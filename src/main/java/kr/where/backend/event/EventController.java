@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.utils.response.ResponseWithData;
+import kr.where.backend.utils.response.StatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -59,6 +60,6 @@ public class EventController {
 //        int ret = eventService.checkEvent(member.getName(), place);
 //        return ret;
         int result = 1;
-        return new ResponseEntity(result, HttpStatus.OK);
+        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "당첨 결과", result), HttpStatus.OK);
     }
 }

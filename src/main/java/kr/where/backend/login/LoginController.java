@@ -31,7 +31,7 @@ public class LoginController {
                     @Parameter(name="key", description = "key in Token", in= ParameterIn.COOKIE)
             },
             responses = {
-                    @ApiResponse(responseCode = "201", description = "로그인 성공", content=@Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "201", description = "로그인 성공", content=@Content(schema = @Schema(implementation = Response.class))),
                     @ApiResponse(responseCode = "401", description = "등록되지 않은 멤버", content=@Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
     @GetMapping("/")

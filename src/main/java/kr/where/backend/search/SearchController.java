@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.utils.response.ResponseWithData;
+import kr.where.backend.utils.response.StatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -48,7 +49,7 @@ public class SearchController {
 //            searchCadetList.add(searchCadet);
 //        }
         List<SearchCadet> searchCadetList = new ArrayList<SearchCadet>();
-        return new ResponseEntity(searchCadetList, HttpStatus.OK);
+        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "검색 성공", searchCadetList), HttpStatus.OK);
 //        return searchCadetList;
     }
 
@@ -75,6 +76,6 @@ public class SearchController {
 //            }
 //        }
 //        return cadet;
-          return new ResponseEntity(cadet, HttpStatus.OK);
+          return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "get 성공", cadet), HttpStatus.OK);
     }
 }

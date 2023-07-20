@@ -30,7 +30,7 @@ public class AuthController {
                     @Parameter(name="key", description = "key in Token", in= ParameterIn.COOKIE)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "등록되어 있는 멤버", content=@Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "등록되어 있는 멤버", content=@Content(schema = @Schema(implementation = Response.class))),
                     @ApiResponse(responseCode = "401", description = "등록되지 않은 멤버", content=@Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
     @GetMapping("/login")
@@ -52,7 +52,7 @@ public class AuthController {
                     @Parameter(name="key", description = "key in Token", in= ParameterIn.COOKIE)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "동의 페이지 접근 가능", content=@Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "동의 페이지 접근 가능", content=@Content(schema = @Schema(implementation = Response.class))),
                     @ApiResponse(responseCode = "409", description = "이미 등록된 멤버", content=@Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
     @GetMapping("/permission")
@@ -76,7 +76,7 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = Map.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "로그인 성공 가능", content=@Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "로그인 성공 가능", content=@Content(schema = @Schema(implementation = Response.class))),
                     @ApiResponse(responseCode = "401", description = "등록 되지않은 멤버", content=@Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
     @PostMapping("/token")
@@ -97,7 +97,7 @@ public class AuthController {
 
     @Operation(summary = "logout API", description = "로그아웃",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "로그아웃 성공", content=@Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "로그아웃 성공", content=@Content(schema = @Schema(implementation = Response.class))),
             })
     @GetMapping("/auth/logout")
     public ResponseEntity logout(HttpServletRequest req, HttpServletResponse res) {
