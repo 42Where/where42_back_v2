@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.where.backend.utils.response.Response;
+import kr.where.backend.utils.response.ResponseMsg;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

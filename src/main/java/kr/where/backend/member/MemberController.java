@@ -175,7 +175,7 @@ public class MemberController {
             }
 
     )
-    @PostMapping("/member/eval")
+    @PostMapping("/member/evalon")
     public ResponseEntity updateEvalOn(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key)
             throws OutStateException, ServiceUnavailableException {
 //        String token42 = tokenService.findAccessToken(res, key);
@@ -196,7 +196,7 @@ public class MemberController {
             }
 
     )
-    @PostMapping("/member/eval")
+    @PostMapping("/member/evaloff")
     public ResponseEntity updateEvalOff(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key) {
 //        String token42 = tokenService.findAccessToken(res, key);
 //        Member member = memberService.findBySessionWithToken(req, token42);
@@ -208,8 +208,8 @@ public class MemberController {
     @Operation(summary = "create friend", description = "친구 생성 API",
             parameters = {
                     @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE),
-                    @Parameter(name = "friedName", description = "친구 카뎃 intra id", in = ParameterIn.QUERY),
-                    @Parameter(name = "friedName", description = "image URL", in = ParameterIn.QUERY)
+                    @Parameter(name = "friendName", description = "친구 카뎃 intra id", in = ParameterIn.QUERY),
+                    @Parameter(name = "img", description = "image URL", in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
