@@ -13,10 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import kr.where.backend.sample.response.Response;
-import kr.where.backend.sample.response.ResponseMsg;
-import kr.where.backend.sample.response.ResponseWithData;
-import kr.where.backend.sample.response.StatusCode;
+
+import kr.where.backend.utils.response.Response;
+import kr.where.backend.utils.response.ResponseMsg;
+import kr.where.backend.utils.response.ResponseWithData;
+import kr.where.backend.utils.response.StatusCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -60,8 +61,8 @@ public class GroupController {
     int groupId = 1;
     return new ResponseEntity(
         ResponseWithData.res(
-            kr.where.backend.sample.response.StatusCode.CREATED,
-            kr.where.backend.sample.response.ResponseMsg.CREATE_GROUP, groupId),
+            StatusCode.CREATED,
+            ResponseMsg.CREATE_GROUP, groupId),
         HttpStatus.CREATED);
   }
 
@@ -128,8 +129,8 @@ public class GroupController {
       @RequestBody String changeName) {
     return new ResponseEntity(
         ResponseWithData.res(
-            kr.where.backend.sample.response.StatusCode.OK,
-            kr.where.backend.sample.response.ResponseMsg.CHANGE_GROUP_NAME, groupId),
+            StatusCode.OK,
+            ResponseMsg.CHANGE_GROUP_NAME, groupId),
         HttpStatus.OK);
   }
 
@@ -150,9 +151,9 @@ public class GroupController {
   @DeleteMapping("/{groupId}")
   public ResponseEntity deleteGroup(@PathVariable("groupId") Long groupId) {
     return new ResponseEntity(
-        kr.where.backend.sample.response.Response.res(
-            kr.where.backend.sample.response.StatusCode.OK,
-            kr.where.backend.sample.response.ResponseMsg.DELETE_GROUP), HttpStatus.OK);
+        Response.res(
+            StatusCode.OK,
+            ResponseMsg.DELETE_GROUP), HttpStatus.OK);
   }
 
   @Operation(
@@ -204,9 +205,9 @@ public class GroupController {
   public ResponseEntity addFriendsToGroup(@PathVariable("groupId") Long groupId,
       @RequestBody List<String> friendNames) {
     return new ResponseEntity(
-        kr.where.backend.sample.response.Response.res(
-            kr.where.backend.sample.response.StatusCode.CREATED,
-            kr.where.backend.sample.response.ResponseMsg.ADD_FRIENDS_TO_GROUP),
+       Response.res(
+           StatusCode.CREATED,
+            ResponseMsg.ADD_FRIENDS_TO_GROUP),
         HttpStatus.CREATED);
   }
 
@@ -230,7 +231,7 @@ public class GroupController {
     ret.add("친구 1");
 
     ResponseWithData<List<String>> response = ResponseWithData.res(
-        kr.where.backend.sample.response.StatusCode.OK,
+       StatusCode.OK,
         "친구 조회 성공", ret);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }

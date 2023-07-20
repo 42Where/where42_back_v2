@@ -1,4 +1,4 @@
-package kr.where.backend.response;
+package kr.where.backend.utils.response;
 
 public class ResponseMsg {
     public static final String ADMIN_LOGIN_SUCCESS = "관리자 로그인 성공";

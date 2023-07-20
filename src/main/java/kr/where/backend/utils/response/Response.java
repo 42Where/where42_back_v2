@@ -1,4 +1,4 @@
-package kr.where.backend.response;
+package kr.where.backend.utils.response;
 
 import lombok.Builder;
 import lombok.Getter;

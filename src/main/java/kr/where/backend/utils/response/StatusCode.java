@@ -1,4 +1,4 @@
-package kr.where.backend.response;
+package kr.where.backend.utils.response;
 
 public class StatusCode {
     public static final int OK = 200;

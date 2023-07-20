@@ -1,9 +1,10 @@
 package kr.where.backend.exception.customException;
 
+import kr.where.backend.utils.response.ResponseMsg;
+import kr.where.backend.utils.response.StatusCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import kr.where.backend.response.ResponseMsg;
-import kr.where.backend.response.StatusCode;
+
 /**
  * <pre>
  *     관리자 로그인 시 id - pwd 불일치 시 발생

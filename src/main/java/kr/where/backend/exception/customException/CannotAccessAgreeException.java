@@ -1,11 +1,10 @@
 package kr.where.backend.exception.customException;
 
-import jakarta.servlet.http.HttpServletRequest;
+import kr.where.backend.utils.response.ResponseMsg;
+import kr.where.backend.utils.response.StatusCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import kr.where.backend.response.ResponseMsg;
-import kr.where.backend.response.StatusCode;
-import jakarta.servlet.http.HttpServletResponse;
+
 
 /**
  * <pre>

@@ -1,9 +1,9 @@
 package kr.where.backend.exception;
 
-import lombok.extern.slf4j.Slf4j;
-import kr.where.backend.response.Response;
-import kr.where.backend.response.ResponseWithData;
 import kr.where.backend.exception.customException.*;
+import kr.where.backend.utils.response.Response;
+import kr.where.backend.utils.response.ResponseWithData;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

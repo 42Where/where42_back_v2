@@ -1,9 +1,10 @@
 package kr.where.backend.exception.customException;
 
+import kr.where.backend.utils.response.ResponseMsg;
+import kr.where.backend.utils.response.StatusCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import kr.where.backend.response.ResponseMsg;
-import kr.where.backend.response.StatusCode;
+
 
 /**
  * <pre>
