@@ -24,8 +24,7 @@ public class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .login((String) attributes.get("login"))
                 .location((String) attributes.get("location"))
-                .image((String) attributes.get("image"))
-                .active((boolean) attributes.get("active"))
+//                .active((boolean) attributes.get("active"))
                 .created_at((String) attributes.get("creat_at"))
                 .build();
     }
