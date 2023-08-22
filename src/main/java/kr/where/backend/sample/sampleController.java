@@ -69,4 +69,9 @@ public class sampleController {
     public ResponseEntity deleteSample(@PathVariable("sampleId") Long sampleId) {
         return new ResponseEntity(Response.res(200, ResponseMsg.DELETE_GROUP), HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity test() {
+        return ResponseEntity.notFound().build();
+    }
 }
