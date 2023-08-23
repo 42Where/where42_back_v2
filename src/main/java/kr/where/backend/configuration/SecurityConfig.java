@@ -3,6 +3,7 @@ package kr.where.backend.configuration;
 import kr.where.backend.auth.JwtToken.JwtFilter;
 import kr.where.backend.auth.JwtToken.TokenProvider;
 import kr.where.backend.auth.oauth.CustomOauth2UserService;
+import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-//    private final JwtFilter jwtFilter;
+    //    private final JwtFilter jwtFilter;
 //
     private final TokenProvider tokenProvider;
     private final CustomOauth2UserService customOauth2UserService;
-//    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final OAuth2SuccessHandler successHandler;
+    //    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 //    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 //
 //    @Bean
@@ -62,14 +64,14 @@ public class SecurityConfig {
 
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers("/login").permitAll()
-                                .requestMatchers("/oauth2/*").permitAll()
+                authorize -> authorize
+                        .requestMatchers("/token").permitAll()
+                        .requestMatchers("/oauth2/*").permitAll()
 //                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 //                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated());
+                        .anyRequest().authenticated());
 
-        httpSecurity.oauth2Login().userInfoEndpoint().userService(customOauth2UserService);
+        httpSecurity.oauth2Login().successHandler(successHandler).userInfoEndpoint().userService(customOauth2UserService);
 //                .successHandler(oAuth2AuthenticationSuccessHandler)
 //                .failureHandler(oAuth2AuthenticationFailureHandler);
 //        httpSecurity.logout()
