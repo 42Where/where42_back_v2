@@ -4,6 +4,7 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import kr.where.backend.auth.exception.TokenExceptions;
 import kr.where.backend.member.Enum.MemberLevel;
 import kr.where.backend.member.entity.Member;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
@@ -28,57 +30,69 @@ import java.util.stream.Stream;
 @Configuration
 @Slf4j
 public class TokenProvider {
-    private final Long expirationTime;
-    private final String secretKey;
+    private final Key secretKey;
+    private final long accessTokenExpirationTime;
+    private final long refreshTokenExpirationTime;
     private final String issuer;
 
-
-    public TokenProvider() {
-        this.secretKey = "ifhewiufghre'apiwhr134e134aeorgbosignspfjawfojo[fowefnipwnvs'mvs'lfmd";
-        this.expirationTime = 3L;
-        this.issuer = "where42";
+    public TokenProvider(@Value("${jwt.token.secret}") final String secretCode,
+                         @Value("${accesstoken.expiration.time}") final long accessTokenExpirationTime,
+                         @Value("${refreshtoken.expiration.time}") final long refreshTokenExpirationTime,
+                         @Value("${issuer}") final String issuer) {
+        this.secretKey = generateSecretKey(secretCode);
+        this.accessTokenExpirationTime = accessTokenExpirationTime;
+        this.refreshTokenExpirationTime = refreshTokenExpirationTime;
+        this.issuer = issuer;
     }
 
-    public String createToken(final Long memberId) {
+    public String createAccessToken(final String intraId) {
+        return createToken(intraId, accessTokenExpirationTime);
+    }
+
+    public String createRefreshToken(final String intraId) {
+        return createToken(intraId, refreshTokenExpirationTime);
+    }
+
+    private Key generateSecretKey(final String secretCode) {
+        final String encodedSecretCode = Base64.getEncoder().encodeToString(secretCode.getBytes());
+        return Keys.hmacShaKeyFor(encodedSecretCode.getBytes());
+    }
+
+    private String createToken(final String intraId, final long validateTime) {
+        final Claims claims = Jwts.claims().setSubject("User");
+        claims.put("intraId", intraId);
+        claims.put("roles", "Cadet");
+        Date now = new Date();
         return Jwts.builder()
-                .signWith(new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))
+                .setClaims(claims)
+                .setIssuedAt(now)
                 .setIssuer(issuer)
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Date.from(Instant.now().plus(expirationTime, ChronoUnit.HOURS)))
-                .claim("id", memberId)
+                .setExpiration(new Date(now.getTime() + validateTime))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean validateToken(final String token) {
+    public Claims parseToken(final String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info(String.format("exception : %s, message : 잘못된 JWT 서명입니다.", e.getClass().getName()));
-        } catch (ExpiredJwtException e) {
-            log.info(String.format("exception : %s, message : 만료된 JWT 토큰입니다.", e.getClass().getName()));
-        } catch (UnsupportedJwtException e) {
-            log.info(String.format("exception : %s, message : 지원되지 않는 JWT 토큰입니다.", e.getClass().getName()));
-        } catch (IllegalArgumentException e) {
-            log.info(String.format("exception : %s, message : JWT 토큰이 잘못되었습니다.", e.getClass().getName()));
-        }
-        return false;
-    }
-
-    public Claims parseClaims(final String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build()
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
+        } catch (MalformedJwtException e) {
+            throw new TokenExceptions.InvalidedTokenException();
         } catch (ExpiredJwtException e) {
-            return e.getClaims();
+            throw new TokenExceptions.ExpiredTokenTimeOutException();
+        } catch (UnsupportedJwtException e) {
+            throw new TokenExceptions.UnsupportedTokenException();
+        } catch (IllegalArgumentException e) {
+            throw new TokenExceptions.IllegalTokenException();
         }
     }
 
     public Authentication getAuthentication(final String token) {
         // 토큰 복호화
-        Claims claims = parseClaims(token);
-        log.info("token_claims : " + claims.toString());
+        Claims claims = parseToken(token);
 
         if (claims.get("role") == null) {
             throw new BadCredentialsException("권한 정보가 없는 토큰입니다.");
@@ -90,12 +104,12 @@ public class TokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        final String userUuid = claims.get("userUuid").toString();
+        final String intraId = claims.get("intraId", String.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = new Member("suhwpark", "....", "GEAPO", "20230810", MemberLevel.member);
 
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(member, userUuid, authorities);
+        return new UsernamePasswordAuthenticationToken(member, intraId, authorities);
     }
 }
