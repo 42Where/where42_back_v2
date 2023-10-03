@@ -38,7 +38,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        Token token = tokenService.generateToken(userDto.getEmail(), "USER");
 //        log.info("{}", token);
-        String token = tokenProvider.createToken(2L);
+        String token = tokenProvider.createAccessToken("suhwpark");
         targetUrl = UriComponentsBuilder.fromUriString("/token")
                 .queryParam("token", token)
                 .build().toUriString();
