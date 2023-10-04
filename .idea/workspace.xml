@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/JwtToken/JwtFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/JwtToken/JwtFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/JwtToken/TokenProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/JwtToken/TokenProvider.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/CustomOauth2UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/CustomOauth2UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2Attribute$OAuth2AttributeBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2Attribute$OAuth2AttributeBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2Attribute.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2SuccessHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/auth/oauth/OAuth2SuccessHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/configuration/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/configuration/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/exception/ControllerExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/exception/ControllerExceptionHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/JwtToken/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/JwtToken/JwtFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/JwtToken/LoginController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/oauth/OAuth2Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/oauth/OAuth2Attribute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/oauth/OAuth2SuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/auth/oauth/OAuth2SuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/configuration/EnvConfig.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/configuration/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/configuration/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

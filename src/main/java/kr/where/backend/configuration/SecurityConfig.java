@@ -39,21 +39,12 @@ public class SecurityConfig {
                                 .requestMatchers("/token/**").permitAll()
                                 .requestMatchers("/oauth2/*").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                        .requestMatchers("/login").permitAll()
-//                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
                         .failureHandler(failureHandler))
                 .logout(logout -> logout.clearAuthentication(true))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
-//                .userInfoEndpoint().userService(customOauth2UserService)
-//                .and()
-//                .successHandler(successHandler)
-//                .failureHandler(failureHandler);
-
-//                .clearAuthentication(true);
-//                .deleteCookies("JSESSIONID");
         return httpSecurity.build();
     }
 }
