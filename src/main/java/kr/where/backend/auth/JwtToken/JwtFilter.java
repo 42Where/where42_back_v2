@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.exception.TokenExceptions;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
@@ -27,9 +29,12 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String token = extractToken(request).orElseThrow(TokenExceptions.InvalidedTokenException::new);
-        Authentication auth = tokenProvider.getAuthentication(token);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        log.info("어떻게 처리하징");
+        final String token = extractToken(request).orElse(null);
+        if (token != null) {
+            Authentication auth = tokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
         filterChain.doFilter(request, response);
     }
 
@@ -47,10 +52,4 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         return Optional.ofNullable(token[1]);
     }
-//    private String getParseJwt(final String headerAuth) {
-//        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
-//            return headerAuth.substring(7);
-//        }
-//        return null;
-//    }
 }

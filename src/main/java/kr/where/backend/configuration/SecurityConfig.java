@@ -3,6 +3,7 @@ package kr.where.backend.configuration;
 import kr.where.backend.auth.JwtToken.JwtFilter;
 import kr.where.backend.auth.JwtToken.TokenProvider;
 import kr.where.backend.auth.oauth.CustomOauth2UserService;
+import kr.where.backend.auth.oauth.OAuth2FailureHandler;
 import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,34 +27,33 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CustomOauth2UserService customOauth2UserService;
     private final OAuth2SuccessHandler successHandler;
+    private final OAuth2FailureHandler failureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity
-                .csrf()
-                .disable()
-                .formLogin()
-                .disable();
-
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        httpSecurity.authorizeHttpRequests(
-                authorize -> authorize
-                        .requestMatchers("/token").permitAll()
-                        .requestMatchers("/oauth2/*").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+        httpSecurity.csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        authorize -> authorize
+                                .requestMatchers("/token/**").permitAll()
+                                .requestMatchers("/oauth2/*").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 //                        .requestMatchers("/login").permitAll()
 //                                .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated());
+                                .anyRequest().authenticated())
+                .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler))
+                .logout(logout -> logout.clearAuthentication(true))
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+//                .userInfoEndpoint().userService(customOauth2UserService)
+//                .and()
+//                .successHandler(successHandler)
+//                .failureHandler(failureHandler);
 
-        httpSecurity.oauth2Login()
-                .successHandler(successHandler).userInfoEndpoint().userService(customOauth2UserService);
-//                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                .failureHandler(oAuth2AuthenticationFailureHandler);
-//        httpSecurity.logout()
-//                .clearAuthentication(true)
+//                .clearAuthentication(true);
 //                .deleteCookies("JSESSIONID");
-//        httpSecurity.addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }
