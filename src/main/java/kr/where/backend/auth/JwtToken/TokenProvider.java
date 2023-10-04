@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.file.attribute.UserPrincipal;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -107,9 +108,9 @@ public class TokenProvider {
         final String intraId = claims.get("intraId", String.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
-        final Member member = new Member("suhwpark", "....", "GEAPO", "20230810", MemberLevel.member);
+        final Member member = new Member(claims.getId(), "", "", "", MemberLevel.member);
 
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(member, intraId, authorities);
+        return new UsernamePasswordAuthenticationToken(member, "", authorities);
     }
 }
