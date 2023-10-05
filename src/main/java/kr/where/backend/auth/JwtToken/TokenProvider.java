@@ -83,6 +83,9 @@ public class TokenProvider {
         } catch (MalformedJwtException e) {
             throw new TokenExceptions.InvalidedTokenException();
         } catch (ExpiredJwtException e) {
+            // 방법 1. ExpiredJwtException 던지고 프론트에서 refresh 저장해놨다가 refresh 로 재요청 (이때 access, refresh 재발급)
+            // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access, refresh 재발급
+
             throw new TokenExceptions.ExpiredTokenTimeOutException();
         } catch (UnsupportedJwtException e) {
             throw new TokenExceptions.UnsupportedTokenException();
@@ -94,14 +97,15 @@ public class TokenProvider {
     public Authentication getAuthentication(final String token) {
         // 토큰 복호화
         Claims claims = parseToken(token);
+        log.info("token 정보 : " + claims);
 
-        if (claims.get("role") == null) {
+        if (claims.get("roles") == null) {
             throw new BadCredentialsException("권한 정보가 없는 토큰입니다.");
         }
 
         // 클레임에서 권한 정보 가져오기
         final Collection<? extends GrantedAuthority> authorities = Stream.of(
-                        claims.get("role").toString())
+                        claims.get("roles").toString())
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
