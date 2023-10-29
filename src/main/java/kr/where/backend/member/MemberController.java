@@ -9,15 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import kr.where.backend.exception.customException.OutStateException;
 import kr.where.backend.exception.customException.ServiceUnavailableException;
 import kr.where.backend.exception.customException.TakenSeatException;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.Locate;
-import kr.where.backend.member.DTO.MemberInfo;
-import kr.where.backend.member.DTO.Seoul42;
-import kr.where.backend.member.Enum.MemberLevel;
+import kr.where.backend.member.DTO.*;
 import kr.where.backend.utils.response.Response;
 import kr.where.backend.utils.response.ResponseMsg;
 import kr.where.backend.utils.response.ResponseWithData;
@@ -70,6 +65,28 @@ public class MemberController {
         final List<Member> members = memberService.findAll();
 
         final ResponseEntity response = ResponseEntity.ok(members);
+
+        return response;
+    }
+
+    @Operation(summary = "deleteMember API", description = "맴버 탈퇴",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            requestBody =
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = DeleteMemberDto.class)))
+            ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "맴버 삭제 성공")
+            }
+    )
+    @DeleteMapping("/")
+    public ResponseEntity deleteMember(@RequestBody DeleteMemberDto deleteMemberDto) {
+
+        memberService.deleteMember(deleteMemberDto);
+
+        final ResponseEntity response = ResponseEntity.ok(deleteMemberDto.getIntraId());
 
         return response;
     }

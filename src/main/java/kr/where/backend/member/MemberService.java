@@ -1,6 +1,7 @@
 package kr.where.backend.member;
 
 import kr.where.backend.member.DTO.CreateMemberDto;
+import kr.where.backend.member.DTO.DeleteMemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,20 @@ public class MemberService {
     }
 
     public void validateDuplicatedMember(final Long intraId) {
-        Member member = memberRepository.findByIntraId(intraId).orElse(null);
-        if (member != null) {
-            throw new RuntimeException("중복된 회원입니다");
-        }
+        memberRepository.findByIntraId(intraId).ifPresent(present -> {
+            throw new RuntimeException("이미 존재하는 멤버입니다.");
+        });
     }
 
     public List<Member> findAll() {
         final List<Member> members = memberRepository.findAll();
         return members;
+    }
+
+    public void deleteMember(DeleteMemberDto deleteMemberDto) {
+        Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
+                .orElseThrow(RuntimeException::new);
+
+        this.memberRepository.delete(member);
     }
 }
