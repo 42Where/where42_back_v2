@@ -1,7 +1,7 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
-//import kr.where.backend.group.GroupMember;
+// import kr.where.backend.group.GroupMember;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
