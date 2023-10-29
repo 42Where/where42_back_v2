@@ -4,6 +4,8 @@ import kr.where.backend.member.DTO.CreateMemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -23,5 +25,10 @@ public class MemberService {
         if (member != null) {
             throw new RuntimeException("중복된 회원입니다");
         }
+    }
+
+    public List<Member> findAll() {
+        final List<Member> members = memberRepository.findAll();
+        return members;
     }
 }

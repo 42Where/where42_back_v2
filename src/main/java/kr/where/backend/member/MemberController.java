@@ -62,7 +62,15 @@ public class MemberController {
 
         final ResponseEntity response = ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main")).body(member);
 
-//        return new ResponseEntity(ResponseWithData.res(StatusCode.CREATED, ResponseMsg.CREATE_MEMBER, 1L), HttpStatus.CREATED);
+        return response;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity findAllMember() {
+        final List<Member> members = memberService.findAll();
+
+        final ResponseEntity response = ResponseEntity.ok(members);
+
         return response;
     }
 
