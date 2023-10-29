@@ -73,15 +73,21 @@ public class Member {
         this.agree = true;
     }
 
+    public void updatePersonalMsg(final String comment) {
+        this.comment = comment;
+    }
+
+    public void updateCustomLocation(String customLocation) {
+//        log.info("[member-update] \"{}\"님의 Location이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.location, location);
+        this.customLocation = customLocation;
+    }
+
 //
 //    public void setDefaultGroup(Long defaultGroupId, Long starredGroupId) {
 //        this.defaultGroupId = defaultGroupId;
 //        this.starredGroupId = starredGroupId;
 //    }
 //
-//    public void updatePersonalMsg(String msg) {
-//        this.msg = msg;
-//    }
 //
 //    public void changeTime() {
 //        this.updateTime = new Date();
@@ -93,11 +99,7 @@ public class Member {
 //        this.updateTime = new Date();
 //    }
 //
-//    public void updateLocation(String location) {
-//        log.info("[member-update] \"{}\"님의 Location이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.location, location);
-//        this.location = location;
-//        this.updateTime = new Date();
-//    }
+
 //
 //    public void updateParsedInOrOut(int inOrOut) {
 //        this.inOrOut = inOrOut;

@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -43,28 +42,29 @@ public class MemberController {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             requestBody =
-                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
             ,
             responses = {
-                @ApiResponse(responseCode = "201", description = "맴버 생성 성공")
+                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공")
             }
     )
     @PostMapping("/")
     public ResponseEntity createMember(@RequestBody CreateMemberDto createMemberDto) {
 
-        final Member member = memberService.createMember(createMemberDto);
+        final ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
 
-        final ResponseEntity response = ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main")).body(member);
+        final ResponseEntity response = ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
+                .body(responseMemberDto);
 
         return response;
     }
 
     @GetMapping("/")
     public ResponseEntity findAllMember() {
-        final List<Member> members = memberService.findAll();
+        final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();
 
-        final ResponseEntity response = ResponseEntity.ok(members);
+        final ResponseEntity response = ResponseEntity.ok(responseMemberDtos);
 
         return response;
     }
@@ -84,13 +84,54 @@ public class MemberController {
     @DeleteMapping("/")
     public ResponseEntity deleteMember(@RequestBody DeleteMemberDto deleteMemberDto) {
 
-        memberService.deleteMember(deleteMemberDto);
+        final ResponseMemberDto responseMemberDto = memberService.deleteMember(deleteMemberDto);
 
-        final ResponseEntity response = ResponseEntity.ok(deleteMemberDto.getIntraId());
+        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
 
         return response;
     }
 
+    @Operation(summary = "updatePersonalMessage API", description = "맴버 상태 메시지 변경",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            requestBody =
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
+            ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공")
+            }
+    )
+    @PostMapping("/message")
+    public ResponseEntity updateComment(@RequestBody final UpdateMemberDto updateMemberDto) {
+        final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberDto);
+
+        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
+
+        return response;
+    }
+
+    @Operation(summary = "updateCustomLocation API", description = "맴버 수동자리 변경",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            requestBody =
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
+            ,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "맴버 수동자리 변경 성공")
+            }
+    )
+    @PostMapping("/custom-location")
+    public ResponseEntity updateCustomLocation(@RequestBody final UpdateMemberDto updateMemberDto) {
+        final ResponseMemberDto responseMemberDto = memberService.updateCustomLocation(updateMemberDto);
+
+        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
+
+        return response;
+    }
 //    @Operation(summary = "get member information", description = "맴버 프로필과 현재 위치를 조회하는 API",
 //            parameters = {
 //                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
@@ -135,25 +176,25 @@ public class MemberController {
 //        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "조회 성공", member.getMsg()), HttpStatus.OK);
 //    }
 
-    @Operation(summary = "post member personal status message", description = "맴버 상태 메시지 설정 API",
-            parameters = {
-                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = Map.class))
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버의 상태 메시지 반환", content = @Content(schema = @Schema(implementation = String.class))),
-                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-    )
-    @PostMapping( "/status-msg")
-    public ResponseEntity updatePersonalMsg(HttpServletRequest req,  HttpServletResponse res, @CookieValue(value = "ID", required = false) String key, @RequestBody Map<String, String> msg) {
-//        String token42 = tokenService.findAccessToken(res, key);
-//        memberService.updatePersonalMsg(req, token42, msg.get("msg"));
-        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_MSG), HttpStatus.OK);
-    }
+//    @Operation(summary = "post member personal status message", description = "맴버 상태 메시지 설정 API",
+//            parameters = {
+//                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+//            },
+//            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+//                    content = @Content(schema = @Schema(implementation = Map.class))
+//            ),
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "맴버의 상태 메시지 반환", content = @Content(schema = @Schema(implementation = String.class))),
+//                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//            }
+//    )
+//    @PostMapping("/status-msg")
+//    public ResponseEntity updatePersonalMsg(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key, @RequestBody Map<String, String> msg) {
+////        String token42 = tokenService.findAccessToken(res, key);
+////        memberService.updatePersonalMsg(req, token42, msg.get("msg"));
+//        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_MSG), HttpStatus.OK);
+//    }
 
     @Operation(summary = "get member location", description = "멤버 위치 설정 가능 여부 조회 API",
             parameters = {
@@ -176,29 +217,29 @@ public class MemberController {
         return new ResponseEntity(ResponseWithData.res(StatusCode.OK, ResponseMsg.NOT_TAKEN_SEAT, planet), HttpStatus.OK);
     }
 
-    @Operation(summary = "post member location", description = "멤버 위치 설정 API",
-            parameters = {
-                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = Locate.class))
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 위치 설정 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-
-    )
-    @PostMapping("/location")
-    public ResponseEntity updateLocate(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key, @RequestBody Locate locate) {
-//        String token42 = tokenService.findAccessToken(res, key);
-//        Member member = memberService.findBySessionWithToken(req, token42);
-//        memberService.updateLocate(member, locate);
-//        log.info("[setting] \"{}\"님이 \"p:{}, f:{}, c:{}, s:{}\" (으)로 위치를 수동 변경하였습니다.", member.getName(),
-//                locate.getPlanet(), locate.getFloor(), locate.getCluster(), locate.getSpot());
-//        memberService.saveLocateDate(member.getName(), locate);
-        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_LOCATE), HttpStatus.OK);
-    }
+//    @Operation(summary = "post member location", description = "멤버 위치 설정 API",
+//            parameters = {
+//                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+//            },
+//            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+//                    content = @Content(schema = @Schema(implementation = Locate.class))
+//            ),
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "맴버 위치 설정 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+//                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//            }
+//
+//    )
+//    @PostMapping("/location")
+//    public ResponseEntity updateLocate(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key, @RequestBody Locate locate) {
+////        String token42 = tokenService.findAccessToken(res, key);
+////        Member member = memberService.findBySessionWithToken(req, token42);
+////        memberService.updateLocate(member, locate);
+////        log.info("[setting] \"{}\"님이 \"p:{}, f:{}, c:{}, s:{}\" (으)로 위치를 수동 변경하였습니다.", member.getName(),
+////                locate.getPlanet(), locate.getFloor(), locate.getCluster(), locate.getSpot());
+////        memberService.saveLocateDate(member.getName(), locate);
+//        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_LOCATE), HttpStatus.OK);
+//    }
 
     @Operation(summary = "post Eval button", description = "동료평가 정보 설정 API",
             parameters = {
