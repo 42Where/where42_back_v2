@@ -13,21 +13,23 @@ import jakarta.servlet.http.HttpSession;
 import kr.where.backend.exception.customException.OutStateException;
 import kr.where.backend.exception.customException.ServiceUnavailableException;
 import kr.where.backend.exception.customException.TakenSeatException;
+import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.Locate;
 import kr.where.backend.member.DTO.MemberInfo;
 import kr.where.backend.member.DTO.Seoul42;
 import kr.where.backend.member.Enum.MemberLevel;
-import kr.where.backend.member.entity.Member;
 import kr.where.backend.utils.response.Response;
 import kr.where.backend.utils.response.ResponseMsg;
 import kr.where.backend.utils.response.ResponseWithData;
 import kr.where.backend.utils.response.StatusCode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,37 +38,46 @@ import java.util.Map;
 @Slf4j
 @Tag(name = "member", description = "member API")
 @RequestMapping("/v3/member")
+@RequiredArgsConstructor
 public class MemberController {
+
+    private final MemberService memberService;
 
     @Operation(summary = "createMember API", description = "맴버 생성 하는 POST API",
             parameters = {
-                    @Parameter(name = "session", description = "맴버 확인용 세션", in = ParameterIn.HEADER),
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             requestBody =
                     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            content = @Content(schema = @Schema(implementation = Seoul42.class)))
+                            content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
             ,
             responses = {
-                @ApiResponse(responseCode = "201", description = "맴버 성공 메세지")
+                @ApiResponse(responseCode = "201", description = "맴버 생성 성공")
             }
     )
     @PostMapping("/")
-    public ResponseEntity createMember(HttpSession session, @RequestBody Seoul42 seoul42) {
-        return new ResponseEntity(ResponseWithData.res(StatusCode.CREATED, ResponseMsg.CREATE_MEMBER, 1L), HttpStatus.CREATED);
+    public ResponseEntity createMember(@RequestBody CreateMemberDto createMemberDto) {
+
+        final Member member = memberService.createMember(createMemberDto);
+
+        final ResponseEntity response = ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main")).body(member);
+
+//        return new ResponseEntity(ResponseWithData.res(StatusCode.CREATED, ResponseMsg.CREATE_MEMBER, 1L), HttpStatus.CREATED);
+        return response;
     }
 
-    @Operation(summary = "get member information", description = "맴버 프로필과 현재 위치를 조회하는 API",
-            parameters = {
-                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 정보에 대한 DTO 반환", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-
-    )
-    @GetMapping("/info")
-    public ResponseEntity memberInformation(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key) {
+//    @Operation(summary = "get member information", description = "맴버 프로필과 현재 위치를 조회하는 API",
+//            parameters = {
+//                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+//            },
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "맴버 정보에 대한 DTO 반환", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+//                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//            }
+//
+//    )
+//    @GetMapping("/info")
+//    public ResponseEntity memberInformation(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key) {
 //        String token42 = tokenService.findAccessToken(res, key);
 //        Member member = memberService.findBySessionWithToken(req, token42);
 //        log.info("[main] \"{}\"님이 메인화면을 조회하였습니다.", member.getName());
@@ -76,28 +87,28 @@ public class MemberController {
 //            return new MemberInfo(member);
 //        }
 //        memberService.parseStatus(member, token42);
-        Member member = new Member("suhwpark", "http://localhost", "seocho", "single", MemberLevel.member);
-        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "조회 성공", new MemberInfo(member)), HttpStatus.OK);
-    }
+//        Member member = new Member("suhwpark", "http://localhost", "seocho", "single", MemberLevel.member);
+//        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "조회 성공", new MemberInfo(member)), HttpStatus.OK);
+//    }
 
-    @Operation(summary = "get member status message", description = "맴버 상태 메시지 조회 API",
-            parameters = {
-                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버의 상태 메시지 반환", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-            }
-
-    )
-    @GetMapping("/status-msg")
-    public ResponseEntity getPersonalMsg(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key) {
-//        String token42 = tokenService.findAccessToken(res, key);
-//        Member member = memberService.findBySessionWithToken(req, token42);
-        Member member = new Member("suhwpark", "http://localhost", "seocho", "single", MemberLevel.member);
-        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "조회 성공", member.getMsg()), HttpStatus.OK);
-    }
+//    @Operation(summary = "get member status message", description = "맴버 상태 메시지 조회 API",
+//            parameters = {
+//                    @Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+//            },
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "맴버의 상태 메시지 반환", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+//                    @ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//                    @ApiResponse(responseCode = "401", description = "쿠키나 DB에 저장된 맴버의 토큰이 없을 경우",  content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+//            }
+//
+//    )
+//    @GetMapping("/status-msg")
+//    public ResponseEntity getPersonalMsg(HttpServletRequest req, HttpServletResponse res, @CookieValue(value = "ID", required = false) String key) {
+////        String token42 = tokenService.findAccessToken(res, key);
+////        Member member = memberService.findBySessionWithToken(req, token42);
+//        Member member = new Member("suhwpark", "http://localhost", "seocho", "single", MemberLevel.member);
+//        return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "조회 성공", member.getMsg()), HttpStatus.OK);
+//    }
 
     @Operation(summary = "post member personal status message", description = "맴버 상태 메시지 설정 API",
             parameters = {
