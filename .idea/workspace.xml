@@ -4,22 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="[feat] : mount volume in deploy.sh">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/CreateMemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/CreateMemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/DeleteMemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/DeleteMemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Image.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Image.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Locate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Locate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/MemberInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/MemberInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/ResponseMemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/ResponseMemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Seoul42.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/Seoul42.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/UpdateMemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/DTO/UpdateMemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberService.java" afterDir="false" />
+    <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/backend.main.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
