@@ -1,7 +1,7 @@
 package kr.where.backend.member.DTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.where.backend.member.entity.Member;
+import kr.where.backend.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,13 +24,13 @@ public class MemberInfo {
     @Schema(description = "평가 중인지에 대한 상태")
     private int eval;
 
-    public MemberInfo(Member member) {
-        this.id = member.getId();
-        this.name = member.getName();
-        this.img = member.getImg();
-        this.msg = member.getMsg();
-        this.locate = member.getLocate();
-        this.inOrOut = member.getInOrOut();
-        this.eval = member.getEvaling();
-    }
+//    public MemberInfo(Member member) {
+//        this.id = member.getId();
+//        this.name = member.getName();
+//        this.img = member.getImg();
+//        this.msg = member.getMsg();
+//        this.locate = member.getLocate();
+//        this.inOrOut = member.getInOrOut();
+//        this.eval = member.getEvaling();
+//    }
 }
