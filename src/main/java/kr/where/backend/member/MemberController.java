@@ -54,19 +54,15 @@ public class MemberController {
 
         final ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
 
-        final ResponseEntity response = ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
+        return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
                 .body(responseMemberDto);
-
-        return response;
     }
 
     @GetMapping("/")
     public ResponseEntity findAllMember() {
         final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();
 
-        final ResponseEntity response = ResponseEntity.ok(responseMemberDtos);
-
-        return response;
+        return ResponseEntity.ok(responseMemberDtos);
     }
 
     @Operation(summary = "deleteMember API", description = "맴버 탈퇴",
@@ -86,9 +82,7 @@ public class MemberController {
 
         final ResponseMemberDto responseMemberDto = memberService.deleteMember(deleteMemberDto);
 
-        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
-
-        return response;
+        return ResponseEntity.ok(responseMemberDto);
     }
 
     @Operation(summary = "updatePersonalMessage API", description = "맴버 상태 메시지 변경",
@@ -107,9 +101,7 @@ public class MemberController {
     public ResponseEntity updateComment(@RequestBody final UpdateMemberDto updateMemberDto) {
         final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberDto);
 
-        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
-
-        return response;
+        return ResponseEntity.ok(responseMemberDto);
     }
 
     @Operation(summary = "updateCustomLocation API", description = "맴버 수동자리 변경",
@@ -128,9 +120,7 @@ public class MemberController {
     public ResponseEntity updateCustomLocation(@RequestBody final UpdateMemberDto updateMemberDto) {
         final ResponseMemberDto responseMemberDto = memberService.updateCustomLocation(updateMemberDto);
 
-        final ResponseEntity response = ResponseEntity.ok(responseMemberDto);
-
-        return response;
+        return ResponseEntity.ok(responseMemberDto);
     }
 //    @Operation(summary = "get member information", description = "맴버 프로필과 현재 위치를 조회하는 API",
 //            parameters = {

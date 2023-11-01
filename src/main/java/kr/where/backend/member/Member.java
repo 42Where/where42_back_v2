@@ -1,7 +1,7 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
-import kr.where.backend.group.GroupMember;
+//import kr.where.backend.group.GroupMember;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +45,13 @@ public class Member {
 
     private int clusterLocation;
 
-    @Builder.Default
+//    @Builder.Default
     private boolean blackHole = true;
 
     @Column(nullable = false)
     private int grade;
 
-    @Builder.Default
+//    @Builder.Default
     private boolean agree = false;
 
     @Column(nullable = false)
@@ -62,8 +62,8 @@ public class Member {
     @UpdateTimestamp
     private LocalDate updatedAt = LocalDate.now();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<GroupMember> groupMembers = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<GroupMember> groupMembers = new ArrayList<>();
 
     public Member(final CreateMemberDto createMemberDto) {
         this.intraId = createMemberDto.getIntraId();
