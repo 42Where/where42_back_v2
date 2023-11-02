@@ -11,11 +11,12 @@ import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "groups")
 public class Group {
 
@@ -25,8 +26,16 @@ public class Group {
     private Long groupId;
 
     @Column(name = "group_name", length = 40)
-    private  String name;
+    private  String groupName;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private Set<GroupMember> groupMembers = new HashSet<>();
+
+    public Group(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }

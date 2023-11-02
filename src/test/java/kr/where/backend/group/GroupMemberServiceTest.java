@@ -1,8 +1,6 @@
 package kr.where.backend.group;
 
-import kr.where.backend.group.dto.CreateGroupMemberDTO;
-import kr.where.backend.group.dto.ResponseGroupMemberDTO;
-import kr.where.backend.group.dto.RequestGroupMemberDTO;
+import kr.where.backend.group.dto.*;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.MemberRepository;
@@ -41,17 +39,17 @@ public class GroupMemberServiceTest {
     private MemberRepository memberRepository;
 
     CreateMemberDto createMemberDto = CreateMemberDto.create(11111L, "jonhan", 1, "img");
-
+    CreateGroupDto createGroupDto = new CreateGroupDto(11111L,"test Group");
 
     @Test
     @DisplayName("그룹 멤버 생성")
     public void createGroupMemberTest() throws Exception{
         //given
-        Long id = groupService.createGroup("test Group");
+        ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
         ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
         CreateGroupMemberDTO dto = CreateGroupMemberDTO.builder()
                 .intraId(responseMemberDto.getIntraId())
-                .groupId(id)
+                .groupId(groupDto.getGroupId())
                 .groupName("test Group")
                 .isOwner(true)
                 .build();
@@ -66,16 +64,16 @@ public class GroupMemberServiceTest {
     public void findGroupMemberTest(){
 
         //given
-        Long id = groupService.createGroup("test Group");
+        ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
         ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
         CreateGroupMemberDTO dto = CreateGroupMemberDTO.builder()
                 .intraId(responseMemberDto.getIntraId())
-                .groupId(id)
+                .groupId(groupDto.getGroupId())
                 .groupName("test Group")
                 .isOwner(true)
                 .build();
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(responseMemberDto.getIntraId())
-                        .groupId(id).build();
+                        .groupId(groupDto.getGroupId()).build();
         System.out.println("저장한 id :" + responseMemberDto.getIntraId());
         System.out.println("찾아온 id :" + memberService.findAll().get(0).getIntraId().toString());
 
@@ -90,14 +88,14 @@ public class GroupMemberServiceTest {
     @DisplayName("그룹 멤버 삭제")
     public void deleteGroupMemberTest(){
         //given
-        Long id = groupService.createGroup("test Group");
+        ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
         ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
-        CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder().groupId(id)
+        CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder().groupId(groupDto.getGroupId())
                 .groupName("test Group")
                 .intraId(responseMemberDto.getIntraId())
                         .build();
         groupMemberService.createGroupMember(createGroupMemberDTO);
-        RequestGroupMemberDTO requestdto = RequestGroupMemberDTO.builder().groupId(id).memberId(responseMemberDto.getIntraId())
+        RequestGroupMemberDTO requestdto = RequestGroupMemberDTO.builder().groupId(groupDto.getGroupId()).memberId(responseMemberDto.getIntraId())
                 .build();
         //when
         ResponseGroupMemberDTO responseDto = groupMemberService.deleteGroupMember(requestdto);

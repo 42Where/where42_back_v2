@@ -10,11 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-
 import kr.where.backend.group.dto.*;
-import kr.where.backend.group.dto.GroupCreateRequestDTO;
-import kr.where.backend.group.dto.GroupMemberResponseDTO;
-import kr.where.backend.group.dto.GroupUpdateRequestDTO;
+import kr.where.backend.group.dto.CreateGroupDto;
+import kr.where.backend.group.dto.ResponseGroupDto;
+import kr.where.backend.group.dto.UpdateGroupDto;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,10 +56,16 @@ public class GroupController {
         }
     )
     @PostMapping("/")
-    public ResponseEntity createGroup(@RequestBody @Valid CreateGroupMemberDTO request){
-        Long groupId = groupService.createGroup(request.getGroupName());
-        groupMemberService.createGroupMember(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity createGroup(@RequestBody @Valid CreateGroupDto request){
+        ResponseGroupDto dto = groupService.createGroup(request);
+        CreateGroupMemberDTO groupMemberDTO = CreateGroupMemberDTO.builder()
+                .groupId(dto.getGroupId())
+                .intraId(request.getMemberIntraId())
+                .groupName(request.getGroupName())
+                .isOwner(true)
+                .build();
+        groupMemberService.createGroupMember(groupMemberDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @Operation(
@@ -98,9 +102,9 @@ public class GroupController {
         }
     )
     @PatchMapping("/")
-    public ResponseEntity updateGroup(@RequestBody @Valid GroupUpdateRequestDTO dto){
-        groupService.updateGroup(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
+        ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 
     @Operation(
@@ -118,8 +122,9 @@ public class GroupController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity deleteGroup(@PathVariable("id") Long groupId){
-//        groupMemberService.deleteGroupMember(groupId);
-        groupService.deleteGroup(groupId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        RequestGroupMemberDTO dto = RequestGroupMemberDTO.builder().groupId(groupId).build();
+        groupMemberService.deleteGroupMember(dto);
+        ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 }

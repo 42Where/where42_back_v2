@@ -47,7 +47,7 @@ public class GroupMemberService {
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
-                    .groupName(m.getGroup().getName())
+                    .groupName(m.getGroup().getGroupName())
                     .memberId(requsetDTO.getMemberId()).build()).toList();
 
 //      List<GroupMemberResponseDTO> groupMemberResponseDTOS = groupMembers.stream().map(groupMember -> {
