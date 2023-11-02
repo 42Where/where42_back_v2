@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import kr.where.backend.member.entity.Member;
+import kr.where.backend.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +32,11 @@ public class GroupMember {
 
     @Column(name = "is_owner")
     private Boolean isOwner;
+
+    public GroupMember() {}
+    public GroupMember(Group group, Member member, Boolean isOwner){
+        this.group = group;
+        this.member = member;
+        this.isOwner = isOwner;
+    }
 }

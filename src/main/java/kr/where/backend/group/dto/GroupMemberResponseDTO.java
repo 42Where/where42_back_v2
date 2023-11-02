@@ -1,16 +1,17 @@
 package kr.where.backend.group.dto;
 
-import java.util.List;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
-@Setter
-@Getter
-@NoArgsConstructor
 public class GroupMemberResponseDTO {
+
+    @NotNull
     private Long groupId;
     private String groupName;
-    private int count;
-    private List<Long> members;
+
+    @Builder
+    public GroupMemberResponseDTO(Long groupId, String groupName){
+        this.groupId = groupId;
+        this.groupName = groupName;
+    }
 }
