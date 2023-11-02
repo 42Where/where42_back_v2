@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GroupMemberRequestDTO {
+public class RequestGroupMemberDTO {
     @NotNull
     private Long groupId;
     @NotNull

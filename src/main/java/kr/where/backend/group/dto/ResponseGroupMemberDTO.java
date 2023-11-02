@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class GroupMemberResponseDTO {
+public class ResponseGroupMemberDTO {
 
     @NotNull
     private Long groupId;
@@ -14,7 +14,7 @@ public class GroupMemberResponseDTO {
     private Long memberId;
 
     @Builder
-    public GroupMemberResponseDTO(Long groupId, String groupName, Long memberId){
+    public ResponseGroupMemberDTO(Long groupId, String groupName, Long memberId){
         this.groupId = groupId;
         this.groupName = groupName;
         this.memberId = memberId;

@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class FindGroupMemberResponseDTO {
+public class FindResponseGroupMemberDTO {
     @NotNull
     private Long id;
 
     @Builder
-    public FindGroupMemberResponseDTO(Long id){
+    public FindResponseGroupMemberDTO(Long id){
         this.id = id;
     }
 }

@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.where.backend.group.dto.GroupCreateRequestDTO;
-import kr.where.backend.group.dto.GroupMemberListResponseDTO;
+import kr.where.backend.group.dto.ResponseGroupMemberListDTO;
 import kr.where.backend.group.dto.GroupUpdateRequestDTO;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
@@ -75,7 +75,7 @@ public class GroupController {
     )
     @GetMapping("/")
     public ResponseEntity findGroup(@RequestParam Long memberId){
-        List<GroupMemberListResponseDTO> dto =  groupMemberService.findGroupMembers(memberId);
+        List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 

@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GroupMemberListResponseDTO {
+public class ResponseGroupMemberListDTO {
     private Long groupId;
     private String groupName;
     private int count;
-    private List<FindGroupMemberResponseDTO> members;
+    private List<FindResponseGroupMemberDTO> members;
 
     @Builder
-    public GroupMemberListResponseDTO(Long groupId, String groupName, int count, List<FindGroupMemberResponseDTO> members){
+    public ResponseGroupMemberListDTO(Long groupId, String groupName, int count, List<FindResponseGroupMemberDTO> members){
         this.groupId = groupId;
         this.groupName = groupName;
         this.count = count;
