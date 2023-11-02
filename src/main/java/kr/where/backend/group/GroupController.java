@@ -10,9 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import kr.where.backend.group.dto.GroupCreateRequestDTO;
+import kr.where.backend.group.dto.CreateGroupDto;
 import kr.where.backend.group.dto.GroupMemberResponseDTO;
-import kr.where.backend.group.dto.GroupUpdateRequestDTO;
+import kr.where.backend.group.dto.ResponseGroupDto;
+import kr.where.backend.group.dto.UpdateGroupDto;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,10 +57,10 @@ public class GroupController {
         }
     )
     @PostMapping("/")
-    public ResponseEntity createGroup(@RequestBody @Valid GroupCreateRequestDTO request){
-        Long groupId = groupService.createGroup(request.getGroupName());
-        groupMemberService.createGroupMember(request, groupId,true);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity createGroup(@RequestBody @Valid CreateGroupDto request){
+        ResponseGroupDto dto = groupService.createGroup(request);
+        groupMemberService.createGroupMember(request, dto.getGroupId(),true);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @Operation(
@@ -96,9 +97,9 @@ public class GroupController {
         }
     )
     @PatchMapping("/")
-    public ResponseEntity updateGroup(@RequestBody @Valid GroupUpdateRequestDTO dto){
-        groupService.updateGroup(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
+        ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 
     @Operation(
@@ -117,7 +118,7 @@ public class GroupController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteGroup(@PathVariable("id") Long groupId){
         groupMemberService.deleteGroupMember(groupId);
-        groupService.deleteGroup(groupId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 }
