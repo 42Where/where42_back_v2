@@ -1,16 +1,17 @@
 package kr.where.backend.group.dto;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
+@Data
 public class RequestGroupMemberDTO {
-    @NotNull
-    private Long groupId;
-    @NotNull
+
     private Long memberId;
-    @NotNull
-    private Boolean is_owner;
+    private Long groupId;
+
+    @Builder
+    public RequestGroupMemberDTO(Long memberId, Long groupId) {
+        this.memberId = memberId;
+        this.groupId = groupId;
+    }
 }

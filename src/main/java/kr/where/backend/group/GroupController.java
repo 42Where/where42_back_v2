@@ -10,9 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import kr.where.backend.group.dto.GroupCreateRequestDTO;
-import kr.where.backend.group.dto.ResponseGroupMemberListDTO;
-import kr.where.backend.group.dto.GroupUpdateRequestDTO;
+
+import kr.where.backend.group.dto.*;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,9 +55,9 @@ public class GroupController {
         }
     )
     @PostMapping("/")
-    public ResponseEntity createGroup(@RequestBody @Valid GroupCreateRequestDTO request){
+    public ResponseEntity createGroup(@RequestBody @Valid CreateGroupMemberDTO request){
         Long groupId = groupService.createGroup(request.getGroupName());
-        groupMemberService.createGroupMember(request, groupId,true);
+        groupMemberService.createGroupMember(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -74,8 +73,8 @@ public class GroupController {
         }
     )
     @GetMapping("/")
-    public ResponseEntity findGroup(@RequestParam Long memberId){
-        List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(memberId);
+    public ResponseEntity findGroup(@RequestBody RequestGroupMemberDTO request){
+        List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(request);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -116,7 +115,7 @@ public class GroupController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity deleteGroup(@PathVariable("id") Long groupId){
-        groupMemberService.deleteGroupMember(groupId);
+//        groupMemberService.deleteGroupMember(groupId);
         groupService.deleteGroup(groupId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
