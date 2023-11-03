@@ -58,15 +58,16 @@ public class GroupController {
     @PostMapping("/")
     public ResponseEntity createGroup(@RequestBody @Valid CreateGroupDto request){
         ResponseGroupDto dto = groupService.createGroup(request);
-        CreateGroupMemberDTO groupMemberDTO = CreateGroupMemberDTO.builder()
-                .groupId(dto.getGroupId())
-                .intraId(request.getMemberIntraId())
-                .groupName(request.getGroupName())
-                .isOwner(true)
-                .build();
-        groupMemberService.createGroupMember(groupMemberDTO);
+//        CreateGroupMemberDTO groupMemberDTO = CreateGroupMemberDTO.builder()
+//                .groupId(dto.getGroupId())
+//                .intraId(request.getMemberIntraId())
+//                .groupName(request.getGroupName())
+//                .isOwner(true)
+//                .build();
+//        groupMemberService.createGroupMember(groupMemberDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
+
 
     @Operation(
         summary = "get group list with friend API",
@@ -82,6 +83,7 @@ public class GroupController {
     @GetMapping("/")
     public ResponseEntity findGroup(@RequestBody RequestGroupMemberDTO request){
         List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(request);
+
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -104,6 +106,7 @@ public class GroupController {
     @PatchMapping("/")
     public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
         ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
+
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 
@@ -125,6 +128,7 @@ public class GroupController {
         RequestGroupMemberDTO dto = RequestGroupMemberDTO.builder().groupId(groupId).build();
         groupMemberService.deleteGroupMember(dto);
         ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
 }
