@@ -12,6 +12,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 import kr.where.backend.group.dto.*;
+import kr.where.backend.group.dto.GroupCreateRequestDTO;
+import kr.where.backend.group.dto.GroupMemberResponseDTO;
+import kr.where.backend.group.dto.GroupUpdateRequestDTO;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
