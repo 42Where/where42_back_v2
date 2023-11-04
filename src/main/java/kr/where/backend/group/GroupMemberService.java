@@ -5,7 +5,11 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import kr.where.backend.group.dto.*;
+import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
+import kr.where.backend.group.dto.groupmember.FindResponseGroupMemberDTO;
+import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
+import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
+import kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.member.MemberRepository;
@@ -20,7 +24,6 @@ public class GroupMemberService {
 
     private final GroupMemberRepository groupMemberRepository;
     private final MemberRepository memberRepository;
-    private final GroupService groupService;
     private final GroupRepository groupRepository;
 
     @Transactional

@@ -2,7 +2,11 @@ package kr.where.backend.group;
 
 import java.util.List;
 
-import kr.where.backend.group.dto.*;
+import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
+import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
+import kr.where.backend.group.dto.group.UpdateGroupDto;
 import kr.where.backend.group.entity.Group;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

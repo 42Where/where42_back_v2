@@ -1,6 +1,10 @@
 package kr.where.backend.group;
 
-import kr.where.backend.group.dto.*;
+import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
+import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
+import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.MemberRepository;
