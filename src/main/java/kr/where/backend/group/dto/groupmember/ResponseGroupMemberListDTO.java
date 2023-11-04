@@ -1,4 +1,4 @@
-package kr.where.backend.group.dto;
+package kr.where.backend.group.dto.groupmember;
 
 import java.util.List;
 

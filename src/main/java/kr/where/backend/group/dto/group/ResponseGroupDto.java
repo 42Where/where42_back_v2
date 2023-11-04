@@ -1,4 +1,4 @@
-package kr.where.backend.group.dto;
+package kr.where.backend.group.dto.group;
 
 import kr.where.backend.group.entity.Group;
 import lombok.Getter;

@@ -1,16 +1,16 @@
-package kr.where.backend.group.dto;
+package kr.where.backend.group.dto.group;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
-public class UpdateGroupDto {
+@NoArgsConstructor
+public class GroupCreateRequestDTO {
     @NotNull
-    private Long groupId;
+    private Long memberId;
+
     @NotEmpty
     private String groupName;
 }
