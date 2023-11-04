@@ -5,11 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import jakarta.persistence.EntityNotFoundException;
-import kr.where.backend.group.dto.CreateGroupDto;
-import kr.where.backend.group.dto.ResponseGroupDto;
-import kr.where.backend.group.dto.UpdateGroupDto;
-import kr.where.backend.member.MemberRepository;
+import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.dto.group.UpdateGroupDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,10 +23,13 @@ public class GroupServiceTest {
     private GroupService groupService;
 
     private CreateGroupDto createGroupDto;
+    private ResponseGroupDto responseGroupDto;
 
     @BeforeEach
     public void setUp () {
+        // Given
         createGroupDto = new CreateGroupDto(10000L, "group");
+        responseGroupDto = groupService.createGroup(createGroupDto);
     }
 
     @Test
@@ -44,9 +45,6 @@ public class GroupServiceTest {
     @Test
     @DisplayName("그룹 이름 찾기 성공")
     public void testFindGroupName() {
-        // Given
-        ResponseGroupDto responseGroupDto = groupService.createGroup(createGroupDto);
-
         // When
         String name = groupService.findGroupName(responseGroupDto.getGroupId());
 
@@ -58,27 +56,22 @@ public class GroupServiceTest {
     @DisplayName("그룹 이름 업데이트 성공")
     public void testUpdateGroup() {
         // Given
-        ResponseGroupDto responseGroupDto1 = groupService.createGroup(createGroupDto);
-
-        UpdateGroupDto dto = new UpdateGroupDto(responseGroupDto1.getGroupId(), "group111");
+        UpdateGroupDto dto = new UpdateGroupDto(responseGroupDto.getGroupId(), "group111");
 
         // When
-        ResponseGroupDto responseGroupDto2 = groupService.updateGroup(dto);
+        ResponseGroupDto updateDto = groupService.updateGroup(dto);
 
         // Then
-        assertEquals("group111", responseGroupDto2.getGroupName());
+        assertEquals("group111", updateDto.getGroupName());
     }
 
     @Test
     @DisplayName("그룹 이름 삭제 성공")
     public void testDeleteGroup() {
-        // Given
-        ResponseGroupDto responseGroupDto1 = groupService.createGroup(createGroupDto);
-
         // When
-        ResponseGroupDto responseGroupDto2 = groupService.deleteGroup(responseGroupDto1.getGroupId());
+        ResponseGroupDto deleteDto = groupService.deleteGroup(responseGroupDto.getGroupId());
 
         // Then
-        assertEquals("group", responseGroupDto2.getGroupName());
+        assertEquals("group", deleteDto.getGroupName());
     }
 }
