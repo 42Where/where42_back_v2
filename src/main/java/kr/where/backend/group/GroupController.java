@@ -105,7 +105,7 @@ public class GroupController {
                 @ExampleObject(name = "example3", value = "{\"statusCode\": 409, \"responseMsg\": \"그룹 이름 중복\"}"),})),
         }
     )
-    @PostMapping("/")
+    @PostMapping("/name")
     public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
         ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
 
