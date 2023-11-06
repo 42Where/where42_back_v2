@@ -1,7 +1,12 @@
 package kr.where.backend.group;
 
+import static kr.where.backend.exception.ErrorCode.DUPLICATE_GROUP_NAME;
+import static kr.where.backend.exception.ErrorCode.NOT_FOUND_GROUP;
+
 import java.util.List;
 
+import kr.where.backend.exception.CustomException;
+import kr.where.backend.exception.ErrorCode;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -63,4 +68,5 @@ public class GroupService {
         groupRepository.delete(group);
         return ResponseGroupDto.from(group);
     }
+
 }

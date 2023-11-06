@@ -105,7 +105,7 @@ public class GroupController {
                 @ExampleObject(name = "example3", value = "{\"statusCode\": 409, \"responseMsg\": \"그룹 이름 중복\"}"),})),
         }
     )
-    @PostMapping("/name")
+    @PostMapping("/name/")
     public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
         ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
 
@@ -151,7 +151,7 @@ public class GroupController {
     )
     @GetMapping("/names/{memberIntraId}")
     public ResponseEntity findGroupNames(@PathVariable("memberIntraId") Long memberIntraId) {
-        // TODO Group
+        // TODO GroupMember
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -223,8 +223,9 @@ public class GroupController {
         }
     )
     @GetMapping("/{groupId}/friends")
-    public ResponseEntity<List<String>> getIncludeGroupFriendNames(@PathVariable("groupId") Long groupId) {
+    public ResponseEntity<List<Long>> getIncludeGroupFriendNames(@PathVariable("groupId") Long groupId) {
         // TODO GroupMember
+        /* intraId name */
         /* intraName list로 반환하면 될거같죠? */
         /* 이름도 싹다 find 나 get 중 하나로 통일하면 좋을 것 같아요! */
 
