@@ -3,3 +3,4 @@ build
 out
 .gradle
 .idea
+/src/main/java/kr/where/backend/group
