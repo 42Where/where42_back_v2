@@ -31,8 +31,12 @@ public class Group {
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private Set<GroupMember> groupMembers = new HashSet<>();
 
-    public Group(String groupName) {
+    @Column(name = "is_default")
+    private boolean isDefault;
+
+    public Group(String groupName, Boolean isDefault) {
         this.groupName = groupName;
+        this.isDefault = isDefault;
     }
 
     public void setGroupName(String groupName) {

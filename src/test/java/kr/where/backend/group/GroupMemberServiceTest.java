@@ -1,6 +1,7 @@
 package kr.where.backend.group;
 
 import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -43,7 +44,7 @@ public class GroupMemberServiceTest {
     private MemberRepository memberRepository;
 
     CreateMemberDto createMemberDto = CreateMemberDto.create(11111L, "jonhan", 1, "img");
-    CreateGroupDto createGroupDto = new CreateGroupDto(11111L,"test Group");
+    CreateGroupDto createGroupDto = new CreateGroupDto(11111L,"test Group", true);
 
     @Test
     @DisplayName("그룹 멤버 생성")
@@ -80,10 +81,11 @@ public class GroupMemberServiceTest {
                         .groupId(groupDto.getGroupId()).build();
         System.out.println("저장한 id :" + responseMemberDto.getIntraId());
         System.out.println("찾아온 id :" + memberService.findAll().get(0).getIntraId().toString());
+        FindGroupDto groupDto1 = FindGroupDto.builder().memberId(responseMemberDto.getIntraId()).build();
 
         //when
         groupMemberService.createGroupMember(dto);
-        List<ResponseGroupMemberDTO> list = groupMemberService.findGroupId(requestGroupMemberDTO);
+        List<ResponseGroupMemberDTO> list = groupMemberService.findGroupId(groupDto1);
 
         //then
         assertEquals(list.get(0).getMemberId().toString(), "1");

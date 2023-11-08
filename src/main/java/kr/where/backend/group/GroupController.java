@@ -8,12 +8,12 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import jakarta.validation.Valid;
 import java.util.List;
-import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
-import kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO;
+
+import kr.where.backend.group.dto.group.FindGroupDto;
+import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/v3/group")
@@ -44,7 +45,7 @@ public class GroupController {
         parameters = {
             @Parameter(name = "key", description = "Token 내의 ID 값", required = false, in = ParameterIn.COOKIE)
         },
-        requestBody = @RequestBody(description = "그룹 이름", required = true, content = @Content(schema = @Schema(type = "string"))),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "그룹 이름", required = true, content = @Content(schema = @Schema(type = "string"))),
         responses = {
             @ApiResponse(responseCode = "200", description = "그룹 생성 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                 @ExampleObject(name = "example1", value = "{\"statusCode\": 201, \"responseMsg\": \"그룹 생성 성공\", \"data\": [\"groupId\", \"groupName\"]}"),})),
@@ -57,15 +58,9 @@ public class GroupController {
         }
     )
     @PostMapping("/")
-    public ResponseEntity createGroup(@RequestBody @Valid CreateGroupDto request){
+    public ResponseEntity createGroup(@RequestBody CreateGroupDto request){
         ResponseGroupDto dto = groupService.createGroup(request);
-//        CreateGroupMemberDTO groupMemberDTO = CreateGroupMemberDTO.builder()
-//                .groupId(dto.getGroupId())
-//                .intraId(request.getMemberIntraId())
-//                .groupName(request.getGroupName())
-//                .isOwner(true)
-//                .build();
-//        groupMemberService.createGroupMember(groupMemberDTO);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
@@ -81,11 +76,10 @@ public class GroupController {
         }
     )
     @GetMapping("/")
-    public ResponseEntity findGroups(@RequestBody @Valid RequestGroupMemberDTO request){
+    public ResponseEntity findAllGroups(@RequestBody @Valid FindGroupMemberDto request){
         List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(request);
         // TODO GroupMember
         /* 메인화면에 띄우는 것 : 위치 / 사진 / intraName / 상태메세지 */
-
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -95,7 +89,7 @@ public class GroupController {
         parameters = {
             @Parameter(name = "groupId", description = "이름을 변경할 그룹 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH),
         },
-        requestBody = @RequestBody(description = "변경할 새로운 이름", required = true, content = @Content(schema = @Schema(type = "string"))),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "변경할 새로운 이름", required = true, content = @Content(schema = @Schema(type = "string"))),
         responses = {
             @ApiResponse(responseCode = "200", description = "그룹 이름 변경 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                 @ExampleObject(name = "example1", value = "{\"statusCode\": 200, \"responseMsg\": \"그룹 이름 변경 성공\", \"data\": [{\"groupId\": 3, \"changeName\": \"그룹1\"}] }"),})),
@@ -126,10 +120,9 @@ public class GroupController {
         }
     )
     @DeleteMapping("/{groupId}")
-    public ResponseEntity deleteGroup(@PathVariable("groupId") Long groupId){
-        RequestGroupMemberDTO dto = RequestGroupMemberDTO.builder().groupId(groupId).build();
-        groupMemberService.deleteGroupMember(dto);
-        ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+    public ResponseEntity deleteGroup(@PathVariable("groupId") RequestGroupMemberDTO request){
+        groupMemberService.deleteGroupMember(request);
+        ResponseGroupDto responseGroupDto = groupService.deleteGroup(request.getGroupId());
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -150,12 +143,21 @@ public class GroupController {
         }
     )
     @GetMapping("/names/{memberIntraId}")
-    public ResponseEntity findGroupNames(@PathVariable("memberIntraId") Long memberIntraId) {
+    public ResponseEntity findGroupNames(@RequestBody FindGroupDto findGroupDto) {
         // TODO GroupMember
+        //멤버 아이디로 멤버가 가진 그룹id와 그룹이름을 리턴
+        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupId(findGroupDto);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
+    //친구를 나의 기본 그룹에 추가하는 코드
+    @PostMapping("/groupmember")
+    public ResponseEntity createGroupMember(@RequestBody CreateGroupMemberDTO createGroupMemberDTO){
+        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    }
 
     @Operation(
         summary = "get not included friends in group API",
@@ -176,11 +178,12 @@ public class GroupController {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
         }
     )
-    @GetMapping("/{groupId}/not/friends")
-    public ResponseEntity<List<String>> findMemberListNotInGroup(@PathVariable("groupId") Long groupId) {
+    @GetMapping("/addgroupmember")
+    public ResponseEntity<List<String>> findMemberListNotInGroup(FindGroupMemberDto request) {
         // TODO GroupMember
         /* 친구(기본그룹) 중 groupId 그룹에 포함되지 않은 친구 intraName List 반환  */
-
+        List<ResponseGroupMemberListDTO> groupmembers = groupMemberService.findGroupMembers(request);
+        //기본 그룹 멤버 리스트를 쫙 받는 서비스 코드가 있어야 할 것 같음.
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -190,7 +193,7 @@ public class GroupController {
         parameters = {
             @Parameter(name = "groupId", description = "친구를 추가할 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH)
         },
-        requestBody = @RequestBody(description = "추가하려는 친구 이름 리스트", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 이름 리스트", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")))
         ),
         responses = {
             @ApiResponse(responseCode = "201", description = "친구 일괄 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
@@ -200,10 +203,11 @@ public class GroupController {
         }
     )
     @PostMapping("/{groupId}/friends")
-    public ResponseEntity addFriendsToGroup(@PathVariable("groupId") Long groupId, @RequestBody List<String> friendNames) {
+    public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
         // TODO GroupMember
         /* false 로 생성하는 그거 */
         /* dto 로 받는게 나을것 같기두*/
+
 
     return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -222,12 +226,13 @@ public class GroupController {
                 @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
         }
     )
-    @GetMapping("/{groupId}/friends")
-    public ResponseEntity<List<Long>> getIncludeGroupFriendNames(@PathVariable("groupId") Long groupId) {
+    @GetMapping("/find/friends")
+    public ResponseEntity<List<Long>> findIncludeGroupFriendNames(@RequestBody FindGroupMemberDto request) {
         // TODO GroupMember
         /* intraId name */
         /* intraName list로 반환하면 될거같죠? */
         /* 이름도 싹다 find 나 get 중 하나로 통일하면 좋을 것 같아요! */
+        groupMemberService.findGroupMemberId(request);
 
     return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -238,7 +243,7 @@ public class GroupController {
         parameters = {
             @Parameter(name = "groupId", description = "그룹 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH),
         },
-        requestBody = @RequestBody(description = "삭제하려는 친구 이름 리스트", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "삭제하려는 친구 이름 리스트", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")))
         ),
         responses = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {

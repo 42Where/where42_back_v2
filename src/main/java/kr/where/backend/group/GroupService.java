@@ -1,13 +1,14 @@
 package kr.where.backend.group;
 
-import static kr.where.backend.exception.ErrorCode.DUPLICATE_GROUP_NAME;
-import static kr.where.backend.exception.ErrorCode.NOT_FOUND_GROUP;
+//import static kr.where.backend.exception.ErrorCode.DUPLICATE_GROUP_NAME;
+//import static kr.where.backend.exception.ErrorCode.NOT_FOUND_GROUP;
 
 import java.util.List;
 
-import kr.where.backend.exception.CustomException;
-import kr.where.backend.exception.ErrorCode;
+//import kr.where.backend.exception.CustomException;
+//import kr.where.backend.exception.ErrorCode;
 import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
@@ -28,14 +29,15 @@ public class GroupService {
     @Transactional
     public ResponseGroupDto createGroup(final CreateGroupDto dto){
         validateGroupName(dto);
-        Group group = new Group(dto.getGroupName());
+        Group group = new Group(dto.getGroupName(), dto.isDefault());
         groupRepository.save(group);
         return ResponseGroupDto.from(group);
     }
 
     private void validateGroupName(final CreateGroupDto dto) {
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(dto.getMemberIntraId()).build();
-        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(requestGroupMemberDTO);
+        FindGroupDto groupDto = FindGroupDto.builder().memberId(dto.getMemberIntraId()).build();
+        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(groupDto);
         groupIds.stream().forEach(c -> System.out.println(c));
         if (groupIds.stream()
                 .filter(id -> findGroupName(id.getGroupId()).equals(dto.getGroupName()))

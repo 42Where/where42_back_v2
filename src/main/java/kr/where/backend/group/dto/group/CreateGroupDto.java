@@ -1,19 +1,24 @@
 package kr.where.backend.group.dto.group;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateGroupDto {
-    @NotNull
+
+//    @NotNull
+//    @JsonProperty("memberIntraId")
     private Long memberIntraId;
-    @NotEmpty
-    @Size(max = 40)
+//    @Size(max = 40)
+//    @NotNull
+//    @JsonProperty("groupName")
     private String groupName;
+
+    private boolean isDefault;
 }
