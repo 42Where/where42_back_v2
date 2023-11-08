@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findByIntraId(Long intraId);
+	Optional<Member> findByIntraId(Long intraId);
 }
