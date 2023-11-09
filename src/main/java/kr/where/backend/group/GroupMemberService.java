@@ -40,19 +40,32 @@ public class GroupMemberService {
         return createDTO;
     }
 
+    @Transactional
     public ResponseGroupMemberListDTO addGroupMember(final AddGroupMemberListDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
-        ResponseGroupMemberListDTO responseGroupMemberListDTO;
-        for (String m : requestDTO.getMembers()){
-            final Member member = memberRepository.findByIntraName(m).orElseThrow();
-            final GroupMember groupMember = new GroupMember(group, member, false);
+        ResponseGroupMemberListDTO responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().build();
+//        for (String m : requestDTO.getMembers()){
+//            final Member member = memberRepository.findByIntraName(m).orElseThrow();
+//            final GroupMember groupMember = new GroupMember(group, member, false);
+//            groupMemberRepository.save(groupMember);
+//            ResponseGroupMemberDTO memberDTO = ResponseGroupMemberDTO.builder().memberId(member.getId()).build();
+//            responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().groupId(requestDTO.getGroupId()).build();
+//        }
+
+        // 수환 로직이에요 한번 보고 괜찮으면 채택 ㄱ
+        final List<Member> members = memberRepository.findByIntraNameIn(requestDTO.getMembers());
+
+        members.forEach(member -> {
+            GroupMember groupMember = new GroupMember(group, member, false);
+
             groupMemberRepository.save(groupMember);
-            ResponseGroupMemberDTO memberDTO = ResponseGroupMemberDTO.builder().memberId(member.getId()).build();
-            responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().groupId(requestDTO.getGroupId()).build();
-        }
+            responseGroupMemberListDTO.getMembers()
+                    .add(ResponseGroupMemberDTO.builder().groupId(group.getGroupId()).memberId(member.getId()).build());
+        });
+
         return responseGroupMemberListDTO;
-        //이거 매우 잘못됨 수정해야함. 특정 그룹에 그룹멤버여러명 추가 하는 기능
+        // 특정 그룹에 그룹멤버여러명 추가 하는 기능
     }
 
 
