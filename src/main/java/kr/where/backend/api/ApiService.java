@@ -52,7 +52,7 @@ public class ApiService {
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         params.add("grant_type","authorization_code");
-        params.add("client_id","u-s4t2ud-ad59ee104e6d4bb8bd6238ceb7629aa9a301f6fe2e10858d3fec141261928014");
+        params.add("client_id","");
         params.add("client_secret", secret);
         params.add("code", code);
         params.add("redirect_uri","http://localhost:8080/v2/auth/callback");
@@ -88,7 +88,7 @@ public class ApiService {
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");
-        params.add("client_id", "u-s4t2ud-ad59ee104e6d4bb8bd6238ceb7629aa9a301f6fe2e10858d3fec141261928014");
+        params.add("client_id", "");
         params.add("client_secret", secret);
         params.add("refresh_token", refreshToken);
         return new HttpEntity<>(params, headers);
