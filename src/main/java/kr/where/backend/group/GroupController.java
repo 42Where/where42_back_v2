@@ -22,13 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v3/group")
@@ -77,11 +71,10 @@ public class GroupController {
     )
     @GetMapping("/")
     public ResponseEntity findAllGroups(@RequestBody @Valid FindGroupMemberDto request){
-        List<ResponseGroupMemberListDTO> dto =  groupMemberService.findGroupMembers(request);
-        // TODO GroupMember
-        /* 메인화면에 띄우는 것 : 위치 / 사진 / intraName / 상태메세지 */
+        List<ResponseGroupMemberListDTO> dto =  groupMemberService.findAllGroupInformation(request);
+
         return ResponseEntity.status(HttpStatus.OK).body(dto);
-    }
+    }//완성 아마두
 
     @Operation(
         summary = "modify group name API",
@@ -105,6 +98,7 @@ public class GroupController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
+    //완성
 
     @Operation(
         summary = "delete group API",
@@ -126,10 +120,12 @@ public class GroupController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
+    //layer를 넘어갈 때는 dto를 받고 같은 계층에서는 각 자료형을 받고 싶은데 요거또 고민을 좀 해야봐야 할것같다.
+    //일단은 기능은 완성.. 테스트 해봐야함
 
     @Operation(
         summary = "get group list API",
-        description = "그룹별 id, 이름 반환 (그룹관리)",
+        description = "멤버가 소유한 그룹들의 id, 이름 반환 (그룹관리)",
         parameters = {
             @Parameter(name = "key", description = "Token 내의 ID 값", required = false, in = ParameterIn.COOKIE)
         },
@@ -142,20 +138,22 @@ public class GroupController {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
         }
     )
-    @GetMapping("/names/{memberIntraId}")
+    @GetMapping("/info/")
     public ResponseEntity findGroupNames(@RequestBody FindGroupDto findGroupDto) {
-        // TODO GroupMember
-        //멤버 아이디로 멤버가 가진 그룹id와 그룹이름을 리턴
-        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupId(findGroupDto);
+        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfo(findGroupDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
+    //완
+
 
     //친구를 나의 기본 그룹에 추가하는 코드
-    @PostMapping("/groupmember")
+    @PostMapping("/addgroupmember/")
     public ResponseEntity createGroupMember(@RequestBody CreateGroupMemberDTO createGroupMemberDTO){
         final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO);
-
+        //지금은 그냥 특정그룹에 그룹 멤버만 추가됨.
+        //멤버의 기본 그룹을 찾기
+        //그 기본 그룹의 아이디를 찾아 그 그룹에 그룹멤버 추가
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
@@ -178,11 +176,11 @@ public class GroupController {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
         }
     )
-    @GetMapping("/addgroupmember")
+    @GetMapping("/additionalmember")
     public ResponseEntity<List<String>> findMemberListNotInGroup(FindGroupMemberDto request) {
         // TODO GroupMember
         /* 친구(기본그룹) 중 groupId 그룹에 포함되지 않은 친구 intraName List 반환  */
-        List<ResponseGroupMemberListDTO> groupmembers = groupMemberService.findGroupMembers(request);
+        List<ResponseGroupMemberListDTO> groupmembers = groupMemberService.findGroupMembersbyMemberId(request.getMemberId());
         //기본 그룹 멤버 리스트를 쫙 받는 서비스 코드가 있어야 할 것 같음.
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -202,14 +200,11 @@ public class GroupController {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
         }
     )
-    @PostMapping("/{groupId}/friends")
+    @PostMapping("/friendsAddition")
     public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
-        // TODO GroupMember
-        /* false 로 생성하는 그거 */
-        /* dto 로 받는게 나을것 같기두*/
+        List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
-
-    return new ResponseEntity(HttpStatus.CREATED);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
@@ -226,15 +221,12 @@ public class GroupController {
                 @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
         }
     )
-    @GetMapping("/find/friends")
-    public ResponseEntity<List<Long>> findIncludeGroupFriendNames(@RequestBody FindGroupMemberDto request) {
-        // TODO GroupMember
-        /* intraId name */
-        /* intraName list로 반환하면 될거같죠? */
-        /* 이름도 싹다 find 나 get 중 하나로 통일하면 좋을 것 같아요! */
-        groupMemberService.findGroupMemberId(request);
+    @GetMapping("/friends/")
+    public ResponseEntity findIncludeGroupFriendNames(@RequestParam("groupId") Long groupId) {
+        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
+        //intraName, id만 반환하면 될거같은데 쓸데없는 내용까지 같이 있어서 어떻게 해야하나 고민중
 
-    return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @Operation(

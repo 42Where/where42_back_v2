@@ -37,7 +37,7 @@ public class GroupService {
     private void validateGroupName(final CreateGroupDto dto) {
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(dto.getMemberIntraId()).build();
         FindGroupDto groupDto = FindGroupDto.builder().memberId(dto.getMemberIntraId()).build();
-        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(groupDto);
+        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(groupDto.getMemberId());
         groupIds.stream().forEach(c -> System.out.println(c));
         if (groupIds.stream()
                 .filter(id -> findGroupName(id.getGroupId()).equals(dto.getGroupName()))

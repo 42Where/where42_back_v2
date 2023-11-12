@@ -1,23 +1,22 @@
 package kr.where.backend.group.dto.groupmember;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CreateGroupMemberDTO {
 
-    @NotNull
     private Long intraId;
-    @NotNull
     private Long groupId;
-    @NotNull
     private String groupName;
-    @NotNull
     private boolean isOwner;
 
     @Builder
-    public CreateGroupMemberDTO(@NotNull Long intraId, @NotNull Long groupId, String groupName, @NotNull boolean isOwner) {
+    public CreateGroupMemberDTO(Long intraId, Long groupId, String groupName, boolean isOwner) {
         this.intraId = intraId;
         this.groupId = groupId;
         this.groupName = groupName;

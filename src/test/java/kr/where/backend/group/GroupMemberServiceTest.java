@@ -85,7 +85,7 @@ public class GroupMemberServiceTest {
 
         //when
         groupMemberService.createGroupMember(dto);
-        List<ResponseGroupMemberDTO> list = groupMemberService.findGroupId(groupDto1);
+        List<ResponseGroupMemberDTO> list = groupMemberService.findGroupId(groupDto1.getMemberId());
 
         //then
         assertEquals(list.get(0).getMemberId().toString(), "1");

@@ -1,5 +1,6 @@
 package kr.where.backend.group.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ public class GroupMember {
     @JoinColumn(name = "id")
     private Member member;
 
+    @JsonProperty(value = "isOwner")
     @Column(name = "is_owner")
     private Boolean isOwner;
 
