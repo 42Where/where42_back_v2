@@ -35,14 +35,14 @@ public class GroupMemberService {
         if (isGroupMemberExists) {
             throw new EntityNotFoundException("이미 그룹 멤버로 등록된 사용자입니다.");
         }
-
+        System.out.println(requestDTO.isOwner());
         final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
         groupMemberRepository.save(groupMember);
 
         final ResponseGroupMemberDTO createDTO = ResponseGroupMemberDTO.builder()
                 .groupId(requestDTO.getGroupId())
                 .groupName(requestDTO.getGroupName())
-                .memberId(member.getId()).build();
+                .memberId(member.getIntraId()).build();
         return createDTO;
     }
 
@@ -85,21 +85,28 @@ public class GroupMemberService {
 
             groupMemberRepository.save(groupMember);
             responseGroupMemberListDTO.getMembers()
-                    .add(ResponseGroupMemberDTO.builder().groupId(group.getGroupId()).memberId(member.getId()).build());
+                    .add(ResponseGroupMemberDTO.builder().groupId(group.getGroupId()).memberId(member.getIntraId()).build());
         });
 
         return responseGroupMemberListDTO;
-        // 특정 그룹에 그룹멤버여러명 추가 하는 기능
+        // 특정 그룹에 그룹멤버여러명 추가 하는 기능 , 기본그룹에 있는지 확인해야함.
     }
 
-    public List<ResponseGroupMemberDTO> findGroupsInfo(final FindGroupDto request){
-        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
+//    public List<ResponseGroupMemberDTO> findGroupsInfo(final FindGroupDto request){
+//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
+//
+//        return dto;
+//    }
+    public List<ResponseGroupMemberDTO> findGroupsInfo(final Long memberId){
+//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
+        List<ResponseGroupMemberDTO> dto = findGroupId(memberId);
 
         return dto;
     }
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
-        final List<GroupMember> groupMembers = groupMemberRepository.findByMemberIdAndIsOwner(memberId, true);
+        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IdAndIsOwner(memberId, true);
+        System.out.println(groupMembers.get(0).toString());
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
@@ -113,7 +120,7 @@ public class GroupMemberService {
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(groupId);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
-                .memberId(m.getMember().getId())
+                .memberId(m.getMember().getIntraId())
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
@@ -136,8 +143,8 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
-    public List<ResponseGroupMemberListDTO> findAllGroupInformation(final FindGroupMemberDto requestDto){
-        final List<ResponseGroupMemberDTO> groups = findGroupId(requestDto.getMemberId());
+    public List<ResponseGroupMemberListDTO> findAllGroupInformation(final Long memberId){
+        final List<ResponseGroupMemberDTO> groups = findGroupId(memberId);
         final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
@@ -197,9 +204,22 @@ public class GroupMemberService {
 
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
-                        .memberId(m.getMember().getId())
+                        .memberId(m.getMember().getIntraId())
                         .memberIntraName(m.getMember().getIntraName())
                         .build()).toList();
         return responseGroupMemberDTOS;
+    }
+
+    public List<ResponseGroupMemberDTO> findMemberNotInGroup(FindGroupMemberDto dto)
+    {
+        List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(dto.getDefaultGroupId());
+        List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(dto.getGroupId());
+
+        List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
+                .filter(defaultMember -> groupMembers.stream()
+                        .noneMatch(groupMember -> defaultMember.getMemberId().equals(groupMember.getMemberId())))
+                .collect(Collectors.toList());
+
+        return membersNotInGroup;
     }
 }

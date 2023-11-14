@@ -44,7 +44,7 @@ public class GroupMemberServiceTest {
     private MemberRepository memberRepository;
 
     CreateMemberDto createMemberDto = CreateMemberDto.create(11111L, "jonhan", 1, "img");
-    CreateGroupDto createGroupDto = new CreateGroupDto(11111L,"test Group", true);
+    CreateGroupDto createGroupDto = new CreateGroupDto(11111L,"test Group");
 
     @Test
     @DisplayName("그룹 멤버 생성")

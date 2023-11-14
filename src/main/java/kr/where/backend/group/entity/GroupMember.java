@@ -29,12 +29,13 @@ public class GroupMember {
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "intra_id")
     private Member member;
 
     @JsonProperty(value = "isOwner")
     @Column(name = "is_owner")
     private Boolean isOwner;
+
 
     public GroupMember() {}
     public GroupMember(Group group, Member member, Boolean isOwner){

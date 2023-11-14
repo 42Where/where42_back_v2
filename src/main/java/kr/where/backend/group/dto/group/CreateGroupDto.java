@@ -20,5 +20,4 @@ public class CreateGroupDto {
 //    @JsonProperty("groupName")
     private String groupName;
 
-    private boolean isDefault;
 }

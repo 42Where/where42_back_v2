@@ -29,7 +29,7 @@ public class GroupService {
     @Transactional
     public ResponseGroupDto createGroup(final CreateGroupDto dto){
         validateGroupName(dto);
-        Group group = new Group(dto.getGroupName(), dto.isDefault());
+        Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
         return ResponseGroupDto.from(group);
     }

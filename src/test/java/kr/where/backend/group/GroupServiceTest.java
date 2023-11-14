@@ -28,7 +28,7 @@ public class GroupServiceTest {
     @BeforeEach
     public void setUp () {
         // Given
-        createGroupDto = new CreateGroupDto(10000L, "group", true);
+        createGroupDto = new CreateGroupDto(10000L, "group");
         responseGroupDto = groupService.createGroup(createGroupDto);
     }
 
