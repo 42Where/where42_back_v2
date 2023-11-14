@@ -105,7 +105,7 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IdAndIsOwner(memberId, true);
+        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
         System.out.println(groupMembers.get(0).toString());
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
@@ -147,6 +147,7 @@ public class GroupMemberService {
         final List<ResponseGroupMemberDTO> groups = findGroupId(memberId);
         final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
+            System.out.println("groupId : " + g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
                     .groupId(g.getGroupId())
                     .groupName(g.getGroupName())

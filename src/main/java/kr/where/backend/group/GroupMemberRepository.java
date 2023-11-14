@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
 
-    List<GroupMember> findByMemberIdAndIsOwner(Long memberId, boolean isOwner);
+    List<GroupMember> findByMember_IdAndIsOwner(Long memberId, Boolean isOwner);
 
-    List<GroupMember> findGroupMembersByMember_IdAndIsOwner(Long memberId, Boolean isOwner);
+    List<GroupMember> findGroupMembersByMember_IntraIdAndIsOwner(Long memberId, Boolean isOwner);
 
     List<GroupMember> findGroupMemberByGroup_GroupId(Long groupId);
 

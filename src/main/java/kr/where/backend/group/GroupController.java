@@ -60,8 +60,10 @@ public class GroupController {
             @Parameter(name = "id", description = "멤버 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
         },
         responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class),
-                examples = {@ExampleObject(name = "example1", value = "{\"statusCode\": 200, \"responseMsg\": \"조회 성공\", \"data\": [ {\"groupId\": 2, \"groupName\": \"기본그룹\", \"count\": 3, \"groupFriends\": [\"친구1\", \"친구2\", \"친구3\"] }," +
-                        " {\"groupId\": 3, \"groupName\": \"그룹1\", \"count\": 2, \"groupFriends\": [\"친구1\", \"친구2\"] }, {\"groupId\": 4, \"groupName\": \"그룹2\", \"count\": 1, \"groupFriends\": [\"친구1\"] } ] }"
+                examples = {@ExampleObject(name = "example1", value =
+                        "{\"statusCode\": 200, \"responseMsg\": \"조회 성공\", \"data\": [ {\"groupId\": 2, \"groupName\": \"기본그룹\", \"count\": 3, " +
+                                "\"members\": [{\"memberId\": 11111, \"memberIntraName\": jonhan, \"customLocation\": 오아시스, \"imacLocation\" : 1c1s1r, \"clusterLocation\" : 1, \"inCluster\": ture, \"image\": url}, " +
+                                "{\"memberId\": 11111, \"memberIntraName\": jonhan, \"customLocation\": 오아시스, \"imacLocation\" : 1c1s1r, \"clusterLocation\" : 1, \"inCluster\": ture, \"image\": url}] }] }"
                 )}))
         }
     )
