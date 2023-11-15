@@ -3,7 +3,7 @@ package kr.where.backend.search;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.where.backend.member.DTO.Locate;
-import kr.where.backend.member.entity.Member;
+import kr.where.backend.member.Member;
 import kr.where.backend.utils.Define;
 import kr.where.backend.utils.FlashData;
 import lombok.AllArgsConstructor;
@@ -55,13 +55,13 @@ public class SearchCadet {
      * @since 1.0
      * @author hyunjcho
      */
-    public SearchCadet(Member member) {
-        this.name = member.getName();
-        this.img = member.getImg();
-        this.msg = member.getMsg();
-        this.eval = member.getEvaling();
-        this.isMember = true;
-    }
+//    public SearchCadet(Member member) {
+//        this.name = member.getName();
+//        this.img = member.getImg();
+//        this.msg = member.getMsg();
+//        this.eval = member.getEvaling();
+//        this.isMember = true;
+//    }
 
     /**
      * 멤버는 아니지만 플래시 데이터에 존재하는 카뎃 검색시 사용 생성자
