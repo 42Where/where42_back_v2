@@ -63,8 +63,8 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDate updatedAt = LocalDate.now();
 
-	   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-	   private List<GroupMember> groupMembers = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<GroupMember> groupMembers = new ArrayList<>();
 
 	public Member(final CreateMemberDto createMemberDto) {
 		this.intraId = createMemberDto.getIntraId();
