@@ -1,5 +1,6 @@
 package kr.where.backend.member;
 
+import kr.where.backend.group.GroupService;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MemberService {
 
 	private final MemberRepository memberRepository;
+	private final GroupService groupService;
 
 	@Transactional
 	public ResponseMemberDto createMember(final CreateMemberDto createMemberDto) {
@@ -24,6 +26,9 @@ public class MemberService {
 		final Member member = new Member(createMemberDto);
 
 		memberRepository.save(member);
+
+		// groupService.createGroup();
+		// groupCreateDto를 넘겨야하네...? 띠용...
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
 			.intraName(member.getIntraName()).grade(member.getGrade())

@@ -83,6 +83,17 @@ public class Member {
 		this.customLocation = customLocation;
 	}
 
+	/*
+	 * 테스트용 setter
+	 */
+	public void setOtherinfomation(final String comment, final String customLocation, final boolean inCluster,
+		final String imacLocation) {
+		this.comment = comment;
+		this.customLocation = customLocation;
+		this.imacLocation = imacLocation;
+		this.inCluster = inCluster;
+	}
+
 	//
 	//    public void setDefaultGroup(Long defaultGroupId, Long starredGroupId) {
 	//        this.defaultGroupId = defaultGroupId;

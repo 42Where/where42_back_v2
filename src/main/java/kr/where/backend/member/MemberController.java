@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.exception.customException.OutStateException;
 import kr.where.backend.exception.customException.ServiceUnavailableException;
 import kr.where.backend.exception.customException.TakenSeatException;
+import kr.where.backend.group.GroupService;
 import kr.where.backend.member.DTO.*;
 import kr.where.backend.utils.response.Response;
 import kr.where.backend.utils.response.ResponseMsg;
@@ -38,7 +39,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@Operation(summary = "createMember API", description = "맴버 생성 하는 POST API",
+	@Operation(summary = "1.1 createMember API", description = "맴버 생성 하는 POST API",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
 		},
@@ -47,7 +48,7 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "201", description = "맴버 생성 성공")
+			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
 		}
 	)
 	@PostMapping("/")
@@ -66,13 +67,13 @@ public class MemberController {
 	//        return ResponseEntity.ok(responseMemberDtos);
 	//    }
 
-	@Operation(summary = "findOneByIntraId API", description = "맴버 1명 Dto 조회",
+	@Operation(summary = "1.3 findOneByIntraId API", description = "맴버 1명 Dto 조회",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
 			@Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
 		},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 조회 성공")
+			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
 		}
 	)
 	@GetMapping("/")
@@ -82,7 +83,7 @@ public class MemberController {
 		return ResponseEntity.ok(responseMemberDto);
 	}
 
-	@Operation(summary = "deleteMember API", description = "맴버 탈퇴",
+	@Operation(summary = "1.2 deleteMember API", description = "맴버 탈퇴",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
 		},
@@ -91,7 +92,7 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = DeleteMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공")
+			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
 		}
 	)
 	@DeleteMapping("/")
@@ -102,7 +103,7 @@ public class MemberController {
 		return ResponseEntity.ok(responseMemberDto);
 	}
 
-	@Operation(summary = "updatePersonalMessage API", description = "맴버 상태 메시지 변경",
+	@Operation(summary = "1.4 updatePersonalMessage API", description = "맴버 상태 메시지 변경",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
 		},
@@ -111,7 +112,7 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공")
+			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
 		}
 	)
 	@PostMapping("/comment")
@@ -121,7 +122,7 @@ public class MemberController {
 		return ResponseEntity.ok(responseMemberDto);
 	}
 
-	@Operation(summary = "updateCustomLocation API", description = "맴버 수동자리 변경",
+	@Operation(summary = "1.5 updateCustomLocation API", description = "맴버 수동자리 변경",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
 		},
@@ -130,7 +131,7 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 수동자리 변경 성공")
+			@ApiResponse(responseCode = "200", description = "맴버 수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
 		}
 	)
 	@PostMapping("/custom-location")
