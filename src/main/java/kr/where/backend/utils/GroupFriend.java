@@ -1,7 +1,7 @@
 package kr.where.backend.utils;
 
 import jakarta.persistence.*;
-import kr.where.backend.group.Groups;
+import kr.where.backend.group.entity.Group;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class GroupFriend {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    private Groups group;
+    private Group group;
     @Column(nullable = false)
     private String friendName;
     private String img;
@@ -32,7 +32,7 @@ public class GroupFriend {
     @Column(name="add_at")
     private Date addAt;
 
-    public GroupFriend(String friendName, String img, String signUpdate, Groups group) {
+    public GroupFriend(String friendName, String img, String signUpdate, Group group) {
         this.friendName = friendName;
         this.img = img;
         this.signUpDate = signUpdate;
@@ -40,7 +40,7 @@ public class GroupFriend {
         this.addAt = new Date();
     }
 
-    public GroupFriend(String friendName, Groups group) {
+    public GroupFriend(String friendName, Group group) {
         this.friendName = friendName;
         this.group = group;
     }
