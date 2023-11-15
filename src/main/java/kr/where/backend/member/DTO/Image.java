@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Image {
-    private String link;
+   private String link;
 }
