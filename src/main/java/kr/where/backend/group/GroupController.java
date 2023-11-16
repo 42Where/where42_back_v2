@@ -254,5 +254,4 @@ public class GroupController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-    //TODO
 }
