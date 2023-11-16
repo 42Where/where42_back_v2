@@ -73,7 +73,8 @@ public class GroupController {
         List<ResponseGroupMemberListDTO> dto =  groupMemberService.findAllGroupInformation(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
-    }//완성 아마두
+    }
+    //기능 완성. 스웨거 보충
 
     @Operation(
         summary = "modify group name API",
@@ -92,7 +93,7 @@ public class GroupController {
         }
     )
     @PostMapping("/name/")
-    public ResponseEntity updateGroup(@RequestBody @Valid UpdateGroupDto dto){
+    public ResponseEntity updateGroupName(@RequestBody @Valid UpdateGroupDto dto){
         ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
@@ -145,13 +146,13 @@ public class GroupController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
-    //완
+    //기능은 완성 근데, 쓸데 없는 정보까지 받아와도 되는가..?
 
 
     //친구를 나의 기본 그룹에 추가하는 코드
     @Operation(
             summary = "add friends to defualt group API",
-            description = "새로운 친구를 기본그룹에 추가 요청",
+            description = "새로운 친구를 기본그룹에 추가 요청(멤버의 기본그룹 ID와, 추가할 멤버 ID)",
             parameters = {
                     @Parameter(name = "memberId", description = "친구를 추가할 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH)
             },
@@ -173,40 +174,27 @@ public class GroupController {
 
     @Operation(
         summary = "get not included friends in group API",
-        description = "그룹에 포함되지 않은 친구 목록을 조회 (그룹관리)",
-//        description = "그룹에 포함되지 않은 친구 목록을 조회. 그룹에 새로운 친구를 추가하기 위함이다. 이때, 조회되는 친구들은 멤버가 친구로 등록하되 해당 그룹에 등록되지 않은 친구들이다.",
-        parameters = {
-            @Parameter(name = "groupId", description = "그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH),
-            @Parameter(name = "key", description = "Token 내의 ID 값", required = false, in = ParameterIn.COOKIE)
-        },
+        description = "그룹에 포함되지 않은 친구 목록을 조회. 그룹에 새로운 친구를 추가하기 위함이다. 이때, 조회되는 친구들은 멤버가 친구로 등록하되 해당 그룹에 등록되지 않은 친구들이다.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하고싶은 그룹 id", required = true, content = @Content(schema = @Schema(type = "Long"))
+        ),
         responses = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 200, \"responseMsg\": \"조회 성공\", \"data\": [\"친구1\", \"친구2\", \"친구3\"]}")})),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
               @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}")})),
-            @ApiResponse(responseCode = "401", description = "토큰 쿠키 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
-              @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"토큰 쿠키 찾을 수 없음\"}")})),
-            @ApiResponse(responseCode = "401", description = "등록되지 않은 카뎃", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
-              @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
         }
     )
     @GetMapping("/groupmember/notingroup/")
     public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(FindGroupMemberDto request) {
-        // TODO GroupMember
-        /* 친구(기본그룹) 중 groupId 그룹에 포함되지 않은 친구 intraName List 반환  */
         List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(request);
-//        List<ResponseGroupMemberListDTO> groupmembers = groupMemberService.findGroupMembersbyMemberId(request.getMemberId());
-        //기본 그룹 멤버 리스트를 쫙 받는 서비스 코드가 있어야 할 것 같음.
+
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
     }
 
     @Operation(
         summary = "add friends to group API",
         description = "친구 리스트를 받아서 해당 그룹에 일괄 추가",
-        parameters = {
-            @Parameter(name = "groupId", description = "친구를 추가할 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH)
-        },
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 이름 리스트", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 ID 리스트와 친구를 추가할 그룹 ID", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")), schema = @Schema(type = "Long"))
         ),
         responses = {
             @ApiResponse(responseCode = "201", description = "친구 일괄 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
@@ -266,4 +254,5 @@ public class GroupController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+    //TODO
 }

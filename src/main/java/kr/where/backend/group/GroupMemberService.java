@@ -106,7 +106,6 @@ public class GroupMemberService {
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
-        System.out.println(groupMembers.get(0).toString());
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
@@ -189,13 +188,10 @@ public class GroupMemberService {
 
     @Transactional
     public List<ResponseGroupMemberDTO> addFriendsList(AddGroupMemberListDTO dto){
-        List<String> memberId = dto.getMembers();
-        Long groupId = dto.getGroupId();
-
-        Group group = groupRepository.findById(groupId)
+        Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
 
-        List<Member> members = memberRepository.findByIntraNameIn(memberId);
+        List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers());
 
         List<GroupMember> groupMembers = members.stream()
                 .map(member -> new GroupMember(group, member, false))

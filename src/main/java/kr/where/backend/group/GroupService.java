@@ -9,6 +9,7 @@ import java.util.List;
 //import kr.where.backend.exception.ErrorCode;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.FindGroupDto;
+import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
@@ -28,16 +29,21 @@ public class GroupService {
 
     @Transactional
     public ResponseGroupDto createGroup(final CreateGroupDto dto){
+        //그룹을 먼저 만들고, 그룹이 만들어지면 동시에 그 소유주 그룹 멤버는 isOwner가 true인 채로 생성되어야한다.
         validateGroupName(dto);
         Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
+
+
+        CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
+                .groupId(group.getGroupId()).intraId(dto.getMemberIntraId()).isOwner(true).build();
+        groupMemberService.createGroupMember(createGroupMemberDTO);
         return ResponseGroupDto.from(group);
     }
 
     private void validateGroupName(final CreateGroupDto dto) {
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(dto.getMemberIntraId()).build();
-        FindGroupDto groupDto = FindGroupDto.builder().memberId(dto.getMemberIntraId()).build();
-        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(groupDto.getMemberId());
+        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(dto.getMemberIntraId());
         groupIds.stream().forEach(c -> System.out.println(c));
         if (groupIds.stream()
                 .filter(id -> findGroupName(id.getGroupId()).equals(dto.getGroupName()))
