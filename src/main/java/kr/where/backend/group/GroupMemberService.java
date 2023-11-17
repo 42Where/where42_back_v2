@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class GroupMemberService {
 
     private final GroupMemberRepository groupMemberRepository;
@@ -35,34 +36,15 @@ public class GroupMemberService {
         if (isGroupMemberExists) {
             throw new EntityNotFoundException("이미 그룹 멤버로 등록된 사용자입니다.");
         }
-        System.out.println(requestDTO.isOwner());
         final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
         groupMemberRepository.save(groupMember);
 
-        final ResponseGroupMemberDTO createDTO = ResponseGroupMemberDTO.builder()
+        final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
                 .groupId(requestDTO.getGroupId())
                 .groupName(requestDTO.getGroupName())
                 .memberId(member.getIntraId()).build();
-        return createDTO;
+        return responseGroupMemberDTO;
     }
-
-//    @Transactional
-//    public ResponseGroupMemberDTO createDefaultGroupMember(final CreateGroupMemberDTO requestDTO){
-//        List<GroupMember> groupMembers = groupMemberRepository.findByMemberIdAndIsOwner(requestDTO.getIntraId(), true);
-//        Optional<Group> group = groupRepository.findByGroupMembersAndDefault(groupMembers, true);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-//                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-//
-//        final GroupMember groupMember = new GroupMember(group.orElseThrow(), member, requestDTO.isOwner());
-//        groupMemberRepository.save(groupMember);
-//        final ResponseGroupMemberDTO createDTO = ResponseGroupMemberDTO.builder()
-//                .groupId(requestDTO.getGroupId())
-//                .groupName(requestDTO.getGroupName())
-//                .memberId(member.getId()).build();
-//
-//        return createDTO;
-//    }
-//    기본그룹에 친구를 추가...하는건데.. 제대로 돌아가는가..?
 
     @Transactional
     public ResponseGroupMemberListDTO addGroupMember(final AddGroupMemberListDTO requestDTO){
@@ -92,16 +74,10 @@ public class GroupMemberService {
         // 특정 그룹에 그룹멤버여러명 추가 하는 기능 , 기본그룹에 있는지 확인해야함.
     }
 
-//    public List<ResponseGroupMemberDTO> findGroupsInfo(final FindGroupDto request){
-//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
-//
-//        return dto;
-//    }
     public List<ResponseGroupMemberDTO> findGroupsInfo(final Long memberId){
-//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
-        List<ResponseGroupMemberDTO> dto = findGroupId(memberId);
+        List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupId(memberId);
 
-        return dto;
+        return responseGroupMemberDTOS;
     }
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
