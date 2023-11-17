@@ -6,6 +6,7 @@ import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.DTO.UpdateMemberDto;
 
+import kr.where.backend.member.exception.MemberException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -87,8 +89,7 @@ public class memberServiceTest {
 
 		//then
 		assertThatThrownBy(() -> memberService.validateDuplicatedMember(12345L))
-			.isInstanceOf(RuntimeException.class)
-			.hasMessage("이미 존재하는 멤버입니다.");
+			.isInstanceOf(MemberException.class);
 	}
 
 	@Test
@@ -143,7 +144,7 @@ public class memberServiceTest {
 	@Test
 	public void 멤버_한명_조회_예외_테스트() {
 		//then
-		assertThatThrownBy(() -> memberService.findOneByIntraId(1L)).isInstanceOf(RuntimeException.class);
+		assertThatThrownBy(() -> memberService.findOneByIntraId(1L)).isInstanceOf(MemberException.class);
 	}
 
 	@Test
