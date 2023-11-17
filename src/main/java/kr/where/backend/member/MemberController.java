@@ -9,11 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.where.backend.exception.customException.OutStateException;
-import kr.where.backend.exception.customException.ServiceUnavailableException;
-import kr.where.backend.exception.customException.TakenSeatException;
-import kr.where.backend.group.GroupService;
 import kr.where.backend.member.DTO.*;
+import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.utils.response.Response;
 import kr.where.backend.utils.response.ResponseMsg;
 import kr.where.backend.utils.response.ResponseWithData;
@@ -48,7 +45,8 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
+			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
 		}
 	)
 	@PostMapping("/")
@@ -73,7 +71,8 @@ public class MemberController {
 			@Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
 		},
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
+			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
 		}
 	)
 	@GetMapping("/")
@@ -92,7 +91,8 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = DeleteMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
+			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 삭제 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
 		}
 	)
 	@DeleteMapping("/")
@@ -112,7 +112,8 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
+			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 상태 메시지 설정 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
 		}
 	)
 	@PostMapping("/comment")
@@ -131,7 +132,8 @@ public class MemberController {
 			content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
 		,
 		responses = {
-			@ApiResponse(responseCode = "200", description = "맴버 수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class)))
+			@ApiResponse(responseCode = "200", description = "맴버 수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 수동자리 변경 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
 		}
 	)
 	@PostMapping("/custom-location")
@@ -219,8 +221,7 @@ public class MemberController {
 	)
 	@GetMapping("/location")
 	public ResponseEntity checkLocate(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key)
-		throws OutStateException, TakenSeatException, ServiceUnavailableException {
+		@CookieValue(value = "ID", required = false) String key) {
 		//        String token42 = tokenService.findAccessToken(res, key);
 		//        int planet = memberService.checkLocate(req, token42);
 		int planet = 1;
@@ -265,8 +266,7 @@ public class MemberController {
 	)
 	@PostMapping("/eval")
 	public ResponseEntity updateEvalOn(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key)
-		throws OutStateException, ServiceUnavailableException {
+		@CookieValue(value = "ID", required = false) String key) {
 		//        String token42 = tokenService.findAccessToken(res, key);
 		//        Member member = memberService.findBySessionWithToken(req, token42);
 		//        memberService.updateEvalOn(req, token42);

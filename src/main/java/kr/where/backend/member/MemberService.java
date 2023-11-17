@@ -5,6 +5,7 @@ import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.DTO.UpdateMemberDto;
+import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -38,8 +39,8 @@ public class MemberService {
 	}
 
 	public void validateDuplicatedMember(final Long intraId) {
-		memberRepository.findByIntraId(intraId).ifPresent(present -> {
-			throw new RuntimeException("이미 존재하는 멤버입니다.");
+		memberRepository.findByIntraId(intraId).ifPresent(member -> {
+			throw new MemberException.DuplicatedMemberException();
 		});
 	}
 
@@ -56,7 +57,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
 		final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId()).build();
 
 		memberRepository.delete(member);
@@ -67,7 +68,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		member.updatePersonalMsg(updateMemberDto.getComment());
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
@@ -81,7 +82,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto updateCustomLocation(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		member.updateCustomLocation(updateMemberDto.getCustomLocation());
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
@@ -93,7 +94,7 @@ public class MemberService {
 	}
 
 	public ResponseMemberDto findOneByIntraId(final Long intraId) {
-		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(RuntimeException::new);
+		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
 			.intraId(member.getIntraId())
