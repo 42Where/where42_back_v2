@@ -31,36 +31,6 @@ public class TokenApiService {
     MultiValueMap<String, String> params;
     ResponseEntity<String> response;
 
-
-    /**
-     * 요청 3번 실패 시 실행되는 메서드
-     */
-    @Recover
-    public Seoul42 fallback(RuntimeException e, String token) {
-        log.info("[ApiService] {}", e.getMessage());
-        throw new RuntimeException();
-    }
-
-    /**
-     * intra 에 oAuth token 발급 요청 후 토큰을 반환
-     */
-    @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public OAuthToken getOAuthToken(String secret, String code) {
-        request = request42TokenHeader(secret, code);
-        response = postResponseApi(request, req42TokenUri());
-        return oAuthTokenMapping(response.getBody());
-    }
-
-    public OAuthToken oAuthTokenMapping(String body) {
-        OAuthToken oAuthToken = null;
-        try {
-            oAuthToken = objectMapper.readValue(body, OAuthToken.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(); // checked exception 좀 더 구체적인 exception 을 던져야 함
-        }
-        return oAuthToken;
-    }
-
     public HttpEntity<MultiValueMap<String, String>> request42TokenHeader(String secret, String code) {
         headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -81,11 +51,41 @@ public class TokenApiService {
                 String.class);
     }
 
-    public URI req42TokenUri() {
+    /**
+     * 요청 3번 실패 시 실행되는 메서드
+     */
+    @Recover
+    public Seoul42 fallback(RuntimeException e, String token) {
+        log.info("[ApiService] {}", e.getMessage());
+        throw new RuntimeException();
+    }
+
+    /**
+     * intra 에 oAuth token 발급 요청 후 토큰을 반환
+     */
+    @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
+    public OAuthToken getOAuthToken(String secret, String code) {
+        request = request42TokenHeader(secret, code);
+        response = postResponseApi(request, request42TokenUri());
+        return oAuthTokenMapping(response.getBody());
+    }
+
+    public URI request42TokenUri() {
         return UriComponentsBuilder.fromHttpUrl("https://api.intra.42.fr/oauth/token")
                 .build()
                 .toUri();
     }
+
+    public OAuthToken oAuthTokenMapping(String body) {
+        OAuthToken oAuthToken = null;
+        try {
+            oAuthToken = objectMapper.readValue(body, OAuthToken.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(); // checked exception 좀 더 구체적인 exception 을 던져야 함
+        }
+        return oAuthToken;
+    }
+
 
     /**
      * refreshToken 으로 intra 에 oAuth token 발급 요청 후 토큰 반환
@@ -93,7 +93,7 @@ public class TokenApiService {
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
     public OAuthToken getOAuthTokenWithRefreshToken(String secret, String refreshToken) {
         request = request42RefreshHeader(secret, refreshToken);
-        response = postResponseApi(request, req42TokenUri());
+        response = postResponseApi(request, request42TokenUri());
         return oAuthTokenMapping(response.getBody());
     }
 
