@@ -4,9 +4,6 @@ sudo docker ps -a -q --filter "name=app" | grep -q . && docker stop app && docke
 # 기존 이미지 삭제
 sudo docker rmi where42/where42:latest
 
-# 도커에 로그인
-sudo docker login
-
 # 도커허브 이미지 pull
 sudo docker pull where42/where42:latest
 
