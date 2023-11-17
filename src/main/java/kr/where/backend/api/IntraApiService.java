@@ -41,15 +41,6 @@ public class IntraApiService {
     MultiValueMap<String, String> params;
     ResponseEntity<String> response;
 
-    /**
-     * 요청 3번 실패 시 실행되는 메서드
-     */
-    @Recover
-    public Seoul42 fallback(RuntimeException e, String token) {
-        log.info("[ApiService] {}", e.getMessage());
-        throw new RuntimeException();
-    }
-
     public HttpEntity<MultiValueMap<String, String>> request42ApiHeader(String token) {
         headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
@@ -64,6 +55,15 @@ public class IntraApiService {
                 HttpMethod.GET,
                 request,
                 String.class);
+    }
+
+    /**
+     * 요청 3번 실패 시 실행되는 메서드
+     */
+    @Recover
+    public Seoul42 fallback(RuntimeException e, String token) {
+        log.info("[ApiService] {}", e.getMessage());
+        throw new RuntimeException();
     }
 
     /**
