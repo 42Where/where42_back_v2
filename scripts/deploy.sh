@@ -4,6 +4,9 @@ sudo docker ps -a -q --filter "name=app" | grep -q . && docker stop app && docke
 # 기존 이미지 삭제
 sudo docker rmi where42/where42:latest
 
+source ~/.brashrc
+sudo docker login -u $DOCKER_HUB_ID -p $DOCKER_HUB_PASSWORD
+
 # 도커허브 이미지 pull
 sudo docker pull where42/where42:latest
 
