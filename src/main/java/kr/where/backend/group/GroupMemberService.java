@@ -2,6 +2,7 @@ package kr.where.backend.group;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -179,6 +180,19 @@ public class GroupMemberService {
                 .map(m -> ResponseGroupMemberDTO.builder()
                         .memberId(m.getMember().getIntraId())
                         .memberIntraName(m.getMember().getIntraName())
+                        .build()).toList();
+        return responseGroupMemberDTOS;
+    }
+
+    @Transactional
+    public List<ResponseGroupMemberDTO> deleteFriendsList(DeleteGroupMemberListDto dto){
+        List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
+        groupMemberRepository.deleteAll(groupMembers);
+
+        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
+                .map(m -> ResponseGroupMemberDTO.builder()
+                        .groupId(dto.getGroupId())
+                        .memberId(m.getMember().getIntraId())
                         .build()).toList();
         return responseGroupMemberDTOS;
     }
