@@ -2,12 +2,9 @@ package kr.where.backend.group;
 
 import jakarta.persistence.EntityNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
@@ -47,13 +44,13 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupsInfo(final Long memberId){
-        List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupId(memberId);
+    public List<ResponseGroupMemberDTO> findGroupsInfoByMemberId(final Long memberId){
+        List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByMemberId(memberId);
 
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
+    public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Long memberId){
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
@@ -91,8 +88,8 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
-    public List<ResponseGroupMemberListDTO> findAllGroupInformation(final Long memberId){
-        final List<ResponseGroupMemberDTO> groups = findGroupId(memberId);
+    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Long memberId){
+        final List<ResponseGroupMemberDTO> groups = findGroupIdByMemberId(memberId);
         final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
             System.out.println("groupId : " + g.getGroupId());
