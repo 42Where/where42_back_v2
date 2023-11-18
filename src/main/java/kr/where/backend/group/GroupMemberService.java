@@ -47,34 +47,6 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
-    @Transactional
-    public ResponseGroupMemberListDTO addGroupMember(final AddGroupMemberListDTO requestDTO){
-        final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
-        ResponseGroupMemberListDTO responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().build();
-//        for (String m : requestDTO.getMembers()){
-//            final Member member = memberRepository.findByIntraName(m).orElseThrow();
-//            final GroupMember groupMember = new GroupMember(group, member, false);
-//            groupMemberRepository.save(groupMember);
-//            ResponseGroupMemberDTO memberDTO = ResponseGroupMemberDTO.builder().memberId(member.getId()).build();
-//            responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().groupId(requestDTO.getGroupId()).build();
-//        }
-
-        // 수환 로직이에요 한번 보고 괜찮으면 채택 ㄱ
-        final List<Member> members = memberRepository.findByIntraNameIn(requestDTO.getMembers());
-
-        members.forEach(member -> {
-            GroupMember groupMember = new GroupMember(group, member, false);
-
-            groupMemberRepository.save(groupMember);
-            responseGroupMemberListDTO.getMembers()
-                    .add(ResponseGroupMemberDTO.builder().groupId(group.getGroupId()).memberId(member.getIntraId()).build());
-        });
-
-        return responseGroupMemberListDTO;
-        // 특정 그룹에 그룹멤버여러명 추가 하는 기능 , 기본그룹에 있는지 확인해야함.
-    }
-
     public List<ResponseGroupMemberDTO> findGroupsInfo(final Long memberId){
         List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupId(memberId);
 
@@ -133,34 +105,6 @@ public class GroupMemberService {
         }).collect(Collectors.toList());
 
         return dtoList;
-    }
-
-    public List<ResponseGroupMemberListDTO> findGroupMembersbyMemberId(final Long memberId){
-//        RequestGroupMemberDTO searchMemberDto = RequestGroupMemberDTO.builder().memberId(requestDto.getMemberId()).build();
-        FindGroupDto groupDto = FindGroupDto.builder().memberId(memberId).build();
-        final List<ResponseGroupMemberDTO> groups = findGroupId(groupDto.getMemberId());
-        final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
-            RequestGroupMemberDTO searchGroupDto = RequestGroupMemberDTO.builder().groupId(g.getGroupId()).build();
-            List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
-            return ResponseGroupMemberListDTO.builder()
-                .groupId(g.getGroupId())
-                .groupName(g.getGroupName())
-                .count(friends.size())
-                .members(friends)
-                .build();
-        }).collect(Collectors.toList());
-
-//        List<GroupMemberListResponseDTO> dtoList = new ArrayList<>();
-//        for (GroupMemberResponseDTO g :groups){
-//            List<FindGroupMemberResponseDTO> friends = findGroupMemberId(g.getGroupId());
-//            GroupMemberListResponseDTO dto = GroupMemberListResponseDTO.builder().groupId(g.getGroupId())
-//                    .groupName(groupService.findGroupName(g.getGroupId()))
-//                    .count(friends.size())
-//                    .members(friends);
-//            dtoList.add(dto);
-//        }
-        return dtoList;
-        //수정해야함
     }
 
     @Transactional
