@@ -5,7 +5,7 @@ sudo docker ps -a -q --filter "name=app" | grep -q . && docker stop app && docke
 sudo docker rmi where42/where42:latest
 
 source ~/.bashrc
-sudo docker login -u $DOCKER_HUB_ID -p $DOCKER_HUB_PASSWORD
+sudo docker login -u ${DOCKER_HUB_ID} -p ${DOCKER_HUB_PASSWORD}
 
 # 도커허브 이미지 pull
 sudo docker pull where42/where42:latest
