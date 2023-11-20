@@ -106,7 +106,7 @@ public class GroupMemberService {
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
-        System.out.println(groupMembers.get(0).toString());
+        // System.out.println(groupMembers.get(0).toString());
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())

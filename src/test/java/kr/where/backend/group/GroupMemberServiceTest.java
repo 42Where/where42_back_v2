@@ -51,7 +51,7 @@ public class GroupMemberServiceTest {
     public void createGroupMemberTest() throws Exception{
         //given
         ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
-        ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
+        ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
         CreateGroupMemberDTO dto = CreateGroupMemberDTO.builder()
                 .intraId(responseMemberDto.getIntraId())
                 .groupId(groupDto.getGroupId())
@@ -70,7 +70,7 @@ public class GroupMemberServiceTest {
 
         //given
         ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
-        ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
+        ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
         CreateGroupMemberDTO dto = CreateGroupMemberDTO.builder()
                 .intraId(responseMemberDto.getIntraId())
                 .groupId(groupDto.getGroupId())
@@ -95,7 +95,7 @@ public class GroupMemberServiceTest {
     public void deleteGroupMemberTest(){
         //given
         ResponseGroupDto groupDto = groupService.createGroup(createGroupDto);
-        ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
+        ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder().groupId(groupDto.getGroupId())
                 .groupName("test Group")
                 .intraId(responseMemberDto.getIntraId())
