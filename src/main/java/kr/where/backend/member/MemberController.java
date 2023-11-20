@@ -7,28 +7,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import kr.where.backend.exception.customException.OutStateException;
-import kr.where.backend.exception.customException.ServiceUnavailableException;
-import kr.where.backend.exception.customException.TakenSeatException;
-import kr.where.backend.group.GroupService;
 import kr.where.backend.member.DTO.*;
-import kr.where.backend.utils.response.Response;
-import kr.where.backend.utils.response.ResponseMsg;
-import kr.where.backend.utils.response.ResponseWithData;
-import kr.where.backend.utils.response.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -54,7 +40,7 @@ public class MemberController {
 	@PostMapping("/")
 	public ResponseEntity createMember(@RequestBody CreateMemberDto createMemberDto) {
 
-		final ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
+		final ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
 
 		return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
 			.body(responseMemberDto);
@@ -205,28 +191,28 @@ public class MemberController {
 	//        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_MSG), HttpStatus.OK);
 	//    }
 
-	@Operation(summary = "get member location", description = "멤버 위치 설정 가능 여부 조회 API",
-		parameters = {
-			@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-		},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "설정 가능 반환 여부", content = @Content(schema = @Schema(implementation = Integer.class))),
-			@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-			@ApiResponse(responseCode = "409", description = "맴버가 퇴근 상태이거나, 아이맥 자리 정보가 있을 시", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-			@ApiResponse(responseCode = "503", description = "24hane API 정상 정보 조회 불가능 시", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-		}
-
-	)
-	@GetMapping("/location")
-	public ResponseEntity checkLocate(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key)
-		throws OutStateException, TakenSeatException, ServiceUnavailableException {
-		//        String token42 = tokenService.findAccessToken(res, key);
-		//        int planet = memberService.checkLocate(req, token42);
-		int planet = 1;
-		return new ResponseEntity(ResponseWithData.res(StatusCode.OK, ResponseMsg.NOT_TAKEN_SEAT, planet),
-			HttpStatus.OK);
-	}
+	// @Operation(summary = "get member location", description = "멤버 위치 설정 가능 여부 조회 API",
+	// 	parameters = {
+	// 		@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+	// 	},
+	// 	responses = {
+	// 		@ApiResponse(responseCode = "200", description = "설정 가능 반환 여부", content = @Content(schema = @Schema(implementation = Integer.class))),
+	// 		@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+	// 		@ApiResponse(responseCode = "409", description = "맴버가 퇴근 상태이거나, 아이맥 자리 정보가 있을 시", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+	// 		@ApiResponse(responseCode = "503", description = "24hane API 정상 정보 조회 불가능 시", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	// 	}
+	//
+	// )
+	// @GetMapping("/location")
+	// public ResponseEntity checkLocate(HttpServletRequest req, HttpServletResponse res,
+	// 	@CookieValue(value = "ID", required = false) String key)
+	// 	throws OutStateException, TakenSeatException, ServiceUnavailableException {
+	// 	//        String token42 = tokenService.findAccessToken(res, key);
+	// 	//        int planet = memberService.checkLocate(req, token42);
+	// 	int planet = 1;
+	// 	return new ResponseEntity(ResponseWithData.res(StatusCode.OK, ResponseMsg.NOT_TAKEN_SEAT, planet),
+	// 		HttpStatus.OK);
+	// }
 
 	//    @Operation(summary = "post member location", description = "멤버 위치 설정 API",
 	//            parameters = {
@@ -252,89 +238,89 @@ public class MemberController {
 	//        return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_LOCATE), HttpStatus.OK);
 	//    }
 
-	@Operation(summary = "post Eval button", description = "동료평가 정보 설정 API",
-		parameters = {
-			@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-		},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "동료평가 상태 설정 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-			@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-			@ApiResponse(responseCode = "409", description = "퇴근한 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-		}
-
-	)
-	@PostMapping("/eval")
-	public ResponseEntity updateEvalOn(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key)
-		throws OutStateException, ServiceUnavailableException {
-		//        String token42 = tokenService.findAccessToken(res, key);
-		//        Member member = memberService.findBySessionWithToken(req, token42);
-		//        memberService.updateEvalOn(req, token42);
-		//        log.info("[setting] \"{}\"님이 동료 평가 중으로 상태를 변경하였습니다.", member.getName());
-		return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_EVAL_ON), HttpStatus.OK);
-	}
-
-	@Operation(summary = "create friend", description = "친구 생성 API",
-		parameters = {
-			@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE),
-			@Parameter(name = "friedName", description = "친구 카뎃 intra id", in = ParameterIn.QUERY),
-			@Parameter(name = "imageUrl", description = "image URL", in = ParameterIn.QUERY)
-		},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-			@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-			@ApiResponse(responseCode = "409", description = "이미 등록된 친구", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-		}
-
-	)
-	@PostMapping("/friend")
-	public ResponseEntity createFriend(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key, @RequestParam String friendName,
-		@RequestParam String img) {
-		//        String token42 = tokenService.findAccessToken(res, key);
-		//        Member member = memberService.findBySessionWithToken(req, token42);
-		//        if (memberRepository.checkFriendByMemberIdAndName(member.getId(), friendName))
-		//            throw new RegisteredFriendException();
-		//        Seoul42 friend = apiService.getUserInfo(token42, friendName);
-		//        Long friendId = groupFriendService.saveFriend(friendName, img, friend.getCreated_at(), member.getDefaultGroupId());
-		//        log.info("[friend] \"{}\"님이 \"{}\"님을 친구 추가 하였습니다", member.getName(), friendName);
-		return new ResponseEntity(ResponseWithData.res(StatusCode.CREATED, ResponseMsg.CREATE_GROUP_FRIEND, 2L),
-			HttpStatus.CREATED);
-	}
-
-	@Operation(summary = "get all friends list", description = "모든 친구 조회 API",
-		parameters = {
-			@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-		},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "친구 리스트 조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-			@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-		}
-	)
-	@GetMapping("/friend")
-	public ResponseEntity getAllDefaultFriends(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key) {
-		//        String token42 = tokenService.findAccessToken(res, key);
-		//        Member member = memberService.findBySessionWithToken(req, token42);
-		List<String> result = new ArrayList<>();
-		return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "친구 조회 성공", result), HttpStatus.OK);
-	}
-
-	@Operation(summary = "delete friends list", description = "친구 삭제 API",
-		parameters = {
-			@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
-		},
-		responses = {
-			@ApiResponse(responseCode = "200", description = "친구 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
-			@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-		}
-	)
-	@DeleteMapping("/friend")
-	public ResponseEntity deleteFriends(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key, @RequestBody List<String> friendNames) {
-		//        String token42 = tokenService.findAccessToken(res, key);
-		//        Member member = memberService.findBySessionWithToken(req, token42);
-		//        groupFriendService.deleteFriends(member, friendNames);
-		return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.DELETE_GROUP_FRIENDS), HttpStatus.OK);
-	}
+	// @Operation(summary = "post Eval button", description = "동료평가 정보 설정 API",
+	// 	parameters = {
+	// 		@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+	// 	},
+	// 	responses = {
+	// 		@ApiResponse(responseCode = "200", description = "동료평가 상태 설정 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+	// 		@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+	// 		@ApiResponse(responseCode = "409", description = "퇴근한 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	// 	}
+	//
+	// )
+	// @PostMapping("/eval")
+	// public ResponseEntity updateEvalOn(HttpServletRequest req, HttpServletResponse res,
+	// 	@CookieValue(value = "ID", required = false) String key)
+	// 	throws OutStateException, ServiceUnavailableException {
+	// 	//        String token42 = tokenService.findAccessToken(res, key);
+	// 	//        Member member = memberService.findBySessionWithToken(req, token42);
+	// 	//        memberService.updateEvalOn(req, token42);
+	// 	//        log.info("[setting] \"{}\"님이 동료 평가 중으로 상태를 변경하였습니다.", member.getName());
+	// 	return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.SET_EVAL_ON), HttpStatus.OK);
+	// }
+	//
+	// @Operation(summary = "create friend", description = "친구 생성 API",
+	// 	parameters = {
+	// 		@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE),
+	// 		@Parameter(name = "friedName", description = "친구 카뎃 intra id", in = ParameterIn.QUERY),
+	// 		@Parameter(name = "imageUrl", description = "image URL", in = ParameterIn.QUERY)
+	// 	},
+	// 	responses = {
+	// 		@ApiResponse(responseCode = "200", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+	// 		@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+	// 		@ApiResponse(responseCode = "409", description = "이미 등록된 친구", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	// 	}
+	//
+	// )
+	// @PostMapping("/friend")
+	// public ResponseEntity createFriend(HttpServletRequest req, HttpServletResponse res,
+	// 	@CookieValue(value = "ID", required = false) String key, @RequestParam String friendName,
+	// 	@RequestParam String img) {
+	// 	//        String token42 = tokenService.findAccessToken(res, key);
+	// 	//        Member member = memberService.findBySessionWithToken(req, token42);
+	// 	//        if (memberRepository.checkFriendByMemberIdAndName(member.getId(), friendName))
+	// 	//            throw new RegisteredFriendException();
+	// 	//        Seoul42 friend = apiService.getUserInfo(token42, friendName);
+	// 	//        Long friendId = groupFriendService.saveFriend(friendName, img, friend.getCreated_at(), member.getDefaultGroupId());
+	// 	//        log.info("[friend] \"{}\"님이 \"{}\"님을 친구 추가 하였습니다", member.getName(), friendName);
+	// 	return new ResponseEntity(ResponseWithData.res(StatusCode.CREATED, ResponseMsg.CREATE_GROUP_FRIEND, 2L),
+	// 		HttpStatus.CREATED);
+	// }
+	//
+	// @Operation(summary = "get all friends list", description = "모든 친구 조회 API",
+	// 	parameters = {
+	// 		@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+	// 	},
+	// 	responses = {
+	// 		@ApiResponse(responseCode = "200", description = "친구 리스트 조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+	// 		@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	// 	}
+	// )
+	// @GetMapping("/friend")
+	// public ResponseEntity getAllDefaultFriends(HttpServletRequest req, HttpServletResponse res,
+	// 	@CookieValue(value = "ID", required = false) String key) {
+	// 	//        String token42 = tokenService.findAccessToken(res, key);
+	// 	//        Member member = memberService.findBySessionWithToken(req, token42);
+	// 	List<String> result = new ArrayList<>();
+	// 	return new ResponseEntity(ResponseWithData.res(StatusCode.OK, "친구 조회 성공", result), HttpStatus.OK);
+	// }
+	//
+	// @Operation(summary = "delete friends list", description = "친구 삭제 API",
+	// 	parameters = {
+	// 		@Parameter(name = "cookie", description = "DB 에서 맴버 조회를 위한 key get 용도", in = ParameterIn.COOKIE)
+	// 	},
+	// 	responses = {
+	// 		@ApiResponse(responseCode = "200", description = "친구 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+	// 		@ApiResponse(responseCode = "401", description = "등록되지 않은 맴버일 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	// 	}
+	// )
+	// @DeleteMapping("/friend")
+	// public ResponseEntity deleteFriends(HttpServletRequest req, HttpServletResponse res,
+	// 	@CookieValue(value = "ID", required = false) String key, @RequestBody List<String> friendNames) {
+	// 	//        String token42 = tokenService.findAccessToken(res, key);
+	// 	//        Member member = memberService.findBySessionWithToken(req, token42);
+	// 	//        groupFriendService.deleteFriends(member, friendNames);
+	// 	return new ResponseEntity(Response.res(StatusCode.OK, ResponseMsg.DELETE_GROUP_FRIENDS), HttpStatus.OK);
+	// }
 }
