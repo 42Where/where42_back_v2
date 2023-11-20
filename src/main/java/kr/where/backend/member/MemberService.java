@@ -66,7 +66,6 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto createMember(final CreateMemberDto createMemberDto) {
 		final Member member = new Member(createMemberDto);
-
 		memberRepository.save(member);
 
 		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getId(), "default"));
