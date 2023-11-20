@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class Cluster {
-    String end_at;
-    String begin_at;
-    User user;
+    private String  end_at;
+    private String begin_at;
+    private User user;
 }
