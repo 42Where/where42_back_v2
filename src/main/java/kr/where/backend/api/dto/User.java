@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class User {
-    String login;
-    String image;
-    String location;
+    private String login;
+    private String image;
+    private String location;
 }

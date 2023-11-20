@@ -23,20 +23,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class HaneApiService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
-    private HttpHeaders headers;
     private HttpEntity<MultiValueMap<String, String>> request;
     private MultiValueMap<String, String> params;
     private ResponseEntity<String> response;
 
-    public HttpEntity<MultiValueMap<String, String>> requestHaneApiHeader(String token) {
-        headers = new HttpHeaders();
+    public HttpEntity<MultiValueMap<String, String>> requestHaneApiHeader(final String token) {
+        final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         headers.add("Content-type", "application/json;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         return new HttpEntity<>(params, headers);
     }
 
-    public ResponseEntity<String> getResponseApi(HttpEntity<MultiValueMap<String, String>> request, URI url) {
+    public ResponseEntity<String> getResponseApi(final HttpEntity<MultiValueMap<String, String>> request, final URI url) {
         return restTemplate.exchange(
                 url.toString(),
                 HttpMethod.GET,
@@ -47,7 +46,7 @@ public class HaneApiService {
     /**
      * hane api 호출하여 gaepo, null, error 반환 -> in, out, error 반환 (혹은 error 도 out 으로 표시될 테니 in, out 반환?)
      */
-    public Planet getHaneInfo(String name, String token) {
+    public Planet getHaneInfo(final String name, final String token) {
         request = requestHaneApiHeader(token);
         try {
             response = getResponseApi(request, requestHaneApiUri(name));
@@ -65,14 +64,14 @@ public class HaneApiService {
         }
     }
 
-    public URI requestHaneApiUri(String name) {
+    public URI requestHaneApiUri(final String name) {
         return UriComponentsBuilder.fromHttpUrl(
                         "https://api.24hoursarenotenough.42seoul.kr/ext/where42/where42/" + name)
                 .build()
                 .toUri();
     }
 
-    public Hane haneMapping(String body) {
+    public Hane haneMapping(final String body) {
         Hane hane = null;
         try {
             hane = objectMapper.readValue(body, Hane.class);

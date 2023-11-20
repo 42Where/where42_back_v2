@@ -26,13 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TokenApiService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders headers;
-    HttpEntity<MultiValueMap<String, String>> request;
-    MultiValueMap<String, String> params;
-    ResponseEntity<String> response;
+    private HttpEntity<MultiValueMap<String, String>> request;
+    private MultiValueMap<String, String> params;
+    private ResponseEntity<String> response;
 
-    public HttpEntity<MultiValueMap<String, String>> request42TokenHeader(String secret, String code) {
-        headers = new HttpHeaders();
+    public HttpEntity<MultiValueMap<String, String>> request42TokenHeader(final String secret, final String code) {
+        HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
@@ -43,7 +42,7 @@ public class TokenApiService {
         return new HttpEntity<>(params, headers);
     }
 
-    public ResponseEntity<String> postResponseApi(HttpEntity<MultiValueMap<String, String>> request, URI url) {
+    public ResponseEntity<String> postResponseApi(final HttpEntity<MultiValueMap<String, String>> request, final URI url) {
         return restTemplate.exchange(
                 url.toString(),
                 HttpMethod.POST,
@@ -55,7 +54,7 @@ public class TokenApiService {
      * 요청 3번 실패 시 실행되는 메서드
      */
     @Recover
-    public Seoul42 fallback(RuntimeException e, String token) {
+    public Seoul42 fallback(final RuntimeException e, final String token) {
         log.info("[ApiService] {}", e.getMessage());
         throw new RuntimeException();
     }
@@ -64,7 +63,7 @@ public class TokenApiService {
      * intra 에 oAuth token 발급 요청 후 토큰을 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public OAuthToken getOAuthToken(String secret, String code) {
+    public OAuthToken getOAuthToken(final String secret, final String code) {
         request = request42TokenHeader(secret, code);
         response = postResponseApi(request, request42TokenUri());
         return oAuthTokenMapping(response.getBody());
@@ -76,7 +75,7 @@ public class TokenApiService {
                 .toUri();
     }
 
-    public OAuthToken oAuthTokenMapping(String body) {
+    public OAuthToken oAuthTokenMapping(final String body) {
         OAuthToken oAuthToken = null;
         try {
             oAuthToken = objectMapper.readValue(body, OAuthToken.class);
@@ -91,14 +90,14 @@ public class TokenApiService {
      * refreshToken 으로 intra 에 oAuth token 발급 요청 후 토큰 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public OAuthToken getOAuthTokenWithRefreshToken(String secret, String refreshToken) {
+    public OAuthToken getOAuthTokenWithRefreshToken(final String secret, final String refreshToken) {
         request = request42RefreshHeader(secret, refreshToken);
         response = postResponseApi(request, request42TokenUri());
         return oAuthTokenMapping(response.getBody());
     }
 
-    public HttpEntity<MultiValueMap<String, String>> request42RefreshHeader(String secret, String refreshToken) {
-        headers = new HttpHeaders();
+    public HttpEntity<MultiValueMap<String, String>> request42RefreshHeader(final String secret, final String refreshToken) {
+        HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         params.add("grant_type", "refresh_token");

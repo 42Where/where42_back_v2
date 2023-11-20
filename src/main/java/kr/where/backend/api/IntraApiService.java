@@ -34,22 +34,21 @@ public class IntraApiService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
-    public final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    HttpHeaders headers;
-    HttpEntity<MultiValueMap<String, String>> request;
-    MultiValueMap<String, String> params;
-    ResponseEntity<String> response;
+    private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private HttpEntity<MultiValueMap<String, String>> request;
+    private MultiValueMap<String, String> params;
+    private ResponseEntity<String> response;
 
-    public HttpEntity<MultiValueMap<String, String>> request42ApiHeader(String token) {
-        headers = new HttpHeaders();
+    public HttpEntity<MultiValueMap<String, String>> request42ApiHeader(final String token) {
+        final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         headers.add("Content-type", "application/json;charset=utf-8");
         params = new LinkedMultiValueMap<>();
         return new HttpEntity<>(params, headers);
     }
 
-    public ResponseEntity<String> getResponseApi(HttpEntity<MultiValueMap<String, String>> request, URI url) {
+    public ResponseEntity<String> getResponseApi(final HttpEntity<MultiValueMap<String, String>> request, final URI url) {
         return restTemplate.exchange(
                 url.toString(),
                 HttpMethod.GET,
@@ -61,7 +60,7 @@ public class IntraApiService {
      * 요청 3번 실패 시 실행되는 메서드
      */
     @Recover
-    public Seoul42 fallback(RuntimeException e, String token) {
+    public Seoul42 fallback(final RuntimeException e, final String token) {
         log.info("[ApiService] {}", e.getMessage());
         throw new RuntimeException();
     }
@@ -70,7 +69,7 @@ public class IntraApiService {
      * 본인 정보 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public Seoul42 getMeInfo(String token) {
+    public Seoul42 getMeInfo(final String token) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42MeUri());
         return seoul42Mapping(response.getBody());
@@ -83,7 +82,7 @@ public class IntraApiService {
                 .toUri();
     }
 
-    public Seoul42 seoul42Mapping(String body) {
+    public Seoul42 seoul42Mapping(final String body) {
         Seoul42 seoul42 = null;
         try {
             seoul42 = objectMapper.readValue(body, Seoul42.class);
@@ -97,13 +96,13 @@ public class IntraApiService {
      * 특정 카텟의 정보 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public Seoul42 getUserInfo(String token, String name) {
+    public Seoul42 getUserInfo(final String token, final String name) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42UserUri(name));
         return seoul42Mapping(response.getBody());
     }
 
-    public URI request42UserUri(String name) {
+    public URI request42UserUri(final String name) {
         return UriComponentsBuilder.newInstance()
                 .scheme("https").host("api.intra.42.fr").path("v2/users/" + name)
                 .build()
@@ -114,13 +113,13 @@ public class IntraApiService {
      * index page 별로 image 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public List<Seoul42> get42Image(String token, int index) {
+    public List<Seoul42> get42Image(final String token, final int index) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, reqest42ImageUri(index));
         return seoul42ListMapping(response.getBody());
     }
 
-    public URI reqest42ImageUri(int i) {
+    public URI reqest42ImageUri(final int i) {
         return UriComponentsBuilder.newInstance()
                 .scheme("https").host("api.intra.42.fr").path("v2/campus/29/users")
                 .queryParam("sort", "login")
@@ -136,13 +135,13 @@ public class IntraApiService {
      * 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public List<Cluster> get42ClusterInfo(String token, int index) {
+    public List<Cluster> get42ClusterInfo(final String token, final int index) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42ApiLocationUri(index));
         return clusterMapping(response.getBody());
     }
 
-    public URI request42ApiLocationUri(int index) {
+    public URI request42ApiLocationUri(final int index) {
         return UriComponentsBuilder.newInstance()
                 .scheme("https").host("api.intra.42.fr").path("v2/campus/29/locations")
                 .queryParam("page[size]", 100)
@@ -152,7 +151,7 @@ public class IntraApiService {
                 .toUri();
     }
 
-    public List<Cluster> clusterMapping(String body) {
+    public List<Cluster> clusterMapping(final String body) {
         List<Cluster> clusters = null;
         try {
             clusters = Arrays.asList(objectMapper.readValue(body, Cluster[].class));
@@ -166,13 +165,13 @@ public class IntraApiService {
      * 5분 이내 클러스터 아이맥에 로그아웃 한 카뎃 index page 별로 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public List<Cluster> get42LocationEnd(String token, int index) {
+    public List<Cluster> get42LocationEnd(final String token, final int index) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42ApiLocationEndUri(index));
         return clusterMapping(response.getBody());
     }
 
-    public URI request42ApiLocationEndUri(int i) {
+    public URI request42ApiLocationEndUri(final int i) {
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = new Date();
         calendar.setTime(date);
@@ -190,13 +189,13 @@ public class IntraApiService {
      * 5분 이내 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public List<Cluster> get42LocationBegin(String token, int i) {
+    public List<Cluster> get42LocationBegin(final String token, final int i) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42ApiLocationBeginUri(i));
         return clusterMapping(response.getBody());
     }
 
-    public URI request42ApiLocationBeginUri(int i) {
+    public URI request42ApiLocationBeginUri(final int i) {
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = new Date();
         calendar.setTime(date);
@@ -214,13 +213,13 @@ public class IntraApiService {
      * begin 부터 end 까지 intra id를 가진 카뎃 10명의 정보 반환
      */
     @Retryable(maxAttempts = 3, backoff = @Backoff(1000))
-    public List<Seoul42> get42UsersInfoInRange(String token, String begin, String end) {
+    public List<Seoul42> get42UsersInfoInRange(final String token, final String begin, final String end) {
         request = request42ApiHeader(token);
         response = getResponseApi(request, request42ApiUsersInRangeUri(begin, end));
         return seoul42ListMapping(response.getBody());
     }
 
-    public URI request42ApiUsersInRangeUri(String begin, String end) {
+    public URI request42ApiUsersInRangeUri(final String begin, final String end) {
         return UriComponentsBuilder.newInstance()
                 .scheme("https").host("api.intra.42.fr").path("v2/campus/29/users")
                 .queryParam("sort", "login")
@@ -230,7 +229,7 @@ public class IntraApiService {
                 .toUri();
     }
 
-    public List<Seoul42> seoul42ListMapping(String body) {
+    public List<Seoul42> seoul42ListMapping(final String body) {
         List<Seoul42> seoul42List = null;
         try {
             seoul42List = Arrays.asList(objectMapper.readValue(body, Seoul42[].class));
