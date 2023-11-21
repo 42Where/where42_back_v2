@@ -194,4 +194,3 @@ public class GroupMemberServiceTest {
         assertEquals(requestdto.getMemberId().toString(), "11111");
     }
 }
->>>>>>> d6a6a2e ([refactor] : change method name (createMember->signUp))
