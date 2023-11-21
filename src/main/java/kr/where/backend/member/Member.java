@@ -2,6 +2,7 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.group.entity.GroupMember;
+import kr.where.backend.member.DTO.CreateFlashMemberDto;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,8 @@ public class Member {
 	//    @Builder.Default
 	private boolean agree = false;
 
+	private Long defaultGroupId;
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private LocalDate createdAt = LocalDate.now();
@@ -74,6 +77,11 @@ public class Member {
 		this.agree = true;
 	}
 
+	public Member(final CreateFlashMemberDto createFlashMemberDto) {
+		this.intraId = createFlashMemberDto.getIntraId();
+		this.intraName = createFlashMemberDto.getIntraName();
+	}
+
 	public void updatePersonalMsg(final String comment) {
 		this.comment = comment;
 	}
@@ -86,12 +94,23 @@ public class Member {
 	/*
 	 * 테스트용 setter
 	 */
-	public void setOtherinfomation(final String comment, final String customLocation, final boolean inCluster,
+	public void setOtherInformation(final String comment, final String customLocation, final boolean inCluster,
 		final String imacLocation) {
 		this.comment = comment;
 		this.customLocation = customLocation;
 		this.imacLocation = imacLocation;
 		this.inCluster = inCluster;
+	}
+
+	//setter
+	public void setFlashToMember(final CreateMemberDto createMemberDto) {
+		this.image = createMemberDto.getImage();
+		this.grade = createMemberDto.getGrade();
+		this.agree = true;
+	}
+
+	public void setDefaultGroupId(final Long defaultGroupId) {
+		this.defaultGroupId = defaultGroupId;
 	}
 
 	//
