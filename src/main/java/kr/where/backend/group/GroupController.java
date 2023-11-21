@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
-import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -66,7 +65,7 @@ public class GroupController {
     @GetMapping("/")
     public ResponseEntity findAllGroups(@RequestParam Long memberId) {
         System.out.println("memberId : " + memberId);
-        List<ResponseGroupMemberListDTO> dto = groupMemberService.findAllGroupInformation(memberId);
+        List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -103,9 +102,9 @@ public class GroupController {
             }
     )
     @DeleteMapping("/")
-    public ResponseEntity deleteGroup(@RequestBody RequestGroupMemberDTO request) {
-        groupMemberService.deleteGroupMember(request);
-        ResponseGroupDto responseGroupDto = groupService.deleteGroup(request.getGroupId());
+    public ResponseEntity deleteGroup(@RequestParam Long groupId) {
+//        groupMemberService.deleteGroupMember(request);
+        ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -127,7 +126,7 @@ public class GroupController {
     )
     @GetMapping("/info/")
     public ResponseEntity findGroupNames(@RequestParam Long memberId) {
-        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfo(memberId);
+        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
