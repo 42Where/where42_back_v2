@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
-import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,7 @@ public class GroupServiceTest {
         ResponseGroupDto responseGroupDto = groupService.createGroup(createGroupDto);
 
         // When
-        String name = groupService.findGroupName(responseGroupDto.getGroupId());
+        String name = groupService.findGroupNameById(responseGroupDto.getGroupId());
 
         // Then
         assertEquals("popopop", name);
