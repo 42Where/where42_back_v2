@@ -8,7 +8,6 @@ import java.util.List;
 //import kr.where.backend.exception.CustomException;
 //import kr.where.backend.exception.ErrorCode;
 import kr.where.backend.group.dto.group.CreateGroupDto;
-import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -43,36 +42,36 @@ public class GroupService {
 
     private void validateGroupName(final CreateGroupDto dto) {
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(dto.getMemberIntraId()).build();
-        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(dto.getMemberIntraId());
+        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupIdByMemberId(dto.getMemberIntraId());
         groupIds.stream().forEach(c -> System.out.println(c));
         if (groupIds.stream()
-                .filter(id -> findGroupName(id.getGroupId()).equals(dto.getGroupName()))
+                .filter(id -> findGroupNameById(id.getGroupId()).equals(dto.getGroupName()))
                 .count() != 0)
             throw new RuntimeException("그룹 이름 중복");
     }
 
     /* group 이 존재 하는지 유효성 검사 */
-    public Group findById(final Long groupId) {
+    public Group findOneGroupById(final Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
         return group;
     }
 
-    public final String findGroupName(final Long groupId){
-        Group group = findById(groupId);
+    public final String findGroupNameById(final Long groupId){
+        Group group = findOneGroupById(groupId);
         return group.getGroupName();
     }
 
     @Transactional
     public ResponseGroupDto updateGroup(final UpdateGroupDto dto) {
-        Group group = findById(dto.getGroupId());
+        Group group = findOneGroupById(dto.getGroupId());
         group.setGroupName(dto.getGroupName());
         return ResponseGroupDto.from(group);
     }
 
     @Transactional
     public ResponseGroupDto deleteGroup(final Long groupId){
-        Group group = findById(groupId);
+        Group group = findOneGroupById(groupId);
         groupRepository.delete(group);
         return ResponseGroupDto.from(group);
     }
