@@ -2,15 +2,15 @@ package kr.where.backend.group.dto.groupmember;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class ResponseGroupMemberDTO {
 
-    @NotNull
     private Long groupId;
     private String groupName;
-    @NotNull
     private Long memberId;
     private String comment;
     private String memberIntraName;
