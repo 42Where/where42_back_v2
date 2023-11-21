@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class AddGroupMemberListDTO {
+public class DeleteGroupMemberListDto {
     private Long groupId;
-    private List<String> members;
+    private List<Long> members;
 
     @Builder
-    public AddGroupMemberListDTO(Long groupId, List<String> members) {
+    public DeleteGroupMemberListDto(Long groupId, List<Long> members) {
         this.groupId = groupId;
         this.members = members;
     }
