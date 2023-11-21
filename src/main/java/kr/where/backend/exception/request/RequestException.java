@@ -1,8 +1,6 @@
-package kr.where.backend.suhwparkException.request;
+package kr.where.backend.exception.request;
 
-import java.util.HashSet;
-import kr.where.backend.suhwparkException.CustomException;
-import kr.where.backend.suhwparkException.ErrorCode;
+import kr.where.backend.exception.CustomException;
 
 public class RequestException extends CustomException {
     public RequestException(final RequestErrorCode requestErrorCode) {

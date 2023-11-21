@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.where.backend.admin.dto.AdminInfo;
 import kr.where.backend.admin.dto.KeyValueInfo;
+import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.utils.response.Response;
 import kr.where.backend.utils.response.ResponseMsg;
 import kr.where.backend.utils.response.ResponseWithData;
@@ -37,7 +38,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"관리자 로그인 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "일치하는 관리자 없음", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.AdminLoginFailException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "일치하는 관리자 없음", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"관리자 로그인 실패\"}")})),
             })
     @PostMapping("/login")
@@ -59,7 +60,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "갱신 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"관리자 로그인 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/secret-admin")
@@ -81,7 +82,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "갱신 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"시크릿 아이디 갱신 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/secret-member")
@@ -114,7 +115,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "갱신 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"관리자 토큰 갱신 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/auth/token")
@@ -138,7 +139,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "갱신 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"하네 토큰 갱신 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/hane/token")
@@ -155,7 +156,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "정보 저장 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"클러스터 아이맥 로그인 카뎃 갱신 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @GetMapping("/incluster")
@@ -172,7 +173,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "초기화 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"플래시 디비 초기화 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @DeleteMapping("/flash")
@@ -190,7 +191,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "이미지 갱신 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"이미지 저장 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/image")
@@ -207,7 +208,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "피신 시작일 삽입 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"피신 시작일 삽입 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @PostMapping("/createdAt")
@@ -227,7 +228,7 @@ public class AdminController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 200, \"responseMsg\": \"멤버 삭제 성공\"}")})),
-                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = kr.where.backend.exception.customException.SessionExpiredException.class), examples = {
+                    @ApiResponse(responseCode = "401", description = "세션이 만료된 경우 발생", content = @Content(schema = @Schema(implementation = MemberException.class), examples = {
                             @ExampleObject(value = "{\"statusCode\": 401, \"responseMsg\": \"세션 없음\"}")})),
             })
     @DeleteMapping("/member")

@@ -1,6 +1,6 @@
-package kr.where.backend.suhwparkException.token;
+package kr.where.backend.exception.token;
 
-import kr.where.backend.suhwparkException.CustomException;
+import kr.where.backend.exception.CustomException;
 
 public class TokenException extends CustomException {
 
