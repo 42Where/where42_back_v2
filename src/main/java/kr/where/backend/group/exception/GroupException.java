@@ -1,6 +1,6 @@
 package kr.where.backend.group.exception;
 
-import kr.where.backend.suhwparkException.CustomException;
+import kr.where.backend.exception.CustomException;
 
 public class GroupException extends CustomException {
     public GroupException(final GroupErrorCode groupErrorCode) {

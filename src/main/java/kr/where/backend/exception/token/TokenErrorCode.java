@@ -1,9 +1,8 @@
-package kr.where.backend.suhwparkException.token;
+package kr.where.backend.exception.token;
 
-import kr.where.backend.suhwparkException.ErrorCode;
+import kr.where.backend.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Getter

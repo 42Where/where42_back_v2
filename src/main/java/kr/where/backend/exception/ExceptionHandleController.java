@@ -1,11 +1,11 @@
-package kr.where.backend.suhwparkException;
+package kr.where.backend.exception;
 
 import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.suhwparkException.json.JsonException;
-import kr.where.backend.suhwparkException.request.RequestException;
-import kr.where.backend.suhwparkException.token.TokenException;
+import kr.where.backend.exception.json.JsonException;
+import kr.where.backend.exception.request.RequestException;
+import kr.where.backend.exception.token.TokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

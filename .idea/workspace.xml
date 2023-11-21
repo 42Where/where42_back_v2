@@ -5,40 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="[chore] : set relation">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/admin/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/admin/AdminController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/ControllerExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/UpdateGroupDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/test/kr/where/backend/group/GroupMemberServiceTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/test/kr/where/backend/group/GroupServiceTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/kr.where.backend.group.GroupMemberServiceTest.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/kr.where.backend.group.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-kr.where.backend.group.GroupMemberServiceTest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileTestJava/compileTransaction/stash-dir/GroupMemberServiceTest.class.uniqueId0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/admin/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/admin/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/member/memberServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/member/memberServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ControllerExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/AdminLoginFailException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/BadRequestException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/CannotAccessAgreeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/DefaultGroupNameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/DuplicateGroupNameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/JsonDeserializeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/NotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/OutStateException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/RegisteredFriendException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/ServiceUnavailableException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/SessionExpiredException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TakenSeatException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TokenExpiredException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TooManyRequestException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/UnregisteredMemberException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/CustomException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/CustomException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/ExceptionHandleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ExceptionHandleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/json/JsonErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/json/JsonErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/json/JsonException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/json/JsonException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/request/RequestErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/request/RequestErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/request/RequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/request/RequestException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/token/TokenErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/token/TokenErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/token/TokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/token/TokenException.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,15 +99,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Gradle.memberServiceTest.맴버_중복_테스트">
     <configuration name="memberServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>

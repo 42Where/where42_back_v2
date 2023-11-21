@@ -1,6 +1,6 @@
 package kr.where.backend.member.exception;
 
-import kr.where.backend.suhwparkException.CustomException;
+import kr.where.backend.exception.CustomException;
 
 public class MemberException extends CustomException {
 

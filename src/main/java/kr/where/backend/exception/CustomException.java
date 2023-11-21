@@ -1,4 +1,4 @@
-package kr.where.backend.suhwparkException;
+package kr.where.backend.exception;
 
 import lombok.Getter;
 import lombok.ToString;

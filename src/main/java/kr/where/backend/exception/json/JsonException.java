@@ -1,6 +1,6 @@
-package kr.where.backend.suhwparkException.json;
+package kr.where.backend.exception.json;
 
-import kr.where.backend.suhwparkException.CustomException;
+import kr.where.backend.exception.CustomException;
 
 public class JsonException extends CustomException {
     public JsonException(final JsonErrorCode jsonErrorCode) {

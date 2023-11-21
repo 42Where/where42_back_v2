@@ -1,6 +1,6 @@
-package kr.where.backend.suhwparkException.json;
+package kr.where.backend.exception.json;
 
-import kr.where.backend.suhwparkException.ErrorCode;
+import kr.where.backend.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
