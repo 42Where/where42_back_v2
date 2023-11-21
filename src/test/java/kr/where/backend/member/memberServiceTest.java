@@ -122,8 +122,8 @@ public class memberServiceTest {
 		CreateMemberDto jnam = CreateMemberDto.create(1L, "jnam", 5, "image");
 		ResponseMemberDto jnamDto = memberService.signUp(jnam);
 
-		Member jnamEntity = memberRepository.findByIntraId(1L).orElseThrow(RuntimeException::new);
-		jnamEntity.setOtherInformation("comment", "개포시장 떡볶이", false, "자리 없음");
+		Member jnamEntity = memberRepository.findByIntraId(1L).orElseThrow(MemberException.NoMemberException::new);
+		jnamEntity.setOtherinfomation("comment", "개포시장 떡볶이", false, "자리 없음");
 
 		memberRepository.save(jnamEntity);
 
