@@ -1,7 +1,8 @@
 package kr.where.backend.api;
 
 import java.util.List;
-import kr.where.backend.api.http.HttpRequestAndResponse;
+import kr.where.backend.api.http.HttpRequest;
+import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.Cluster;
 import kr.where.backend.member.DTO.Seoul42;
@@ -30,7 +31,7 @@ public class IntraApiService {
     @Retryable
     public Seoul42 getMeInfo(final String token) {
         return JsonMapper
-                .mapping(HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token),
+                .mapping(HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token),
                         UriBuilder.me()), Seoul42.class);
     }
 
@@ -41,7 +42,7 @@ public class IntraApiService {
     public Seoul42 getUserInfo(final String token, final String name) {
         return JsonMapper
                 .mapping(
-                        HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token), UriBuilder.cadetInfo(name)),
+                        HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token), UriBuilder.cadetInfo(name)),
                         Seoul42.class);
     }
 
@@ -52,7 +53,7 @@ public class IntraApiService {
     public List<Seoul42> get42Image(final String token, final int page) {
         return JsonMapper
                 .mappings(
-                        HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token), UriBuilder.image(page)),
+                        HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token), UriBuilder.image(page)),
                         Seoul42[].class);
     }
 
@@ -63,7 +64,7 @@ public class IntraApiService {
     public List<Cluster> get42ClusterInfo(final String token, final int page) {
         return JsonMapper
                 .mappings(
-                        HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token), UriBuilder.loginCadet(page)),
+                        HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token), UriBuilder.loginCadet(page)),
                         Cluster[].class);
     }
 
@@ -73,7 +74,7 @@ public class IntraApiService {
     @Retryable
     public List<Cluster> get42LocationEnd(final String token, final int page) {
         return JsonMapper
-                .mappings(HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token),
+                .mappings(HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token),
                                 UriBuilder.loginBeforeFiveMinute(page, false)), Cluster[].class);
     }
 
@@ -83,7 +84,7 @@ public class IntraApiService {
     @Retryable
     public List<Cluster> get42LocationBegin(final String token, final int page) {
         return JsonMapper
-                .mappings(HttpRequestAndResponse.responseBodyOfGet(HttpRequestAndResponse.requestInfo(token),
+                .mappings(HttpResponse.responseBodyOfGet(HttpRequest.requestInfo(token),
                         UriBuilder.loginBeforeFiveMinute(page, true)), Cluster[].class);
     }
 
@@ -93,8 +94,8 @@ public class IntraApiService {
     @Retryable
     public List<Seoul42> get42UsersInfoInRange(final String token, final String begin, final String end) {
         return JsonMapper
-                .mappings(HttpRequestAndResponse.responseBodyOfGet(
-                                HttpRequestAndResponse.requestInfo(token), UriBuilder.searchCadets(begin, end)),
+                .mappings(HttpResponse.responseBodyOfGet(
+                                HttpRequest.requestInfo(token), UriBuilder.searchCadets(begin, end)),
                         Seoul42[].class);
     }
 }

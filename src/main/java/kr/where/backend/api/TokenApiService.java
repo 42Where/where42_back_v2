@@ -1,6 +1,7 @@
 package kr.where.backend.api;
 
-import kr.where.backend.api.http.HttpRequestAndResponse;
+import kr.where.backend.api.http.HttpRequest;
+import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.OAuthToken;
 import kr.where.backend.member.DTO.Seoul42;
@@ -30,7 +31,7 @@ public class TokenApiService {
     @Retryable
     public OAuthToken getOAuthToken(final String secret, final String code) {
         return JsonMapper
-                .mapping(HttpRequestAndResponse.responseBodyOfPost(HttpRequestAndResponse.requestToken(secret, code), UriBuilder.token()),
+                .mapping(HttpResponse.responseBodyOfPost(HttpRequest.requestToken(secret, code), UriBuilder.token()),
                         OAuthToken.class);
     }
 
@@ -40,8 +41,8 @@ public class TokenApiService {
     @Retryable
     public OAuthToken getOAuthTokenWithRefreshToken(final String secret, final String refreshToken) {
         return JsonMapper
-                .mapping(HttpRequestAndResponse.responseBodyOfPost(
-                                HttpRequestAndResponse.requestAccessToken(secret, refreshToken), UriBuilder.token()),
+                .mapping(HttpResponse.responseBodyOfPost(
+                                HttpRequest.requestAccessToken(secret, refreshToken), UriBuilder.token()),
                         OAuthToken.class);
     }
 }
