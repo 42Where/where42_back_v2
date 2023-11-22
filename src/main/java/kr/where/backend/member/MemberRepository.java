@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByIntraId(Long intraId);
-	List<Member> findByIntraNameIn(List<String> name);
+	Optional<List<Member>> findByIntraNameIn(List<String> name);
+
 }
