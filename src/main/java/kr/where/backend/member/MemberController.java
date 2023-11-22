@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.member.DTO.*;
 import kr.where.backend.member.exception.MemberException;
@@ -17,10 +19,14 @@ import kr.where.backend.utils.response.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -216,7 +222,7 @@ public class MemberController {
 	)
 	@GetMapping("/location")
 	public ResponseEntity checkLocate(HttpServletRequest req, HttpServletResponse res,
-		@CookieValue(value = "ID", required = false) String key) {
+									  @CookieValue(value = "ID", required = false) String key) {
 		//        String token42 = tokenService.findAccessToken(res, key);
 		//        int planet = memberService.checkLocate(req, token42);
 		int planet = 1;

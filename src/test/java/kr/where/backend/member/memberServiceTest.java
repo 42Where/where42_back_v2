@@ -123,7 +123,7 @@ public class memberServiceTest {
 		ResponseMemberDto jnamDto = memberService.signUp(jnam);
 
 		Member jnamEntity = memberRepository.findByIntraId(1L).orElseThrow(MemberException.NoMemberException::new);
-		jnamEntity.setOtherinfomation("comment", "개포시장 떡볶이", false, "자리 없음");
+		jnamEntity.setOtherInformation("comment", "개포시장 떡볶이", false, "자리 없음");
 
 		memberRepository.save(jnamEntity);
 
