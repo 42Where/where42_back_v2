@@ -22,6 +22,7 @@ public class Token {
     @Column(name = "token_id", unique = true, nullable = false)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private String accessToken;
@@ -35,9 +36,19 @@ public class Token {
         this.accessToken = oAuthToken.getAccess_token();
         this.refreshToken = oAuthToken.getRefresh_token();
 
-        final LocalDateTime triggerTime =
+        final LocalDateTime localDateTime =
                 LocalDateTime.ofInstant(Instant.ofEpochSecond(oAuthToken.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
-        this.createdAt = triggerTime;
+        this.createdAt = localDateTime;
+    }
+
+    public void updateToken(final OAuthToken oAuthToken) {
+        this.accessToken = oAuthToken.getAccess_token();
+        this.refreshToken = oAuthToken.getRefresh_token();
+
+        final LocalDateTime localDateTime =
+                LocalDateTime.ofInstant(Instant.ofEpochSecond(oAuthToken.getCreated_at()),
+                        TimeZone.getDefault().toZoneId());
+        this.createdAt = localDateTime;
     }
 }
