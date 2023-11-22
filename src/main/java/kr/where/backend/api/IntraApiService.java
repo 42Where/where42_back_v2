@@ -20,8 +20,20 @@ public class IntraApiService {
      * 요청 3번 실패 시 실행되는 메서드
      */
     @Recover
-    public Seoul42 fallback(final RuntimeException e, final String token) {
-        log.info("[ApiService] {}", e.getMessage());
+    public Seoul42 fallbackSeoul42(final RuntimeException exception) {
+        log.info("[IntraApiService] Seoul42 fallback {}", exception.getMessage());
+        throw new RuntimeException();
+    }
+
+    @Recover
+    public List<Seoul42> fallbackSeoul42List(final RuntimeException exception) {
+        log.info("[IntraApiService] List<Seoul42> fallback {}", exception.getMessage());
+        throw new RuntimeException();
+    }
+
+    @Recover
+    public List<Cluster> fallbackClusterList(final RuntimeException exception) {
+        log.info("[IntraApiService] List<Cluster> fallback {}", exception.getMessage());
         throw new RuntimeException();
     }
 

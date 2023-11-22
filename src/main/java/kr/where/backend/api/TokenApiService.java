@@ -20,8 +20,8 @@ public class TokenApiService {
      * 요청 3번 실패 시 실행되는 메서드
      */
     @Recover
-    public Seoul42 fallback(final RuntimeException e, final String token) {
-        log.info("[ApiService] {}", e.getMessage());
+    public OAuthToken fallback(final RuntimeException exception) {
+        log.info("[TokenApiService] OAuthToken {}", exception.getMessage());
         throw new RuntimeException();
     }
 
@@ -29,9 +29,9 @@ public class TokenApiService {
      * intra 에 oAuth token 발급 요청 후 토큰을 반환
      */
     @Retryable
-    public OAuthToken getOAuthToken(final String secret, final String code) {
+    public OAuthToken getOAuthToken(final String code) {
         return JsonMapper
-                .mapping(HttpResponse.responseBodyOfPost(HttpRequest.requestToken(secret, code), UriBuilder.token()),
+                .mapping(HttpResponse.responseBodyOfPost(HttpRequest.requestToken(code), UriBuilder.token()),
                         OAuthToken.class);
     }
 
@@ -39,10 +39,10 @@ public class TokenApiService {
      * refreshToken 으로 intra 에 oAuth token 발급 요청 후 토큰 반환
      */
     @Retryable
-    public OAuthToken getOAuthTokenWithRefreshToken(final String secret, final String refreshToken) {
+    public OAuthToken getOAuthTokenWithRefreshToken(final String refreshToken) {
         return JsonMapper
                 .mapping(HttpResponse.responseBodyOfPost(
-                                HttpRequest.requestAccessToken(secret, refreshToken), UriBuilder.token()),
+                                HttpRequest.requestAccessToken(refreshToken), UriBuilder.token()),
                         OAuthToken.class);
     }
 }
