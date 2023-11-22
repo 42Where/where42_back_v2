@@ -30,7 +30,8 @@ public class UriBuilder {
     private static final String RANGE_END = "range[end_at]";
     private static final String RANGE_LOGIN = "range[login]";
     private static final String DELIMITER = ",";
-    private static final int COUNT = 100;
+    private static final int LOGIN_COUNT = 100;
+    private static final int SEARCH_COUNT = 10;
 
     /**
      * oauth Token 요청 URI 반환
@@ -158,7 +159,7 @@ public class UriBuilder {
                 .path(INFO_PATH)
                 .queryParam(SORT, "login")
                 .queryParam(RANGE_LOGIN, begin + DELIMITER + end)
-                .queryParam(PAGE_SIZE, 10)
+                .queryParam(PAGE_SIZE, SEARCH_COUNT)
                 .build()
                 .toUri();
     }
