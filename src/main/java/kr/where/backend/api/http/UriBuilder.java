@@ -84,7 +84,7 @@ public class UriBuilder {
                 .path(IMAGE_PATH)
                 .queryParam(SORT, "login")
                 .queryParam(FILTER, "student")
-                .queryParam(PAGE_SIZE, COUNT)
+                .queryParam(PAGE_SIZE, LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER, page)
                 .build()
                 .toUri();
@@ -99,7 +99,7 @@ public class UriBuilder {
                 .scheme(SCHEME)
                 .host(HOST)
                 .path(INFO_PATH)
-                .queryParam(PAGE_SIZE, COUNT)
+                .queryParam(PAGE_SIZE, LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER, page)
                 .queryParam(SORT, "-end_at")
                 .build()
@@ -118,7 +118,7 @@ public class UriBuilder {
                         .scheme(SCHEME)
                         .host(HOST)
                         .path(INFO_PATH)
-                        .queryParam(PAGE_SIZE, COUNT)
+                        .queryParam(PAGE_SIZE, LOGIN_COUNT)
                         .queryParam(PAGE_NUMBER, page);
 
         if (login) {
