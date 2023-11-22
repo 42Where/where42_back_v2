@@ -7,7 +7,7 @@ import org.springframework.util.MultiValueMap;
 
 public class HttpRequest {
     private static final String BEARER = "Bearer ";
-    private static final String CONTENT_VALUES = "application/json;charset=utf-8";
+    private static final String CONTENT_VALUES = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String GRANT_TYPE = "authorization_code";
     private static final String CLIENT_ID = "id"; // 환경변수
     private static final String SECRET = "secret"; // 환경변수
@@ -26,7 +26,7 @@ public class HttpRequest {
         params.add("code", code);
         params.add("redirect_uri", REDIRECT_UIR);
 
-        return new HttpEntity<>(headers, params);
+        return new HttpEntity<>(params, headers);
     }
 
     public static HttpEntity<MultiValueMap<String, String>> requestAccessToken(final String refreshToken) {
@@ -41,8 +41,7 @@ public class HttpRequest {
         params.add("client_secret", SECRET);
         params.add("refresh_token", refreshToken);
 
-        return new HttpEntity<>(headers, params);
-
+        return new HttpEntity<>(params, headers);
     }
     public static HttpEntity<MultiValueMap<String, String>> requestInfo(final String token) {
         final HttpHeaders headers = new HttpHeaders();
@@ -52,6 +51,6 @@ public class HttpRequest {
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        return new HttpEntity<>(headers, params);
+        return new HttpEntity<>(params, headers);
     }
 }
