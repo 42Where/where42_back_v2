@@ -10,8 +10,11 @@ import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
+import kr.where.backend.group.exception.GroupException;
+import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.Member;
+import kr.where.backend.member.exception.MemberException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +30,13 @@ public class GroupMemberService {
     @Transactional
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+                .orElseThrow(MemberException.NoMemberException::new);
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
-            throw new EntityNotFoundException("이미 그룹 멤버로 등록된 사용자입니다.");
+            throw new GroupMemberException.DuplicatedGroupMemberException();
         }
         System.out.println(requestDTO.isOwner());
         final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
@@ -67,7 +70,7 @@ public class GroupMemberService {
     @Transactional
     public ResponseGroupMemberListDTO addGroupMember(final AddGroupMemberListDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         ResponseGroupMemberListDTO responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().build();
 //        for (String m : requestDTO.getMembers()){
 //            final Member member = memberRepository.findByIntraName(m).orElseThrow();
@@ -106,7 +109,7 @@ public class GroupMemberService {
 
     public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
-        System.out.println(groupMembers.get(0).toString());
+        // System.out.println(groupMembers.get(0).toString());
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
@@ -193,7 +196,7 @@ public class GroupMemberService {
         Long groupId = dto.getGroupId();
 
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
 
         List<Member> members = memberRepository.findByIntraNameIn(memberId);
 

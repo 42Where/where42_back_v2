@@ -5,9 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="[chore] : set relation">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/UpdateGroupDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/admin/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/admin/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ControllerExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/AdminLoginFailException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/BadRequestException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/CannotAccessAgreeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/DefaultGroupNameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/DuplicateGroupNameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/JsonDeserializeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/NotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/OutStateException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/RegisteredFriendException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/ServiceUnavailableException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/SessionExpiredException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TakenSeatException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TokenExpiredException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/TooManyRequestException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/customException/UnregisteredMemberException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/exception/GroupMemberException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/exception/MemberException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/CustomException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/CustomException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/ExceptionHandleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/ExceptionHandleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/json/JsonErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/json/JsonErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/json/JsonException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/json/JsonException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/request/RequestErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/request/RequestErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/request/RequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/request/RequestException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/token/TokenErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/token/TokenErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/suhwparkException/token/TokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/exception/token/TokenException.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +82,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -68,16 +99,88 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.standard" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.standard" value="" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
-  </component>
-  <component name="RunManager" selected="Spring Boot.BackendApplication (1)">
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Gradle.memberServiceTest.맴버_중복_테스트">
+    <configuration name="memberServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;kr.where.backend.member.memberServiceTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="memberServiceTest.맴버_중복_테스트" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;kr.where.backend.member.memberServiceTest.맴버_중복_테스트&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="memberServiceTest.멤버_한명_조회_예외_테스트" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;kr.where.backend.member.memberServiceTest.멤버_한명_조회_예외_테스트&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
     <configuration name="swagger [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -97,6 +200,7 @@
       <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration default="true" type="JetRunConfigurationType">
@@ -134,6 +238,9 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Gradle.memberServiceTest" />
+      <item itemvalue="Gradle.memberServiceTest.맴버_중복_테스트" />
+      <item itemvalue="Gradle.memberServiceTest.멤버_한명_조회_예외_테스트" />
       <item itemvalue="Gradle.swagger [clean]" />
       <item itemvalue="Spring Boot.Application" />
       <item itemvalue="Spring Boot.BackendApplication" />
@@ -141,6 +248,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.memberServiceTest.맴버_중복_테스트" />
+        <item itemvalue="Gradle.memberServiceTest" />
+        <item itemvalue="Gradle.memberServiceTest.멤버_한명_조회_예외_테스트" />
         <item itemvalue="Gradle.swagger [clean]" />
       </list>
     </recent_temporary>
@@ -176,7 +286,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[chore] : set relation" />

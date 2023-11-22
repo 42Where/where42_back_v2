@@ -1,26 +1,25 @@
 package kr.where.backend.member;
 
+import kr.where.backend.member.DTO.CreateFlashMemberDto;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.DTO.UpdateMemberDto;
-import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.MemberService;
 
+import kr.where.backend.member.exception.MemberException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -39,7 +38,7 @@ public class memberServiceTest {
 		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
 
 		//when
-		ResponseMemberDto responseMemberDto = memberService.createMember(createMemberDto);
+		ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
 
 		//then
 		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
@@ -49,17 +48,48 @@ public class memberServiceTest {
 	}
 
 	@Test
+	public void 플래시_멤버_생성_테스트() {
+		//given
+		CreateFlashMemberDto createFlashMemberDto = CreateFlashMemberDto.create(12345L, "suhwpark");
+
+		//when
+		ResponseMemberDto responseMemberDto = memberService.createFlashMember(createFlashMemberDto);
+
+		//then
+		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
+		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
+		assertThat(responseMemberDto.isAgree()).isEqualTo(false);
+	}
+
+	@Test
+	public void 플래시멤버_To_멤버_테스트() {
+		//given
+		CreateFlashMemberDto createFlashMemberDto = CreateFlashMemberDto.create(12345L, "suhwpark");
+		memberService.createFlashMember(createFlashMemberDto);
+
+		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
+
+		//when
+		ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
+		//then
+		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
+		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
+		assertThat(responseMemberDto.getGrade()).isEqualTo(1);
+		assertThat(responseMemberDto.getImage()).isEqualTo("image");
+		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
+	}
+
+	@Test
 	public void 맴버_중복_테스트() {
 		//given
 		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
 
 		//when
-		memberService.createMember(createMemberDto);
+		memberService.signUp(createMemberDto);
 
 		//then
 		assertThatThrownBy(() -> memberService.validateDuplicatedMember(12345L))
-			.isInstanceOf(RuntimeException.class)
-			.hasMessage("이미 존재하는 멤버입니다.");
+			.isInstanceOf(MemberException.class);
 	}
 
 	@Test
@@ -70,10 +100,10 @@ public class memberServiceTest {
 		CreateMemberDto hjeong = CreateMemberDto.create(3L, "hjeong", 1, "image");
 		CreateMemberDto jonhan = CreateMemberDto.create(4L, "jonhan", 1, "image");
 
-		ResponseMemberDto suhwparkDto = memberService.createMember(suhwpark);
-		ResponseMemberDto jnamDto = memberService.createMember(jnam);
-		ResponseMemberDto hjeongDto = memberService.createMember(hjeong);
-		ResponseMemberDto jonhanDto = memberService.createMember(jonhan);
+		ResponseMemberDto suhwparkDto = memberService.signUp(suhwpark);
+		ResponseMemberDto jnamDto = memberService.signUp(jnam);
+		ResponseMemberDto hjeongDto = memberService.signUp(hjeong);
+		ResponseMemberDto jonhanDto = memberService.signUp(jonhan);
 
 		//when
 		List<ResponseMemberDto> responseMemberDto = memberService.findAll();
@@ -90,9 +120,9 @@ public class memberServiceTest {
 	public void 멤버_한명_조회_테스트() {
 		//given
 		CreateMemberDto jnam = CreateMemberDto.create(1L, "jnam", 5, "image");
-		ResponseMemberDto jnamDto = memberService.createMember(jnam);
+		ResponseMemberDto jnamDto = memberService.signUp(jnam);
 
-		Member jnamEntity = memberRepository.findByIntraId(1L).orElseThrow(RuntimeException::new);
+		Member jnamEntity = memberRepository.findByIntraId(1L).orElseThrow(MemberException.NoMemberException::new);
 		jnamEntity.setOtherinfomation("comment", "개포시장 떡볶이", false, "자리 없음");
 
 		memberRepository.save(jnamEntity);
@@ -114,14 +144,14 @@ public class memberServiceTest {
 	@Test
 	public void 멤버_한명_조회_예외_테스트() {
 		//then
-		assertThatThrownBy(() -> memberService.findOneByIntraId(1L)).isInstanceOf(RuntimeException.class);
+		assertThatThrownBy(() -> memberService.findOneByIntraId(1L)).isInstanceOf(MemberException.class);
 	}
 
 	@Test
 	public void 맴버_삭제_테스트() {
 		//given
 		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
-		memberService.createMember(suhwpark);
+		memberService.signUp(suhwpark);
 		DeleteMemberDto deleteMemberDto = new DeleteMemberDto();
 		deleteMemberDto.setIntraId(1L);
 
@@ -137,7 +167,7 @@ public class memberServiceTest {
 	public void 맴버_개인_메시지_설정_테스트() {
 		//given
 		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
-		memberService.createMember(suhwpark);
+		memberService.signUp(suhwpark);
 		Member member = memberRepository.findByIntraId(1L).get();
 		String beforeComment = member.getComment();
 
@@ -157,7 +187,7 @@ public class memberServiceTest {
 	public void 맴버_수동_자리_설정_테스트() {
 		//given
 		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
-		memberService.createMember(suhwpark);
+		memberService.signUp(suhwpark);
 		Member member = memberRepository.findByIntraId(1L).get();
 		String beforeLocation = member.getCustomLocation();
 

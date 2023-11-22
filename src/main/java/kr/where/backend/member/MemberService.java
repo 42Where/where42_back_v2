@@ -1,16 +1,23 @@
 package kr.where.backend.member;
 
+import kr.where.backend.group.GroupMemberService;
 import kr.where.backend.group.GroupService;
+import kr.where.backend.group.dto.group.CreateGroupDto;
+import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
+import kr.where.backend.member.DTO.CreateFlashMemberDto;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
 import kr.where.backend.member.DTO.UpdateMemberDto;
+import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,26 +27,75 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 
+	private final GroupMemberService groupMemberService;
+
+	public ResponseMemberDto signUp(final CreateMemberDto createMemberDto) {
+		validateDuplicatedMember(createMemberDto.getIntraId());
+
+		Optional<Member> alreadyExistMember = memberRepository.findByIntraId(createMemberDto.getIntraId());
+
+		final ResponseMemberDto responseMemberDto;
+
+		if (alreadyExistMember.isPresent()) {
+			responseMemberDto = updateFlashToMember(alreadyExistMember.get(), createMemberDto);
+		} else {
+			responseMemberDto = createMember(createMemberDto);
+		}
+
+		return responseMemberDto;
+	}
+
+	@Transactional
+	public ResponseMemberDto updateFlashToMember(Member alreadyExistMember, final CreateMemberDto createMemberDto) {
+		alreadyExistMember.setFlashToMember(createMemberDto);
+
+		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(alreadyExistMember.getId(), "default"));
+		alreadyExistMember.setDefaultGroupId(responseGroupDto.getGroupId());
+
+		groupMemberService.createGroupMember(new CreateGroupMemberDTO(alreadyExistMember.getIntraId(),
+			alreadyExistMember.getDefaultGroupId(), responseGroupDto.getGroupName(), true));
+
+
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(alreadyExistMember.getIntraId())
+			.intraName(alreadyExistMember.getIntraName()).grade(alreadyExistMember.getGrade())
+			.image(alreadyExistMember.getImage()).agree(alreadyExistMember.isAgree()).build();
+
+		return responseMemberDto;
+	}
+
 	@Transactional
 	public ResponseMemberDto createMember(final CreateMemberDto createMemberDto) {
-		this.validateDuplicatedMember(createMemberDto.getIntraId());
 		final Member member = new Member(createMemberDto);
-
 		memberRepository.save(member);
 
-		// groupService.createGroup();
-		// groupCreateDto를 넘겨야하네...? 띠용...
+		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getId(), "default"));
+		member.setDefaultGroupId(responseGroupDto.getGroupId());
+
+		groupMemberService.createGroupMember(new CreateGroupMemberDTO(member.getIntraId(),
+			member.getDefaultGroupId(), responseGroupDto.getGroupName(), true));
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
 			.intraName(member.getIntraName()).grade(member.getGrade())
-			.image(member.getImage()).build();
+			.image(member.getImage()).agree(member.isAgree()).build();
+
+		return responseMemberDto;
+	}
+
+	@Transactional
+	public ResponseMemberDto createFlashMember(final CreateFlashMemberDto createFlashMember) {
+		final Member member = new Member(createFlashMember);
+		memberRepository.save(member);
+
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
+			.intraName(member.getIntraName()).agree(member.isAgree()).build();
 
 		return responseMemberDto;
 	}
 
 	public void validateDuplicatedMember(final Long intraId) {
 		memberRepository.findByIntraId(intraId).ifPresent(present -> {
-			throw new RuntimeException("이미 존재하는 멤버입니다.");
+			if(present.isAgree())
+				throw new MemberException.DuplicatedMemberException();;
 		});
 	}
 
@@ -56,7 +112,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
 		final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId()).build();
 
 		memberRepository.delete(member);
@@ -67,7 +123,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		member.updatePersonalMsg(updateMemberDto.getComment());
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
@@ -81,7 +137,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto updateCustomLocation(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-			.orElseThrow(RuntimeException::new);
+			.orElseThrow(MemberException.NoMemberException::new);
 		member.updateCustomLocation(updateMemberDto.getCustomLocation());
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
@@ -93,7 +149,7 @@ public class MemberService {
 	}
 
 	public ResponseMemberDto findOneByIntraId(final Long intraId) {
-		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(RuntimeException::new);
+		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
 			.intraId(member.getIntraId())
