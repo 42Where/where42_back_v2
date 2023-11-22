@@ -1,14 +1,11 @@
 package kr.where.backend.api.http;
 
-import java.net.URI;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
-public class HttpRequestAndResponse {
+public class HttpRequest {
     private static final String BEARER = "Bearer ";
     private static final String CONTENT_VALUES = "application/json;charset=utf-8";
     private static final String GRANT_TYPE = "authorization_code";
@@ -56,17 +53,5 @@ public class HttpRequestAndResponse {
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         return new HttpEntity<>(headers, params);
-    }
-
-    public static String responseBodyOfGet(final HttpEntity<MultiValueMap<String, String>> request,
-                                           final URI uri) {
-
-        return new RestTemplate().exchange(uri.toString(), HttpMethod.GET, request, String.class).getBody();
-    }
-
-    public static String responseBodyOfPost(final HttpEntity<MultiValueMap<String, String>> request,
-                                            final URI uri) {
-
-        return new RestTemplate().exchange(uri.toString(), HttpMethod.POST, request, String.class).getBody();
     }
 }
