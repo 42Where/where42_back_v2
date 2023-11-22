@@ -47,6 +47,8 @@ public class Member {
 
 	private Long defaultGroupId;
 
+	private Long defaultGroupId;
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private LocalDate createdAt = LocalDate.now();

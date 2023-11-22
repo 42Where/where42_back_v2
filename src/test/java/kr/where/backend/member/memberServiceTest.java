@@ -65,6 +65,7 @@ public class memberServiceTest {
 	public void 플래시멤버_To_멤버_테스트() {
 		//given
 		CreateMemberDto createFlashMemberDto = CreateMemberDto.create_flash(12345L, "suhwpark");
+
 		memberService.createFlashMember(createFlashMemberDto);
 
 		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
@@ -163,12 +164,13 @@ public class memberServiceTest {
 //		assertThat(member).isEqualTo(null);
 //	}
 
+
 	@Test
 	public void 맴버_개인_메시지_설정_테스트() {
 		//given
 		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
 		memberService.signUp(suhwpark);
-		Member member = memberRepository.findById(1L).get();
+		Member member = memberRepository.findByIntraId(1L).get();
 		String beforeComment = member.getComment();
 
 		//when
@@ -201,4 +203,5 @@ public class memberServiceTest {
 //		assertThat(beforeLocation).isEqualTo(null);
 //		assertThat(afterLocation).isEqualTo("pingpong");
 //	}
+
 }
