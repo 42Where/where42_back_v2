@@ -4,141 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/backend.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/group/CreateGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/group/FindGroupDto$FindGroupDtoBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/group/FindGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/group/ResponseGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/group/UpdateGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO$CreateGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/DeleteGroupMemberDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/FindResponseGroupMemberDTO$FindResponseGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/FindResponseGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/GroupMemberRequestDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/GroupMemberResponseDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO$RequestGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO$ResponseGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/ResponseGroupMemberListDTO$ResponseGroupMemberListDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/dto/groupmember/ResponseGroupMemberListDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/kr/where/backend/group/GroupMemberServiceTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/kr/where/backend/group/GroupServiceTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/CreateGroupDto.class.uniqueId1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Group.class.uniqueId4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupController.class.uniqueId0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupController.class.uniqueId7" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupFriend.class.uniqueId8" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupMember.class.uniqueId0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupMemberRepository.class.uniqueId2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupMemberService.class.uniqueId3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupRepository.class.uniqueId5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupService.class.uniqueId2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GroupService.class.uniqueId6" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/compileTransaction/stash-dir/GroupMemberServiceTest.class.uniqueId0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/compileTransaction/stash-dir/GroupMemberServiceTest.class.uniqueId1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/compileTransaction/stash-dir/GroupServiceTest.class.uniqueId0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupMemberRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupMemberService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/CreateGroupDto$CreateGroupDtoBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/CreateGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/FindGroupDto$FindGroupDtoBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/FindGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/ResponseGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/group/UpdateGroupDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/AddGroupMemberListDTO$AddGroupMemberListDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/AddGroupMemberListDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO$CreateGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/DeleteGroupMemberListDto$DeleteGroupMemberListDtoBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/DeleteGroupMemberListDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/FindGroupMemberDto$FindGroupMemberDtoBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/FindGroupMemberDto.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO$RequestGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO$ResponseGroupMemberDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/ResponseGroupMemberListDTO$ResponseGroupMemberListDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/dto/groupmember/ResponseGroupMemberListDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/entity/Group.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/entity/GroupMember.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/test/classes/kr/where/backend/group/GroupMemberServiceTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/test/classes/kr/where/backend/group/GroupServiceTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/DeleteGroupMemberListDto.java" afterDir="false" />
+    <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="[chore] : set relation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/admin/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/admin/AdminController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/AdminLoginFailException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/BadRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/CannotAccessAgreeException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/DefaultGroupNameException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/DuplicateGroupNameException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/JsonDeserializeException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/NotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/OutStateException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/RegisteredFriendException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/ServiceUnavailableException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/SessionExpiredException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/TakenSeatException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/TokenExpiredException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/TooManyRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/exception/customException/UnregisteredMemberException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupMemberService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/GroupService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/entity/Group.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/entity/Group.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/entity/GroupMember.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/group/entity/GroupMember.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/CreateMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/CreateMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/DeleteMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/DeleteMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/ResponseMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/ResponseMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/UpdateMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/DTO/UpdateMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/Member.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/Member.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/kr/where/backend/member/MemberService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/group/GroupController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/CreateMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/CreateMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/DeleteMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/DeleteMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/UpdateMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/UpdateMemberDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/Member.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/Member.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/utils/GroupFriend.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/utils/GroupFriend.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/CreateGroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/CreateGroupDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/FindGroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/FindGroupDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/UpdateGroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/group/UpdateGroupDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/AddGroupMemberListDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/AddGroupMemberListDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/CreateGroupMemberDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/FindGroupMemberDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/FindGroupMemberDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/RequestGroupMemberDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/entity/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/entity/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupMemberServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupMemberServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/member/memberServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/member/memberServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,30 +106,6 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="GroupMemberServiceTest.deleteGroupMemberTest (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;kr.where.backend.group.GroupMemberServiceTest.deleteGroupMemberTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
-    </configuration>
     <configuration name="GroupServiceTest.testCreateGroup" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -316,6 +162,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="memberServiceTest.플래시_멤버_생성_테스트" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kr.where.backend.member.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="kr.where.backend.member" />
+      <option name="MAIN_CLASS_NAME" value="kr.where.backend.member.memberServiceTest" />
+      <option name="METHOD_NAME" value="플래시_멤버_생성_테스트" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="where42_back_v2" />
       <method v="2">
@@ -353,9 +215,9 @@
     <list>
       <item itemvalue="Gradle.GroupServiceTest.testCreateGroup" />
       <item itemvalue="Gradle.GroupMemberServiceTest.createGroupMemberTest (1)" />
-      <item itemvalue="Gradle.GroupMemberServiceTest.deleteGroupMemberTest (1)" />
       <item itemvalue="JUnit.GroupServiceTest.testCreateGroup" />
       <item itemvalue="JUnit.memberServiceTest.맴버_생성_테스트" />
+      <item itemvalue="JUnit.memberServiceTest.플래시_멤버_생성_테스트" />
       <item itemvalue="Spring Boot.BackendApplication (1)" />
       <item itemvalue="Spring Boot.Application" />
       <item itemvalue="Spring Boot.BackendApplication" />
@@ -364,9 +226,9 @@
       <list>
         <item itemvalue="JUnit.memberServiceTest.맴버_생성_테스트" />
         <item itemvalue="JUnit.GroupServiceTest.testCreateGroup" />
+        <item itemvalue="JUnit.memberServiceTest.플래시_멤버_생성_테스트" />
         <item itemvalue="Gradle.GroupServiceTest.testCreateGroup" />
         <item itemvalue="Gradle.GroupMemberServiceTest.createGroupMemberTest (1)" />
-        <item itemvalue="Gradle.GroupMemberServiceTest.deleteGroupMemberTest (1)" />
       </list>
     </recent_temporary>
   </component>
