@@ -1,12 +1,12 @@
 package kr.where.backend.group;
 
-//import static kr.where.backend.exception.ErrorCode.DUPLICATE_GROUP_NAME;
-//import static kr.where.backend.exception.ErrorCode.NOT_FOUND_GROUP;
+//import static kr.where.backend.suhwparkException.ErrorCode.DUPLICATE_GROUP_NAME;
+//import static kr.where.backend.suhwparkException.ErrorCode.NOT_FOUND_GROUP;
 
 import java.util.List;
 
-//import kr.where.backend.exception.CustomException;
-//import kr.where.backend.exception.ErrorCode;
+//import kr.where.backend.suhwparkException.CustomException;
+//import kr.where.backend.suhwparkException.ErrorCode;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
@@ -15,6 +15,7 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
 import kr.where.backend.group.entity.Group;
 import jakarta.persistence.EntityNotFoundException;
+import kr.where.backend.group.exception.GroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,16 +40,18 @@ public class GroupService {
         FindGroupDto groupDto = FindGroupDto.builder().memberId(dto.getMemberIntraId()).build();
         List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupId(groupDto.getMemberId());
         groupIds.stream().forEach(c -> System.out.println(c));
-        if (groupIds.stream()
+        groupIds.stream()
                 .filter(id -> findGroupName(id.getGroupId()).equals(dto.getGroupName()))
-                .count() != 0)
-            throw new RuntimeException("그룹 이름 중복");
+                .findFirst()
+                .ifPresent(name -> {
+                    throw new GroupException.DuplicatedGroupNameException();
+                });
     }
 
     /* group 이 존재 하는지 유효성 검사 */
     public Group findById(final Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         return group;
     }
 

@@ -13,11 +13,12 @@ public class ResponseMemberDto {
 	private boolean inCluster;
 	private String imacLocation;
 	private String customLocation;
+	private boolean agree;
 
 	@Builder
 	public ResponseMemberDto(final Long intraId, final String intraName,
 		final int grade, final String image, final String comment, final String customLocation, final boolean inCluster,
-		final String imacLocation) {
+		final String imacLocation, final boolean agree) {
 		this.intraId = intraId;
 		this.intraName = intraName;
 		this.grade = grade;
@@ -26,6 +27,7 @@ public class ResponseMemberDto {
 		this.customLocation = customLocation;
 		this.inCluster = inCluster;
 		this.imacLocation = imacLocation;
+		this.agree = agree;
 	}
 
 }
