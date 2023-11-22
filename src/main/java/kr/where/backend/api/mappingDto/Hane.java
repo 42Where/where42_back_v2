@@ -1,4 +1,4 @@
-package kr.where.backend.api.mapper;
+package kr.where.backend.api.mappingDto;
 
 import lombok.Getter;
 
