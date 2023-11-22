@@ -10,6 +10,7 @@ public class CreateMemberDto {
 	private String intraName;
 	private int grade;
 	private String image;
+	private boolean agree;
 
 	public static CreateMemberDto create(final Long intraId, final String intraName, final int grade,
 		final String image) {
@@ -19,7 +20,18 @@ public class CreateMemberDto {
 		createMemberDto.intraName = intraName;
 		createMemberDto.grade = grade;
 		createMemberDto.image = image;
+		createMemberDto.agree = true;
 
 		return createMemberDto;
+	}
+
+	public static CreateMemberDto create_flash(final Long intraId, final String intraName) {
+		CreateMemberDto createFlashMemberDto = new CreateMemberDto();
+
+		createFlashMemberDto.intraId = intraId;
+		createFlashMemberDto.intraName = intraName;
+		createFlashMemberDto.agree = false;
+
+		return createFlashMemberDto;
 	}
 }

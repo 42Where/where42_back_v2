@@ -29,7 +29,7 @@ public class GroupMember {
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "intra_id")
+    @JoinColumn(referencedColumnName = "intra_id")
     private Member member;
 
     @JsonProperty(value = "isOwner")
