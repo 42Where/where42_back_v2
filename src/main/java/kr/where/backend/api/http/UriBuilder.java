@@ -20,7 +20,7 @@ public class UriBuilder {
     private static final String ME_PATH = "v2/me";
     private static final String CADET_PATH = "v2/users/";
     private static final String USERS_PATH = "v2/campus/29/users";
-    private static final String INFO_PATH = "v2/campus/29/locations";
+    private static final String LOCATIONS_PATH = "v2/campus/29/locations";
     private static final String HANE_PATH = "https://api.24hoursarenotenough.42seoul.kr/ext/where42/where42/";
     private static final String SORT = "sort";
     private static final String FILTER = "filter[kind]";
@@ -98,7 +98,7 @@ public class UriBuilder {
                 .newInstance()
                 .scheme(HTTPS)
                 .host(HOST)
-                .path(INFO_PATH)
+                .path(LOCATIONS_PATH)
                 .queryParam(PAGE_SIZE, LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER, page)
                 .queryParam(SORT, "-end_at")
@@ -117,7 +117,7 @@ public class UriBuilder {
                         .newInstance()
                         .scheme(HTTPS)
                         .host(HOST)
-                        .path(INFO_PATH)
+                        .path(LOCATIONS_PATH)
                         .queryParam(PAGE_SIZE, LOGIN_COUNT)
                         .queryParam(PAGE_NUMBER, page);
 
