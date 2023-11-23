@@ -23,8 +23,7 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
-//	@Id
-//	@NotNull
+
 	@Column(name = "intra_id", unique = true, nullable = false)
 	private Long intraId;
 
