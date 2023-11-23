@@ -6,9 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="ac5830a9-bcbf-4729-ba72-01c41c3d4d37" name="Changes" comment="[chore] : set relation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/CreateMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/CreateMemberDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto$ResponseMemberDtoBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/DTO/ResponseMemberDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/Member.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/Member.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/kr/where/backend/member/MemberService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/classes/kr/where/backend/member/memberServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/kr/where/backend/member/memberServiceTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/GroupMemberService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/group/dto/groupmember/ResponseGroupMemberDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/where/backend/member/Member.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupMemberServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupMemberServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kr/where/backend/group/GroupServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,56 +90,40 @@
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.memberServiceTest.맴버_생성_테스트">
-    <configuration name="GroupMemberServiceTest.createGroupMemberTest (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;kr.where.backend.group.GroupMemberServiceTest.createGroupMemberTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
+  <component name="RunManager" selected="JUnit.GroupMemberServiceTest.그룹_멤버_조회">
+    <configuration name="GroupMemberServiceTest.그룹_멤버_조회" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kr.where.backend.group.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="kr.where.backend.group" />
+      <option name="MAIN_CLASS_NAME" value="kr.where.backend.group.GroupMemberServiceTest" />
+      <option name="METHOD_NAME" value="그룹_멤버_조회" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="GroupServiceTest.testCreateGroup" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;kr.where.backend.group.GroupServiceTest.testCreateGroup&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
+    <configuration name="GroupMemberServiceTest.createGroupMemberTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kr.where.backend.group.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="kr.where.backend.group" />
+      <option name="MAIN_CLASS_NAME" value="kr.where.backend.group.GroupMemberServiceTest" />
+      <option name="METHOD_NAME" value="createGroupMemberTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="GroupServiceTest.testCreateGroup" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GroupServiceTest.testDeleteGroup" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend.test" />
       <extension name="coverage">
         <pattern>
@@ -140,39 +133,39 @@
       </extension>
       <option name="PACKAGE_NAME" value="kr.where.backend.group" />
       <option name="MAIN_CLASS_NAME" value="kr.where.backend.group.GroupServiceTest" />
-      <option name="METHOD_NAME" value="testCreateGroup" />
+      <option name="METHOD_NAME" value="testDeleteGroup" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="memberServiceTest.맴버_생성_테스트" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GroupServiceTest.testFindGroupName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.where.backend.member.*" />
+          <option name="PATTERN" value="kr.where.backend.group.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="kr.where.backend.member" />
-      <option name="MAIN_CLASS_NAME" value="kr.where.backend.member.memberServiceTest" />
-      <option name="METHOD_NAME" value="맴버_생성_테스트" />
+      <option name="PACKAGE_NAME" value="kr.where.backend.group" />
+      <option name="MAIN_CLASS_NAME" value="kr.where.backend.group.GroupServiceTest" />
+      <option name="METHOD_NAME" value="testFindGroupName" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="memberServiceTest.플래시_멤버_생성_테스트" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GroupServiceTest.testUpdateGroup" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.where.backend.member.*" />
+          <option name="PATTERN" value="kr.where.backend.group.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="kr.where.backend.member" />
-      <option name="MAIN_CLASS_NAME" value="kr.where.backend.member.memberServiceTest" />
-      <option name="METHOD_NAME" value="플래시_멤버_생성_테스트" />
+      <option name="PACKAGE_NAME" value="kr.where.backend.group" />
+      <option name="MAIN_CLASS_NAME" value="kr.where.backend.group.GroupServiceTest" />
+      <option name="METHOD_NAME" value="testUpdateGroup" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -213,22 +206,22 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Gradle.GroupServiceTest.testCreateGroup" />
-      <item itemvalue="Gradle.GroupMemberServiceTest.createGroupMemberTest (1)" />
-      <item itemvalue="JUnit.GroupServiceTest.testCreateGroup" />
-      <item itemvalue="JUnit.memberServiceTest.맴버_생성_테스트" />
-      <item itemvalue="JUnit.memberServiceTest.플래시_멤버_생성_테스트" />
+      <item itemvalue="JUnit.GroupMemberServiceTest.createGroupMemberTest" />
+      <item itemvalue="JUnit.GroupMemberServiceTest.그룹_멤버_조회" />
+      <item itemvalue="JUnit.GroupServiceTest.testDeleteGroup" />
+      <item itemvalue="JUnit.GroupServiceTest.testFindGroupName" />
+      <item itemvalue="JUnit.GroupServiceTest.testUpdateGroup" />
       <item itemvalue="Spring Boot.BackendApplication (1)" />
       <item itemvalue="Spring Boot.Application" />
       <item itemvalue="Spring Boot.BackendApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.memberServiceTest.맴버_생성_테스트" />
-        <item itemvalue="JUnit.GroupServiceTest.testCreateGroup" />
-        <item itemvalue="JUnit.memberServiceTest.플래시_멤버_생성_테스트" />
-        <item itemvalue="Gradle.GroupServiceTest.testCreateGroup" />
-        <item itemvalue="Gradle.GroupMemberServiceTest.createGroupMemberTest (1)" />
+        <item itemvalue="JUnit.GroupMemberServiceTest.그룹_멤버_조회" />
+        <item itemvalue="JUnit.GroupMemberServiceTest.createGroupMemberTest" />
+        <item itemvalue="JUnit.GroupServiceTest.testDeleteGroup" />
+        <item itemvalue="JUnit.GroupServiceTest.testUpdateGroup" />
+        <item itemvalue="JUnit.GroupServiceTest.testFindGroupName" />
       </list>
     </recent_temporary>
   </component>

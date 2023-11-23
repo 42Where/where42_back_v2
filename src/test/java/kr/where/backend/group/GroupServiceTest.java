@@ -33,7 +33,7 @@ public class GroupServiceTest {
     public void setUp () {
         // Given
         createMemberDto = CreateMemberDto.create(10000L, "phan", 0, "url");
-        memberService.createMember(createMemberDto);
+        memberService.signUp(createMemberDto);
         createGroupDto = new CreateGroupDto(10000L, "popopop");
     }
 
