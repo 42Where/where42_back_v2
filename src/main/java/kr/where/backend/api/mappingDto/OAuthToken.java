@@ -1,4 +1,4 @@
-package kr.where.backend.api.dto;
+package kr.where.backend.api.mappingDto;
 
 import lombok.Getter;
 
@@ -6,8 +6,9 @@ import lombok.Getter;
 public class OAuthToken {
     private String access_token;
     private String token_type;
-    private String refresh_token;
     private int expires_in;
+    private String refresh_token;
     private String scope;
     private int created_at;
+    private int secret_valid_until;
 }
