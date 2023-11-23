@@ -1,20 +1,19 @@
 package kr.where.backend.group;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
+import kr.where.backend.group.exception.GroupException;
+import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.Member;
+import kr.where.backend.member.exception.MemberException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.StyledEditorKit;
 
 @Service
 @AllArgsConstructor
@@ -28,14 +27,14 @@ public class GroupMemberService {
     @Transactional
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
 //        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
 //                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
-            throw new EntityNotFoundException("이미 그룹 멤버로 등록된 사용자입니다.");
+            throw new GroupMemberException.DuplicatedGroupMemberException();
         }
         final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
         groupMemberRepository.save(groupMember);
@@ -96,19 +95,19 @@ public class GroupMemberService {
     }
 
     @Transactional
-    public Boolean duplicateGroupMember(final Long groupId, final List<Member> members){
+    public void duplicateGroupMember(final Long groupId, final List<Member> members){
         final long count = groupMemberRepository.countByGroup_GroupIdAndMemberIn(groupId, members);
-        return count > 0;
+        if (count > 0)
+            throw new GroupMemberException.DuplicatedGroupMemberException();
     }
 
     @Transactional
     public List<ResponseGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto){
         final Group group = groupRepository.findById(dto.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
-                .orElseThrow(()-> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-        if (duplicateGroupMember(dto.getGroupId(), members))
-            throw new IllegalArgumentException("이미 추가되어있는 멤버가 존재합니다.");
+                .orElseThrow(MemberException.NoMemberException::new);
+        duplicateGroupMember(dto.getGroupId(), members);
 
         final List<GroupMember> groupMembers = members.stream()
                 .map(member -> new GroupMember(group, member, false))
