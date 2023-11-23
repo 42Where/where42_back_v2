@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public class UriBuilder {
 
-    private static final String SCHEME = "https";
+    private static final String HTTPS = "https";
     private static final String HOST = "api.intra.42.fr";
     private static final String TOKEN_PATH = "oauth/token";
     private static final String ME_PATH = "v2/me";
@@ -39,7 +39,7 @@ public class UriBuilder {
     public static URI token() {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(TOKEN_PATH)
                 .build()
@@ -52,7 +52,7 @@ public class UriBuilder {
     public static URI me() {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(ME_PATH)
                 .build()
@@ -65,7 +65,7 @@ public class UriBuilder {
     public static URI cadetInfo(final String intraName) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(CADET_PATH + intraName)
                 .build()
@@ -79,7 +79,7 @@ public class UriBuilder {
     public static URI image(final int page) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(IMAGE_PATH)
                 .queryParam(SORT, "login")
@@ -96,7 +96,7 @@ public class UriBuilder {
     public static URI loginCadet(final int page) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(INFO_PATH)
                 .queryParam(PAGE_SIZE, LOGIN_COUNT)
@@ -115,7 +115,7 @@ public class UriBuilder {
         final UriComponentsBuilder builder =
                 UriComponentsBuilder
                         .newInstance()
-                        .scheme(SCHEME)
+                        .scheme(HTTPS)
                         .host(HOST)
                         .path(INFO_PATH)
                         .queryParam(PAGE_SIZE, LOGIN_COUNT)
@@ -154,7 +154,7 @@ public class UriBuilder {
     public static URI searchCadets(final String begin, final String end) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(SCHEME)
+                .scheme(HTTPS)
                 .host(HOST)
                 .path(INFO_PATH)
                 .queryParam(SORT, "login")
