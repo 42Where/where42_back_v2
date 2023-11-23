@@ -72,10 +72,10 @@ public class GroupMemberService {
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
-                .clusterLocation(m.getMember().getClusterLocation())
                 .inCluster(m.getMember().isInCluster())
-                .imacLocation(m.getMember().getImacLocation())
                         .build()).toList();
+//                .clusterLocation(m.getMember().getClusterLocation())
+//                .imacLocation(m.getMember().getImacLocation())
 
         return responseGroupMemberDTOS;
     }
