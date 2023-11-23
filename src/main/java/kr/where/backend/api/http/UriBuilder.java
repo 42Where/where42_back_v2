@@ -26,7 +26,7 @@ public class UriBuilder {
     private static final String FILTER = "filter[kind]";
     private static final String PAGE_SIZE = "page[size]";
     private static final String PAGE_NUMBER = "page[number]";
-    private static final String RANGE_BEGIN = "range[Begin_at]";
+    private static final String RANGE_BEGIN = "range[begin_at]";
     private static final String RANGE_END = "range[end_at]";
     private static final String RANGE_LOGIN = "range[login]";
     private static final String DELIMITER = ",";
