@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
+    private static final int TOKEN_EXPIRATION_MINUTES = 60;
 
     private final TokenRepository tokenRepository;
     private final TokenApiService tokenApiService;
@@ -55,9 +56,9 @@ public class TokenService {
         final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
         final Duration duration = Duration.between(currentTime, createdAt);
         final Long minute = Math.abs(duration.toMinutes());
-        
         log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
-        if (minute > 60) {
+
+        if (minute > TOKEN_EXPIRATION_MINUTES) {
             return true;
         }
         return false;
