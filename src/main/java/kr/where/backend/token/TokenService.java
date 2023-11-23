@@ -2,8 +2,10 @@ package kr.where.backend.token;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 import kr.where.backend.api.TokenApiService;
-import kr.where.backend.api.dto.OAuthToken;
+import kr.where.backend.api.mappingDto.OAuthToken;
+import kr.where.backend.exception.token.TokenException.InvalidedTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,41 +29,42 @@ public class TokenService {
 
     private void validateName(final String name) {
         if (name == null || name.isEmpty()) {
-            throw new RuntimeException();
+            throw new RuntimeException("유효하지 않은 이름입니다.");
         }
         tokenRepository.findByName(name).ifPresent(present -> {
-            throw new RuntimeException();
+            throw new RuntimeException("이미 등록된 토큰입니다.");
         });
     }
 
     @Transactional
     public void deleteToken(final String name) {
-        Token token = tokenRepository.findByName(name).orElseThrow(RuntimeException::new);
+        final Token token = tokenRepository.findByName(name).orElseThrow(InvalidedTokenException::new);
         tokenRepository.delete(token);
     }
 
     @Transactional
-    public String findAccessToken(String name) {
-        Token token = tokenRepository.findByName(name).orElseThrow(RuntimeException::new);
-        if (isTimeOver(token.getCreatedAt())) {
+    public String findAccessToken(final String name) {
+        final Token token = tokenRepository.findByName(name).orElseThrow(InvalidedTokenException::new);
+        if (isTimeOver(name, token.getCreatedAt())) {
             updateToken(token);
         }
         return token.getAccessToken();
     }
 
-    private boolean isTimeOver(LocalDateTime createdAt) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        Duration duration = Duration.between(createdAt, currentTime);
-        Long minute = Math.abs(duration.toMinutes());
-        log.info("[accessToken] : Token 을 발급받은지 {}분 지났습니다.", minute);
+    private boolean isTimeOver(final String name, final LocalDateTime createdAt) {
+        final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
+        final Duration duration = Duration.between(currentTime, createdAt);
+        final Long minute = Math.abs(duration.toMinutes());
+        
+        log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
         if (minute > 60) {
             return true;
         }
         return false;
     }
 
-    private void updateToken(Token token) {
-        OAuthToken oAuthToken = tokenApiService.getOAuthTokenWithRefreshToken("", token.getRefreshToken());
+    public void updateToken(final Token token) {
+        final OAuthToken oAuthToken = tokenApiService.getOAuthTokenWithRefreshToken(token.getRefreshToken());
         token.updateToken(oAuthToken);
         log.info("[updateToken] {} Token 이 업데이트 되었습니다.", token.getName());
     }

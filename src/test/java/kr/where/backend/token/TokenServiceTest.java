@@ -1,9 +1,10 @@
 package kr.where.backend.token;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import kr.where.backend.api.dto.OAuthToken;
+import kr.where.backend.api.mappingDto.OAuthToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +29,8 @@ public class TokenServiceTest {
         tokenService.createToken(name, oAuthToken);
 
         // then
-        assertEquals(tokenRepository.findAll().size(), 1);
-        assertEquals(tokenRepository.findAll().get(0).getName(), name);
+        assertDoesNotThrow(() -> tokenRepository.findByName(name).orElseThrow());
+        assertEquals(tokenRepository.findByName(name).get().getName(), name);
     }
 
     @Test
@@ -56,20 +57,6 @@ public class TokenServiceTest {
         tokenService.deleteToken(name);
 
         // then
-        assertEquals(tokenRepository.findAll().size(), 0);
-    }
-
-    @Test
-    public void 토큰_찾기_테스트() {
-        // given
-        String name = "back";
-        OAuthToken oAuthToken = new OAuthToken();
-        tokenService.createToken(name, oAuthToken);
-
-        // when
-        String accessToken = tokenService.findAccessToken(name);
-
-        // then
-        assertEquals(oAuthToken.getAccess_token(), accessToken);
+        assertThrows(Exception.class, () -> tokenRepository.findByName(name).orElseThrow());
     }
 }

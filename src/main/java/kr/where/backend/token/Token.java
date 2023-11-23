@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
-import kr.where.backend.api.dto.OAuthToken;
+import kr.where.backend.api.mappingDto.OAuthToken;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,24 +31,41 @@ public class Token {
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     public Token(final String name, final OAuthToken oAuthToken) {
         this.name = name;
         this.accessToken = oAuthToken.getAccess_token();
         this.refreshToken = oAuthToken.getRefresh_token();
 
-        final LocalDateTime localDateTime =
-                LocalDateTime.ofInstant(Instant.ofEpochSecond(oAuthToken.getCreated_at()),
+        final LocalDateTime createdAt =
+                LocalDateTime.ofInstant(
+                        Instant.ofEpochSecond(oAuthToken.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
-        this.createdAt = localDateTime;
+        this.createdAt = createdAt;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Token(final String name, final String accessToken) {
+        this.name = name;
+        this.accessToken = accessToken;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateToken(final OAuthToken oAuthToken) {
         this.accessToken = oAuthToken.getAccess_token();
         this.refreshToken = oAuthToken.getRefresh_token();
 
-        final LocalDateTime localDateTime =
-                LocalDateTime.ofInstant(Instant.ofEpochSecond(oAuthToken.getCreated_at()),
+        final LocalDateTime createdAt =
+                LocalDateTime.ofInstant(
+                        Instant.ofEpochSecond(oAuthToken.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
-        this.createdAt = localDateTime;
+        this.createdAt = createdAt;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateToken(final String accessToken) {
+        this.accessToken = accessToken;
+        this.updatedAt = LocalDateTime.now();
     }
 }
