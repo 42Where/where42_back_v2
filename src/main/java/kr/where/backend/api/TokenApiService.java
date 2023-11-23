@@ -1,10 +1,9 @@
 package kr.where.backend.api;
 
-import kr.where.backend.api.http.HttpRequest;
-import kr.where.backend.api.http.HttpResponse;
+import kr.where.backend.api.http.HttpHeaderBuilder;
+import kr.where.backend.api.http.HttpBodyBuilder;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.OAuthToken;
-import kr.where.backend.member.DTO.Seoul42;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Recover;
@@ -31,7 +30,7 @@ public class TokenApiService {
     @Retryable
     public OAuthToken getOAuthToken(final String code) {
         return JsonMapper
-                .mapping(HttpResponse.responseBodyOfPost(HttpRequest.requestToken(code), UriBuilder.token()),
+                .mapping(HttpBodyBuilder.responseBodyOfPost(HttpHeaderBuilder.requestToken(code), UriBuilder.token()),
                         OAuthToken.class);
     }
 
@@ -41,8 +40,8 @@ public class TokenApiService {
     @Retryable
     public OAuthToken getOAuthTokenWithRefreshToken(final String refreshToken) {
         return JsonMapper
-                .mapping(HttpResponse.responseBodyOfPost(
-                                HttpRequest.requestAccessToken(refreshToken), UriBuilder.token()),
+                .mapping(HttpBodyBuilder.responseBodyOfPost(
+                                HttpHeaderBuilder.requestAccessToken(refreshToken), UriBuilder.token()),
                         OAuthToken.class);
     }
 }

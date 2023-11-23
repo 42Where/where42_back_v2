@@ -1,7 +1,7 @@
 package kr.where.backend.api;
 
-import kr.where.backend.api.http.HttpRequest;
-import kr.where.backend.api.http.HttpResponse;
+import kr.where.backend.api.http.HttpHeaderBuilder;
+import kr.where.backend.api.http.HttpBodyBuilder;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.member.Enum.Planet;
@@ -19,7 +19,7 @@ public class HaneApiService {
     public Planet getHaneInfo(final String name, final String token) {
         try {
             final Hane hane = JsonMapper
-                    .mapping(HttpResponse.responseBodyOfPost(HttpRequest.requestInfo(token), UriBuilder.hane(name)),
+                    .mapping(HttpBodyBuilder.responseBodyOfPost(HttpHeaderBuilder.request42Info(token), UriBuilder.hane(name)),
                             Hane.class);
             if (hane.getInoutState().equalsIgnoreCase("OUT")) {
                 return null;
