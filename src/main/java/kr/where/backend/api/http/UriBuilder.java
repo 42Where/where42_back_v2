@@ -19,7 +19,7 @@ public class UriBuilder {
     private static final String TOKEN_PATH = "oauth/token";
     private static final String ME_PATH = "v2/me";
     private static final String CADET_PATH = "v2/users/";
-    private static final String IMAGE_PATH = "v2/campus/29/users";
+    private static final String USERS_PATH = "v2/campus/29/users";
     private static final String INFO_PATH = "v2/campus/29/locations";
     private static final String HANE_PATH = "https://api.24hoursarenotenough.42seoul.kr/ext/where42/where42/";
     private static final String SORT = "sort";
@@ -81,7 +81,7 @@ public class UriBuilder {
                 .newInstance()
                 .scheme(HTTPS)
                 .host(HOST)
-                .path(IMAGE_PATH)
+                .path(USERS_PATH)
                 .queryParam(SORT, "login")
                 .queryParam(FILTER, "student")
                 .queryParam(PAGE_SIZE, LOGIN_COUNT)
@@ -149,14 +149,14 @@ public class UriBuilder {
     }
 
     /**
-     * 조회를 시작하려는 첫 단어와 마지막 단어를 param으로 받아, 검색하는 URI 반환 하은님 이거 int 형으로 page[size] 해야하지 않나요???
+     * 조회를 시작하려는 첫 단어와 마지막 단어를 param으로 받아, 검색하는 URI 반환
      */
     public static URI searchCadets(final String begin, final String end) {
         return UriComponentsBuilder
                 .newInstance()
                 .scheme(HTTPS)
                 .host(HOST)
-                .path(INFO_PATH)
+                .path(USERS_PATH)
                 .queryParam(SORT, "login")
                 .queryParam(RANGE_LOGIN, begin + DELIMITER + end)
                 .queryParam(PAGE_SIZE, SEARCH_COUNT)
