@@ -1,5 +1,8 @@
 package kr.where.backend.token;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.mappingDto.OAuthToken;
 import kr.where.backend.exception.token.TokenException.InvalidedTokenException;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
+    private static final int TOKEN_EXPIRATION_MINUTES = 60;
 
     private final TokenRepository tokenRepository;
     private final TokenApiService tokenApiService;
@@ -42,10 +46,22 @@ public class TokenService {
     @Transactional
     public String findAccessToken(final String name) {
         final Token token = tokenRepository.findByName(name).orElseThrow(InvalidedTokenException::new);
-        if (token.isTimeOver()) {
+        if (isTimeOver(name, token.getCreatedAt())) {
             updateToken(token);
         }
         return token.getAccessToken();
+    }
+
+    private boolean isTimeOver(final String name, final LocalDateTime createdAt) {
+        final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
+        final Duration duration = Duration.between(currentTime, createdAt);
+        final Long minute = Math.abs(duration.toMinutes());
+        log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
+
+        if (minute > TOKEN_EXPIRATION_MINUTES) {
+            return true;
+        }
+        return false;
     }
 
     public void updateToken(final Token token) {
