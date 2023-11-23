@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-public class HttpRequest {
+public class HttpHeaderBuilder {
     private static final String BEARER = "Bearer ";
     private static final String CONTENT_VALUES = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String GRANT_TYPE_ACCESS = "authorization_code";
@@ -44,7 +44,8 @@ public class HttpRequest {
 
         return new HttpEntity<>(params, headers);
     }
-    public static HttpEntity<MultiValueMap<String, String>> requestInfo(final String token) {
+
+    public static HttpEntity<MultiValueMap<String, String>> request42Info(final String token) {
         final HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
