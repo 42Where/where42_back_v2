@@ -1,10 +1,11 @@
 package kr.where.backend.api;
 
 import java.util.List;
-import kr.where.backend.api.http.HttpHeaderBuilder;
-import kr.where.backend.api.http.HttpBodyBuilder;
+import kr.where.backend.api.http.HttpHeader;
+import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.Cluster;
+import kr.where.backend.exception.request.RequestException;
 import kr.where.backend.member.DTO.Seoul42;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,26 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class IntraApiService {
-    /**
-     * 요청 3번 실패 시 실행되는 메서드
-     */
-    @Recover
-    public Seoul42 fallbackSeoul42(final RuntimeException exception) {
-        log.info("[IntraApiService] Seoul42 fallback {}", exception.getMessage());
-        throw new RuntimeException();
-    }
-
-    @Recover
-    public List<Seoul42> fallbackSeoul42List(final RuntimeException exception) {
-        log.info("[IntraApiService] List<Seoul42> fallback {}", exception.getMessage());
-        throw new RuntimeException();
-    }
-
-    @Recover
-    public List<Cluster> fallbackClusterList(final RuntimeException exception) {
-        log.info("[IntraApiService] List<Cluster> fallback {}", exception.getMessage());
-        throw new RuntimeException();
-    }
 
     /**
      * 본인 정보 반환
@@ -43,7 +24,7 @@ public class IntraApiService {
     @Retryable
     public Seoul42 getMeInfo(final String token) {
         return JsonMapper
-                .mapping(HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token),
+                .mapping(HttpResponse.getMethod(HttpHeader.request42Info(token),
                         UriBuilder.me()), Seoul42.class);
     }
 
@@ -54,7 +35,7 @@ public class IntraApiService {
     public Seoul42 getUserInfo(final String token, final String name) {
         return JsonMapper
                 .mapping(
-                        HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token), UriBuilder.cadetInfo(name)),
+                        HttpResponse.getMethod(HttpHeader.request42Info(token), UriBuilder.cadetInfo(name)),
                         Seoul42.class);
     }
 
@@ -65,7 +46,7 @@ public class IntraApiService {
     public List<Seoul42> get42Image(final String token, final int page) {
         return JsonMapper
                 .mappings(
-                        HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token), UriBuilder.image(page)),
+                        HttpResponse.getMethod(HttpHeader.request42Info(token), UriBuilder.image(page)),
                         Seoul42[].class);
     }
 
@@ -76,7 +57,7 @@ public class IntraApiService {
     public List<Cluster> get42ClusterInfo(final String token, final int page) {
         return JsonMapper
                 .mappings(
-                        HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token), UriBuilder.loginCadet(page)),
+                        HttpResponse.getMethod(HttpHeader.request42Info(token), UriBuilder.loginCadet(page)),
                         Cluster[].class);
     }
 
@@ -86,7 +67,7 @@ public class IntraApiService {
     @Retryable
     public List<Cluster> get42LocationEnd(final String token, final int page) {
         return JsonMapper
-                .mappings(HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token),
+                .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
                                 UriBuilder.loginBeforeFiveMinute(page, false)), Cluster[].class);
     }
 
@@ -96,7 +77,7 @@ public class IntraApiService {
     @Retryable
     public List<Cluster> get42LocationBegin(final String token, final int page) {
         return JsonMapper
-                .mappings(HttpBodyBuilder.responseBodyOfGet(HttpHeaderBuilder.request42Info(token),
+                .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
                         UriBuilder.loginBeforeFiveMinute(page, true)), Cluster[].class);
     }
 
@@ -106,8 +87,29 @@ public class IntraApiService {
     @Retryable
     public List<Seoul42> get42UsersInfoInRange(final String token, final String begin, final String end) {
         return JsonMapper
-                .mappings(HttpBodyBuilder.responseBodyOfGet(
-                                HttpHeaderBuilder.request42Info(token), UriBuilder.searchCadets(begin, end)),
+                .mappings(HttpResponse.getMethod(
+                                HttpHeader.request42Info(token), UriBuilder.searchCadets(begin, end)),
                         Seoul42[].class);
+    }
+
+    /**
+     * 요청 3번 실패 시 실행되는 메서드
+     */
+    @Recover
+    public Seoul42 fallbackSeoul42(final RuntimeException exception) {
+        log.info("[IntraApiService] Seoul42 fallback {}", exception.getMessage());
+        throw new RequestException.BadRequestException();
+    }
+
+    @Recover
+    public List<Seoul42> fallbackSeoul42List(final RuntimeException exception) {
+        log.info("[IntraApiService] List<Seoul42> fallback {}", exception.getMessage());
+        throw new RequestException.BadRequestException();
+    }
+
+    @Recover
+    public List<Cluster> fallbackClusterList(final RuntimeException exception) {
+        log.info("[IntraApiService] List<Cluster> fallback {}", exception.getMessage());
+        throw new RequestException.BadRequestException();
     }
 }
