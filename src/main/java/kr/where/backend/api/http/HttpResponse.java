@@ -6,7 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class HttpBodyBuilder {
+public class HttpResponse {
 
     public static String getMethod(final HttpEntity<MultiValueMap<String, String>> request,
                                    final URI uri) {
