@@ -1,4 +1,4 @@
-package kr.where.backend.member.DTO;
+package kr.where.backend.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

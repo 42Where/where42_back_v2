@@ -2,8 +2,7 @@ package kr.where.backend.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.where.backend.member.DTO.Locate;
-import kr.where.backend.member.Member;
+import kr.where.backend.member.dto.Locate;
 import kr.where.backend.utils.Define;
 import kr.where.backend.utils.FlashData;
 import lombok.AllArgsConstructor;
