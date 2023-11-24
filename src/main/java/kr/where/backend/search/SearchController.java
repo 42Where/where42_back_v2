@@ -29,7 +29,7 @@ public class SearchController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "카뎃 검색 성공", content=@Content(schema = @Schema(implementation = ResponseSearch.class))),
-                    @ApiResponse(responseCode = "401", description = "입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
+                    @ApiResponse(responseCode = "401", description = "요효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
     @GetMapping("/")
     public ResponseEntity search42UserResponse(@RequestParam("keyWord") String keyWord) {
