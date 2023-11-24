@@ -2,6 +2,7 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.group.entity.GroupMember;
+import kr.where.backend.location.Location;
 import kr.where.backend.member.DTO.CreateFlashMemberDto;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import lombok.*;
@@ -45,6 +46,10 @@ public class Member {
 	private boolean agree;
 
 	private Long defaultGroupId;
+
+	@OneToOne
+	@JoinColumn(name = "location_id")
+	private Location location;
 
 	@Column(nullable = false)
 	@CreationTimestamp
