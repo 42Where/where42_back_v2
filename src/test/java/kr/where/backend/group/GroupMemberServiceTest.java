@@ -8,8 +8,8 @@ import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.ResponseMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
@@ -81,7 +81,7 @@ public class GroupMemberServiceTest {
                 .build();
         //when
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO);
-        
+
         //then
         assertNotNull(responseGroupMemberDTO.getGroupId());
     }
@@ -89,7 +89,7 @@ public class GroupMemberServiceTest {
     @DisplayName("그룹 멤버 조회")
     @Test
     public void 그룹_멤버_조회() throws Exception{
-    
+
         //given
         CreateMemberDto groupmember = CreateMemberDto.create(22222L, "jnam", 1, "img");
         memberService.signUp(groupmember);
@@ -109,7 +109,7 @@ public class GroupMemberServiceTest {
 
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMemberService.findGroupMemberbyGroupId(responseGroupDto.getGroupId());
-        
+
         //then
         for (ResponseGroupMemberDTO memberDTO : responseGroupMemberDTOS) {
             System.out.println(memberDTO);

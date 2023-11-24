@@ -12,7 +12,7 @@ public class HttpHeader {
     private static final String GRANT_TYPE_REFRESH = "refresh_token";
     private static final String CLIENT_ID = "id"; // 환경변수
     private static final String SECRET = "secret"; // 환경변수
-    private static final String REDIRECT_UIR = "callbackAddress";
+    private static final String REDIRECT_URI = "callbackAddress";
 
     public static HttpEntity<MultiValueMap<String, String>> requestToken(final String code) {
         final HttpHeaders headers = new HttpHeaders();
@@ -25,7 +25,7 @@ public class HttpHeader {
         params.add("client_id", CLIENT_ID);
         params.add("client_secret", SECRET);
         params.add("code", code);
-        params.add("redirect_uri", REDIRECT_UIR);
+        params.add("redirect_uri", REDIRECT_URI);
 
         return new HttpEntity<>(params, headers);
     }

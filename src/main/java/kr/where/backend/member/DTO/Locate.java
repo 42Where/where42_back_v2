@@ -1,4 +1,4 @@
-package kr.where.backend.member.DTO;
+package kr.where.backend.member.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embeddable;

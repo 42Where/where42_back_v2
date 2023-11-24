@@ -1,14 +1,13 @@
 package kr.where.backend.member;
 
-import kr.where.backend.group.GroupMemberService;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
-import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.DeleteMemberDto;
-import kr.where.backend.member.DTO.ResponseMemberDto;
-import kr.where.backend.member.DTO.UpdateMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.member.dto.DeleteMemberDto;
+import kr.where.backend.member.dto.ResponseMemberDto;
+import kr.where.backend.member.dto.UpdateMemberDto;
+import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +23,6 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
-
-	private final GroupMemberService groupMemberService;
 
 	@Transactional
 	public ResponseMemberDto signUp(final CreateMemberDto createMemberDto) {
@@ -43,7 +39,7 @@ public class MemberService {
 		}
 
 		if (member.isAgree()) {
-			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), "default"));
+			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 			member.setDefaultGroupId(responseGroupDto.getGroupId());
 		}
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
@@ -142,20 +138,6 @@ public class MemberService {
 		return responseMemberDto;
 	}
 
-//	@Transactional
-//	public ResponseMemberDto updateCustomLocation(final UpdateMemberDto updateMemberDto) {
-//		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-//			.orElseThrow(MemberException.NoMemberException::new);
-//		member.updateCustomLocation(updateMemberDto.getCustomLocation());
-//
-//		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
-//			.intraId(member.getIntraId())
-//			.customLocation(member.getCustomLocation())
-//			.build();
-//
-//		return responseMemberDto;
-//	}
-
 	public ResponseMemberDto findOneByIntraId(final Long intraId) {
 		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
@@ -165,9 +147,7 @@ public class MemberService {
 				.grade(member.getGrade())
 				.image(member.getImage())
 				.comment(member.getComment())
-//			.customLocation(member.getCustomLocation())
 				.inCluster(member.isInCluster())
-//			.imacLocation(member.getImacLocation())
 				.build();
 
 		return responseMemberDto;
