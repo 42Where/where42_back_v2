@@ -8,7 +8,6 @@ import kr.where.backend.member.dto.Seoul42;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;
-import kr.where.backend.search.exception.SearchException.InvalidContextException;
 import kr.where.backend.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
