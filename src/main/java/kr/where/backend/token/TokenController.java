@@ -5,7 +5,7 @@ import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.mappingDto.Cluster;
 import kr.where.backend.api.mappingDto.OAuthToken;
-import kr.where.backend.member.DTO.Seoul42;
+import kr.where.backend.member.dto.Seoul42;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
