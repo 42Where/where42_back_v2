@@ -1,28 +1,21 @@
 package kr.where.backend.group;
 
-import jakarta.persistence.EntityNotFoundException;
 import kr.where.backend.group.dto.group.CreateGroupDto;
-import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.AddGroupMemberListDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
-import kr.where.backend.group.dto.groupmember.RequestGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.ResponseMemberDto;
-import kr.where.backend.member.Member;
+import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -3,8 +3,7 @@ package kr.where.backend.member;
 import jakarta.persistence.*;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.member.DTO.CreateFlashMemberDto;
-import kr.where.backend.member.DTO.CreateMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +21,7 @@ import java.util.List;
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
 	@Column(name = "intra_id", unique = true, nullable = false)
@@ -81,11 +80,6 @@ public class Member {
 	public void updatePersonalMsg(final String comment) {
 		this.comment = comment;
 	}
-
-//	public void updateCustomLocation(String customLocation) {
-//		//        log.info("[member-update] \"{}\"님의 Location이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.location, location);
-//		this.customLocation = customLocation;
-//	}
 
 	/*
 	 * 테스트용 setter

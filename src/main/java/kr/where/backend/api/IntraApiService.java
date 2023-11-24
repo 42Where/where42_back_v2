@@ -6,7 +6,7 @@ import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.Cluster;
 import kr.where.backend.exception.request.RequestException;
-import kr.where.backend.member.DTO.Seoul42;
+import kr.where.backend.member.dto.Seoul42;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Recover;
