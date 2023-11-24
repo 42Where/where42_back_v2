@@ -101,14 +101,10 @@ public class GroupController {
     )
     @DeleteMapping("/")
     public ResponseEntity deleteGroup(@RequestParam Long groupId) {
-//        groupMemberService.deleteGroupMember(request);
         ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
-    //layer를 넘어갈 때는 dto를 받고 같은 계층에서는 각 자료형을 받고 싶은데 요거또 고민을 좀 해야봐야 할것같다.
-    //cascade 해놓으면 아마 연관관계 맺어진 데이터도 다 삭제 될거 같긴해요
-    //일단은 기능은 완성.. 테스트 해봐야함
 
     @Operation(
             summary = "2.5 get group list API",
