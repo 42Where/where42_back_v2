@@ -1,14 +1,14 @@
 package kr.where.backend.member;
 
-import kr.where.backend.group.GroupMemberService;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
-import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.DeleteMemberDto;
-import kr.where.backend.member.DTO.ResponseMemberDto;
-import kr.where.backend.member.DTO.UpdateMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.member.dto.DeleteMemberDto;
+import kr.where.backend.member.dto.ResponseMemberDto;
+import kr.where.backend.member.dto.UpdateMemberDto;
+import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +26,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 
-	private final GroupMemberService groupMemberService;
-
 	@Transactional
 	public ResponseMemberDto signUp(final CreateMemberDto createMemberDto) {
 
@@ -43,7 +41,7 @@ public class MemberService {
 		}
 
 		if (member.isAgree()) {
-			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), "default"));
+			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 			member.setDefaultGroupId(responseGroupDto.getGroupId());
 		}
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
@@ -142,20 +140,6 @@ public class MemberService {
 		return responseMemberDto;
 	}
 
-//	@Transactional
-//	public ResponseMemberDto updateCustomLocation(final UpdateMemberDto updateMemberDto) {
-//		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-//			.orElseThrow(MemberException.NoMemberException::new);
-//		member.updateCustomLocation(updateMemberDto.getCustomLocation());
-//
-//		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
-//			.intraId(member.getIntraId())
-//			.customLocation(member.getCustomLocation())
-//			.build();
-//
-//		return responseMemberDto;
-//	}
-
 	public ResponseMemberDto findOneByIntraId(final Long intraId) {
 		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
@@ -165,12 +149,25 @@ public class MemberService {
 				.grade(member.getGrade())
 				.image(member.getImage())
 				.comment(member.getComment())
-//			.customLocation(member.getCustomLocation())
 				.inCluster(member.isInCluster())
-//			.imacLocation(member.getImacLocation())
 				.build();
 
 		return responseMemberDto;
+	}
+
+	/**
+	 * search에서 사용하는 로직입니다. 혹시 수정하면 수정하셔도 되요!
+	 */
+	public Optional<Member> findOne(final Long intraId) {
+		return memberRepository.findById(intraId);
+	}
+
+	@Transactional
+	public Member createFlashMember(final CadetPrivacy cadetPrivacy) {
+		final Member flash = new Member(cadetPrivacy);
+
+		memberRepository.save(flash);
+		return flash;
 	}
 }
 

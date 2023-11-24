@@ -1,10 +1,10 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.member.DTO.CreateFlashMemberDto;
-import kr.where.backend.member.DTO.CreateMemberDto;
+import kr.where.backend.member.dto.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,10 +22,9 @@ import java.util.List;
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
-//	@Id
-//	@NotNull
+
 	@Column(name = "intra_id", unique = true, nullable = false)
 	private Long intraId;
 
@@ -82,11 +81,6 @@ public class Member {
 	public void updatePersonalMsg(final String comment) {
 		this.comment = comment;
 	}
-
-//	public void updateCustomLocation(String customLocation) {
-//		//        log.info("[member-update] \"{}\"님의 Location이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.location, location);
-//		this.customLocation = customLocation;
-//	}
 
 	/*
 	 * 테스트용 setter
@@ -166,4 +160,14 @@ public class Member {
 	//        this.signUpDate = date;
 	//    }
 
+	//플러시 데이터 만드때 필요한 생성자 이것도 수정하시려면 수정하셔도 됩니다.
+	//location 생성자도 필요합니다!
+	public Member(final CadetPrivacy cadetPrivacy) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.image = cadetPrivacy.getImage().getLink();
+		this.location = cadetPrivacy.getLocation();
+		this.blackHole = false;
+		this.agree = false;
+	}
 }
