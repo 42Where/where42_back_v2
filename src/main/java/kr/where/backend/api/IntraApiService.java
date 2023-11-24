@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class IntraApiService {
 
+    private static final String END_DELIMITER = "z";
+
     /**
      * 본인 정보 반환
      */
@@ -82,13 +84,14 @@ public class IntraApiService {
     }
 
     /**
-     * begin 부터 end 까지 intra id를 가진 카뎃 10명의 정보 반환
+     * keyWord 부터 end 까지 intra id를 가진 카뎃 10명의 정보 반환
      */
     @Retryable
-    public List<Seoul42> get42UsersInfoInRange(final String token, final String begin, final String end) {
+    public List<Seoul42> get42UsersInfoInRange(final String token, final String keyWord) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(
-                                HttpHeader.request42Info(token), UriBuilder.searchCadets(begin, end)),
+                                HttpHeader.request42Info(token),
+                                UriBuilder.searchCadets(keyWord, keyWord + END_DELIMITER)),
                         Seoul42[].class);
     }
 
