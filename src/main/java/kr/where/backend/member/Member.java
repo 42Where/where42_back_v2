@@ -1,6 +1,7 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.member.dto.CreateMemberDto;
@@ -159,4 +160,14 @@ public class Member {
 	//        this.signUpDate = date;
 	//    }
 
+	//플러시 데이터 만드때 필요한 생성자 이것도 수정하시려면 수정하셔도 됩니다.
+	//location 생성자도 필요합니다!
+	public Member(final CadetPrivacy cadetPrivacy) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.image = cadetPrivacy.getImage().getLink();
+		this.location = cadetPrivacy.getLocation();
+		this.blackHole = false;
+		this.agree = false;
+	}
 }
