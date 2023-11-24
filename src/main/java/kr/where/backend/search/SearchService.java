@@ -7,6 +7,7 @@ import kr.where.backend.api.IntraApiService;
 import kr.where.backend.member.DTO.Seoul42;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.token.TokenService;
 import lombok.RequiredArgsConstructor;

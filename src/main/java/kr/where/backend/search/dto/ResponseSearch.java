@@ -1,10 +1,8 @@
-package kr.where.backend.search;
+package kr.where.backend.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.where.backend.member.DTO.Locate;
 import kr.where.backend.member.Member;
-import kr.where.backend.utils.Define;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
