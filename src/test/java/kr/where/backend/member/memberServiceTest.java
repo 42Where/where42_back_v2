@@ -1,10 +1,8 @@
 package kr.where.backend.member;
 
-import kr.where.backend.member.DTO.CreateFlashMemberDto;
-import kr.where.backend.member.DTO.CreateMemberDto;
-import kr.where.backend.member.DTO.DeleteMemberDto;
-import kr.where.backend.member.DTO.ResponseMemberDto;
-import kr.where.backend.member.DTO.UpdateMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.member.dto.ResponseMemberDto;
+import kr.where.backend.member.dto.UpdateMemberDto;
 
 import kr.where.backend.member.exception.MemberException;
 import org.junit.Test;
@@ -19,7 +17,6 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
