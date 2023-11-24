@@ -68,6 +68,7 @@ public class ResponseSearch {
         responseSearch.intraName = searched.getIntraName();
         responseSearch.image = searched.getImage();
         responseSearch.location = searched.getLocation();
+        responseSearch.isFriend = false;
 
         return responseSearch;
     }
