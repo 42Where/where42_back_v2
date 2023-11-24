@@ -6,9 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,24 +30,40 @@ public class Location {
     private String imacLocation;
 
     @Column(nullable = false)
-    private LocalDate customUpdatedAt = LocalDate.now();
+    private LocalDateTime customUpdatedAt = LocalDateTime.now();
 
     @Column(nullable = false)
-    private LocalDate imacUpdatedAt = LocalDate.now();
-
-    // 얘랑 비교해서 똑같은게 최신!
-    // 근데 또 compareTo를 잘 쓰면 그냥 바로 비교해버려도 될 것 같기도..
-    @Column(nullable = false)
-    @UpdateTimestamp
-    private LocalDate updatedAt = LocalDate.now();
+    private LocalDateTime imacUpdatedAt = LocalDateTime.now();
 
     public void setCustomLocation(final String customLocation) {
         this.customLocation = customLocation;
-        this.customUpdatedAt = LocalDate.now();
+        this.customUpdatedAt = LocalDateTime.now();
     }
 
     public void setImacLocation(final String imacLocation) {
         this.imacLocation = imacLocation;
-        this.imacUpdatedAt = LocalDate.now();
+        this.imacUpdatedAt = LocalDateTime.now();
+    }
+
+    public String getLocation(final String member) {
+        if (member == null)
+            throw new RuntimeException("멤버가 없습니다");
+
+        if (!getMember().isAgree()) {
+            return this.imacLocation;
+        } else {
+            if (customLocation.isEmpty() && imacLocation.isEmpty()) {
+                return null;
+            } else if (customLocation.isEmpty()) {
+                return imacLocation;
+            } else if (imacLocation.isEmpty()) {
+                return customLocation;
+            } else {
+                if (customUpdatedAt.isAfter(imacUpdatedAt)) {
+                    return customLocation;
+                } else
+                    return imacLocation;
+            }
+        }
     }
 }
