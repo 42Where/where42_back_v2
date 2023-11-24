@@ -66,17 +66,11 @@ public class SearchService {
     }
 
     private List<ResponseSearch> responseOfSearch(final List<Seoul42> result) {
-        final List<ResponseSearch> responseSearches = new ArrayList<>();
 
-        for (Seoul42 search : result) {
-            final Member member = memberService.findOne(search.getId()).orElse(null);
-            if (member != null) {
-                responseSearches.add(ResponseSearch.of(member));
-                continue ;
-            }
-            responseSearches.add(memberService.createNotMember(search));
-        }
-
-        return responseSearches;
+         return result.stream()
+                .map(search -> memberService.findOne(search.getId())
+                        .orElse(() -> memberService.createNotMember(search)))
+                .map(ResponseSearch::of)
+                .toList();
     }
 }
