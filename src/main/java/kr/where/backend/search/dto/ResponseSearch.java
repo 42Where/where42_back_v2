@@ -27,11 +27,11 @@ public class ResponseSearch {
     private String comment;
     @Schema(description = "카뎃의 위치")
     private String location;
-    @Schema(description = "카뎃의 상태")
+    @Schema(description = "카뎃의 incluster 상태")
     private boolean inOrOut;
-    @Schema(description = "친구 여부")
+    @Schema(description = "검색한 맴버와의 친구 여부")
     private boolean isFriend;
-    @Schema(description = "멤버 여부")
+    @Schema(description = "서비스 동의 여부")
     private boolean isAgree;
 
     /**
