@@ -8,7 +8,6 @@ import kr.where.backend.api.mappingDto.OAuthToken;
 import kr.where.backend.member.DTO.Seoul42;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,8 +22,13 @@ public class TokenController {
     private final IntraApiService intraApiService;
 
     // test 용
-    @PostMapping("")
-    public String createToken(@RequestParam String code) {
+
+    /**
+     * api/http/HttpHeader 에 test 용 CLIENT_ID, SECRET, REDIRECT_URI(http://localhost:8080/v3/token) 로 변경후
+     * https://api.intra.42.fr/oauth/authorize?client_id= 로 시작하는 긴 redirect url 입력하면 이곳으로 넘어와서 토큰 생성
+     */
+    @GetMapping("")
+    public String createToken(@RequestParam("code") String code) {
         final OAuthToken oAuthToken = tokenApiService.getOAuthToken(code);
         tokenService.createToken("test", oAuthToken);
         return oAuthToken.getAccess_token();
@@ -40,7 +44,7 @@ public class TokenController {
     @GetMapping("/user")
     public Seoul42 getUserInfo() {
         final String accessToken = tokenService.findAccessToken("test");
-        final Seoul42 seoul42 = intraApiService.getUserInfo(accessToken, "junhyuki");
+        final Seoul42 seoul42 = intraApiService.getUserInfo(accessToken, "jonhan");
         return seoul42;
     }
 
@@ -75,7 +79,7 @@ public class TokenController {
     @GetMapping("/range/info")
     public List<Seoul42> get42UsersInfoInRange() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Seoul42> list = intraApiService.get42UsersInfoInRange(accessToken, "juna", "junz");
+        final List<Seoul42> list = intraApiService.get42UsersInfoInRange(accessToken, "jon");
         return list;
     }
 }
