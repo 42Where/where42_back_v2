@@ -7,6 +7,7 @@ import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.member.dto.CreateMemberDto;
 import kr.where.backend.member.dto.ResponseMemberDto;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
 import lombok.extern.slf4j.Slf4j;

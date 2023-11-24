@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.member.dto.*;
+import kr.where.backend.member.dto.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
