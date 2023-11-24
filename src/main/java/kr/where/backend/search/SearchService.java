@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
-import kr.where.backend.member.dto.Seoul42;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.group.GroupMemberService;
+import kr.where.backend.group.GroupService;
+import kr.where.backend.group.entity.Group;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.token.TokenService;
@@ -22,6 +27,8 @@ public class SearchService {
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final TokenService tokenService;
+    private final GroupService groupService;
+    private final GroupMemberService groupMemberService;
 
     /**
      *
@@ -31,10 +38,11 @@ public class SearchService {
      * 블랙홀에 빠지지 않은 카뎃을 필터로 걸러서 response DTO 생성
      */
 
-    public List<ResponseSearch> search(final String keyWord) {
+    public List<ResponseSearch> search(final Long intraId, final String keyWord) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
+        final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-        return responseOfSearch(findActiveCadets(word));
+        return responseOfSearch(member, findActiveCadets(word));
     }
 
     private String validateKeyWord(final String keyWord) {
@@ -55,20 +63,20 @@ public class SearchService {
         return keyWord.length() < MINIMUM_LENGTH;
     }
 
-    private List<Seoul42> findActiveCadets(final String word) {
-        final List<Seoul42> result = new ArrayList<>();
+    private List<CadetPrivacy> findActiveCadets(final String word) {
+        final List<CadetPrivacy> result = new ArrayList<>();
 
         do {
             isActiveCadet(result,
                     intraApiService
-                            .get42UsersInfoInRange(tokenService.findAccessToken(TOKEN_NAME), word));
+                            .getCadetsInRange(tokenService.findAccessToken(TOKEN_NAME), word));
         } while(result.size() > MAXIMUM_SIZE);
 
         return result;
     }
 
-    private void isActiveCadet(final List<Seoul42> result, final List<Seoul42> responses) {
-        for (Seoul42 response : responses) {
+    private void isActiveCadet(final List<CadetPrivacy> result, final List<CadetPrivacy> responses) {
+        for (CadetPrivacy response : responses) {
             if (response.isActive()) {
                 result.add(response);
             }
@@ -78,9 +86,10 @@ public class SearchService {
         }
     }
 
-    private List<ResponseSearch> responseOfSearch(final List<Seoul42> result) {
+    private List<ResponseSearch> responseOfSearch(final Member member, final List<CadetPrivacy> result) {
+        final Group group = groupService.findOneGroupById(member.getDefaultGroupId());
 
-         return result.stream()
+        return result.stream()
                 .map(search -> memberService.findOne(search.getId())
                         .orElse(() -> memberService.createNotMember(search)))
                 .map(ResponseSearch::of)
