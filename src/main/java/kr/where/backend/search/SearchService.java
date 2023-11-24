@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class SearchService {
     private static final String END_WORD = "z";
     private static final String PATTERN = "^[a-zA-Z]*$";
+    private static final String TOKEN_NAME = "search";
+    private static final int MAXIMUM_SIZE = 9;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final TokenService tokenService;
@@ -47,8 +49,8 @@ public class SearchService {
         do {
             isActiveCadet(result,
                     intraApiService
-                            .get42UsersInfoInRange(tokenService.findAccessToken("search"), word, word + END_WORD));
-        } while(result.size() > 10);
+                            .get42UsersInfoInRange(tokenService.findAccessToken(TOKEN_NAME), word, word + END_WORD));
+        } while(result.size() > MAXIMUM_SIZE);
 
         return result;
     }
@@ -58,7 +60,7 @@ public class SearchService {
             if (response.isActive()) {
                 result.add(response);
             }
-            if (result.size() > 9) {
+            if (result.size() > MAXIMUM_SIZE) {
                 break;
             }
         }
@@ -68,7 +70,7 @@ public class SearchService {
         final List<ResponseSearch> responseSearches = new ArrayList<>();
 
         for (Seoul42 search : result) {
-            final Member member = memberService.findOne(search.getId());
+            final Member member = memberService.findOne(search.getId()).orElse(null);
             if (member != null) {
                 responseSearches.add(ResponseSearch.of(member));
                 continue ;
