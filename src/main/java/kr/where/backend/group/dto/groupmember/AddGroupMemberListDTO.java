@@ -1,11 +1,13 @@
 package kr.where.backend.group.dto.groupmember;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class AddGroupMemberListDTO {
     private Long groupId;
     private List<String> members;
