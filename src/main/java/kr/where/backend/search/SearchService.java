@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-    private static final String END_WORD = "z";
     private static final String PATTERN = "^[a-zA-Z]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 9;
@@ -49,7 +48,7 @@ public class SearchService {
         do {
             isActiveCadet(result,
                     intraApiService
-                            .get42UsersInfoInRange(tokenService.findAccessToken(TOKEN_NAME), word, word + END_WORD));
+                            .get42UsersInfoInRange(tokenService.findAccessToken(TOKEN_NAME), word));
         } while(result.size() > MAXIMUM_SIZE);
 
         return result;
