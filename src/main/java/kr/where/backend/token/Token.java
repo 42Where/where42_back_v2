@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
@@ -12,11 +13,15 @@ import kr.where.backend.api.mappingDto.OAuthToken;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Getter
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Token {
+    private static final int TOKEN_EXPIRATION_MINUTES = 60;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "token_id", unique = true, nullable = false)
@@ -67,5 +72,16 @@ public class Token {
     public void updateToken(final String accessToken) {
         this.accessToken = accessToken;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isTimeOver() {
+        final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
+        final Duration duration = Duration.between(currentTime, createdAt);
+        final Long minute = Math.abs(duration.toMinutes());
+        log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
+        if (minute > TOKEN_EXPIRATION_MINUTES) {
+            return true;
+        }
+        return false;
     }
 }
