@@ -7,16 +7,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -27,27 +30,27 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-//	@Operation(summary = "1.1 createMember API", description = "맴버 생성 하는 POST API",
-//		parameters = {
-//			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
-//		},
-//		requestBody =
-//		@io.swagger.v3.oas.annotations.parameters.RequestBody(
-//			content = @Content(schema = @Schema(implementation = CadetPrivacy.class)))
-//		,
-//		responses = {
-//			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
-//			@ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
-//		}
-//	)
-//	@PostMapping("/")
-//	public ResponseEntity createMember(@RequestBody CreateMemberDto createMemberDto) {
-//
-//		final ResponseMemberDto responseMemberDto = memberService.createAgreeMember(createMemberDto);
-//
-//		return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
-//			.body(responseMemberDto);
-//	}
+	@Operation(summary = "1.1 createMember API", description = "맴버 생성 하는 POST API",
+		parameters = {
+			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+		},
+		requestBody =
+		@io.swagger.v3.oas.annotations.parameters.RequestBody(
+			content = @Content(schema = @Schema(implementation = CreateMemberDto.class)))
+		,
+		responses = {
+			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+			@ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+		}
+	)
+	@PostMapping("/")
+	public ResponseEntity createMember(@RequestBody CreateMemberDto createMemberDto) {
+
+		final ResponseMemberDto responseMemberDto = memberService.signUp(createMemberDto);
+
+		return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
+			.body(responseMemberDto);
+	}
 
 	//    @GetMapping("/")
 	//    public ResponseEntity findAllMember() {
