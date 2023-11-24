@@ -1,4 +1,4 @@
-package kr.where.backend.member.DTO;
+package kr.where.backend.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,5 +8,4 @@ import lombok.Setter;
 public class UpdateMemberDto {
 	private Long intraId;
 	private String comment;
-	private String customLocation;
 }

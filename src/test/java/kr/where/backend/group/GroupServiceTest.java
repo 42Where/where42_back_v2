@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
-import kr.where.backend.member.DTO.CreateMemberDto;
+import kr.where.backend.member.dto.CreateMemberDto;
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

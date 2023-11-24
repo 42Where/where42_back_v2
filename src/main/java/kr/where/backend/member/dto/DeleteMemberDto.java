@@ -1,4 +1,4 @@
-package kr.where.backend.member.DTO;
+package kr.where.backend.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
