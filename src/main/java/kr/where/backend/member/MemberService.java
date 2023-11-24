@@ -5,6 +5,7 @@ import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
+import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.DTO.CreateMemberDto;
 import kr.where.backend.member.DTO.DeleteMemberDto;
 import kr.where.backend.member.DTO.ResponseMemberDto;
@@ -43,7 +44,7 @@ public class MemberService {
 		}
 
 		if (member.isAgree()) {
-			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), "default"));
+			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 			member.setDefaultGroupId(responseGroupDto.getGroupId());
 		}
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())

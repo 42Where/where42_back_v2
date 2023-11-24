@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "groups")
 public class Group {
 
+    public static final String DEFAULT_GROUP = "default";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id", nullable = false)
