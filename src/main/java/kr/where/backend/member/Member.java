@@ -2,8 +2,8 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.group.entity.GroupMember;
-import kr.where.backend.member.DTO.CreateFlashMemberDto;
-import kr.where.backend.member.DTO.CreateMemberDto;
+import kr.where.backend.location.Location;
+import kr.where.backend.member.dto.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,13 +19,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Member {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@Column(unique = true, nullable = false)
+	@Column(name = "intra_id", unique = true, nullable = false)
 	private Long intraId;
 
 	@Column(length = 15, unique = true, nullable = false)
@@ -39,24 +37,18 @@ public class Member {
 
 	private boolean inCluster;
 
-	@Column(length = 6)
-	private String imacLocation;
-
-	@Column(length = 30)
-	private String customLocation;
-
-	private int clusterLocation;
-
-	//    @Builder.Default
-	private boolean blackHole = true;
+	private boolean blackHole;
 
 	@Column(nullable = false)
 	private int grade;
 
-	//    @Builder.Default
-	private boolean agree = false;
+	private boolean agree;
 
 	private Long defaultGroupId;
+
+	@OneToOne
+	@JoinColumn(name = "location_id")
+	private Location location;
 
 	@Column(nullable = false)
 	@CreationTimestamp
@@ -74,31 +66,26 @@ public class Member {
 		this.intraName = createMemberDto.getIntraName();
 		this.grade = createMemberDto.getGrade();
 		this.image = createMemberDto.getImage();
-		this.agree = true;
+		this.agree = createMemberDto.isAgree();
+		this.blackHole = false;
 	}
 
-	public Member(final CreateFlashMemberDto createFlashMemberDto) {
-		this.intraId = createFlashMemberDto.getIntraId();
-		this.intraName = createFlashMemberDto.getIntraName();
-	}
+//	public Member(final CreateFlashMemberDto createFlashMemberDto) {
+//		this.intraId = createFlashMemberDto.getIntraId();
+//		this.intraName = createFlashMemberDto.getIntraName();
+//		this.agree = false;
+//		this.blackHole = false;
+//	}
 
 	public void updatePersonalMsg(final String comment) {
 		this.comment = comment;
 	}
 
-	public void updateCustomLocation(String customLocation) {
-		//        log.info("[member-update] \"{}\"님의 Location이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.location, location);
-		this.customLocation = customLocation;
-	}
-
 	/*
 	 * 테스트용 setter
 	 */
-	public void setOtherInformation(final String comment, final String customLocation, final boolean inCluster,
-		final String imacLocation) {
+	public void setOtherInformation(final String comment, final boolean inCluster) {
 		this.comment = comment;
-		this.customLocation = customLocation;
-		this.imacLocation = imacLocation;
 		this.inCluster = inCluster;
 	}
 

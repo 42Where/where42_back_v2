@@ -48,6 +48,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
+//	implementation group: 'org.postgresql', name: 'postgresql', version : '42.2.19'
+
 }
 
 //def projectDir = "."
