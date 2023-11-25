@@ -1,5 +1,7 @@
 package kr.where.backend.member;
 
+import java.util.Optional;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -151,6 +153,21 @@ public class MemberService {
 				.build();
 
 		return responseMemberDto;
+	}
+
+	/**
+	 * search에서 사용하는 로직입니다. 혹시 수정하면 수정하셔도 되요!
+	 */
+	public Optional<Member> findOne(final Long intraId) {
+		return memberRepository.findById(intraId);
+	}
+
+	@Transactional
+	public Member createFlashMember(final CadetPrivacy cadetPrivacy) {
+		final Member flash = new Member(cadetPrivacy);
+
+		memberRepository.save(flash);
+		return flash;
 	}
 }
 
