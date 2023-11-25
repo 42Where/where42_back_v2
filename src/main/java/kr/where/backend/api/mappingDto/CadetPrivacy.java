@@ -20,6 +20,6 @@ public class CadetPrivacy {
     @JsonProperty("active?")
     @Schema(description = "카뎃의 블랙홀 상태")
     private boolean active;
-    @Schema(description = "로그인한 클러스터 위치")
+    @Schema(description = "42서울 등록일")
     private String created_at;
 }
