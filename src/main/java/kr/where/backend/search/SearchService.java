@@ -23,6 +23,7 @@ public class SearchService {
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
     private static final int MINIMUM_LENGTH = 2;
+    private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final TokenService tokenService;
@@ -56,7 +57,7 @@ public class SearchService {
     }
 
     private boolean validateLength(final String keyWord) {
-        return keyWord.length() < MINIMUM_LENGTH;
+        return keyWord.length() < MINIMUM_LENGTH || keyWord.length() > MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
