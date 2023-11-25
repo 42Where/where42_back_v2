@@ -3,9 +3,9 @@ package kr.where.backend.token;
 import java.util.List;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.api.mappingDto.Cluster;
 import kr.where.backend.api.mappingDto.OAuthToken;
-import kr.where.backend.member.DTO.Seoul42;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,51 +35,51 @@ public class TokenController {
     }
 
     @GetMapping("/me")
-    public Seoul42 getMeInfo() {
+    public CadetPrivacy getMeInfo() {
         final String accessToken = tokenService.findAccessToken("test");
-        final Seoul42 seoul42 = intraApiService.getMeInfo(accessToken);
-        return seoul42;
+        final CadetPrivacy cadetPrivacy = intraApiService.getMyPrivacy(accessToken);
+        return cadetPrivacy;
     }
 
     @GetMapping("/user")
-    public Seoul42 getUserInfo() {
+    public CadetPrivacy getUserInfo() {
         final String accessToken = tokenService.findAccessToken("test");
-        final Seoul42 seoul42 = intraApiService.getUserInfo(accessToken, "jonhan");
-        return seoul42;
+        final CadetPrivacy cadetPrivacy = intraApiService.getCadetPrivacy(accessToken, "jonhan");
+        return cadetPrivacy;
     }
 
     @GetMapping("/image")
-    public List<Seoul42> get42Image() {
+    public List<CadetPrivacy> get42Image() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Seoul42> list = intraApiService.get42Image(accessToken, 1);
+        final List<CadetPrivacy> list = intraApiService.getCadetsImage(accessToken, 1);
         return list;
     }
 
     @GetMapping("/info")
     public List<Cluster> get42ClusterInfo() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Cluster> list = intraApiService.get42ClusterInfo(accessToken, 1);
+        final List<Cluster> list = intraApiService.getCadetsInCluster(accessToken, 1);
         return list;
     }
 
     @GetMapping("/end")
     public List<Cluster> get42LocationEnd() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Cluster> list = intraApiService.get42LocationEnd(accessToken, 1);
+        final List<Cluster> list = intraApiService.getLogoutCadetsLocation(accessToken, 1);
         return list;
     }
 
     @GetMapping("/begin")
     public List<Cluster> get42LocationBegin() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Cluster> list = intraApiService.get42LocationBegin(accessToken, 1);
+        final List<Cluster> list = intraApiService.getLoginCadetsLocation(accessToken, 1);
         return list;
     }
 
     @GetMapping("/range/info")
-    public List<Seoul42> get42UsersInfoInRange() {
+    public List<CadetPrivacy> get42UsersInfoInRange() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<Seoul42> list = intraApiService.get42UsersInfoInRange(accessToken, "jon");
+        final List<CadetPrivacy> list = intraApiService.getCadetsInRange(accessToken, "jon");
         return list;
     }
 }
