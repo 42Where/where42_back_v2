@@ -47,7 +47,7 @@ public class Member {
 
 	private Long defaultGroupId;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id")
 	private Location location;
 
@@ -69,6 +69,7 @@ public class Member {
 		this.image = createMemberDto.getImage();
 		this.agree = createMemberDto.isAgree();
 		this.blackHole = false;
+		this.location = createMemberDto.getLocation();
 	}
 
 //	public Member(final CreateFlashMemberDto createFlashMemberDto) {
@@ -88,6 +89,10 @@ public class Member {
 	public void setOtherInformation(final String comment, final boolean inCluster) {
 		this.comment = comment;
 		this.inCluster = inCluster;
+	}
+
+	public void setLocation(final Location location) {
+		this.location = location;
 	}
 
 	//setter
@@ -166,7 +171,7 @@ public class Member {
 		this.intraId = cadetPrivacy.getId();
 		this.intraName = cadetPrivacy.getLogin();
 		this.image = cadetPrivacy.getImage().getLink();
-		this.location = cadetPrivacy.getLocation();
+		this.location.setImacLocation(cadetPrivacy.getLocation());
 		this.blackHole = false;
 		this.agree = false;
 	}
