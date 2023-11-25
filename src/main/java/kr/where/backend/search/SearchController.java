@@ -25,6 +25,7 @@ public class SearchController {
 
     @Operation(summary = "search API", description = "멤버 검색 api",
             parameters = {
+                    @Parameter(name="intraId", description = "검색하려는 맴버 id 값", in= ParameterIn.QUERY),
                     @Parameter(name="keyWord", description = "검색하려는 입력값", in= ParameterIn.QUERY)
             },
             responses = {
