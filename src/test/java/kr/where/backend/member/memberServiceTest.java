@@ -102,38 +102,54 @@ public class memberServiceTest {
 		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
 	}
-//
-//	@Test
-//	public void 플래시멤버_To_멤버_테스트() {
-//		//given
-//		CreateMemberDto createFlashMemberDto = CreateMemberDto.createFlash(12345L, "suhwpark");
-//
-//		memberService.createDisagreeMember(createFlashMemberDto);
-//
-//		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
-//
-//		//when
-//		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(createMemberDto);
-//		//then
-//		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
-//		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
-//		assertThat(responseMemberDto.getGrade()).isEqualTo(1);
-//		assertThat(responseMemberDto.getImage()).isEqualTo("image");
-//		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
-//	}
-//
-//	@Test
-//	public void 맴버_중복_테스트() {
-//		//given
-//		CreateMemberDto createMemberDto = CreateMemberDto.create(12345L, "suhwpark", 1, "image");
-//
-//		//when
-//		memberService.createAgreeMember(createMemberDto);
-//
-//		//then
-//		assertThatThrownBy(() -> memberService.createAgreeMember(createMemberDto))
-//			.isInstanceOf(MemberException.class);
-//	}
+
+	@Test
+	public void disagree_to_agree_test() {
+		//given
+		CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		memberService.createDisagreeMember(cadetPrivacy);
+		Hane hane = Hane.createForTest("IN");
+
+		//when
+		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+
+		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
+
+		Location location = locationRepository.findByMember(member.get());
+		Optional<Group> group = groupRepository.findById(responseMemberDto.getDefaultGroupId());
+		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(responseMemberDto.getDefaultGroupId());
+
+		//then
+		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
+		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
+		assertThat(responseMemberDto.getImage()).isEqualTo("image");
+		assertThat(responseMemberDto.getGrade()).isEqualTo("2022-10-31");
+		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
+
+		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
+
+		assertThat(group.get()).isNotNull();
+		assertThat(group.get().getGroupName()).isEqualTo("default");
+
+		assertThat(groupMembers).isNotNull();
+		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(12345L);
+		assertThat(groupMembers.get(0).getIsOwner()).isEqualTo(true);
+	}
+
+	@Test
+	public void member_duplicate_test() {
+		//given
+		CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		Hane hane = Hane.createForTest("IN");
+
+		//when
+		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+
+		//then
+		assertThatThrownBy(() -> memberService.createAgreeMember(cadetPrivacy, hane))
+			.isInstanceOf(MemberException.class);
+	}
 //
 //	@Test
 //	public void 모든_맴버_목록_조회_테스트() {
