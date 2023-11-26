@@ -58,11 +58,11 @@ public class Location {
         this.imacUpdatedAt = LocalDateTime.now();
     }
 
-    public String getLocation(final String member) {
+    public String getLocation(final Member member) {
         if (member == null)
             throw new RuntimeException("멤버가 없습니다");
 
-        if (!getMember().isAgree()) {
+        if (!member.isAgree()) {
             return this.imacLocation;
         } else {
             if (customLocation.isEmpty() && imacLocation.isEmpty()) {
