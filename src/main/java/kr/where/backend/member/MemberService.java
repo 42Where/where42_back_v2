@@ -30,6 +30,8 @@ public class MemberService {
 
 	@Transactional
 	public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+
+		// 1. if-else
 //		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 //
 //		if (member != null && member.isAgree()) {
@@ -44,6 +46,7 @@ public class MemberService {
 //		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 //		member.setDefaultGroupId(responseGroupDto.getGroupId());
 
+		// 2. 람다식
 		Member member = memberRepository.findByIntraId(cadetPrivacy.getId())
 				.map(existingMember -> {
 					if (existingMember.isAgree())
