@@ -22,4 +22,18 @@ public class CadetPrivacy {
     private boolean active;
     @Schema(description = "로그인한 클러스터 위치")
     private String created_at;
+
+    //create for Test
+    public static CadetPrivacy createForTest(Long id, String login, String location, String small_image, boolean active, String craeated_at) {
+        CadetPrivacy cadetPrivacy = new CadetPrivacy();
+
+        cadetPrivacy.id = id;
+        cadetPrivacy.login = login;
+        cadetPrivacy.image = Image.createForTest(Versions.createForTest(small_image));
+        cadetPrivacy.location = location;
+        cadetPrivacy.active = active;
+        cadetPrivacy.created_at = craeated_at;
+
+        return cadetPrivacy;
+    }
 }

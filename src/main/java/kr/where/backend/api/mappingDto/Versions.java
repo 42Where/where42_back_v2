@@ -7,4 +7,13 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Versions {
     private String small;
+
+    //test
+    public static Versions createForTest(String small) {
+        Versions versions = new Versions();
+
+        versions.small = small;
+
+        return versions;
+    }
 }
