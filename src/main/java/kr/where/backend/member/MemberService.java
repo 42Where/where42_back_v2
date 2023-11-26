@@ -61,7 +61,7 @@ public class MemberService {
 		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 		member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-		final ResponseMemberDto responseMemberDto = setResponseMemberDto(member);
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
 		return responseMemberDto;
 	}
