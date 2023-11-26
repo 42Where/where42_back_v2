@@ -89,7 +89,7 @@ public class Member {
 		this.agree = true;
 	}
 
-	public void setPersonalMsg(final String comment) {
+	public void setComment(final String comment) {
 		this.comment = comment;
 	}
 	public void setLocation(final Location location) {

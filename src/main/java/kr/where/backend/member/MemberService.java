@@ -99,7 +99,7 @@ public class MemberService {
 	public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
 				.orElseThrow(MemberException.NoMemberException::new);
-		member.setPersonalMsg(updateMemberDto.getComment());
+		member.setComment(updateMemberDto.getComment());
 
 		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 		return responseMemberDto;

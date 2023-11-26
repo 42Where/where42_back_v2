@@ -144,7 +144,7 @@ public class memberServiceTest {
 		Hane hane = Hane.createForTest("IN");
 
 		//when
-		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+		memberService.createAgreeMember(cadetPrivacy, hane);
 
 		//then
 		assertThatThrownBy(() -> memberService.createAgreeMember(cadetPrivacy, hane))
@@ -221,25 +221,28 @@ public class memberServiceTest {
 ////	}
 //
 //
-//	@Test
-//	public void 맴버_개인_메시지_설정_테스트() {
-//		//given
-//		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
-//		memberService.createAgreeMember(suhwpark);
-//		Member member = memberRepository.findByIntraId(1L).get();
-//		String beforeComment = member.getComment();
-//
-//		//when
-//		UpdateMemberDto updateMemberDto = new UpdateMemberDto();
-//		updateMemberDto.setComment("안녕");
-//		updateMemberDto.setIntraId(1L);
-//		memberService.updateComment(updateMemberDto);
-//		String afterComment = member.getComment();
-//
-//		//then
-//		assertThat(beforeComment).isEqualTo(null);
-//		assertThat(afterComment).isEqualTo("안녕");
-//	}
+	@Test
+	public void update_comment_test() {
+		//given
+		CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		Hane hane = Hane.createForTest("IN");
+		memberService.createAgreeMember(cadetPrivacy, hane);
+
+		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+		String beforeComment = member.getComment();
+
+		//when
+		UpdateMemberDto updateMemberDto = new UpdateMemberDto();
+		updateMemberDto.setComment("new comment");
+		updateMemberDto.setIntraId(cadetPrivacy.getId());
+
+		memberService.updateComment(updateMemberDto);
+		String afterComment = member.getComment();
+
+		//then
+		assertThat(beforeComment).isEqualTo(null);
+		assertThat(afterComment).isEqualTo("new comment");
+	}
 //
 //    @Test
 //    public void 멤버_생성_전_location_생성_테스트() {
@@ -285,24 +288,6 @@ public class memberServiceTest {
 //		assertThat(locationResult.getMember()).isNotNull();
 //		assertThat(locationResult.getMember().getIntraId()).isEqualTo(member.getIntraId());
 //	}
-//
-////	@Test
-////	public void 맴버_수동_자리_설정_테스트() {
-////		//given
-////		CreateMemberDto suhwpark = CreateMemberDto.create(1L, "suhwpark", 1, "image");
-////		memberService.signUp(suhwpark);
-////		Member member = memberRepository.findById(1L).get();
-////		String beforeLocation = member.getCustomLocation();
-////
-////		//when
-////		UpdateMemberDto updateMemberDto = new UpdateMemberDto();
-////		updateMemberDto.setCustomLocation("pingpong");
-////		updateMemberDto.setId(1L);
-////		memberService.updateCustomLocation(updateMemberDto);
-////		String afterLocation = member.getCustomLocation();
-////		//then
-////		assertThat(beforeLocation).isEqualTo(null);
-////		assertThat(afterLocation).isEqualTo("pingpong");
-////	}
+
 
 }
