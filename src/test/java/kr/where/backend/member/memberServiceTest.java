@@ -2,12 +2,13 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
+import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.location.LocationService;
-//import kr.where.backend.member.dto.CreateMemberDto;
 import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.dto.UpdateMemberDto;
 
@@ -42,15 +43,23 @@ public class memberServiceTest {
 	LocationService locationService;
 	@Autowired
 	GroupRepository groupRepository;
+	@Autowired
+	GroupMemberRepository groupMemberRepository;
 
 	@Test
-	public void 맴버_생성_테스트() {
+	public void create_agree_member_test() {
 		//given
 		CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.createForTest("IN");
 
 		//when
 		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+
+		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
+
+		Location location = locationRepository.findByMember(member.get());
+		Optional<Group> group = groupRepository.findById(responseMemberDto.getDefaultGroupId());
+		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(responseMemberDto.getDefaultGroupId());
 
 		//then
 		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
@@ -60,6 +69,14 @@ public class memberServiceTest {
 		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
 
 		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
+
+		assertThat(group.get()).isNotNull();
+		assertThat(group.get().getGroupName()).isEqualTo("default");
+
+		assertThat(groupMembers).isNotNull();
+		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(12345L);
+		assertThat(groupMembers.get(0).getIsOwner()).isEqualTo(true);
 
 	}
 
