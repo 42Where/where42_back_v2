@@ -38,11 +38,13 @@ public class Member {
 
 	private boolean inCluster;
 
+	@Column(nullable = false)
 	private boolean blackHole;
 
 	@Column(nullable = false)
 	private String grade;
 
+	@Column(nullable = false)
 	private boolean agree;
 
 	private Long defaultGroupId;
@@ -75,7 +77,8 @@ public class Member {
 	public Member(final CadetPrivacy cadetPrivacy) {
 		this.intraId = cadetPrivacy.getId();
 		this.intraName = cadetPrivacy.getLogin();
-		this.image = cadetPrivacy.getImage().getLink();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+		this.grade = cadetPrivacy.getCreated_at();
 		this.blackHole = false;
 		this.agree = false;
 	}
