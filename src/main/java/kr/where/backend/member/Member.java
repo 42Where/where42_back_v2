@@ -2,9 +2,9 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.member.dto.CreateMemberDto;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,16 +38,18 @@ public class Member {
 
 	private boolean inCluster;
 
+	@Column(nullable = false)
 	private boolean blackHole;
 
 	@Column(nullable = false)
-	private int grade;
+	private String grade;
 
+	@Column(nullable = false)
 	private boolean agree;
 
 	private Long defaultGroupId;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id")
 	private Location location;
 
@@ -62,24 +64,44 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	private List<GroupMember> groupMembers = new ArrayList<>();
 
-	public Member(final CreateMemberDto createMemberDto) {
-		this.intraId = createMemberDto.getIntraId();
-		this.intraName = createMemberDto.getIntraName();
-		this.grade = createMemberDto.getGrade();
-		this.image = createMemberDto.getImage();
-		this.agree = createMemberDto.isAgree();
+	public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.grade = cadetPrivacy.getCreated_at();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+        this.inCluster = hane.getInoutState().equals("IN");
+		this.agree = true;
 		this.blackHole = false;
 	}
 
-//	public Member(final CreateFlashMemberDto createFlashMemberDto) {
-//		this.intraId = createFlashMemberDto.getIntraId();
-//		this.intraName = createFlashMemberDto.getIntraName();
-//		this.agree = false;
-//		this.blackHole = false;
-//	}
+	public Member(final CadetPrivacy cadetPrivacy) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+		this.grade = cadetPrivacy.getCreated_at();
+		this.blackHole = false;
+		this.agree = false;
+	}
 
-	public void updatePersonalMsg(final String comment) {
+	public void setFlashToMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+		this.grade = cadetPrivacy.getCreated_at();
+		this.inCluster = hane.getInoutState().equals("IN");
+		this.agree = true;
+	}
+
+	public void setComment(final String comment) {
 		this.comment = comment;
+	}
+	public void setLocation(final Location location) {
+		this.location = location;
+	}
+
+	public void setDefaultGroupId(final Long defaultGroupId) {
+		this.defaultGroupId = defaultGroupId;
+	}
+
+	public void setBlackHole(final boolean active) {
+		this.blackHole = !active;
 	}
 
 	/*
@@ -88,86 +110,5 @@ public class Member {
 	public void setOtherInformation(final String comment, final boolean inCluster) {
 		this.comment = comment;
 		this.inCluster = inCluster;
-	}
-
-	//setter
-	public void setFlashToMember(final CreateMemberDto createMemberDto) {
-		this.image = createMemberDto.getImage();
-		this.grade = createMemberDto.getGrade();
-		this.agree = true;
-	}
-
-	public void setDefaultGroupId(final Long defaultGroupId) {
-		this.defaultGroupId = defaultGroupId;
-	}
-
-	//
-	//    public void setDefaultGroup(Long defaultGroupId, Long starredGroupId) {
-	//        this.defaultGroupId = defaultGroupId;
-	//        this.starredGroupId = starredGroupId;
-	//    }
-	//
-	//
-	//    public void changeTime() {
-	//        this.updateTime = new Date();
-	//    }
-	//
-	//    public void updatePlanet(Planet planet) {
-	//        log.info("[member-update] \"{}\"님의 Planet이 \"{}\"에서 \"{}\"(으)로 업데이트 되었습니다.", this.name, this.getLocate().getPlanet(), planet);
-	//        this.getLocate().updatePlanet(planet);
-	//        this.updateTime = new Date();
-	//    }
-	//
-
-	//
-	//    public void updateParsedInOrOut(int inOrOut) {
-	//        this.inOrOut = inOrOut;
-	//        this.location = Define.PARSED;
-	//    }
-	//
-	//    public void updateInOrOut(int inOrOut) {
-	//        this.inOrOut = inOrOut;
-	//    }
-	//
-	//    public void updateParsedStatus(int inOrOut) {
-	//        this.inOrOut = inOrOut;
-	//        this.location = Define.PARSED;
-	//        this.updateTime = new Date();
-	//    }
-	//
-	//    public void updateOutStatus(int inOrOut) {
-	//        this.inOrOut = inOrOut;
-	//        this.updateTime = new Date();
-	//    }
-	//
-	//    public void updateEval(int status) {
-	//        this.evaling = status;
-	//        this.evalDate = new Date();
-	//    }
-	//
-	//    public Long timeDiff() {
-	//        Date now = new Date();
-	//        return (now.getTime() - updateTime.getTime()) / 60000;
-	//    }
-	//
-	//
-	//    public Long evalTimeDiff() {
-	//        Date now = new Date();
-	//        return (now.getTime() - evalDate.getTime())/ 60000;
-	//    }
-	//
-	//    public void updateSignUpDate(String date) {
-	//        this.signUpDate = date;
-	//    }
-
-	//플러시 데이터 만드때 필요한 생성자 이것도 수정하시려면 수정하셔도 됩니다.
-	//location 생성자도 필요합니다!
-	public Member(final CadetPrivacy cadetPrivacy) {
-		this.intraId = cadetPrivacy.getId();
-		this.intraName = cadetPrivacy.getLogin();
-		this.image = cadetPrivacy.getImage().getLink();
-		this.location = cadetPrivacy.getLocation();
-		this.blackHole = false;
-		this.agree = false;
 	}
 }

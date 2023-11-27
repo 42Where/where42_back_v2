@@ -5,7 +5,7 @@ import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.exception.request.RequestException.HaneRequestException;
-import kr.where.backend.member.Enum.Planet;
+import kr.where.backend.api.mappingDto.Planet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
