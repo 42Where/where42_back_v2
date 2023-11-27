@@ -2,10 +2,11 @@ package kr.where.backend.member;
 
 import java.util.Optional;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
-import kr.where.backend.member.dto.CreateMemberDto;
+import kr.where.backend.location.LocationService;
 import kr.where.backend.member.dto.DeleteMemberDto;
 import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.dto.UpdateMemberDto;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,92 +27,63 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
+	private final LocationService locationService;
 
 	@Transactional
-	public ResponseMemberDto signUp(final CreateMemberDto createMemberDto) {
+	public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 
-		Member member = memberRepository.findByIntraId(createMemberDto.getIntraId()).orElse(null);
+		// 1. if-else
+//		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+//
+//		if (member != null && member.isAgree()) {
+//			throw new MemberException.DuplicatedMemberException();
+//		} else if (member != null && !member.isAgree()) {
+//			member.setFlashToMember(cadetPrivacy, hane);
+//		} else {
+//			member = new Member(cadetPrivacy, hane);
+//			memberRepository.save(member);
+//			locationService.create(member, cadetPrivacy.getLocation());
+//		}
+//		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
+//		member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-		if (member != null && member.isAgree()) {
-			throw new MemberException.DuplicatedMemberException();
-		} else if (member != null && !member.isAgree()) {
-			member.setFlashToMember(createMemberDto);
-		} else {
-			member = new Member(createMemberDto);
-			memberRepository.save(member);
-		}
+		// 2. 람다식
+		Member member = memberRepository.findByIntraId(cadetPrivacy.getId())
+				.map(existingMember -> {
+					if (existingMember.isAgree())
+						throw new MemberException.DuplicatedMemberException();
+					existingMember.setFlashToMember(cadetPrivacy, hane);
+					return existingMember;
+				})
+				.orElseGet(() -> {
+					Member newMember = new Member(cadetPrivacy, hane);
+					memberRepository.save(newMember);
+					locationService.create(newMember, cadetPrivacy.getLocation());
+					return newMember;
+				});
 
-		if (member.isAgree()) {
-			ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
-			member.setDefaultGroupId(responseGroupDto.getGroupId());
-		}
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
-				.intraName(member.getIntraName()).grade(member.getGrade())
-				.image(member.getImage()).agree(member.isAgree()).build();
+		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
+		member.setDefaultGroupId(responseGroupDto.getGroupId());
+
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
 		return responseMemberDto;
 	}
 
-//	@Transactional
-//	public ResponseMemberDto updateFlashToMember(Member alreadyExistMember, final CreateMemberDto createMemberDto) {
-//		alreadyExistMember.setFlashToMember(createMemberDto);
-//
-//		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(alreadyExistMember.getIntraId(), "default"));
-//		alreadyExistMember.setDefaultGroupId(responseGroupDto.getGroupId());
-//
-//		groupMemberService.createGroupMember(new CreateGroupMemberDTO(alreadyExistMember.getIntraId(),
-//				alreadyExistMember.getDefaultGroupId(), responseGroupDto.getGroupName(), true));
-//
-//
-//		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(alreadyExistMember.getIntraId())
-//				.intraName(alreadyExistMember.getIntraName()).grade(alreadyExistMember.getGrade())
-//				.image(alreadyExistMember.getImage()).agree(alreadyExistMember.isAgree()).build();
-//
-//		return responseMemberDto;
-//	}
-
-//	@Transactional
-//	public Member createMember(final CreateMemberDto createMemberDto) {
-//		final Member member = new Member(createMemberDto);
-//		memberRepository.save(member);
-//
-////		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), "default"));
-////		member.setDefaultGroupId(responseGroupDto.getGroupId());
-////
-////		groupMemberService.createGroupMember(new CreateGroupMemberDTO(member.getIntraId(),
-////			member.getDefaultGroupId(), responseGroupDto.getGroupName(), true));
-////
-////		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
-////			.intraName(member.getIntraName()).grade(member.getGrade())
-////			.image(member.getImage()).agree(member.isAgree()).build();
-//
-//		return member;
-//	}
-
 	@Transactional
-	public ResponseMemberDto createFlashMember(final CreateMemberDto createFlashMember) {
-		final Member member = new Member(createFlashMember);
+	public ResponseMemberDto createDisagreeMember(final CadetPrivacy cadetPrivacy) {
+		final Member member = new Member(cadetPrivacy);
 		memberRepository.save(member);
+		locationService.create(member, cadetPrivacy.getLocation());
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId())
-				.intraName(member.getIntraName()).agree(member.isAgree()).build();
-
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 		return responseMemberDto;
 	}
-
-//	public void validateDuplicatedMember(final Long intraId) {
-//		memberRepository.findByIntraId(intraId).ifPresent(present -> {
-//			if(present.isAgree())
-//				throw new MemberException.DuplicatedMemberException();;
-//		});
-//	}
 
 	public List<ResponseMemberDto> findAll() {
 		final List<Member> members = memberRepository.findAll();
 		final List<ResponseMemberDto> responseMemberDtos = members.stream().map(member -> ResponseMemberDto.builder()
-				.intraId(member.getIntraId())
-				.intraName(member.getIntraName()).grade(member.getGrade())
-				.image(member.getImage()).build()).toList();
+				.member(member).build()).toList();
 
 		return responseMemberDtos;
 	}
@@ -119,7 +92,7 @@ public class MemberService {
 	public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
 		final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
 				.orElseThrow(MemberException.NoMemberException::new);
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().intraId(member.getIntraId()).build();
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
 		memberRepository.delete(member);
 
@@ -130,27 +103,16 @@ public class MemberService {
 	public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
 		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
 				.orElseThrow(MemberException.NoMemberException::new);
-		member.updatePersonalMsg(updateMemberDto.getComment());
+		member.setComment(updateMemberDto.getComment());
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
-				.intraId(member.getIntraId())
-				.comment(member.getComment())
-				.build();
-
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 		return responseMemberDto;
 	}
 
 	public ResponseMemberDto findOneByIntraId(final Long intraId) {
 		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder()
-				.intraId(member.getIntraId())
-				.intraName(member.getIntraName())
-				.grade(member.getGrade())
-				.image(member.getImage())
-				.comment(member.getComment())
-				.inCluster(member.isInCluster())
-				.build();
+		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
 		return responseMemberDto;
 	}
@@ -162,12 +124,6 @@ public class MemberService {
 		return memberRepository.findById(intraId);
 	}
 
-	@Transactional
-	public Member createFlashMember(final CadetPrivacy cadetPrivacy) {
-		final Member flash = new Member(cadetPrivacy);
 
-		memberRepository.save(flash);
-		return flash;
-	}
 }
 
