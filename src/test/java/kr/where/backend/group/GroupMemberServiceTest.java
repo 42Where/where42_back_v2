@@ -1,11 +1,12 @@
 package kr.where.backend.group;
 
+import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.groupmember.AddGroupMemberListDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
-import kr.where.backend.member.dto.CreateMemberDto;
 import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
@@ -43,7 +44,6 @@ public class GroupMemberServiceTest {
     private MemberRepository memberRepository;
 
     private CreateGroupDto createGroupDto;
-    private CreateMemberDto createMemberDto;
     private ResponseMemberDto responseMemberDto;
     private ResponseGroupDto responseGroupDto;
     private CreateGroupMemberDTO createGroupMemberDTO;
@@ -51,9 +51,10 @@ public class GroupMemberServiceTest {
     @BeforeEach
     public void setUp () {
 //         Given
-        createMemberDto = CreateMemberDto.create(11111L, "hjeong", 1, "img");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(11111L, "hjeong", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupDto = new CreateGroupDto(11111L, "group");
-        responseMemberDto = memberService.signUp(createMemberDto);
         responseGroupDto = groupService.createGroup(createGroupDto);
         //        CreateGroupDto createDefaultGroupDto = new CreateGroupDto(11111L,"Default Group");
 
@@ -63,11 +64,12 @@ public class GroupMemberServiceTest {
     @Rollback
     public void 그룹_멤버_생성() throws Exception {
         //given
-        CreateMemberDto groupmember = CreateMemberDto.create(22222L, "jnam", 1, "img");
-        memberService.signUp(groupmember);
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(11111L, "hjeong", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .groupId(responseGroupDto.getGroupId())
-                .intraId(groupmember.getIntraId())
+                .intraId(cadetPrivacy.getId())
                 .isOwner(true)
                 .build();
         //when
@@ -82,12 +84,18 @@ public class GroupMemberServiceTest {
     public void 그룹_멤버_조회() throws Exception{
 
         //given
-        CreateMemberDto groupmember = CreateMemberDto.create(22222L, "jnam", 1, "img");
-        memberService.signUp(groupmember);
-        CreateMemberDto groupmember1 = CreateMemberDto.create(22223L, "suhwpark", 1, "img");
-        memberService.signUp(groupmember1);
-        CreateMemberDto groupmember2 = CreateMemberDto.create(22224L, "jonhan", 1, "img");
-        memberService.signUp(groupmember2);
+        CadetPrivacy cadetPrivacy1 = CadetPrivacy.createForTest(22222L, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane1 = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy1, hane1);
+
+        CadetPrivacy cadetPrivacy2 = CadetPrivacy.createForTest(22223L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane2 = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy2, hane2);
+
+        CadetPrivacy cadetPrivacy3 = CadetPrivacy.createForTest(22224L, "jonhan", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane3 = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy3, hane3);
+
         List<String> members = new ArrayList<>();
         members.add("jnam");
         members.add("suhwpark");
@@ -108,3 +116,4 @@ public class GroupMemberServiceTest {
         assertEquals(4, responseGroupMemberDTOS.size());
     }
 }
+

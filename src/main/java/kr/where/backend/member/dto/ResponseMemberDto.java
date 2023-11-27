@@ -1,6 +1,7 @@
 package kr.where.backend.member.dto;
 
 import kr.where.backend.location.Location;
+import kr.where.backend.member.Member;
 import lombok.*;
 
 @Getter
@@ -8,7 +9,7 @@ import lombok.*;
 public class ResponseMemberDto {
 	private Long intraId;
 	private String intraName;
-	private int grade;
+	private String grade;
 	private String image;
 	private String comment;
 	private boolean inCluster;
@@ -17,17 +18,16 @@ public class ResponseMemberDto {
 	private Location location;
 
 	@Builder
-	public ResponseMemberDto(final Long intraId, final String intraName,
-		final int grade, final String image, final String comment, final boolean inCluster, final boolean agree, final Long defaultGroupId, final Location location) {
-		this.intraId = intraId;
-		this.intraName = intraName;
-		this.grade = grade;
-		this.image = image;
-		this.comment = comment;
-		this.inCluster = inCluster;
-		this.agree = agree;
-		this.defaultGroupId = defaultGroupId;
-		this.location = location;
+	public ResponseMemberDto(final Member member) {
+		this.intraId = member.getIntraId();
+		this.intraName = member.getIntraName();
+		this.grade = member.getGrade();
+		this.image = member.getImage();
+		this.comment = member.getComment();
+		this.inCluster = member.isInCluster();
+		this.agree = member.isAgree();
+		this.defaultGroupId = member.getDefaultGroupId();
+		this.location = member.getLocation();
 	}
 
 }

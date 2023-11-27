@@ -1,4 +1,4 @@
-package kr.where.backend.member.Enum;
+package kr.where.backend.api.mappingDto;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -17,3 +17,4 @@ public enum Planet {
     }
 
 }
+
