@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.group.GroupService;
+import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
+import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
@@ -27,7 +28,7 @@ public class SearchService {
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final TokenService tokenService;
-    private final GroupService groupService;
+    private final GroupRepository groupRepository;
 
     /**
      * @param keyWord 찾을 검색 입력값
@@ -37,7 +38,8 @@ public class SearchService {
 
     public List<ResponseSearch> search(final Long intraId, final String keyWord) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
-        final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
+        final Member member = memberService.findOne(intraId)
+                .orElseThrow(MemberException.NoMemberException::new);
 
         return responseOfSearch(member, findActiveCadets(word));
     }
@@ -80,9 +82,12 @@ public class SearchService {
     }
 
     private List<ResponseSearch> responseOfSearch(final Member member, final List<CadetPrivacy> cadetPrivacies) {
-        final Group group = groupService.findOneGroupById(member.getDefaultGroupId());
+        final Group group = groupRepository
+                .findById(member.getDefaultGroupId())
+                .orElseThrow(GroupException.NoGroupException::new);
 
-        return cadetPrivacies.stream()
+        return cadetPrivacies
+                .stream()
                 .map(search -> memberService.findOne(search.getId())
                         .orElse(memberService.createFlashMember(search)))
                 .map(search -> ResponseSearch.of(group, search))
