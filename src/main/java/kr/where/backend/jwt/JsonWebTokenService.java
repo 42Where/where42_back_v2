@@ -19,6 +19,7 @@ import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Slf4j
 public class JsonWebTokenService {
+    @Value("${accesstoken.expiration.time}")
+    private Long accessTokenExpirationTime;
+    @Value("${refreshtoken.expiration.time}")
+    private Long refreshTokenExpirationTime;
+    @Value("${jwt.token.secret}")
+    private String secret_code;
+    @Value("${issuer}")
+    private String issuer;
     private final JsonWebTokenRepository jsonWebTokenRepository;
     private final MemberService memberService;
 
@@ -94,6 +103,27 @@ public class JsonWebTokenService {
     }
 
     /**
+     * token을 생성하는 메서드, jwt 안의 claim에 생성 시간, 생성자, 만료시간, secret Key 설정한 후 build
+     * @param intraId : token 주인을 payload에 설정하기 위함
+     * @param validateTime : 토큰의 만료시간 설정하기 위함
+     * @return token
+     */
+    private String createToken(final Long intraId, final long validateTime) {
+        final Claims claims = Jwts.claims().setSubject("User");
+        claims.put("intraId", intraId);
+        claims.put("roles", "Cadet");
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setIssuer(issuer)
+                .setExpiration(new Date(now.getTime() + validateTime))
+                .signWith(generateSecretKey(secret_code), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
      * jwt Token 설정 시 필요한 secret code 복호화 메서드
      * @param secretCode : 사용자 지정 secretcode
      * @return 복호화된 code
@@ -102,27 +132,6 @@ public class JsonWebTokenService {
         final String encodedSecretCode = Base64.getEncoder().encodeToString(secretCode.getBytes());
         return Keys.hmacShaKeyFor(encodedSecretCode.getBytes());
     }
-
-    /**
-     * token을 생성하는 메서드, jwt 안의 claim에 생성 시간, 생성자, 만료시간, secret Key 설정한 후 build
-     * @param intraId : token 주인을 payload에 설정하기 위함
-     * @param validateTime : 토큰의 만료시간 설정하기 위함
-     * @return token
-     */
-    private String createToken(final String intraId, final long validateTime) {
-        final Claims claims = Jwts.claims().setSubject("User");
-        claims.put("intraId", intraId);
-        claims.put("roles", "Cadet");
-        Date now = new Date();
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setIssuer(issuer)
-                .setExpiration(new Date(now.getTime() + validateTime))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
 
     /**
      * security의 권한과 관련된 메서드
@@ -168,7 +177,7 @@ public class JsonWebTokenService {
         private Claims parseToken(final String accessToken) {
             try {
                 return Jwts.parserBuilder()
-                        .setSigningKey(secretKey)
+                        .setSigningKey(generateSecretKey(secret_code))
                         .build()
                         .parseClaimsJws(accessToken)
                         .getBody();
