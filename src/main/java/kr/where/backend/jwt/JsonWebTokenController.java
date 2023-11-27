@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.dto.jwt.ReIssue;
 import kr.where.backend.jwt.dto.ReIssue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class JsonWebTokenController {
             }
 
     )
-    @PostMapping("/reissue-jwt")
+    @PostMapping("/reissue")
     public ResponseEntity<String> reIssue(@RequestBody final ReIssue reIssue) {
 
         return ResponseEntity.ok(jsonWebTokenService.reissueAccessToken(reIssue));
