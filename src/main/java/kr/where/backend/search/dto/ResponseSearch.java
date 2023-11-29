@@ -68,7 +68,7 @@ public class ResponseSearch {
         responseSearch.intraId = searched.getIntraId();
         responseSearch.intraName = searched.getIntraName();
         responseSearch.image = searched.getImage();
-        responseSearch.location = searched.getLocation();
+        responseSearch.location = searched.getLocation().getLocation();
         responseSearch.isFriend = false;
 
         return responseSearch;
@@ -80,7 +80,7 @@ public class ResponseSearch {
         responseSearch.intraId = searched.getIntraId();
         responseSearch.intraName = searched.getIntraName();
         responseSearch.image = searched.getImage();
-        responseSearch.location = searched.getLocation();
+        responseSearch.location = searched.getLocation().getLocation();
         responseSearch.comment = searched.getComment();
         responseSearch.inOrOut = searched.isInCluster();
         responseSearch.isFriend = group.isInGroup(searched);
