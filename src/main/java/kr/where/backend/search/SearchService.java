@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-    private static final String PATTERN = "^[0-9a-zA-Z]*$";
+    private static final String PATTERN = "^[0-9a-z]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
-    private static final int MINIMUM_LENGTH = 2;
+    private static final int MINIMUM_LENGTH = 1;
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
@@ -59,26 +59,27 @@ public class SearchService {
     }
 
     private boolean validateLength(final String keyWord) {
-        return keyWord.length() < MINIMUM_LENGTH || keyWord.length() > MAXIMUM_LENGTH;
+        return keyWord.length() > MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
         final List<CadetPrivacy> result = new ArrayList<>();
 
-        do {
-            isActiveCadet(result,
-                    intraApiService
-                            .getCadetsInRange(tokenService.findAccessToken(TOKEN_NAME), word));
-        } while (result.size() < MAXIMUM_SIZE);
-
+        int page = 1;
+        while (true) {
+            final List<CadetPrivacy> searchApiResult =
+                    intraApiService.getCadetsInRange(tokenService.findAccessToken(TOKEN_NAME), word, page);
+            isActiveCadet(result, searchApiResult);
+            if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
+                break;
+            }
+            page += 1;
+        }
         return result;
     }
 
     private void isActiveCadet(final List<CadetPrivacy> result, final List<CadetPrivacy> cadetPrivacies) {
-        cadetPrivacies.stream()
-                .filter(CadetPrivacy::isActive)
-                .limit(MAXIMUM_SIZE - result.size())
-                .forEach(result::add);
+        cadetPrivacies.stream().filter(CadetPrivacy::isActive).forEach(result::add);
     }
 
     private List<ResponseSearch> responseOfSearch(final Member member, final List<CadetPrivacy> cadetPrivacies) {
@@ -89,7 +90,7 @@ public class SearchService {
         return cadetPrivacies
                 .stream()
                 .map(search -> memberService.findOne(search.getId())
-                        .orElse(memberService.createFlashMember(search)))
+                        .orElse(memberService.createDisagree(search)))
                 .map(search -> ResponseSearch.of(group, search))
                 .toList();
     }
