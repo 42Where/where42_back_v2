@@ -79,7 +79,7 @@ public class TokenController {
     @GetMapping("/range/info")
     public List<CadetPrivacy> get42UsersInfoInRange() {
         final String accessToken = tokenService.findAccessToken("test");
-        final List<CadetPrivacy> list = intraApiService.getCadetsInRange(accessToken, "jon");
+        final List<CadetPrivacy> list = intraApiService.getCadetsInRange(accessToken, "jon", 1);
         return list;
     }
 }
