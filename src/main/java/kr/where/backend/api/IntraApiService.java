@@ -87,11 +87,11 @@ public class IntraApiService {
      * keyWord 부터 end 까지 intra id를 가진 카뎃 10명의 정보 반환
      */
     @Retryable
-    public List<CadetPrivacy> getCadetsInRange(final String token, final String keyWord) {
+    public List<CadetPrivacy> getCadetsInRange(final String token, final String keyWord, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(
                                 HttpHeader.request42Info(token),
-                                UriBuilder.searchCadets(keyWord, keyWord + END_DELIMITER)),
+                                UriBuilder.searchCadets(keyWord, keyWord + END_DELIMITER, page)),
                         CadetPrivacy[].class);
     }
 
