@@ -151,7 +151,7 @@ public class UriBuilder {
     /**
      * 조회를 시작하려는 첫 단어와 마지막 단어를 param으로 받아, 검색하는 URI 반환
      */
-    public static URI searchCadets(final String begin, final String end) {
+    public static URI searchCadets(final String begin, final String end, final int page) {
         return UriComponentsBuilder
                 .newInstance()
                 .scheme(HTTPS)
@@ -160,6 +160,7 @@ public class UriBuilder {
                 .queryParam(SORT, "login")
                 .queryParam(RANGE_LOGIN, begin + DELIMITER + end)
                 .queryParam(PAGE_SIZE, SEARCH_COUNT)
+                .queryParam(PAGE_NUMBER, page)
                 .build()
                 .toUri();
     }
