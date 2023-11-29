@@ -3,10 +3,12 @@ package kr.where.backend.group;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
-import kr.where.backend.member.dto.CreateMemberDto;
+
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,15 +25,16 @@ public class GroupServiceTest {
     @Autowired
     private GroupService groupService;
     private CreateGroupDto createGroupDto;
-    private CreateMemberDto createMemberDto;
     @Autowired
     private MemberService memberService;
 
     @BeforeEach
     public void setUp () {
         // Given
-        createMemberDto = CreateMemberDto.create(10000L, "phan", 0, "url");
-        memberService.signUp(createMemberDto);
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000L, "phan", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy, hane);
+
         createGroupDto = new CreateGroupDto(10000L, "popopop");
     }
 
@@ -88,3 +91,4 @@ public class GroupServiceTest {
         assertEquals("popopop", deleteDto.getGroupName());
     }
 }
+

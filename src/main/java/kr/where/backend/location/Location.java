@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 public class Location {
 
     @Id
-    @Column(name = "location_id",nullable = false)
+    @Column(name = "location_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long locationId;
 
-    @OneToOne(mappedBy = "location")
+    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
     private Member member;
 
     @Column(length = 30)
@@ -29,11 +29,24 @@ public class Location {
     @Column(length = 6)
     private String imacLocation;
 
-    @Column(nullable = false)
-    private LocalDateTime customUpdatedAt = LocalDateTime.now();
+    private LocalDateTime customUpdatedAt;
 
-    @Column(nullable = false)
-    private LocalDateTime imacUpdatedAt = LocalDateTime.now();
+    private LocalDateTime imacUpdatedAt;
+
+    public Location(final Member member, final String imacLocation) {
+        this.member = member;
+        this.imacLocation = imacLocation;
+        this.imacUpdatedAt = LocalDateTime.now();
+    }
+
+    public Location(final String imacLocation) {
+        this.imacLocation = imacLocation;
+        this.imacUpdatedAt = LocalDateTime.now();
+    }
+
+    public  void setMember(Member member) {
+        this.member = member;
+    }
 
     public void setCustomLocation(final String customLocation) {
         this.customLocation = customLocation;
@@ -45,11 +58,11 @@ public class Location {
         this.imacUpdatedAt = LocalDateTime.now();
     }
 
-    public String getLocation(final String member) {
+    public String getLocation(final Member member) {
         if (member == null)
             throw new RuntimeException("멤버가 없습니다");
 
-        if (!getMember().isAgree()) {
+        if (!member.isAgree()) {
             return this.imacLocation;
         } else {
             if (customLocation.isEmpty() && imacLocation.isEmpty()) {
