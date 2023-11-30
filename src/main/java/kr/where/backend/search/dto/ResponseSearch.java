@@ -46,45 +46,12 @@ public class ResponseSearch {
         this.image = searched.getImage();
         this.location = searched.getLocation().getLocation();
         this.isAgree = searched.isAgree();
+        this.isFriend = false;
 
         if (this.isAgree) {
             this.comment = searched.getComment();
             this.inOrOut = searched.isInCluster();
             this.isFriend = group.isInGroup(searched);
         }
-    }
-
-    /**
-     * 두번째 방식, 아에 서비스 동의한 사람과 아닌 사람에 대한 생성자를 나누기!
-     *
-     */
-    public static ResponseSearch of(final Group group, final Member searched) {
-        if (searched.isAgree()) {
-            return agreedMember(group, searched);
-        }
-
-        final ResponseSearch responseSearch = new ResponseSearch();
-
-        responseSearch.intraId = searched.getIntraId();
-        responseSearch.intraName = searched.getIntraName();
-        responseSearch.image = searched.getImage();
-        responseSearch.location = searched.getLocation().getLocation();
-        responseSearch.isFriend = false;
-
-        return responseSearch;
-    }
-
-    private static ResponseSearch agreedMember(final Group group, final Member searched) {
-        final ResponseSearch responseSearch = new ResponseSearch();
-
-        responseSearch.intraId = searched.getIntraId();
-        responseSearch.intraName = searched.getIntraName();
-        responseSearch.image = searched.getImage();
-        responseSearch.location = searched.getLocation().getLocation();
-        responseSearch.comment = searched.getComment();
-        responseSearch.inOrOut = searched.isInCluster();
-        responseSearch.isFriend = group.isInGroup(searched);
-
-        return responseSearch;
     }
 }
