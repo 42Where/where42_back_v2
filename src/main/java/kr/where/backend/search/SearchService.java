@@ -91,7 +91,7 @@ public class SearchService {
                 .stream()
                 .map(search -> memberService.findOne(search.getId())
                         .orElse(memberService.createDisagree(search)))
-                .map(search -> ResponseSearch.of(group, search))
+                .map(search -> new ResponseSearch(group, search))
                 .toList();
     }
 }
