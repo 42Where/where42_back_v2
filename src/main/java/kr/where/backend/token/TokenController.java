@@ -45,6 +45,7 @@ public class TokenController {
     public CadetPrivacy getUserInfo() {
         final String accessToken = tokenService.findAccessToken("test");
         final CadetPrivacy cadetPrivacy = intraApiService.getCadetPrivacy(accessToken, "jonhan");
+
         return cadetPrivacy;
     }
 
@@ -80,6 +81,7 @@ public class TokenController {
     public List<CadetPrivacy> get42UsersInfoInRange() {
         final String accessToken = tokenService.findAccessToken("test");
         final List<CadetPrivacy> list = intraApiService.getCadetsInRange(accessToken, "jon", 1);
+
         return list;
     }
 }

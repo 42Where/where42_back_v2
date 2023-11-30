@@ -2,9 +2,9 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
+import kr.where.backend.api.mappingDto.Hane;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +25,7 @@ public class Member {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@Column(name = "intra_id", unique = true, nullable = false)
+	@Column(name = "intra_id", unique = true)
 	private Long intraId;
 
 	@Column(length = 15, unique = true, nullable = false)

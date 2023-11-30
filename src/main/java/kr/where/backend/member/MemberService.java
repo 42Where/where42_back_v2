@@ -120,9 +120,21 @@ public class MemberService {
 	 * search에서 사용하는 로직입니다. 혹시 수정하면 수정하셔도 되요!
 	 */
 	public Optional<Member> findOne(final Long intraId) {
-		return memberRepository.findById(intraId);
+		return memberRepository.findByIntraId(intraId);
 	}
 
+	/**
+	 * search 용도
+	 */
+	@Transactional
+	public Member createDisagree(final CadetPrivacy cadetPrivacy) {
+		System.out.println(cadetPrivacy);
+		final Member member = new Member(cadetPrivacy);
 
+		memberRepository.save(member);
+		locationService.create(member, cadetPrivacy.getLocation());
+
+		return member;
+	}
 }
 
