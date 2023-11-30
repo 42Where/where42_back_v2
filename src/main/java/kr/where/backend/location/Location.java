@@ -26,7 +26,7 @@ public class Location {
     @Column(length = 30)
     private String customLocation;
 
-    @Column(length = 6)
+    @Column(length = 7)
     private String imacLocation;
 
     private LocalDateTime customUpdatedAt;
@@ -58,11 +58,8 @@ public class Location {
         this.imacUpdatedAt = LocalDateTime.now();
     }
 
-    public String getLocation(final Member member) {
-        if (member == null)
-            throw new RuntimeException("멤버가 없습니다");
-
-        if (!member.isAgree()) {
+    public String getLocation() {
+        if (!this.member.isAgree()) {
             return this.imacLocation;
         } else {
             if (customLocation.isEmpty() && imacLocation.isEmpty()) {
