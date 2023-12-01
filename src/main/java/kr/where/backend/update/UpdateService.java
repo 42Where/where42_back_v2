@@ -3,6 +3,7 @@ package kr.where.backend.update;
 import java.util.ArrayList;
 import java.util.List;
 import kr.where.backend.api.IntraApiService;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.api.mappingDto.Cluster;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.MemberService;
@@ -116,13 +117,40 @@ public class UpdateService {
         return statusResult;
     }
 
-    private void updateStatus(final List<Cluster> result) {
-        result.forEach(cadet -> memberService.findOne(cadet.getId())
+    private void updateStatus(final List<Cluster> cadets) {
+        cadets.forEach(cadet -> memberService.findOne(cadet.getId())
                     .ifPresent(member -> locationService.update(member, cadet.getUser().getLocation())));
     }
 
     /**
      * 새로운 기수에 대한 image 업데이트
      */
+    @Transactional
+    public void updateMemberImage() {
+        final String token = tokenService.findAccessToken("image");
 
+        final List<CadetPrivacy> cadets = getCadetsInfo(token);
+        updateImage(cadets);
+    }
+
+    private List<CadetPrivacy> getCadetsInfo(final String token) {
+        int page = 1;
+
+        final List<CadetPrivacy> cadets = new ArrayList<>();
+        while (true) {
+            List<CadetPrivacy> response = intraApiService.getCadetsImage(token, page);
+            cadets.addAll(response);
+
+            if (response.size() < 100) {
+                break;
+            }
+        }
+
+        return cadets;
+    }
+
+    private void updateImage(final List<CadetPrivacy> cadets) {
+        cadets.forEach(cadet -> memberService.findOne(cadet.getId())
+                .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
+    }
 }
