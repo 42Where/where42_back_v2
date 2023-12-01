@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Cluster {
-    private String  end_at;
+    private Long id;
+    private String end_at;
     private String begin_at;
     private User user;
 }
