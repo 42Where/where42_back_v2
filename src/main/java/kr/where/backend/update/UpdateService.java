@@ -82,6 +82,7 @@ public class UpdateService {
         updateStatus(status);
     }
 
+
     private List<Cluster> getStatus(final String token) {
         int page = 1;
 
