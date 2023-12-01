@@ -2,18 +2,16 @@ package kr.where.backend.update;
 
 import java.util.ArrayList;
 import java.util.List;
-import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
-import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.mappingDto.Cluster;
-import kr.where.backend.api.mappingDto.Hane;
-import kr.where.backend.member.Member;
+import kr.where.backend.location.LocationService;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateService {
 
     private final TokenService tokenService;
-    private final HaneApiService haneApiService;
     private final IntraApiService intraApiService;
     private final MemberService memberService;
+    private final LocationService locationService;
 
     //TODO
     /**
@@ -39,49 +37,92 @@ public class UpdateService {
     /**
      * where42 서비스가 1시간 이상 다운 되었을때, 42 서울 로그인한 카뎃에 대한 위치 업데이트 42api를 호출하기 때문에 admin 토큰 호출(api 호출 제한)
      */
-    @Transactional
+    @Retryable
     public void updateMemberLocations() {
         final String token = tokenService.findAccessToken("admin");
-        final String hane = tokenService.findAccessToken("Hane");
 
         final List<List<Cluster>> loginMember = getLoginMember(token);
 
-        for (List<Cluster> members : loginMember) {
-            updateLocation(members, hane);
-        }
+        loginMember.forEach(this::updateLocation);
     }
 
     private List<List<Cluster>> getLoginMember(final String token) {
         int page = 1;
-        List<List<Cluster>> result = new ArrayList<>();
+        final List<List<Cluster>> result = new ArrayList<>();
 
         while (true) {
-            List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
+            final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.add(loginMember);
-            if (loginMember.size() != 100) {
+            if (loginMember.size() < 100) {
                 break;
             }
-            page++;
+            page += 1;
         }
 
         return result;
     }
 
-
-    private void updateLocation(final List<Cluster> cadets, final String haneToken) {
-        for (Cluster cadet : cadets) {
-            final Member member = memberService.findOne(cadet.getUser().getId())
-                    .orElseThrow(MemberException.NoMemberException::new);
-
-            if (member != null) {
-                memberService.updateMemberInfo(member, haneApiService.getHaneInfo(member.getIntraName(), haneToken),
-                        cadet.getUser().getLocation());
-            }
-            if (member == null) {
-                memberService.createCadet(cadet.getUser().getId(), cadet.getUser().getLogin(),
-                        haneApiService.getHaneInfo(member.getIntraName(), haneToken),
-                        member.getImacLocation());
-            }
-        }
+    private void updateLocation(final List<Cluster> cadets) {
+        cadets.forEach(cadet -> memberService.findOne(cadet.getId())
+                .ifPresent(member -> locationService.update(member, cadet.getUser().getLocation())));
     }
+
+    /**
+     * 5분 동안 login, logout status 적용하는 메서드
+     */
+    @Retryable
+    @Scheduled(cron = "0 0/5 * 1/1 * ?")
+    public void updateMemberStatus() {
+        final String token = tokenService.findAccessToken("admin");
+
+        final List<Cluster> status = getStatus(token);
+
+        updateStatus(status);
+    }
+
+    private List<Cluster> getStatus(final String token) {
+        int page = 1;
+
+        final List<Cluster> statusResult = new ArrayList<>();
+
+        while(true) {
+            boolean loginFlag = false;
+            boolean logoutFlag = false;
+
+            if (!loginFlag) {
+                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
+                statusResult.addAll(loginStatus);
+
+                if (loginStatus.size() < 100) {
+                    loginFlag = true;
+                }
+            }
+            if (!logoutFlag) {
+                final List<Cluster> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
+                statusResult.addAll(logoutStatus);
+
+                if (logoutStatus.size() < 100) {
+                    logoutFlag = true;
+                }
+            }
+
+            if (loginFlag && logoutFlag) {
+                break;
+            }
+
+            page += 1;
+        }
+
+        return statusResult;
+    }
+
+    private void updateStatus(final List<Cluster> result) {
+        result.forEach(cadet -> memberService.findOne(cadet.getId())
+                    .ifPresent(member -> locationService.update(member, cadet.getUser().getLocation())));
+    }
+
+    /**
+     * 새로운 기수에 대한 image 업데이트
+     */
+
 }
