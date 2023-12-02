@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,11 +59,11 @@ public class Member {
 
 	@Column(nullable = false)
 	@CreationTimestamp
-	private LocalDate createdAt = LocalDate.now();
+	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@Column(nullable = false)
 	@UpdateTimestamp
-	private LocalDate updatedAt = LocalDate.now();
+	private LocalDateTime updatedAt = LocalDateTime.now();
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	private List<GroupMember> groupMembers = new ArrayList<>();
