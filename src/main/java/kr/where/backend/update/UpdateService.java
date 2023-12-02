@@ -2,9 +2,11 @@ package kr.where.backend.update;
 
 import java.util.ArrayList;
 import java.util.List;
+import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
 import kr.where.backend.api.mappingDto.Cluster;
+import kr.where.backend.api.mappingDto.Hane;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.token.TokenService;
@@ -22,11 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(readOnly = true)
 public class UpdateService {
-
+    private static final String HANE_TOKEN = "hane";
+    private static final String IMAGE_TOKEN = "image";
+    private static final String ADMIN_TOKEN = "admin";
     private final TokenService tokenService;
     private final IntraApiService intraApiService;
+    private final HaneApiService haneApiService;
     private final MemberService memberService;
-    private final LocationService locationService;
 
     //TODO
     /**
@@ -41,7 +45,7 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        final String token = tokenService.findAccessToken("admin");
+        final String token = tokenService.findAccessToken(ADMIN_TOKEN);
 
         final List<List<Cluster>> loginMember = getLoginMember(token);
 
@@ -65,8 +69,13 @@ public class UpdateService {
     }
 
     private void updateLocation(final List<Cluster> cadets) {
+        final String haneToken = tokenService.findAccessToken(HANE_TOKEN);
+
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
-                .ifPresent(member -> member.getLocation().setImacLocation(cadet.getUser().getLocation())));
+                .ifPresent(member -> {
+                    member.getLocation().setImacLocation(cadet.getUser().getLocation());
+                    member.setIncluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                }));
     }
 
     /**
@@ -77,7 +86,7 @@ public class UpdateService {
     @Scheduled(cron = "0 0/5 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
-        final String token = tokenService.findAccessToken("admin");
+        final String token = tokenService.findAccessToken(ADMIN_TOKEN);
 
         final List<Cluster> status = getStatus(token);
 
@@ -126,7 +135,7 @@ public class UpdateService {
      */
     @Transactional
     public void updateMemberImage() {
-        final String token = tokenService.findAccessToken("image");
+        final String token = tokenService.findAccessToken(IMAGE_TOKEN);
 
         final List<CadetPrivacy> cadets = getCadetsInfo(token);
         updateImage(cadets);
