@@ -31,36 +31,17 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 
-		// 1. if-else
-//		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
-//
-//		if (member != null && member.isAgree()) {
-//			throw new MemberException.DuplicatedMemberException();
-//		} else if (member != null && !member.isAgree()) {
-//			member.setFlashToMember(cadetPrivacy, hane);
-//		} else {
-//			member = new Member(cadetPrivacy, hane);
-//			memberRepository.save(member);
-//			locationService.create(member, cadetPrivacy.getLocation());
-//		}
-//		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
-//		member.setDefaultGroupId(responseGroupDto.getGroupId());
+		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
-		// 2. 람다식
-		Member member = memberRepository.findByIntraId(cadetPrivacy.getId())
-				.map(existingMember -> {
-					if (existingMember.isAgree())
-						throw new MemberException.DuplicatedMemberException();
-					existingMember.setFlashToMember(cadetPrivacy, hane);
-					return existingMember;
-				})
-				.orElseGet(() -> {
-					Member newMember = new Member(cadetPrivacy, hane);
-					memberRepository.save(newMember);
-					locationService.create(newMember, cadetPrivacy.getLocation());
-					return newMember;
-				});
-
+		if (member != null && member.isAgree()) {
+			throw new MemberException.DuplicatedMemberException();
+		} else if (member != null && !member.isAgree()) {
+			member.setFlashToMember(cadetPrivacy, hane);
+		} else {
+			member = new Member(cadetPrivacy, hane);
+			memberRepository.save(member);
+			locationService.create(member, cadetPrivacy.getLocation());
+		}
 		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
 		member.setDefaultGroupId(responseGroupDto.getGroupId());
 
@@ -116,25 +97,9 @@ public class MemberService {
 		return responseMemberDto;
 	}
 
-	/**
-	 * search에서 사용하는 로직입니다. 혹시 수정하면 수정하셔도 되요!
-	 */
+	// 위의 findOne이랑 중복! 안쓰면 지우자!
 	public Optional<Member> findOne(final Long intraId) {
 		return memberRepository.findByIntraId(intraId);
-	}
-
-	/**
-	 * search 용도
-	 */
-	@Transactional
-	public Member createDisagree(final CadetPrivacy cadetPrivacy) {
-		System.out.println(cadetPrivacy);
-		final Member member = new Member(cadetPrivacy);
-
-		memberRepository.save(member);
-		locationService.create(member, cadetPrivacy.getLocation());
-
-		return member;
 	}
 }
 
