@@ -2,6 +2,9 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Planet;
+import kr.where.backend.exception.request.RequestErrorCode;
+import kr.where.backend.exception.request.RequestException;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.api.mappingDto.Hane;
@@ -14,6 +17,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -85,7 +89,7 @@ public class Member {
 
 	public void setFlashToMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 		this.grade = cadetPrivacy.getCreated_at();
-		this.inCluster = hane.getInoutState().equals("IN");
+		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 		this.agree = true;
 	}
 
@@ -102,6 +106,17 @@ public class Member {
 
 	public void setBlackHole(final boolean active) {
 		this.blackHole = !active;
+	}
+
+	public void setInCluster(final Planet haneInfo) {
+		this.inCluster = Objects.equals(Planet.gaepo, haneInfo);
+
+		if (Objects.equals(Planet.error, haneInfo))
+			throw new RequestException.HaneRequestException(RequestErrorCode.HANE_SERVICE);
+	}
+
+	public void setImage(final String image) {
+		this.image = image;
 	}
 
 	/*
