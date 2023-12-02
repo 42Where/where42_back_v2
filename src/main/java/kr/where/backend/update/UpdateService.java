@@ -39,6 +39,7 @@ public class UpdateService {
      * where42 서비스가 1시간 이상 다운 되었을때, 42 서울 로그인한 카뎃에 대한 위치 업데이트 42api를 호출하기 때문에 admin 토큰 호출(api 호출 제한)
      */
     @Retryable
+    @Transactional
     public void updateMemberLocations() {
         final String token = tokenService.findAccessToken("admin");
 
@@ -65,7 +66,7 @@ public class UpdateService {
 
     private void updateLocation(final List<Cluster> cadets) {
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
-                .ifPresent(member -> locationService.update(member, cadet.getUser().getLocation())));
+                .ifPresent(member -> member.getLocation().setImacLocation(cadet.getUser().getLocation())));
     }
 
     /**
@@ -74,12 +75,13 @@ public class UpdateService {
      */
     @Retryable
     @Scheduled(cron = "0 0/5 * 1/1 * ?")
+    @Transactional
     public void updateMemberStatus() {
         final String token = tokenService.findAccessToken("admin");
 
         final List<Cluster> status = getStatus(token);
 
-        updateStatus(status);
+        updateLocation(status);
     }
 
 
@@ -117,11 +119,6 @@ public class UpdateService {
         }
 
         return statusResult;
-    }
-
-    private void updateStatus(final List<Cluster> cadets) {
-        cadets.forEach(cadet -> memberService.findOne(cadet.getId())
-                    .ifPresent(member -> locationService.update(member, cadet.getUser().getLocation())));
     }
 
     /**
