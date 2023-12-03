@@ -47,18 +47,18 @@ public class UpdateService {
     public void updateMemberLocations() {
         final String token = tokenService.findAccessToken(ADMIN_TOKEN);
 
-        final List<List<Cluster>> loginMember = getLoginMember(token);
+        final List<Cluster> loginMember = getLoginMember(token);
 
-        loginMember.forEach(this::updateLocation);
+        updateLocation(loginMember);
     }
 
-    private List<List<Cluster>> getLoginMember(final String token) {
+    private List<Cluster> getLoginMember(final String token) {
         int page = 1;
-        final List<List<Cluster>> result = new ArrayList<>();
+        final List<Cluster> result = new ArrayList<>();
 
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
-            result.add(loginMember);
+            result.addAll(loginMember);
             if (loginMember.size() < 100) {
                 break;
             }
