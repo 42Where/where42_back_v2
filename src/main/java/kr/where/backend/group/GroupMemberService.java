@@ -135,9 +135,9 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final FindGroupMemberDto dto) {
-        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(dto.getDefaultGroupId());
-        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(dto.getGroupId());
+    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
+        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
         final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
