@@ -160,11 +160,7 @@ public class GroupMemberServiceTest {
         groupMemberService.addFriendsList(addGroupMemberListDTO);
 
         //when
-        FindGroupMemberDto findGroupMemberDto = FindGroupMemberDto.builder()
-                .defaultGroupId(responseGroupDto.getGroupId())
-                .groupId(dto.getGroupId())
-                .build();
-        List<ResponseGroupMemberDTO> responseGroupMemberDTOS= groupMemberService.findMemberNotInGroup(findGroupMemberDto);
+        List<ResponseGroupMemberDTO> responseGroupMemberDTOS= groupMemberService.findMemberNotInGroup(responseGroupDto.getGroupId(), dto.getGroupId());
 
         //then
         assertEquals(2, responseGroupMemberDTOS.size());
