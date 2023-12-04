@@ -1,5 +1,9 @@
 package kr.where.backend.member;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,8 +49,13 @@ public class MemberController {
             }
     )
     @PostMapping("/")
-    public ResponseEntity createAgreeMember(@RequestBody CadetPrivacy cadetPrivacy, @RequestBody Hane hane) {
+    public ResponseEntity createAgreeMember(@RequestBody ObjectNode saveObj) throws JsonProcessingException {
 
+        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
+        CadetPrivacy cadetPrivacy = mapper.treeToValue(saveObj.get("cadetPrivacy"), CadetPrivacy.class);
+        Hane hane = mapper.treeToValue(saveObj.get("hane"), Hane.class);
+
+        // 나머지 로직은 동일
         final Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 

@@ -15,7 +15,7 @@ public class ResponseMemberDto {
     private boolean inCluster;
     private boolean agree;
     private Long defaultGroupId;
-    private Location location;
+    private String location;
 
     @Builder
     public ResponseMemberDto(final Member member) {
@@ -27,7 +27,7 @@ public class ResponseMemberDto {
         this.inCluster = member.isInCluster();
         this.agree = member.isAgree();
         this.defaultGroupId = member.getDefaultGroupId();
-        this.location = member.getLocation();
+        this.location = member.getLocation().getLocation();
     }
 
 }
