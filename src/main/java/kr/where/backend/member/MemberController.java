@@ -47,7 +47,8 @@ public class MemberController {
     @PostMapping("/")
     public ResponseEntity createAgreeMember(@RequestBody CadetPrivacy cadetPrivacy, @RequestBody Hane hane) {
 
-        final ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+        final Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
         return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
                 .body(responseMemberDto);
