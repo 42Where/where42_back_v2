@@ -90,7 +90,7 @@ public class SearchService {
         return cadetPrivacies
                 .stream()
                 .map(search -> memberService.findOne(search.getId())
-                        .orElse(memberService.createDisagree(search)))
+                        .orElse(memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearch(group, search))
                 .toList();
     }
