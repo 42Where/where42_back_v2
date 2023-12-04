@@ -74,7 +74,7 @@ public class UpdateService {
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
                 .ifPresent(member -> {
                     member.getLocation().setImacLocation(cadet.getUser().getLocation());
-                    member.setIncluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                    member.setInCluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
                 }));
     }
 
