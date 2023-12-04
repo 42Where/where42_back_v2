@@ -9,7 +9,6 @@ import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.location.LocationService;
-import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.dto.UpdateMemberDto;
 
 import kr.where.backend.member.exception.MemberException;
@@ -53,22 +52,22 @@ public class memberServiceTest {
 		Hane hane = Hane.createForTest("IN");
 
 		//when
-		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+		Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
 		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
 
 		Location location = locationRepository.findByMember(member.get());
-		Optional<Group> group = groupRepository.findById(responseMemberDto.getDefaultGroupId());
-		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(responseMemberDto.getDefaultGroupId());
+		Optional<Group> group = groupRepository.findById(agreeMember.getDefaultGroupId());
+		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(agreeMember.getDefaultGroupId());
 
 		//then
-		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
-		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
-		assertThat(responseMemberDto.getImage()).isEqualTo("image");
-		assertThat(responseMemberDto.getGrade()).isEqualTo("2022-10-31");
-		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
+		assertThat(agreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(agreeMember.getIntraName()).isEqualTo("suhwpark");
+		assertThat(agreeMember.getImage()).isEqualTo("image");
+		assertThat(agreeMember.getGrade()).isEqualTo("2022-10-31");
+		assertThat(agreeMember.isAgree()).isEqualTo(true);
 
-		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+		assertThat(agreeMember.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
 
 		assertThat(group.get()).isNotNull();
@@ -86,20 +85,20 @@ public class memberServiceTest {
 		CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 
 		//when
-		ResponseMemberDto responseMemberDto = memberService.createDisagreeMember(cadetPrivacy);
+		Member disagreeMember = memberService.createDisagreeMember(cadetPrivacy);
 
 		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
 
 		Location location = locationRepository.findByMember(member.get());
 
 		//then
-		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
-		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
-		assertThat(responseMemberDto.getImage()).isEqualTo("image");
-		assertThat(responseMemberDto.getGrade()).isEqualTo("2022-10-31");
-		assertThat(responseMemberDto.isAgree()).isEqualTo(false);
+		assertThat(disagreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(disagreeMember.getIntraName()).isEqualTo("suhwpark");
+		assertThat(disagreeMember.getImage()).isEqualTo("image");
+		assertThat(disagreeMember.getGrade()).isEqualTo("2022-10-31");
+		assertThat(disagreeMember.isAgree()).isEqualTo(false);
 
-		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+		assertThat(disagreeMember.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
 	}
 
@@ -111,22 +110,22 @@ public class memberServiceTest {
 		Hane hane = Hane.createForTest("IN");
 
 		//when
-		ResponseMemberDto responseMemberDto = memberService.createAgreeMember(cadetPrivacy, hane);
+		Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
 		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
 
 		Location location = locationRepository.findByMember(member.get());
-		Optional<Group> group = groupRepository.findById(responseMemberDto.getDefaultGroupId());
-		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(responseMemberDto.getDefaultGroupId());
+		Optional<Group> group = groupRepository.findById(agreeMember.getDefaultGroupId());
+		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(agreeMember.getDefaultGroupId());
 
 		//then
-		assertThat(responseMemberDto.getIntraId()).isEqualTo(12345L);
-		assertThat(responseMemberDto.getIntraName()).isEqualTo("suhwpark");
-		assertThat(responseMemberDto.getImage()).isEqualTo("image");
-		assertThat(responseMemberDto.getGrade()).isEqualTo("2022-10-31");
-		assertThat(responseMemberDto.isAgree()).isEqualTo(true);
+		assertThat(agreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(agreeMember.getIntraName()).isEqualTo("suhwpark");
+		assertThat(agreeMember.getImage()).isEqualTo("image");
+		assertThat(agreeMember.getGrade()).isEqualTo("2022-10-31");
+		assertThat(agreeMember.isAgree()).isEqualTo(true);
 
-		assertThat(responseMemberDto.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+		assertThat(agreeMember.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 		assertThat(location.getImacLocation()).isEqualTo("c1r1s1");
 
 		assertThat(group.get()).isNotNull();
