@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HaneApiService {
     /**
-     * hane api 호출하여 inoutState, null 반환
+     * hane api 호출하여 in, out state 반환
      */
     public Hane getHaneInfo(final String name, final String token) {
         try {
