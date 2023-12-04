@@ -62,18 +62,20 @@ public class Location {
         if (!this.member.isAgree()) {
             return this.imacLocation;
         } else {
-            if (customLocation.isEmpty() && imacLocation.isEmpty()) {
+            if (customLocation == null && imacLocation == null) {
                 return null;
-            } else if (customLocation.isEmpty()) {
+            } else if (customLocation == null) {
                 return imacLocation;
-            } else if (imacLocation.isEmpty()) {
+            } else if (imacLocation == null) {
                 return customLocation;
             } else {
                 if (customUpdatedAt.isAfter(imacUpdatedAt)) {
                     return customLocation;
-                } else
+                } else {
                     return imacLocation;
+                }
             }
         }
     }
+
 }
