@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateMemberDto {
-	private Long intraId;
-	private String comment;
+    private Long intraId;
+    private String comment;
 }

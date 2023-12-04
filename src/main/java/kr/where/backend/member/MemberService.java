@@ -24,82 +24,82 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-	private final MemberRepository memberRepository;
-	private final GroupService groupService;
-	private final LocationService locationService;
+    private final MemberRepository memberRepository;
+    private final GroupService groupService;
+    private final LocationService locationService;
 
-	@Transactional
-	public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+    @Transactional
+    public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 
-		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+        Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
-		if (member != null && member.isAgree()) {
-			throw new MemberException.DuplicatedMemberException();
-		} else if (member != null && !member.isAgree()) {
-			member.setFlashToMember(cadetPrivacy, hane);
-		} else {
-			member = new Member(cadetPrivacy, hane);
-			memberRepository.save(member);
-			locationService.create(member, cadetPrivacy.getLocation());
-		}
-		ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
-		member.setDefaultGroupId(responseGroupDto.getGroupId());
+        if (member != null && member.isAgree()) {
+            throw new MemberException.DuplicatedMemberException();
+        } else if (member != null && !member.isAgree()) {
+            member.setFlashToMember(cadetPrivacy, hane);
+        } else {
+            member = new Member(cadetPrivacy, hane);
+            memberRepository.save(member);
+            locationService.create(member, cadetPrivacy.getLocation());
+        }
+        ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
+        member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
-		return responseMemberDto;
-	}
+        return responseMemberDto;
+    }
 
-	@Transactional
-	public ResponseMemberDto createDisagreeMember(final CadetPrivacy cadetPrivacy) {
-		final Member member = new Member(cadetPrivacy);
-		memberRepository.save(member);
-		locationService.create(member, cadetPrivacy.getLocation());
+    @Transactional
+    public ResponseMemberDto createDisagreeMember(final CadetPrivacy cadetPrivacy) {
+        final Member member = new Member(cadetPrivacy);
+        memberRepository.save(member);
+        locationService.create(member, cadetPrivacy.getLocation());
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-		return responseMemberDto;
-	}
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        return responseMemberDto;
+    }
 
-	public List<ResponseMemberDto> findAll() {
-		final List<Member> members = memberRepository.findAll();
-		final List<ResponseMemberDto> responseMemberDtos = members.stream().map(member -> ResponseMemberDto.builder()
-				.member(member).build()).toList();
+    public List<ResponseMemberDto> findAll() {
+        final List<Member> members = memberRepository.findAll();
+        final List<ResponseMemberDto> responseMemberDtos = members.stream().map(member -> ResponseMemberDto.builder()
+                .member(member).build()).toList();
 
-		return responseMemberDtos;
-	}
+        return responseMemberDtos;
+    }
 
-	@Transactional
-	public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
-		final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
-				.orElseThrow(MemberException.NoMemberException::new);
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+    @Transactional
+    public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
+        final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
-		memberRepository.delete(member);
+        memberRepository.delete(member);
 
-		return responseMemberDto;
-	}
+        return responseMemberDto;
+    }
 
-	@Transactional
-	public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
-		final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
-				.orElseThrow(MemberException.NoMemberException::new);
-		member.setComment(updateMemberDto.getComment());
+    @Transactional
+    public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
+        final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+        member.setComment(updateMemberDto.getComment());
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-		return responseMemberDto;
-	}
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        return responseMemberDto;
+    }
 
-	public ResponseMemberDto findOneByIntraId(final Long intraId) {
-		final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
+    public ResponseMemberDto findOneByIntraId(final Long intraId) {
+        final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-		final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
-		return responseMemberDto;
-	}
+        return responseMemberDto;
+    }
 
-	// 위의 findOne이랑 중복! 안쓰면 지우자!
-	public Optional<Member> findOne(final Long intraId) {
-		return memberRepository.findByIntraId(intraId);
-	}
+    // 위의 findOne이랑 중복! 안쓰면 지우자!
+    public Optional<Member> findOne(final Long intraId) {
+        return memberRepository.findByIntraId(intraId);
+    }
 }
 
