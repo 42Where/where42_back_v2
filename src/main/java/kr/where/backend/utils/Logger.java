@@ -2,7 +2,6 @@ package kr.where.backend.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public enum Logger {
     LOGIN("[INFO] : '{}님이 로그인 하였습니다."),
     LOGOUT("[INFO] : '{}님이 로그아웃 하였습니다."),
@@ -36,6 +35,9 @@ public enum Logger {
         this.msg = msg;
     }
 
+
+    //이런식으로 사용하면 돠지 않을까 싶습니다~
+//    @Slf4j
 //    public static void main(String[] args) {
 //        log.info(Logger.LOGIN.msg, "suhwpark", "where42");
 //    }
