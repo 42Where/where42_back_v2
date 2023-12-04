@@ -2,7 +2,6 @@ package kr.where.backend.member;
 
 import jakarta.persistence.*;
 import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Planet;
 import kr.where.backend.exception.request.RequestErrorCode;
 import kr.where.backend.exception.request.RequestException;
 import kr.where.backend.group.entity.GroupMember;
@@ -108,11 +107,8 @@ public class Member {
 		this.blackHole = !active;
 	}
 
-	public void setInCluster(final Planet haneInfo) {
-		this.inCluster = Objects.equals(Planet.gaepo, haneInfo);
-
-		if (Objects.equals(Planet.error, haneInfo))
-			throw new RequestException.HaneRequestException(RequestErrorCode.HANE_SERVICE);
+	public void setInCluster(final Hane hane) {
+		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 	}
 
 	public void setImage(final String image) {
