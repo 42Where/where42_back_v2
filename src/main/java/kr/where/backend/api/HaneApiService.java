@@ -23,7 +23,7 @@ public class HaneApiService {
                             Hane.class);
         } catch (HaneRequestException e) {
             log.info(e.toString());
-            return null;
+            return new Hane();
         }
     }
 }
