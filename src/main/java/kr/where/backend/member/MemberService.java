@@ -29,7 +29,7 @@ public class MemberService {
     private final LocationService locationService;
 
     @Transactional
-    public ResponseMemberDto createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+    public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 
         Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
@@ -45,19 +45,22 @@ public class MemberService {
         ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
         member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+//        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
-        return responseMemberDto;
+//        return responseMemberDto;
+
+        return member;
     }
 
     @Transactional
-    public ResponseMemberDto createDisagreeMember(final CadetPrivacy cadetPrivacy) {
+    public Member createDisagreeMember(final CadetPrivacy cadetPrivacy) {
         final Member member = new Member(cadetPrivacy);
         memberRepository.save(member);
         locationService.create(member, cadetPrivacy.getLocation());
 
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-        return responseMemberDto;
+//        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+//        return responseMemberDto;
+        return member;
     }
 
     public List<ResponseMemberDto> findAll() {
