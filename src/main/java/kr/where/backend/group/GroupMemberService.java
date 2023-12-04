@@ -53,7 +53,10 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Long memberId){
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
+        final Member owner = memberRepository.findByIntraId(memberId)
+                                .orElseThrow(MemberException.NoMemberException::new);
+        final List<GroupMember> groupMembers = groupMemberRepository
+                .findGroupMembersByMemberAndIsOwner(owner, true);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
