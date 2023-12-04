@@ -7,10 +7,7 @@ import org.thymeleaf.standard.expression.IStandardConversionService;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Hane {
-    private String login;
     private String inoutState;
-    private String cluster;
-    private String tag_at;
 
     // test
     public static Hane createForTest(String inoutState) {
