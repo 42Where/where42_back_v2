@@ -54,7 +54,7 @@ public class GroupController {
             summary = "2.2 그룹 목록 및 친구 API 조회",
             description = "멤버가 만든 그룹 및 그룹 내의 친구 목록을 조회합니다 (메인 화면 용)",
             parameters = {
-                    @Parameter(name = "memberId", description = "멤버 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+                    @Parameter(name = "memberId", description = "멤버 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
