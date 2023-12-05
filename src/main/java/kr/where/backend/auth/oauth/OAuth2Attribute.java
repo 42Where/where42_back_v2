@@ -13,14 +13,14 @@ public class OAuth2Attribute {
 
     private Map<String, Object> attributes;
     private String attributeId;
-
-    private Integer id;
+    private Long id;
     private String login;
     private String location;
     private String image;
     private boolean active;
     private String created_at;
-    public static OAuth2Attribute of(Map<String, Object> attributes) {
+
+    public static OAuth2Attribute of(final Map<String, Object> attributes) {
         Map<String, Object> image = (Map<String, Object>) attributes.get("image");
         String smallUrl = "";
         if (image != null) {
@@ -31,7 +31,7 @@ public class OAuth2Attribute {
         }
 
         return OAuth2Attribute.builder()
-                .id((Integer) attributes.get("id"))
+                .id((Long) attributes.get("id"))
                 .login((String) attributes.get("login"))
                 .location((String) attributes.get("location"))
                 .image(smallUrl)

@@ -1,8 +1,10 @@
 package kr.where.backend.auth.oauth;
 
-import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
-import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.Member;
+import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.member.MemberService;
+import kr.where.backend.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,31 +25,25 @@ import java.util.Map;
 @Slf4j
 public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final MemberRepository memberRepository;
-
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+    public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        Map<String, Object> attributes = oAuth2User.getAttributes();
+        final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
+        final OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        final Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(attributes);
+        final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-//        saveMember(oAuth2Attribute);
-        Map<String, Object> map = mapChanger(oAuth2Attribute);
+        final OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(attributes);
+
+        final Map<String, Object> map = mapChanger(oAuth2Attribute);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 map, "login");
     }
 
-//    private void saveMember(OAuth2Attribute oAuth2Attribute) {
-//        memberRepository.findByName(oAuth2Attribute.getLogin()).orElseGet(() -> memberService.create(oAuth2Attribute));
-//    }
-
-    private Map<String, Object> mapChanger(OAuth2Attribute oAuth2Attribute) {
+    private Map<String, Object> mapChanger(final OAuth2Attribute oAuth2Attribute) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("login", oAuth2Attribute.getLogin());
