@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,8 +41,33 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(allOf = {CadetPrivacy.class, Hane.class})
-                    ))
+                            examples = {
+                                    @ExampleObject(
+                                            name = "example",
+                                            value = "{\n" +
+                                                    "  \"cadetPrivacy\": {\n" +
+                                                    "    \"id\": 12345,\n" +
+                                                    "    \"login\": \"string\",\n" +
+                                                    "    \"location\": \"string\",\n" +
+                                                    "    \"image\": {\n" +
+                                                    "      \"versions\": {\n" +
+                                                    "        \"small\": \"string\"\n" +
+                                                    "      }\n" +
+                                                    "    },\n" +
+                                                    "    \"created_at\": \"string\",\n" +
+                                                    "    \"active?\": true\n" +
+                                                    "  },\n" +
+                                                    "  \"hane\": {\n" +
+                                                    "    \"login\": \"string\",\n" +
+                                                    "    \"inoutState\": \"string\",\n" +
+                                                    "    \"cluster\": \"string\",\n" +
+                                                    "    \"tag_at\": \"string\"\n" +
+                                                    "  }\n" +
+                                                    "}"                                    )
+                            },
+                            schema = @Schema(type = "object")
+                    )
+            )
             ,
             responses = {
                     @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
