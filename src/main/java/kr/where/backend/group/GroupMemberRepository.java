@@ -14,7 +14,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     List<GroupMember> findByMember_IdAndIsOwner(Long memberId, Boolean isOwner);
 
-    List<GroupMember> findGroupMembersByMember_IntraIdAndIsOwner(Long memberId, Boolean isOwner);
+    List<GroupMember> findGroupMembersByMemberAndIsOwner(Member member, Boolean isOwner);
 
     List<GroupMember> findGroupMemberByGroup_GroupId(Long groupId);
 
