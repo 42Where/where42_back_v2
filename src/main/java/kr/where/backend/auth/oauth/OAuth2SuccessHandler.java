@@ -4,12 +4,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.api.HaneApiService;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
-import kr.where.backend.jwt.JsonWebTokenService;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
+import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.token.TokenService;
+import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -26,8 +26,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final String TOKEN = "hane";
     private final MemberService memberService;
     private final HaneApiService haneApiService;
-    private final TokenService tokenService;
-    private final JsonWebTokenService jsonWebTokenService;
+    private final OauthTokenService oauthTokenService;
+    private final JwtService jwtService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -45,10 +45,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("토큰 발행 시작");
 
-        final String accessToken = jsonWebTokenService.createAccessToken(oAuth2User.getId());
+        final String accessToken = jwtService.createAccessToken(oAuth2User.getId());
 
         // refreshToken 발급 & DB 저장
-        final String refreshToken = jsonWebTokenService.createRefreshToken(oAuth2User.getId());
+        final String refreshToken = jwtService.createRefreshToken(oAuth2User.getId());
 
         final String targetUrl = UriComponentsBuilder.fromUriString("/accessToken")
                 .queryParam("accessToken", accessToken)
@@ -73,7 +73,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         final Hane hane = haneApiService
                 .getHaneInfo(
                         oAuth2Attribute.getLogin(),
-                        tokenService.findAccessToken(TOKEN)
+                        oauthTokenService.findAccessToken(TOKEN)
                 );
 
         return memberService.createAgreeMember(cadetPrivacy, hane);

@@ -2,8 +2,8 @@ package kr.where.backend.search;
 
 
 import java.util.List;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;

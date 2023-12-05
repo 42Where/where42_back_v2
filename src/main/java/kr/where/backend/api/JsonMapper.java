@@ -5,8 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
-import kr.where.backend.exception.json.JsonException;
-import kr.where.backend.exception.json.JsonException.DeserializeException;
+import kr.where.backend.api.exception.JsonException;
 
 public class JsonMapper {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();

@@ -1,12 +1,10 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.exception.request.RequestErrorCode;
-import kr.where.backend.exception.request.RequestException;
+import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.Hane;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

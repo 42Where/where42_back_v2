@@ -1,7 +1,7 @@
 package kr.where.backend.group;
 
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.ResponseGroupDto;

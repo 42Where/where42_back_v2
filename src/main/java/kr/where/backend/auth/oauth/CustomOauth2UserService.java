@@ -1,10 +1,5 @@
 package kr.where.backend.auth.oauth;
 
-import kr.where.backend.api.HaneApiService;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
-import kr.where.backend.member.MemberService;
-import kr.where.backend.token.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -3,9 +3,9 @@ package kr.where.backend.exception;
 import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.exception.json.JsonException;
-import kr.where.backend.exception.request.RequestException;
-import kr.where.backend.exception.token.TokenException;
+import kr.where.backend.api.exception.JsonException;
+import kr.where.backend.api.exception.RequestException;
+import kr.where.backend.oauthtoken.exception.OauthTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.toString());
     }
 
-    @ExceptionHandler(TokenException.class)
+    @ExceptionHandler(OauthTokenException.class)
     public ResponseEntity<String> handleTokenException(final CustomException e) {
         log.info(e.toString());
 
