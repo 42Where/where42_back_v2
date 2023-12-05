@@ -108,7 +108,7 @@ public class GroupController {
             summary = "2.5 get group list API",
             description = "멤버가 소유한 그룹들의 id, 이름 반환 (그룹관리)",
             parameters = {
-                    @Parameter(name = "memberId", description = "나의 member Id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+                    @Parameter(name = "memberId", description = "나의 member Id", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
