@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HaneApiService {
     /**
-     * hane api 호출하여 gaepo, null, error 반환 -> in, out, error 반환 (혹은 error 도 out 으로 표시될 테니 in, out 반환?)
+     * hane api 호출하여 in, out state 반환
      */
     public Hane getHaneInfo(final String name, final String token) {
         try {
@@ -23,7 +23,7 @@ public class HaneApiService {
                             Hane.class);
         } catch (HaneRequestException e) {
             log.info(e.toString());
-            return null;
+            return new Hane();
         }
     }
 }

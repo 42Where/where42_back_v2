@@ -83,7 +83,7 @@ public class UpdateService {
      * Hane token도 적용 해야함!
      */
     @Retryable
-    @Scheduled(cron = "0 0/5 * 1/1 * ?")
+//    @Scheduled(cron = "0 0/5 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
         final String token = tokenService.findAccessToken(ADMIN_TOKEN);

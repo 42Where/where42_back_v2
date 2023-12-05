@@ -51,23 +51,21 @@ public class GroupController {
     //완성
 
     @Operation(
-            summary = "2.2 get group list with friend API",
-            description = "멤버가 만든 그룹 & 그룹 내의 친구 리스트 조회(메인화면 용)",
+            summary = "2.2 그룹 목록 및 친구 API 조회",
+            description = "멤버가 만든 그룹 및 그룹 내의 친구 목록을 조회합니다 (메인 화면 용)",
             parameters = {
-                    @Parameter(name = "id", description = "멤버 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+                    @Parameter(name = "memberId", description = "멤버 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
             }
     )
     @GetMapping("/")
-    public ResponseEntity findAllGroups(@RequestParam Long memberId) {
-        System.out.println("memberId : " + memberId);
+    public ResponseEntity findAllGroups(@RequestParam("memberId") Long memberId) {
         List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
-    //기능 완성. 스웨거 보충
 
     @Operation(
             summary = "2.3 modify group name API",
@@ -119,7 +117,7 @@ public class GroupController {
             }
     )
     @GetMapping("/info/")
-    public ResponseEntity findGroupNames(@RequestParam Long memberId) {
+    public ResponseEntity findGroupNames(@RequestParam("memberId") Long memberId) {
         List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -149,17 +147,19 @@ public class GroupController {
     @Operation(
             summary = "2.7 get not included friends in group API",
             description = "그룹에 포함되지 않은 친구 목록을 조회. 그룹에 기본 그룹의 친구를 추가하기 위함이다. 이때, 조회되는 친구들은 멤버가 친구로 등록하되 해당 그룹에 등록되지 않은 친구들이다.",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하고싶은 그룹 id", required = true, content = @Content(schema = @Schema(implementation = FindGroupMemberDto.class))
-            ),
+            parameters = {
+                    @Parameter(name = "default groupID", description = "나의 기본그룹 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY),
+                    @Parameter(name = "groupID", description = "해당 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}")})),
             }
     )
-    @GetMapping("/groupmember/notingroup/")
-    public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(FindGroupMemberDto request) {
-        List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(request);
+    @PostMapping("/groupmember/not-ingroup/")
+    public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
+        List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
     }
@@ -167,7 +167,7 @@ public class GroupController {
     @Operation(
             summary = "2.8 add friends to group API",
             description = "친구 리스트를 받아서 해당 그룹에 일괄 추가",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 ID 리스트와 친구를 추가할 그룹 ID", required = true, content = @Content(array = @ArraySchema(schema = @Schema(type = "string")), schema = @Schema(type = "Long"))
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 ID 리스트와 친구를 추가할 그룹 ID", required = true, content = @Content(schema = @Schema(implementation = AddGroupMemberListDTO.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "친구 일괄 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
@@ -176,7 +176,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @PostMapping("/groupmember-add")
+    @PostMapping("/groupmember/add/")
     public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
         List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
@@ -187,7 +187,7 @@ public class GroupController {
             summary = "2.9 get group friend list API",
             description = "그룹 내의 모든 친구 목록 조회",
             parameters = {
-                    @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.PATH)
+                    @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
@@ -196,7 +196,7 @@ public class GroupController {
             }
     )
     @GetMapping("/groupmember/")
-    public ResponseEntity findALlGroupFriends(@RequestParam Long groupId) {
+    public ResponseEntity findAllGroupFriends(@RequestParam("groupId") Long groupId) {
         List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);

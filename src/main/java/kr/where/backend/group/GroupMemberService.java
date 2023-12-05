@@ -28,9 +28,9 @@ public class GroupMemberService {
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-//                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
+        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
@@ -53,7 +53,10 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Long memberId){
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
+        final Member owner = memberRepository.findByIntraId(memberId)
+                                .orElseThrow(MemberException.NoMemberException::new);
+        final List<GroupMember> groupMembers = groupMemberRepository
+                .findGroupMembersByMemberAndIsOwner(owner, true);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
@@ -72,9 +75,7 @@ public class GroupMemberService {
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
                 .inCluster(m.getMember().isInCluster())
-                        .build()).toList();
-//                .clusterLocation(m.getMember().getClusterLocation())
-//                .imacLocation(m.getMember().getImacLocation())
+                .build()).toList();
 
         return responseGroupMemberDTOS;
     }
@@ -136,14 +137,14 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final FindGroupMemberDto dto) {
-        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(dto.getDefaultGroupId());
-        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(dto.getGroupId());
+    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
+        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
         final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
                         .noneMatch(groupMember -> defaultMember.getMemberId().equals(groupMember.getMemberId())))
-                .collect(Collectors.toList());
+                .toList();
 
         return membersNotInGroup;
     }
