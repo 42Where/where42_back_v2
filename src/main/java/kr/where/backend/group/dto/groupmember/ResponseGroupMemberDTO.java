@@ -2,27 +2,29 @@ package kr.where.backend.group.dto.groupmember;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Data
+@Getter
+@NoArgsConstructor
+@ToString
 public class ResponseGroupMemberDTO {
 
-    @NotNull
     private Long groupId;
     private String groupName;
-    @NotNull
     private Long memberId;
     private String comment;
     private String memberIntraName;
     private String customLocation;
     private String imacLocation;
-    private int clusterLocation;
+    private String clusterLocation;
     private boolean inCluster;
     private String image;
 
 
     @Builder
-    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Long memberId, String comment, String memberIntraName, String customLocation, String imacLocation, int clusterLocation, boolean inCluster, String image) {
+    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Long memberId, String comment, String memberIntraName, String customLocation, String imacLocation, String clusterLocation, boolean inCluster, String image) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.memberId = memberId;

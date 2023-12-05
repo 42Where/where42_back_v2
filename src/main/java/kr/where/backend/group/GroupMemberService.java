@@ -1,23 +1,23 @@
 package kr.where.backend.group;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import kr.where.backend.group.dto.group.FindGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
+import kr.where.backend.group.exception.GroupException;
+import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.Member;
+import kr.where.backend.member.exception.MemberException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class GroupMemberService {
 
     private final GroupMemberRepository groupMemberRepository;
@@ -27,86 +27,36 @@ public class GroupMemberService {
     @Transactional
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+                .orElseThrow(MemberException.NoMemberException::new);
+//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
-            throw new EntityNotFoundException("이미 그룹 멤버로 등록된 사용자입니다.");
+            throw new GroupMemberException.DuplicatedGroupMemberException();
         }
-        System.out.println(requestDTO.isOwner());
         final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
         groupMemberRepository.save(groupMember);
 
-        final ResponseGroupMemberDTO createDTO = ResponseGroupMemberDTO.builder()
+        final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
                 .groupId(requestDTO.getGroupId())
                 .groupName(requestDTO.getGroupName())
                 .memberId(member.getIntraId()).build();
-        return createDTO;
+        return responseGroupMemberDTO;
     }
 
-//    @Transactional
-//    public ResponseGroupMemberDTO createDefaultGroupMember(final CreateGroupMemberDTO requestDTO){
-//        List<GroupMember> groupMembers = groupMemberRepository.findByMemberIdAndIsOwner(requestDTO.getIntraId(), true);
-//        Optional<Group> group = groupRepository.findByGroupMembersAndDefault(groupMembers, true);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-//                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-//
-//        final GroupMember groupMember = new GroupMember(group.orElseThrow(), member, requestDTO.isOwner());
-//        groupMemberRepository.save(groupMember);
-//        final ResponseGroupMemberDTO createDTO = ResponseGroupMemberDTO.builder()
-//                .groupId(requestDTO.getGroupId())
-//                .groupName(requestDTO.getGroupName())
-//                .memberId(member.getId()).build();
-//
-//        return createDTO;
-//    }
-//    기본그룹에 친구를 추가...하는건데.. 제대로 돌아가는가..?
+    public List<ResponseGroupMemberDTO> findGroupsInfoByMemberId(final Long memberId){
+        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByMemberId(memberId);
 
-    @Transactional
-    public ResponseGroupMemberListDTO addGroupMember(final AddGroupMemberListDTO requestDTO){
-        final Group group = groupRepository.findById(requestDTO.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
-        ResponseGroupMemberListDTO responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().build();
-//        for (String m : requestDTO.getMembers()){
-//            final Member member = memberRepository.findByIntraName(m).orElseThrow();
-//            final GroupMember groupMember = new GroupMember(group, member, false);
-//            groupMemberRepository.save(groupMember);
-//            ResponseGroupMemberDTO memberDTO = ResponseGroupMemberDTO.builder().memberId(member.getId()).build();
-//            responseGroupMemberListDTO = ResponseGroupMemberListDTO.builder().groupId(requestDTO.getGroupId()).build();
-//        }
-
-        // 수환 로직이에요 한번 보고 괜찮으면 채택 ㄱ
-        final List<Member> members = memberRepository.findByIntraNameIn(requestDTO.getMembers());
-
-        members.forEach(member -> {
-            GroupMember groupMember = new GroupMember(group, member, false);
-
-            groupMemberRepository.save(groupMember);
-            responseGroupMemberListDTO.getMembers()
-                    .add(ResponseGroupMemberDTO.builder().groupId(group.getGroupId()).memberId(member.getIntraId()).build());
-        });
-
-        return responseGroupMemberListDTO;
-        // 특정 그룹에 그룹멤버여러명 추가 하는 기능 , 기본그룹에 있는지 확인해야함.
+        return responseGroupMemberDTOS;
     }
 
-//    public List<ResponseGroupMemberDTO> findGroupsInfo(final FindGroupDto request){
-//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
-//
-//        return dto;
-//    }
-    public List<ResponseGroupMemberDTO> findGroupsInfo(final Long memberId){
-//        List<ResponseGroupMemberDTO> dto = findGroupId(request.getMemberId());
-        List<ResponseGroupMemberDTO> dto = findGroupId(memberId);
-
-        return dto;
-    }
-
-    public List<ResponseGroupMemberDTO> findGroupId(final Long memberId){
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMember_IntraIdAndIsOwner(memberId, true);
-        System.out.println(groupMembers.get(0).toString());
+    public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Long memberId){
+        final Member owner = memberRepository.findByIntraId(memberId)
+                                .orElseThrow(MemberException.NoMemberException::new);
+        final List<GroupMember> groupMembers = groupMemberRepository
+                .findGroupMembersByMemberAndIsOwner(owner, true);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
@@ -124,80 +74,43 @@ public class GroupMemberService {
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
-                .clusterLocation(m.getMember().getClusterLocation())
                 .inCluster(m.getMember().isInCluster())
-                .imacLocation(m.getMember().getImacLocation())
-                        .build()).toList();
+                .build()).toList();
 
         return responseGroupMemberDTOS;
     }
 
-    @Transactional
-    public ResponseGroupMemberDTO deleteGroupMember(final RequestGroupMemberDTO requestDto){
-        groupMemberRepository.deleteGroupMemberByGroup_GroupIdAndMember_Id(requestDto.getGroupId(), requestDto.getMemberId());
-        ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
-                .groupId(requestDto.getGroupId())
-                .memberId(requestDto.getMemberId())
-                .build();
-
-        return responseGroupMemberDTO;
-    }
-
-    public List<ResponseGroupMemberListDTO> findAllGroupInformation(final Long memberId){
-        final List<ResponseGroupMemberDTO> groups = findGroupId(memberId);
-        final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
+    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Long memberId){
+        final List<ResponseGroupMemberDTO> groups = findGroupIdByMemberId(memberId);
+        final List<ResponseGroupMemberListDTO> responseGroupMemberListDTOS = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
-            System.out.println("groupId : " + g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
                     .groupId(g.getGroupId())
                     .groupName(g.getGroupName())
                     .count(friends.size())
                     .members(friends)
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
 
-        return dtoList;
-    }
-
-    public List<ResponseGroupMemberListDTO> findGroupMembersbyMemberId(final Long memberId){
-//        RequestGroupMemberDTO searchMemberDto = RequestGroupMemberDTO.builder().memberId(requestDto.getMemberId()).build();
-        FindGroupDto groupDto = FindGroupDto.builder().memberId(memberId).build();
-        final List<ResponseGroupMemberDTO> groups = findGroupId(groupDto.getMemberId());
-        final List<ResponseGroupMemberListDTO> dtoList = groups.stream().map(g -> {
-            RequestGroupMemberDTO searchGroupDto = RequestGroupMemberDTO.builder().groupId(g.getGroupId()).build();
-            List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
-            return ResponseGroupMemberListDTO.builder()
-                .groupId(g.getGroupId())
-                .groupName(g.getGroupName())
-                .count(friends.size())
-                .members(friends)
-                .build();
-        }).collect(Collectors.toList());
-
-//        List<GroupMemberListResponseDTO> dtoList = new ArrayList<>();
-//        for (GroupMemberResponseDTO g :groups){
-//            List<FindGroupMemberResponseDTO> friends = findGroupMemberId(g.getGroupId());
-//            GroupMemberListResponseDTO dto = GroupMemberListResponseDTO.builder().groupId(g.getGroupId())
-//                    .groupName(groupService.findGroupName(g.getGroupId()))
-//                    .count(friends.size())
-//                    .members(friends);
-//            dtoList.add(dto);
-//        }
-        return dtoList;
-        //수정해야함
+        return responseGroupMemberListDTOS;
     }
 
     @Transactional
-    public List<ResponseGroupMemberDTO> addFriendsList(AddGroupMemberListDTO dto){
-        List<String> memberId = dto.getMembers();
-        Long groupId = dto.getGroupId();
+    public void duplicateGroupMember(final Long groupId, final List<Member> members){
+        final long count = groupMemberRepository.countByGroup_GroupIdAndMemberIn(groupId, members);
+        if (count > 0)
+            throw new GroupMemberException.DuplicatedGroupMemberException();
+    }
 
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+    @Transactional
+    public List<ResponseGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto){
+        final Group group = groupRepository.findById(dto.getGroupId())
+                .orElseThrow(GroupException.NoGroupException::new);
+        final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
+                .orElseThrow(MemberException.NoMemberException::new);
+        duplicateGroupMember(dto.getGroupId(), members);
 
-        List<Member> members = memberRepository.findByIntraNameIn(memberId);
-
-        List<GroupMember> groupMembers = members.stream()
+        final List<GroupMember> groupMembers = members.stream()
                 .map(member -> new GroupMember(group, member, false))
                 .collect(Collectors.toList());
 
@@ -211,15 +124,27 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findMemberNotInGroup(FindGroupMemberDto dto)
-    {
-        List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(dto.getDefaultGroupId());
-        List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(dto.getGroupId());
+    @Transactional
+    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDto dto){
+        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
+        groupMemberRepository.deleteAll(groupMembers);
 
-        List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
+        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
+                .map(m -> ResponseGroupMemberDTO.builder()
+                        .groupId(dto.getGroupId())
+                        .memberId(m.getMember().getIntraId())
+                        .build()).toList();
+        return responseGroupMemberDTOS;
+    }
+
+    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
+        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
+
+        final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
                         .noneMatch(groupMember -> defaultMember.getMemberId().equals(groupMember.getMemberId())))
-                .collect(Collectors.toList());
+                .toList();
 
         return membersNotInGroup;
     }

@@ -1,24 +1,21 @@
 package kr.where.backend.group.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import kr.where.backend.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "groups")
 public class Group {
+
+    public static final String DEFAULT_GROUP = "default";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +25,18 @@ public class Group {
     @Column(name = "group_name", length = 40)
     private  String groupName;
 
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<GroupMember> groupMembers = new HashSet<>();
 
-    public Group(String groupName) {
+    public Group(final String groupName) {
         this.groupName = groupName;
     }
 
-    public void setGroupName(String groupName) {
+    public void setGroupName(final String groupName) {
         this.groupName = groupName;
+    }
+
+    public boolean isInGroup(final Member member){
+        return this.groupMembers.contains(member);
     }
 }

@@ -2,8 +2,9 @@ package kr.where.backend.group.dto.group;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class FindGroupDto {
     private Long memberId;
 
