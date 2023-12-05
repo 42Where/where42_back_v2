@@ -28,9 +28,9 @@ public class GroupMemberService {
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
-//                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
+        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
@@ -72,9 +72,8 @@ public class GroupMemberService {
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
                 .inCluster(m.getMember().isInCluster())
+//                .imacLocation(m.getMember().getLocation().getLocation())
                         .build()).toList();
-//                .clusterLocation(m.getMember().getClusterLocation())
-//                .imacLocation(m.getMember().getImacLocation())
 
         return responseGroupMemberDTOS;
     }
@@ -136,14 +135,14 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final FindGroupMemberDto dto) {
-        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(dto.getDefaultGroupId());
-        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(dto.getGroupId());
+    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
+        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
         final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
                         .noneMatch(groupMember -> defaultMember.getMemberId().equals(groupMember.getMemberId())))
-                .collect(Collectors.toList());
+                .toList();
 
         return membersNotInGroup;
     }
