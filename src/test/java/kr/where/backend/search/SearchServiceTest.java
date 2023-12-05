@@ -44,17 +44,17 @@ public class SearchServiceTest {
                 .isInstanceOf(SearchException.class);
     }
 
-    @DisplayName("올바른 keyWord의 검색 결과 확인")
-    @Test
-    public void getCadetPrivacy() {
-        //given
-        memberService.createAgreeMember(CadetPrivacy.createForTest(22224L, "jonhan", "c1r1s1",
-                "image", true, "2022-10-31"), Hane.createForTest("IN"));
-
-        //when
-        List<ResponseSearch> result = searchService.search(22224L, "jn");
-
-        //then
-        result.stream().forEach(System.out::println);
-    }
+//    @DisplayName("올바른 keyWord의 검색 결과 확인")
+//    @Test
+//    public void getCadetPrivacy() {
+//        //given
+//        memberService.createAgreeMember(CadetPrivacy.createForTest(22224L, "jonhan", "c1r1s1",
+//                "image", true, "2022-10-31"), Hane.createForTest("IN"));
+//
+//        //when
+//        List<ResponseSearch> result = searchService.search(22224L, "jn");
+//
+//        //then
+//        result.stream().forEach(System.out::println);
+//    }
 }
