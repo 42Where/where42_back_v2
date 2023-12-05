@@ -47,6 +47,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                             response,
                             UriComponentsBuilder
                                     .fromUriString("/v3/join")
+                                    .queryParam("id", oAuth2User.getId())
                                     .toUriString()
                             // 프런트 분들에게 경로를 상의한후 만들기
                     );
