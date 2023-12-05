@@ -4,9 +4,12 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.IntraApiService;
 import kr.where.backend.auth.exception.TokenExceptions;
-import kr.where.backend.member.Enum.MemberLevel;
-import kr.where.backend.member.entity.Member;
+//import kr.where.backend.member.Enum.MemberLevel;
+import kr.where.backend.member.Member;
+import kr.where.backend.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +38,9 @@ public class TokenProvider {
     private final long accessTokenExpirationTime;
     private final long refreshTokenExpirationTime;
     private final String issuer;
+    private MemberService memberService;
+    private IntraApiService intraApiService;
+    private HaneApiService haneApiService;
 
     public TokenProvider(@Value("${jwt.token.secret}") final String secretCode,
                          @Value("${accesstoken.expiration.time}") final long accessTokenExpirationTime,
@@ -112,7 +118,9 @@ public class TokenProvider {
         final String intraId = claims.get("intraId", String.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
-        final Member member = new Member(claims.getId(), "", "", "", MemberLevel.member);
+        final Member member = memberService.createAgreeMember(
+                intraApiService.getCadetPrivacy("token", intraId),
+                haneApiService.getHaneInfo(intraId, "token"));
 
         //Authentication 객체 생성
         return new UsernamePasswordAuthenticationToken(member, "", authorities);

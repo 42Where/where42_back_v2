@@ -2,7 +2,7 @@ package kr.where.backend.auth.oauth;
 
 import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
 import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.entity.Member;
+import kr.where.backend.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
