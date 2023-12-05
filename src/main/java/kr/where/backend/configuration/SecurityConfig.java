@@ -11,13 +11,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -32,15 +37,23 @@ public class SecurityConfig {
     private final OAuth2FailureHandler failureHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            final HttpSecurity httpSecurity,
+            final HandlerMappingIntrospector introspector) throws Exception {
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/token/**").permitAll()
-                                .requestMatchers("/oauth2/*").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/token/**"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/oauth2/*"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+                                .permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
