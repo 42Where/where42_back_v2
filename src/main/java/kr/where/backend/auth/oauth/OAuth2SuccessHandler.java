@@ -1,6 +1,5 @@
 package kr.where.backend.auth.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,13 +23,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-//    private final TokenService tokenService;
-//    private final UserRequestMapper userRequestMapper;
     private static final String TOKEN = "hane";
     private final MemberService memberService;
     private final HaneApiService haneApiService;
     private final TokenService tokenService;
-    private final ObjectMapper objectMapper;
     private final JsonWebTokenService jsonWebTokenService;
 
     @Override
