@@ -34,6 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         final OAuth2User userProfile = (OAuth2User) authentication.getPrincipal();
         final Integer intraId = (Integer) userProfile.getAttributes().get("id");
+        final String intraName = (String) userProfile.getAttributes().get("login");
 
         log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile);
 
@@ -46,8 +47,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                             request,
                             response,
                             UriComponentsBuilder
-                                    .fromUriString("/v3/join")
-                                    .queryParam("get_login", intraId)
+                                    .fromUriString("/join")
+                                    .queryParam("get_login", intraName)
                                     .toUriString()
                             // 프런트 분들에게 경로를 상의한후 만들기
                     );

@@ -19,7 +19,7 @@ public class HaneApiService {
     public Hane getHaneInfo(final String name, final String token) {
         try {
             return JsonMapper
-                    .mapping(HttpResponse.postMethod(HttpHeader.request42Info(token), UriBuilder.hane(name)),
+                    .mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
                             Hane.class);
         } catch (HaneRequestException e) {
             log.info(e.toString());

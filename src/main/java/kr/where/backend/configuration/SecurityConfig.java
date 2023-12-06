@@ -37,7 +37,8 @@ public class SecurityConfig {
                         authorize -> authorize
                                 .requestMatchers("/token/**").permitAll()
                                 .requestMatchers("/oauth2/*").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/join").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
