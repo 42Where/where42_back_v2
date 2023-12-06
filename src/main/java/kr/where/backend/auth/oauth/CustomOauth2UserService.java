@@ -33,6 +33,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         final OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(attributes);
 
         final Map<String, Object> map = mapChanger(oAuth2Attribute);
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 map, "login");
@@ -41,6 +42,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Map<String, Object> mapChanger(final OAuth2Attribute oAuth2Attribute) {
         Map<String, Object> result = new HashMap<>();
 
+        result.put("id", oAuth2Attribute.getId());
         result.put("login", oAuth2Attribute.getLogin());
         result.put("location", oAuth2Attribute.getLocation());
         result.put("image", oAuth2Attribute.getImage());

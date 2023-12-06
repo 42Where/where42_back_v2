@@ -4,8 +4,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.api.HaneApiService;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Hane;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -13,6 +11,7 @@ import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,13 +32,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        final OAuthUser oAuthUser = (OAuthUser) authentication.getPrincipal();
-        final OAuth2Attribute oAuth2User = oAuthUser.toOAuth2Attribute();
+        final OAuth2User userProfile = (OAuth2User) authentication.getPrincipal();
+        final Integer intraId = (Integer) userProfile.getAttributes().get("id");
 
-        log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
+        log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile);
 
-        final Member member = memberService.findOne(oAuth2User.getId())
-                .orElseGet(null);
+        final Member member = memberService.findOne(intraId)
+                .orElse(null);
 
         if (member == null) {
             getRedirectStrategy()
@@ -48,21 +47,22 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                             response,
                             UriComponentsBuilder
                                     .fromUriString("/v3/join")
-                                    .queryParam("get_login", oAuth2User.getId())
+                                    .queryParam("get_login", intraId)
                                     .toUriString()
                             // 프런트 분들에게 경로를 상의한후 만들기
                     );
+            return ;
         }
 
         log.info("JWT 토큰 발행 시작");
 
-        final String accessToken = jwtService.createAccessToken(oAuth2User.getId());
+        final String accessToken = jwtService.createAccessToken(intraId);
 
         // refreshToken 발급 & DB 저장
 //        final String refreshToken = jwtService.createRefreshToken(oAuth2User.getId());
 
         //jwt refreshToken 저장
-        jwtService.updateJsonWebToken(oAuth2User.getId());
+        jwtService.updateJsonWebToken(intraId);
 
         getRedirectStrategy().sendRedirect(
                 request,

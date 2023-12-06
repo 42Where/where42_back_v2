@@ -1,6 +1,5 @@
 package kr.where.backend.auth.oauth;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,8 +10,7 @@ import java.util.Map;
 
 @Getter
 @Builder
-@AllArgsConstructor
-public class OAuthUser implements OAuth2User {
+public class UserProfile implements OAuth2User {
     private String name;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes; // oauthId, name, email
