@@ -15,11 +15,11 @@ public class JsonWebToken {
     @Id
     @GeneratedValue
     private Long id;
-    private Long intraId;
+    private Integer intraId;
     private String refreshToken;
 
 
-    public JsonWebToken(final Long intraId, final String refreshToken) {
+    public JsonWebToken(final Integer intraId, final String refreshToken) {
         this.intraId = intraId;
         this.refreshToken = refreshToken;
     }

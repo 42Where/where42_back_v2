@@ -8,7 +8,7 @@ public class ResponseGroupDto {
     private Long groupId;
     private String groupName;
 
-    private ResponseGroupDto(Long groupId, String groupName) {
+    private ResponseGroupDto(final Long groupId, String groupName) {
         this.groupId = groupId;
         this.groupName = groupName;
     }

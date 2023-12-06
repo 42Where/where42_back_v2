@@ -12,5 +12,5 @@ public class GroupMemberResponseDTO {
     private Long groupId;
     private String groupName;
     private int count;
-    private List<Long> members;
+    private List<Integer> members;
 }

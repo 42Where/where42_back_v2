@@ -10,7 +10,7 @@ public class GroupMemberRequestDTO {
     @NotNull
     private Long groupId;
     @NotNull
-    private Long memberId;
+    private Integer memberId;
     @NotNull
     private Boolean is_owner;
 }

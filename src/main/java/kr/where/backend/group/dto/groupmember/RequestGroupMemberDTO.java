@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestGroupMemberDTO {
 
-    private Long memberId;
+    private Integer memberId;
     private Long groupId;
 
     @Builder
-    public RequestGroupMemberDTO(Long memberId, Long groupId) {
+    public RequestGroupMemberDTO(Integer memberId, Long groupId) {
         this.memberId = memberId;
         this.groupId = groupId;
     }

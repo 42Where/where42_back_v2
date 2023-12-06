@@ -1,20 +1,25 @@
 package kr.where.backend.group.dto.groupmember;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor
 public class CreateGroupMemberDTO {
 
-    private Long intraId;
+    private Integer intraId;
     private Long groupId;
     private String groupName;
     @JsonProperty(value = "isOwner")
     private boolean isOwner;
 
     @Builder
-    public CreateGroupMemberDTO(Long intraId, Long groupId, String groupName, Boolean isOwner) {
+    public CreateGroupMemberDTO(
+            final Integer intraId,
+            final Long groupId,
+            final String groupName,
+            final Boolean isOwner) {
         this.intraId = intraId;
         this.groupId = groupId;
         this.groupName = groupName;

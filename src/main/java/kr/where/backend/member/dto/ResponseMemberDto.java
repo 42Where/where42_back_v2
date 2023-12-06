@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @RequiredArgsConstructor
 public class ResponseMemberDto {
-    private Long intraId;
+    private Integer intraId;
     private String intraName;
     private String grade;
     private String image;

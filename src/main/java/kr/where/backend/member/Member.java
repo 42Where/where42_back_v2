@@ -27,7 +27,7 @@ public class Member {
     private Long id;
 
     @Column(name = "intra_id", unique = true)
-    private Long intraId;
+    private Integer intraId;
 
     @Column(length = 15, unique = true, nullable = false)
     private String intraName;

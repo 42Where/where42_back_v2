@@ -10,7 +10,7 @@ import lombok.Getter;
 @Schema(description = "42seoul opnen API에 요청한 카뎃 정보")
 public class CadetPrivacy {
     @Schema(description = "카뎃의 고유 intra id")
-    private Long id;
+    private Integer id;
     @Schema(description = "카뎃 Intra 아이디")
     private String login;
     @Schema(description = "카뎃의 클러스터 위치")
@@ -24,7 +24,7 @@ public class CadetPrivacy {
     private String created_at;
 
     //create for Test
-    public static CadetPrivacy createForTest(Long id, String login, String location, String small_image, boolean active, String craeated_at) {
+    public static CadetPrivacy createForTest(Integer id, String login, String location, String small_image, boolean active, String craeated_at) {
         CadetPrivacy cadetPrivacy = new CadetPrivacy();
 
         cadetPrivacy.id = id;

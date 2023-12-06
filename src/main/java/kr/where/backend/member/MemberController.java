@@ -99,7 +99,7 @@ public class MemberController {
             }
     )
     @GetMapping("/")
-    public ResponseEntity findOneByIntraId(@RequestParam Long intraId) {
+    public ResponseEntity findOneByIntraId(@RequestParam Integer intraId) {
         final ResponseMemberDto responseMemberDto = memberService.findOneByIntraId(intraId);
 
         return ResponseEntity.ok(responseMemberDto);

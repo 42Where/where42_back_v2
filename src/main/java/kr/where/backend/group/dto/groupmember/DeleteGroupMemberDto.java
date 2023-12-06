@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class DeleteGroupMemberDto {
-    private Long memberIntraId;
+    private Integer memberIntraId;
     private Long groupId;
 
 }

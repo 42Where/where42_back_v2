@@ -56,13 +56,13 @@ public class JwtService {
      * @param refreshToken : 발급 받은 refreshToken 저장
      */
     @Transactional
-    public void create(final Long intraId, final String refreshToken) {
+    public void create(final Integer intraId, final String refreshToken) {
         jwtRepository.save(new JsonWebToken(intraId, refreshToken));
     }
 
-    public JsonWebToken findById(final Long intraId) {
+    public JsonWebToken findById(final Integer intraId) {
         return jwtRepository
-                .findById(intraId)
+                .findByIntraId(intraId)
                 .orElseThrow(InvalidedOauthTokenException::new);
     }
 
@@ -72,7 +72,7 @@ public class JwtService {
      * transactional을 사용하여, 변경점이 생기면 자동 저장, 영속성 context 관점
      */
     @Transactional
-    public void updateJsonWebToken(final Long intraId) {
+    public void updateJsonWebToken(final Integer intraId) {
         final JsonWebToken jsonWebToken = findById(intraId);
 
         jsonWebToken.updateRefreshToken(createRefreshToken(intraId));
@@ -98,7 +98,7 @@ public class JwtService {
      * @param intraId : token의 주인을 token payload에 저장
      * @return Token을 생성하는 메서드 호출
      */
-    public String createAccessToken(final Long intraId) {
+    public String createAccessToken(final Integer intraId) {
         return createToken(intraId, accessTokenExpirationTime);
     }
 
@@ -108,7 +108,7 @@ public class JwtService {
      * @param intraId : token의 주인을 token payload에 저장
      * @return Token을 생성하는 메서드 호출
      */
-    public String createRefreshToken(final Long intraId) {
+    public String createRefreshToken(final Integer intraId) {
         return createToken(intraId, refreshTokenExpirationTime);
     }
 
@@ -118,7 +118,7 @@ public class JwtService {
      * @param validateTime : 토큰의 만료시간 설정하기 위함
      * @return token
      */
-    private String createToken(final Long intraId, final long validateTime) {
+    private String createToken(final Integer intraId, final long validateTime) {
         final Claims claims = Jwts.claims().setSubject("User");
         claims.put("intraId", intraId);
         claims.put("roles", "Cadet");
@@ -165,7 +165,7 @@ public class JwtService {
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        final Long intraId = claims.get("intraId", Long.class);
+        final Integer intraId = claims.get("intraId", Integer.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)

@@ -33,7 +33,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        final OAuth2Attribute oAuth2User = (OAuth2Attribute) authentication.getPrincipal();
+        final OAuthUser oAuthUser = (OAuthUser) authentication.getPrincipal();
+        final OAuth2Attribute oAuth2User = oAuthUser.toOAuth2Attribute();
 
         log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
 
