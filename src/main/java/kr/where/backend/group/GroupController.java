@@ -187,7 +187,7 @@ public class GroupController {
             summary = "2.9 get group friend list API",
             description = "그룹 내의 모든 친구 목록 조회",
             parameters = {
-                    @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+                    @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
