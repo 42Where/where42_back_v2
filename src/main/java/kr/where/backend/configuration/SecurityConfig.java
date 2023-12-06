@@ -35,11 +35,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/token/**").permitAll()
+                                .requestMatchers("/token").permitAll()
                                 .requestMatchers("/oauth2/*").permitAll()
                                 .requestMatchers("/join").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())
+                // 여기 버전 바꿔야 합니다.
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
                         .failureHandler(failureHandler))

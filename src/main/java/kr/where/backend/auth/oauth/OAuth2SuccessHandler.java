@@ -65,14 +65,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //jwt refreshToken 저장
         jwtService.updateJsonWebToken(intraId);
 
-        getRedirectStrategy().sendRedirect(
-                request,
-                response,
-                UriComponentsBuilder
-                        .fromUriString("/v3/token")
-                        .queryParam("accessToken", accessToken)
-                        .build()
-                        .toUriString()
+        getRedirectStrategy()
+                .sendRedirect(
+                        request,
+                        response,
+                        UriComponentsBuilder
+                                .fromUriString("/token")
+                                .queryParam("accessToken", accessToken)
+                                .build()
+                                .toUriString()
+                        // 프런트 분들에게 경로를 상의한후 만들기
         );
     }
 }
