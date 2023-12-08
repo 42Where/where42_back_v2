@@ -56,7 +56,7 @@ public class LocationServiceTest {
         assertThat(responseLocationDto.getCustomUpdateAt()).isEqualTo(location.getCustomUpdatedAt());
         assertThat(responseLocationDto.getImacLocation()).isEqualTo(location.getImacLocation());
         assertThat(responseLocationDto.getImacUpdateAt()).isEqualTo(location.getImacUpdatedAt());
-        assertThat(member.get().getLocation()).isEqualTo(location.getLocation());
+        assertThat(member.get().getLocation().getLocation()).isEqualTo(location.getLocation());
         assertThat(location.getLocation()).isEqualTo("1F open lounge");
     }
 }
