@@ -30,8 +30,6 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
-
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
             throw new GroupMemberException.DuplicatedGroupMemberException();
@@ -75,6 +73,7 @@ public class GroupMemberService {
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
                 .inCluster(m.getMember().isInCluster())
+                .location(m.getMember().getLocation().getLocation())
                 .build()).toList();
 
         return responseGroupMemberDTOS;
