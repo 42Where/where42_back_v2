@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 public class ResponseLocationDto {
     private Long intraId;
     private String imacLocation;
-    private LocalDateTime imacUpdateAt;
+    private LocalDateTime imacUpdatedAt;
     private String customLocation;
-    private LocalDateTime customUpdateAt;
+    private LocalDateTime customUpdatedAt;
 
     @Builder
     public ResponseLocationDto(final Location location) {
         this.intraId = location.getMember().getIntraId();
         this.imacLocation = location.getImacLocation();
-        this.imacUpdateAt = location.getImacUpdatedAt();
+        this.imacUpdatedAt = location.getImacUpdatedAt();
         this.customLocation = location.getCustomLocation();
-        this.customUpdateAt = location.getCustomUpdatedAt();
+        this.customUpdatedAt = location.getCustomUpdatedAt();
     }
 }
