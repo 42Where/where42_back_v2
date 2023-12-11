@@ -31,11 +31,11 @@ public class GroupServiceTest {
     @BeforeEach
     public void setUp () {
         // Given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000L, "phan", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000, "phan", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
 
-        createGroupDto = new CreateGroupDto(10000L, "popopop");
+        createGroupDto = new CreateGroupDto(10000, "popopop");
     }
 
     @DisplayName("그룹 생성 성공")
