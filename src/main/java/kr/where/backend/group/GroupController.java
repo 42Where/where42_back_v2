@@ -148,8 +148,8 @@ public class GroupController {
             summary = "2.7 get not included friends in group API",
             description = "그룹에 포함되지 않은 친구 목록을 조회. 그룹에 기본 그룹의 친구를 추가하기 위함이다. 이때, 조회되는 친구들은 멤버가 친구로 등록하되 해당 그룹에 등록되지 않은 친구들이다.",
             parameters = {
-                    @Parameter(name = "default groupID", description = "나의 기본그룹 id", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY),
-                    @Parameter(name = "groupID", description = "해당 그룹 ID", required = true, schema = @Schema(type = "Long"), in = ParameterIn.QUERY)
+                    @Parameter(name = "default groupID", description = "나의 기본그룹 id", required = true, in = ParameterIn.QUERY),
+                    @Parameter(name = "groupID", description = "해당 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
