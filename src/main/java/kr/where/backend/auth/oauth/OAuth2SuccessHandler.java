@@ -11,7 +11,6 @@ import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,13 +31,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        final OAuth2User userProfile = (OAuth2User) authentication.getPrincipal();
-        final Integer intraId = (Integer) userProfile.getAttributes().get("id");
-        final String intraName = (String) userProfile.getAttributes().get("login");
+        final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
         log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile);
 
-        final Member member = memberService.findOne(intraId)
+        final CadetInfo cadetInfo = CadetInfo.of(userProfile.getAttributes());
+        final Member member = memberService.findOne(cadetInfo.getId())
                 .orElse(null);
 
         if (member == null) {
@@ -48,7 +46,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                             response,
                             UriComponentsBuilder
                                     .fromUriString("/join")
-                                    .queryParam("get_login", intraName)
+                                    .queryParam("get_login", cadetInfo.getLogin())
                                     .toUriString()
                             // 프런트 분들에게 경로를 상의한후 만들기
                     );
@@ -57,13 +55,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("JWT 토큰 발행 시작");
 
-        final String accessToken = jwtService.createAccessToken(intraId);
+        final String accessToken = jwtService.createAccessToken(cadetInfo.getId());
 
         // refreshToken 발급 & DB 저장
 //        final String refreshToken = jwtService.createRefreshToken(oAuth2User.getId());
 
         //jwt refreshToken 저장
-        jwtService.updateJsonWebToken(intraId);
+        jwtService.updateJsonWebToken(cadetInfo.getId());
 
         getRedirectStrategy()
                 .sendRedirect(

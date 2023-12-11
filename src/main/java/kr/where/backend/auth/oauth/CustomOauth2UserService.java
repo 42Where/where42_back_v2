@@ -21,34 +21,19 @@ import java.util.Map;
 public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     @Override
-    public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public UserProfile loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         final OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
         final Map<String, Object> attributes = oAuth2User.getAttributes();
 
-//        final String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        final OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(attributes);
-
-        final Map<String, Object> map = mapChanger(oAuth2Attribute);
-
-        return new DefaultOAuth2User(
+        return new UserProfile(
+                registrationId,
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                map, "login");
-    }
-
-    private Map<String, Object> mapChanger(final OAuth2Attribute oAuth2Attribute) {
-        Map<String, Object> result = new HashMap<>();
-
-        result.put("id", oAuth2Attribute.getId());
-        result.put("login", oAuth2Attribute.getLogin());
-        result.put("location", oAuth2Attribute.getLocation());
-        result.put("image", oAuth2Attribute.getImage());
-        result.put("create_at", oAuth2Attribute.getCreated_at());
-        result.put("active", oAuth2Attribute.isActive());
-
-        return result;
+                attributes
+        );
     }
 }
