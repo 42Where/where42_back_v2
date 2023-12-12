@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,10 +19,13 @@ import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -119,5 +123,32 @@ public class MemberController {
         final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberDto);
 
         return ResponseEntity.ok(responseMemberDto);
+    }
+
+    @Operation(summary = "1.5 createDummyAgreeMember API", description = "dummy 동의 맴버 생성 하는 POST API, dummy 멤버 10명 생성, 인자 필요 없음 (sign up 생기면 없어질 api 입니다!)",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMemberDto.class)))),
+                    @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+            }
+    )
+    @PostMapping("/dummy")
+    public ResponseEntity<List<ResponseMemberDto>> createDummyAgreeMembers() {
+        List<ResponseMemberDto> responseMemberDtoList = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "image", true, "2022-10-31");
+            Hane hane = Hane.createForTest("IN");
+
+            Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+            ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+            responseMemberDtoList.add(responseMemberDto);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("http://3.35.149.29:8080/v3/main"))
+                .body(responseMemberDtoList);
     }
 }
