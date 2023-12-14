@@ -21,16 +21,6 @@ public class IntraApiService {
     private static final String END_DELIMITER = "z";
 
     /**
-     * 본인 정보 반환
-     */
-    @Retryable
-    public CadetPrivacy getMyPrivacy(final String token) {
-        return JsonMapper
-                .mapping(HttpResponse.getMethod(HttpHeader.request42Info(token),
-                        UriBuilder.me()), CadetPrivacy.class);
-    }
-
-    /**
      * 특정 카텟의 정보 반환
      */
     @Retryable
