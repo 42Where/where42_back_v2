@@ -2,7 +2,9 @@ package kr.where.backend.oauthtoken;
 
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.json.OAuthToken;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.InvalidedOauthTokenException;
+import kr.where.backend.oauthtoken.exception.OauthTokenException.DuplicatedTokenNameException;
+import kr.where.backend.oauthtoken.exception.OauthTokenException.InvalidOAuthTokenException;
+import kr.where.backend.oauthtoken.exception.OauthTokenException.InvalidTokenNameException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,22 +28,22 @@ public class OauthTokenService {
 
     private void validateName(final String name) {
         if (name == null || name.isEmpty()) {
-            throw new RuntimeException("유효하지 않은 이름입니다.");
+            throw new InvalidTokenNameException();
         }
         oauthTokenRepository.findByName(name).ifPresent(present -> {
-            throw new RuntimeException("이미 등록된 토큰입니다.");
+            throw new DuplicatedTokenNameException();
         });
     }
 
     @Transactional
     public void deleteToken(final String name) {
-        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOauthTokenException::new);
+        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
         oauthTokenRepository.delete(oauthToken);
     }
 
     @Transactional
     public String findAccessToken(final String name) {
-        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOauthTokenException::new);
+        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
         if (oauthToken.isTimeOver()) {
             updateToken(oauthToken);
         }
@@ -52,5 +54,11 @@ public class OauthTokenService {
         final OAuthToken oAuthToken = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
         oauthToken.updateToken(oAuthToken);
         log.info("[updateToken] {} Token 이 업데이트 되었습니다.", oauthToken.getName());
+    }
+
+    public void updateHaneToken(final String accessToken) {
+        final OauthToken oauthToken = oauthTokenRepository.findByName("hane").orElseThrow(InvalidOAuthTokenException::new);
+        oauthToken.updateToken(accessToken);
+        log.info("[updateToken] {} Token 이 업데이트 되었습니다.", "hane");
     }
 }

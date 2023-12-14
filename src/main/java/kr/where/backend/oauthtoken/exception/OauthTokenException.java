@@ -34,7 +34,25 @@ public class OauthTokenException extends CustomException {
 
     public static class IllegalOauthTokenException extends OauthTokenException {
         public IllegalOauthTokenException() {
-            super(OauthTokenErrorCode.INVALIDED_TOKEN);
+            super(OauthTokenErrorCode.ILLEGAL_TOKEN);
         }
     }
+
+    public static class InvalidOAuthTokenException extends OauthTokenException {
+        public InvalidOAuthTokenException() {
+            super(OauthTokenErrorCode.INVALID_OAUTH_TOKEN);
+        }
+    }
+
+    public static class InvalidTokenNameException extends OauthTokenException {
+        public InvalidTokenNameException() {
+            super(OauthTokenErrorCode.INVALID_OAUTH_TOKEN_NAME);
+        }
+    }
+    public static class DuplicatedTokenNameException extends OauthTokenException {
+        public DuplicatedTokenNameException() {
+            super(OauthTokenErrorCode.DUPLICATED_OAUTH_TOKEN_NAME);
+        }
+    }
+
 }
