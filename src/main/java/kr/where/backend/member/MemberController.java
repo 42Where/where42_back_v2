@@ -139,7 +139,7 @@ public class MemberController {
         List<ResponseMemberDto> responseMemberDtoList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "image", true, "2022-10-31");
+            CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "https://ibb.co/94KmxcT", true, "2022-10-31");
             Hane hane = Hane.createForTest("IN");
 
             Member member = memberService.createAgreeMember(cadetPrivacy, hane);
