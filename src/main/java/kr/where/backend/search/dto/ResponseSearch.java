@@ -18,7 +18,7 @@ import lombok.Setter;
 public class ResponseSearch {
 
     @Schema(description = "카뎃의 고유 id")
-    private Long intraId;
+    private Integer intraId;
     @Schema(description = "카뎃의 이름")
     private String intraName;
     @Schema(description = "카뎃의 이미지")

@@ -6,10 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class FindGroupDto {
-    private Long memberId;
+    private Integer memberId;
 
     @Builder
-    public FindGroupDto(Long memberId) {
+    public FindGroupDto(Integer memberId) {
         this.memberId = memberId;
     }
 }

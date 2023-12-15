@@ -5,11 +5,11 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateGroupDto {
 
-    private Long memberIntraId;
+    private Integer memberIntraId;
     private String groupName;
 
     @Builder
-    public CreateGroupDto(Long memberIntraId, String groupName) {
+    public CreateGroupDto(final Integer memberIntraId, final String groupName) {
         this.memberIntraId = memberIntraId;
         this.groupName = groupName;
     }

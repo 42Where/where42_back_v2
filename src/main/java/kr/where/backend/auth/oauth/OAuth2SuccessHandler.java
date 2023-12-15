@@ -4,12 +4,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.api.HaneApiService;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
-import kr.where.backend.jwt.JsonWebTokenService;
+import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.token.TokenService;
+import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -26,56 +24,55 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final String TOKEN = "hane";
     private final MemberService memberService;
     private final HaneApiService haneApiService;
-    private final TokenService tokenService;
-    private final JsonWebTokenService jsonWebTokenService;
+    private final OauthTokenService oauthTokenService;
+    private final JwtService jwtService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        final OAuth2Attribute oAuth2User = (OAuth2Attribute) authentication.getPrincipal();
+        final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
-        log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
+        log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile);
 
-        memberService.findOne(oAuth2User.getId())
-                .orElseGet(() -> createMember(oAuth2User));
+        final CadetInfo cadetInfo = CadetInfo.of(userProfile.getAttributes());
+        final Member member = memberService.findOne(cadetInfo.getId())
+                .orElse(null);
 
-        // 최초 로그인이라면 회원가입 처리를 한다.
+        if (member == null) {
+            getRedirectStrategy()
+                    .sendRedirect(
+                            request,
+                            response,
+                            UriComponentsBuilder
+                                    .fromUriString("/join")
+                                    .queryParam("get_login", cadetInfo.getLogin())
+                                    .toUriString()
+                            // 프런트 분들에게 경로를 상의한후 만들기
+                    );
+            return ;
+        }
 
+        log.info("JWT 토큰 발행 시작");
 
-        log.info("토큰 발행 시작");
-
-        final String accessToken = jsonWebTokenService.createAccessToken(oAuth2User.getId());
+        final String accessToken = jwtService.createAccessToken(cadetInfo.getId());
 
         // refreshToken 발급 & DB 저장
-        final String refreshToken = jsonWebTokenService.createRefreshToken(oAuth2User.getId());
+//        final String refreshToken = jwtService.createRefreshToken(oAuth2User.getId());
 
-        final String targetUrl = UriComponentsBuilder.fromUriString("/accessToken")
-                .queryParam("accessToken", accessToken)
-                .queryParam("refreshToken", refreshToken)
-                .build().toUriString();
-        log.info(targetUrl);
+        //jwt refreshToken 저장
+        jwtService.updateJsonWebToken(cadetInfo.getId());
 
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-    }
-
-    private Member createMember(final OAuth2Attribute oAuth2Attribute) {
-        final CadetPrivacy cadetPrivacy = CadetPrivacy
-                .createForTest(
-                        oAuth2Attribute.getId(),
-                        oAuth2Attribute.getLogin(),
-                        oAuth2Attribute.getImage(),
-                        oAuth2Attribute.getLocation(),
-                        oAuth2Attribute.isActive(),
-                        oAuth2Attribute.getCreated_at()
-                );
-
-        final Hane hane = haneApiService
-                .getHaneInfo(
-                        oAuth2Attribute.getLogin(),
-                        tokenService.findAccessToken(TOKEN)
-                );
-
-        return memberService.createAgreeMember(cadetPrivacy, hane);
+        getRedirectStrategy()
+                .sendRedirect(
+                        request,
+                        response,
+                        UriComponentsBuilder
+                                .fromUriString("/token")
+                                .queryParam("accessToken", accessToken)
+                                .build()
+                                .toUriString()
+                        // 프런트 분들에게 경로를 상의한후 만들기
+        );
     }
 }

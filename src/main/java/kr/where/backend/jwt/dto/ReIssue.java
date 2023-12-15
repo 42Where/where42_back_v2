@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ReIssue {
-    private Long intraId;
+    private Integer intraId;
     private String refreshToken;
 }

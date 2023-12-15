@@ -1,7 +1,7 @@
 package kr.where.backend.member;
 
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
@@ -92,7 +92,7 @@ public class MemberService {
         return responseMemberDto;
     }
 
-    public ResponseMemberDto findOneByIntraId(final Long intraId) {
+    public ResponseMemberDto findOneByIntraId(final Integer intraId) {
         final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
         final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
@@ -101,7 +101,7 @@ public class MemberService {
     }
 
     // 위의 findOne이랑 중복! 안쓰면 지우자!
-    public Optional<Member> findOne(final Long intraId) {
+    public Optional<Member> findOne(final Integer intraId) {
         return memberRepository.findByIntraId(intraId);
     }
 }

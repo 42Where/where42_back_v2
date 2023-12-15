@@ -44,13 +44,13 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupsInfoByMemberId(final Long memberId){
+    public List<ResponseGroupMemberDTO> findGroupsInfoByMemberId(final Integer memberId){
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByMemberId(memberId);
 
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Long memberId){
+    public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Integer memberId){
         final Member owner = memberRepository.findByIntraId(memberId)
                                 .orElseThrow(MemberException.NoMemberException::new);
         final List<GroupMember> groupMembers = groupMemberRepository
@@ -79,7 +79,7 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Long memberId){
+    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Integer memberId){
         final List<ResponseGroupMemberDTO> groups = findGroupIdByMemberId(memberId);
         final List<ResponseGroupMemberListDTO> responseGroupMemberListDTOS = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());

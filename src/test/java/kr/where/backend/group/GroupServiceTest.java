@@ -3,8 +3,8 @@ package kr.where.backend.group;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.group.dto.group.UpdateGroupDto;

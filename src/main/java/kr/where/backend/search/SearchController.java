@@ -34,7 +34,7 @@ public class SearchController {
             })
     @GetMapping("/")
     public ResponseEntity search42UserResponse
-            (@RequestParam("intraId") final Long intraId,
+            (@RequestParam("intraId") final Integer intraId,
              @RequestParam("keyWord") final String keyWord
             ) {
         final List<ResponseSearch> responseSearches = searchService.search(intraId, keyWord);

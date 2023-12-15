@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
+import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
@@ -13,7 +13,7 @@ import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;
-import kr.where.backend.token.TokenService;
+import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class SearchService {
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
-    private final TokenService tokenService;
+    private final OauthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
 
     /**
@@ -36,7 +36,7 @@ public class SearchService {
      * 입력 받은 값을 trim으로 공백을 없애주고, 대문자 영어가 들어와도 검색 가능하게 toLowerCase 적용
      */
 
-    public List<ResponseSearch> search(final Long intraId, final String keyWord) {
+    public List<ResponseSearch> search(final Integer intraId, final String keyWord) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
@@ -68,7 +68,7 @@ public class SearchService {
         int page = 1;
         while (true) {
             final List<CadetPrivacy> searchApiResult =
-                    intraApiService.getCadetsInRange(tokenService.findAccessToken(TOKEN_NAME), word, page);
+                    intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
             isActiveCadet(result, searchApiResult);
             if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
                 break;
