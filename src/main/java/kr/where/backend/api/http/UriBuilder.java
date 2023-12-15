@@ -1,5 +1,21 @@
 package kr.where.backend.api.http;
 
+import static kr.where.backend.api.http.Uri.CADET_PATH;
+import static kr.where.backend.api.http.Uri.DELIMITER;
+import static kr.where.backend.api.http.Uri.FILTER;
+import static kr.where.backend.api.http.Uri.HANE_PATH;
+import static kr.where.backend.api.http.Uri.HOST;
+import static kr.where.backend.api.http.Uri.HTTPS;
+import static kr.where.backend.api.http.Uri.LOCATIONS_PATH;
+import static kr.where.backend.api.http.Uri.ME_PATH;
+import static kr.where.backend.api.http.Uri.PAGE_NUMBER;
+import static kr.where.backend.api.http.Uri.PAGE_SIZE;
+import static kr.where.backend.api.http.Uri.RANGE_BEGIN;
+import static kr.where.backend.api.http.Uri.RANGE_END;
+import static kr.where.backend.api.http.Uri.RANGE_LOGIN;
+import static kr.where.backend.api.http.Uri.SORT;
+import static kr.where.backend.api.http.Uri.TOKEN_PATH;
+import static kr.where.backend.api.http.Uri.USERS_PATH;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -9,27 +25,10 @@ import java.util.Date;
 import java.util.TimeZone;
 import org.springframework.web.util.UriComponentsBuilder;
 
-/**
- * 하은님 이거 enum으로 관리 가능할거같아요. 한번 확인해보시고 바꾸는게 낫다고 생각되시면 알려주세요~
- */
 public class UriBuilder {
 
-    private static final String HTTPS = "https";
-    private static final String HOST = "api.intra.42.fr";
-    private static final String TOKEN_PATH = "oauth/token";
-    private static final String ME_PATH = "v2/me";
-    private static final String CADET_PATH = "v2/users/";
-    private static final String USERS_PATH = "v2/campus/29/users";
-    private static final String LOCATIONS_PATH = "v2/campus/29/locations";
-    private static final String HANE_PATH = "https://api.24hoursarenotenough.42seoul.kr/ext/where42/where42/";
-    private static final String SORT = "sort";
-    private static final String FILTER = "filter[kind]";
-    private static final String PAGE_SIZE = "page[size]";
-    private static final String PAGE_NUMBER = "page[number]";
-    private static final String RANGE_BEGIN = "range[begin_at]";
-    private static final String RANGE_END = "range[end_at]";
-    private static final String RANGE_LOGIN = "range[login]";
-    private static final String DELIMITER = ",";
+    private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final int TIME_DIFFERENCE = -5;
     private static final int LOGIN_COUNT = 100;
     private static final int SEARCH_COUNT = 10;
 
@@ -39,9 +38,9 @@ public class UriBuilder {
     public static URI token() {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(TOKEN_PATH)
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(TOKEN_PATH.getValue())
                 .build()
                 .toUri();
     }
@@ -52,9 +51,9 @@ public class UriBuilder {
     public static URI me() {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(ME_PATH)
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(ME_PATH.getValue())
                 .build()
                 .toUri();
     }
@@ -65,9 +64,9 @@ public class UriBuilder {
     public static URI cadetInfo(final String intraName) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(CADET_PATH + intraName)
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(CADET_PATH.getValue() + intraName)
                 .build()
                 .toUri();
     }
@@ -79,13 +78,13 @@ public class UriBuilder {
     public static URI image(final int page) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(USERS_PATH)
-                .queryParam(SORT, "login")
-                .queryParam(FILTER, "student")
-                .queryParam(PAGE_SIZE, LOGIN_COUNT)
-                .queryParam(PAGE_NUMBER, page)
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(USERS_PATH.getValue())
+                .queryParam(SORT.getValue(), "login")
+                .queryParam(FILTER.getValue(), "student")
+                .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
+                .queryParam(PAGE_NUMBER.getValue(), page)
                 .build()
                 .toUri();
     }
@@ -96,12 +95,12 @@ public class UriBuilder {
     public static URI loginCadet(final int page) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(LOCATIONS_PATH)
-                .queryParam(PAGE_SIZE, LOGIN_COUNT)
-                .queryParam(PAGE_NUMBER, page)
-                .queryParam(SORT, "-end_at")
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(LOCATIONS_PATH.getValue())
+                .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
+                .queryParam(PAGE_NUMBER.getValue(), page)
+                .queryParam(SORT.getValue(), "-end_at")
                 .build()
                 .toUri();
     }
@@ -115,20 +114,20 @@ public class UriBuilder {
         final UriComponentsBuilder builder =
                 UriComponentsBuilder
                         .newInstance()
-                        .scheme(HTTPS)
-                        .host(HOST)
-                        .path(LOCATIONS_PATH)
-                        .queryParam(PAGE_SIZE, LOGIN_COUNT)
-                        .queryParam(PAGE_NUMBER, page);
+                        .scheme(HTTPS.getValue())
+                        .host(HOST.getValue())
+                        .path(LOCATIONS_PATH.getValue())
+                        .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
+                        .queryParam(PAGE_NUMBER.getValue(), page);
 
         if (login) {
-            builder.queryParam(RANGE_BEGIN,
-                    formatDate(calculateMinute(currentTime)) + DELIMITER + formatDate(currentTime));
+            builder.queryParam(RANGE_BEGIN.getValue(),
+                    formatDate(calculateMinute(currentTime)) + DELIMITER.getValue() + formatDate(currentTime));
 
             return builder.build().toUri();
         }
-        builder.queryParam(RANGE_END,
-                formatDate(calculateMinute(currentTime)) + DELIMITER + formatDate(currentTime));
+        builder.queryParam(RANGE_END.getValue(),
+                formatDate(calculateMinute(currentTime)) + DELIMITER.getValue() + formatDate(currentTime));
 
         return builder.build().toUri();
     }
@@ -136,13 +135,13 @@ public class UriBuilder {
     private static Date calculateMinute(final Date date) {
         final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
         calendar.setTime(date);
-        calendar.add(Calendar.MINUTE, -5);
+        calendar.add(Calendar.MINUTE, TIME_DIFFERENCE);
 
         return calendar.getTime();
     }
 
     private static String formatDate(final Date date) {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return dateFormat.format(date);
@@ -154,13 +153,13 @@ public class UriBuilder {
     public static URI searchCadets(final String begin, final String end, final int page) {
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(HTTPS)
-                .host(HOST)
-                .path(USERS_PATH)
-                .queryParam(SORT, "login")
-                .queryParam(RANGE_LOGIN, begin + DELIMITER + end)
-                .queryParam(PAGE_SIZE, SEARCH_COUNT)
-                .queryParam(PAGE_NUMBER, page)
+                .scheme(HTTPS.getValue())
+                .host(HOST.getValue())
+                .path(USERS_PATH.getValue())
+                .queryParam(SORT.getValue(), "login")
+                .queryParam(RANGE_LOGIN.getValue(), begin + DELIMITER.getValue() + end)
+                .queryParam(PAGE_SIZE.getValue(), SEARCH_COUNT)
+                .queryParam(PAGE_NUMBER.getValue(), page)
                 .build()
                 .toUri();
     }
@@ -170,7 +169,7 @@ public class UriBuilder {
      */
     public static URI hane(final String name) {
         return UriComponentsBuilder
-                .fromHttpUrl(HANE_PATH + name)
+                .fromHttpUrl(HANE_PATH.getValue() + name)
                 .build()
                 .toUri();
     }
