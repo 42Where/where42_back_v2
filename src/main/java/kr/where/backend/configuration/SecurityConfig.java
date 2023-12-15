@@ -1,11 +1,10 @@
 package kr.where.backend.configuration;
 
-import kr.where.backend.auth.JwtToken.JwtFilter;
-import kr.where.backend.auth.JwtToken.TokenProvider;
+import kr.where.backend.jwt.JwtFilter;
 import kr.where.backend.auth.oauth.CustomOauth2UserService;
 import kr.where.backend.auth.oauth.OAuth2FailureHandler;
 import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
-import kr.where.backend.jwt.JsonWebTokenService;
+import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 public class SecurityConfig {
 
 
-    private final JsonWebTokenService jsonWebTokenService;
+    private final JwtService jwtService;
     private final CustomOauth2UserService customOauth2UserService;
     private final OAuth2SuccessHandler successHandler;
     private final OAuth2FailureHandler failureHandler;
@@ -59,7 +58,7 @@ public class SecurityConfig {
                         .successHandler(successHandler)
                         .failureHandler(failureHandler))
                 .logout(logout -> logout.clearAuthentication(true))
-                .addFilterBefore(new JwtFilter(jsonWebTokenService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }

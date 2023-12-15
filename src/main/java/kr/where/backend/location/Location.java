@@ -18,7 +18,7 @@ public class Location {
     @Id
     @Column(name = "location_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long locationId;
+    private Integer locationId;
 
     @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
     private Member member;

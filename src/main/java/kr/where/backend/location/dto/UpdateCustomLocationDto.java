@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class UpdateCustomLocationDto {
-    private Long intraId;
+    private Integer intraId;
     private String customLocation;
 
     //Test
-    public static UpdateCustomLocationDto createForTest(Long intraId, String customLocation) {
+    public static UpdateCustomLocationDto createForTest(Integer intraId, String customLocation) {
         UpdateCustomLocationDto updateCustomLocationDto = new UpdateCustomLocationDto();
 
         updateCustomLocationDto.intraId = intraId;

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class ResponseLocationDto {
-    private Long intraId;
+    private Integer intraId;
     private String imacLocation;
     private LocalDateTime imacUpdatedAt;
     private String customLocation;

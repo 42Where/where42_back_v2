@@ -13,18 +13,16 @@ public class ResponseGroupMemberDTO {
 
     private Long groupId;
     private String groupName;
-    private Long memberId;
+    private Integer memberId;
     private String comment;
     private String memberIntraName;
-//    private String customLocation;
-//    private String imacLocation;
     private String location;
     private boolean inCluster;
     private String image;
 
 
     @Builder
-    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Long memberId, String comment, String memberIntraName, String location, boolean inCluster, String image) {
+    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Integer memberId, String comment, String memberIntraName, String location, boolean inCluster, String image) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.memberId = memberId;

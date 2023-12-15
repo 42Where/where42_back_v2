@@ -65,7 +65,7 @@ public class GroupController {
             }
     )
     @GetMapping("/")
-    public ResponseEntity findAllGroups(@RequestParam("memberId") Long memberId) {
+    public ResponseEntity findAllGroups(@RequestParam("memberId") Integer memberId) {
         List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -128,7 +128,7 @@ public class GroupController {
             }
     )
     @GetMapping("/info/")
-    public ResponseEntity findGroupNames(@RequestParam("memberId") Long memberId) {
+    public ResponseEntity findGroupNames(@RequestParam("memberId") Integer memberId) {
         List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
