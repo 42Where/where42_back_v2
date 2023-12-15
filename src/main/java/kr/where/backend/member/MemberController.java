@@ -102,11 +102,27 @@ public class MemberController {
                     @ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity findOneByIntraId(@RequestParam Integer intraId) {
         final ResponseMemberDto responseMemberDto = memberService.findOneByIntraId(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
+    }
+
+    @Operation(summary = "1.6 findAll API", description = "모든 멤버 list 조회",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+            }
+    )
+    @GetMapping("/")
+    public ResponseEntity<List<ResponseMemberDto>> findAll() {
+        final List<ResponseMemberDto> responseMemberDtoList = memberService.findAll();
+
+        return ResponseEntity.ok(responseMemberDtoList);
     }
 
     @Operation(summary = "1.2 deleteMember API", description = "맴버 탈퇴",

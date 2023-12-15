@@ -65,10 +65,10 @@ public class MemberService {
 
     public List<ResponseMemberDto> findAll() {
         final List<Member> members = memberRepository.findAll();
-        final List<ResponseMemberDto> responseMemberDtos = members.stream().map(member -> ResponseMemberDto.builder()
+        final List<ResponseMemberDto> responseMemberDtoList = members.stream().map(member -> ResponseMemberDto.builder()
                 .member(member).build()).toList();
 
-        return responseMemberDtos;
+        return responseMemberDtoList;
     }
 
     @Transactional
