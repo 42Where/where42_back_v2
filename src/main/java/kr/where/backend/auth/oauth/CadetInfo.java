@@ -2,17 +2,12 @@ package kr.where.backend.auth.oauth;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Getter
 @Builder
-public class OAuth2Attribute {
-
-    private Map<String, Object> attributes;
-    private String attributeId;
+public class CadetInfo {
     private Integer id;
     private String login;
     private String location;
@@ -20,7 +15,7 @@ public class OAuth2Attribute {
     private boolean active;
     private String created_at;
 
-    public static OAuth2Attribute of(final Map<String, Object> attributes) {
+    public static CadetInfo of(final Map<String, Object> attributes) {
         Map<String, Object> image = (Map<String, Object>) attributes.get("image");
         String smallUrl = "";
         if (image != null) {
@@ -30,7 +25,7 @@ public class OAuth2Attribute {
             }
         }
 
-        return OAuth2Attribute.builder()
+        return CadetInfo.builder()
                 .id((Integer) attributes.get("id"))
                 .login((String) attributes.get("login"))
                 .location((String) attributes.get("location"))
