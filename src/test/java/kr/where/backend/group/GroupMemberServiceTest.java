@@ -167,4 +167,3 @@ public class GroupMemberServiceTest {
         //그룹의 오너는 항상 모든 그룹에 포함되어 있어서 매번 중복되어 없어짐
     }
 }
-
