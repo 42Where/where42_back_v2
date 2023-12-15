@@ -158,7 +158,7 @@ public class MemberController {
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
-    @PostMapping("/dummy")
+    @PostMapping("/dummy/")
     public ResponseEntity<List<ResponseMemberDto>> createDummyAgreeMembers() {
         List<ResponseMemberDto> responseMemberDtoList = new ArrayList<>();
 
