@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@Slf4j
 @Tag(name = "member", description = "member API")
 @RequestMapping("/v3/member")
 @RequiredArgsConstructor
