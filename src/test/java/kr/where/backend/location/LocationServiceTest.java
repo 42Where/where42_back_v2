@@ -1,7 +1,7 @@
 package kr.where.backend.location;
 
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Hane;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Hane;
 import kr.where.backend.location.dto.ResponseLocationDto;
 import kr.where.backend.location.dto.UpdateCustomLocationDto;
 import kr.where.backend.member.Member;
@@ -38,7 +38,7 @@ public class LocationServiceTest {
     @Test
     public void update_custom_location_test() {
 		//given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
 
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
