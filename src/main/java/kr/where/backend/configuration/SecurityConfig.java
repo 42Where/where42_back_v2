@@ -6,30 +6,28 @@ import kr.where.backend.auth.oauth.OAuth2FailureHandler;
 import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:8080")
+@Slf4j
 public class SecurityConfig {
-
-
     private final JwtService jwtService;
     private final CustomOauth2UserService customOauth2UserService;
     private final OAuth2SuccessHandler successHandler;
@@ -39,7 +37,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             final HttpSecurity httpSecurity,
             final HandlerMappingIntrospector introspector) throws Exception {
-
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,8 +48,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
                                 .permitAll()
-                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
-                                .permitAll()
+//                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+//                                .permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
