@@ -6,7 +6,7 @@ import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.join.dto.ResponseJoin;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.oauthtoken.OauthTokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class JoinService {
     private static final String TOKEN_HANE = "hane";
     private final MemberService memberService;
     private final IntraApiService intraApiService;
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oauthTokenService;
     private final HaneApiService haneApiService;
     private final JwtService jwtService;
 

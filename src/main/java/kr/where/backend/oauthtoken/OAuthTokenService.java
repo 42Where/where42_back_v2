@@ -1,8 +1,8 @@
 package kr.where.backend.oauthtoken;
 
 import kr.where.backend.api.TokenApiService;
-import kr.where.backend.api.json.OAuthToken;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.InvalidedOauthTokenException;
+import kr.where.backend.api.json.OAuthTokenDto;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidedOAuthTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OauthTokenService {
+public class OAuthTokenService {
 
-    private final OauthTokenRepository oauthTokenRepository;
+    private final OAuthTokenRepository oauthTokenRepository;
     private final TokenApiService tokenApiService;
 
     @Transactional
-    public void createToken(final String name, final OAuthToken oAuthToken) {
+    public void createToken(final String name, final OAuthTokenDto oAuthTokenDto) {
         validateName(name);
-        final OauthToken oauthToken = new OauthToken(name, oAuthToken);
+        final OAuthToken oauthToken = new OAuthToken(name, oAuthTokenDto);
         oauthTokenRepository.save(oauthToken);
         log.info("[createToken] {} Token 이 생성되었습니다.", name);
     }
@@ -35,22 +35,22 @@ public class OauthTokenService {
 
     @Transactional
     public void deleteToken(final String name) {
-        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOauthTokenException::new);
+        final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOAuthTokenException::new);
         oauthTokenRepository.delete(oauthToken);
     }
 
     @Transactional
     public String findAccessToken(final String name) {
-        final OauthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOauthTokenException::new);
+        final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidedOAuthTokenException::new);
         if (oauthToken.isTimeOver()) {
             updateToken(oauthToken);
         }
         return oauthToken.getAccessToken();
     }
 
-    public void updateToken(final OauthToken oauthToken) {
-        final OAuthToken oAuthToken = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
-        oauthToken.updateToken(oAuthToken);
+    public void updateToken(final OAuthToken oauthToken) {
+        final OAuthTokenDto oAuthTokenDto = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
+        oauthToken.updateToken(oAuthTokenDto);
         log.info("[updateToken] {} Token 이 업데이트 되었습니다.", oauthToken.getName());
     }
 }

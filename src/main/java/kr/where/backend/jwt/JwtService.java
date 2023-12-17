@@ -16,10 +16,10 @@ import kr.where.backend.jwt.dto.ReIssue;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.ExpiredOauthTokenTimeOutException;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.IllegalOauthTokenException;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.InvalidedOauthTokenException;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.UnsupportedOauthTokenException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.ExpiredOAuthTokenTimeOutException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.IllegalOAuthTokenException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidedOAuthTokenException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.UnsupportedOAuthTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +63,7 @@ public class JwtService {
     public JsonWebToken findById(final Integer intraId) {
         return jwtRepository
                 .findByIntraId(intraId)
-                .orElseThrow(InvalidedOauthTokenException::new);
+                .orElseThrow(InvalidedOAuthTokenException::new);
     }
 
     /**
@@ -192,16 +192,16 @@ public class JwtService {
                         .parseClaimsJws(accessToken)
                         .getBody();
             } catch (MalformedJwtException e) {
-                throw new InvalidedOauthTokenException();
+                throw new InvalidedOAuthTokenException();
             } catch (ExpiredJwtException e) {
                 // 방법 1. ExpiredJwtException 던지고 프론트에서 refresh 저장해놨다가 refresh 로 재요청 (이때 access, refresh 재발급)
                 // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access, refresh 재발급
 
-                throw new ExpiredOauthTokenTimeOutException();
+                throw new ExpiredOAuthTokenTimeOutException();
             } catch (UnsupportedJwtException e) {
-                throw new UnsupportedOauthTokenException();
+                throw new UnsupportedOAuthTokenException();
             } catch (IllegalArgumentException e) {
-                throw new IllegalOauthTokenException();
+                throw new IllegalOAuthTokenException();
             }
     }
 }

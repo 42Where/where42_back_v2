@@ -1,4 +1,4 @@
-package kr.where.backend.auth.oauth;
+package kr.where.backend.auth.oauth2login;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,7 +7,7 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.oauthtoken.OauthTokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -24,7 +24,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final String TOKEN = "hane";
     private final MemberService memberService;
     private final HaneApiService haneApiService;
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oauthTokenService;
     private final JwtService jwtService;
 
     @Override

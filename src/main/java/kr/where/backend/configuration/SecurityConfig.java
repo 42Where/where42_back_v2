@@ -1,25 +1,20 @@
 package kr.where.backend.configuration;
 
 import kr.where.backend.jwt.JwtFilter;
-import kr.where.backend.auth.oauth.CustomOauth2UserService;
-import kr.where.backend.auth.oauth.OAuth2FailureHandler;
-import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
+import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
+import kr.where.backend.auth.oauth2login.OAuth2FailureHandler;
+import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 

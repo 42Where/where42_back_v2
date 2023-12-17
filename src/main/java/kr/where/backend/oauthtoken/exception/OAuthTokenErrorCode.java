@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum OauthTokenErrorCode implements ErrorCode {
+public enum OAuthTokenErrorCode implements ErrorCode {
     INVALIDED_TOKEN(3000,"유효한 토큰이 없습니다."),
     WRONG_SIGNED_TOKEN(3001, "서명이 잘못된 토큰입니다."),
     EXPIRED_TOKEN_TIME_OUT(3002, "만료된 토큰입니다."),
