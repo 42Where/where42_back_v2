@@ -30,7 +30,6 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-//        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId()).orElseThrow();
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
@@ -126,6 +125,7 @@ public class GroupMemberService {
 
     @Transactional
     public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDto dto){
+        groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
         groupMemberRepository.deleteAll(groupMembers);
 
