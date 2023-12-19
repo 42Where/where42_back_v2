@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -33,46 +34,46 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
-        log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile);
+        log.info("Principal에서 꺼낸 OAuth2User = {}", userProfile.toString());
 
         final CadetInfo cadetInfo = CadetInfo.of(userProfile.getAttributes());
         final Member member = memberService.findOne(cadetInfo.getId())
-                .orElse(null);
+                .orElseGet(() -> memberService.createDisagreeMember(
+                        CadetPrivacy.createForTest(cadetInfo.getId(), cadetInfo.getLogin(), cadetInfo.getLocation(), cadetInfo.getImage(), cadetInfo.isActive(), cadetInfo.getCreated_at())
+                        )
+                );
+        /**
+         * 무조권 token 발행 -> 없으면 맴버 생성? agree = false로 생성 token 저장
+         * jwt name과 id 동의 여부 넣어주기
+         *
+         * 동의를 받고 -> memeber를 만들지
+         * 임의의 member를 만들고 -> 동의를 받았을때, 거부한다면 -> 다시 로그인 페이지로 redicet할지
+         *
+         */
 
-        if (member == null) {
-            getRedirectStrategy()
-                    .sendRedirect(
-                            request,
-                            response,
-                            UriComponentsBuilder
-                                    .fromUriString("/join")
-                                    .queryParam("get_login", cadetInfo.getLogin())
-                                    .toUriString()
-                            // 프런트 분들에게 경로를 상의한후 만들기
-                    );
-            return ;
-        }
-
+        //jwt 발행
         log.info("JWT 토큰 발행 시작");
 
-        final String accessToken = jwtService.createAccessToken(cadetInfo.getId());
+        final String accessToken = jwtService.createAccessToken(cadetInfo.getId(), cadetInfo.getLogin());
+        boolean isAgree = false;
 
-        // refreshToken 발급 & DB 저장
-//        final String refreshToken = jwtService.createRefreshToken(oAuth2User.getId());
-
-        //jwt refreshToken 저장
-        jwtService.updateJsonWebToken(cadetInfo.getId());
+        if (member.isAgree()) {
+            jwtService.updateJsonWebToken(cadetInfo.getId(), cadetInfo.getLogin());
+            isAgree = member.isAgree();
+        }
 
         getRedirectStrategy()
                 .sendRedirect(
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("/token")
-                                .queryParam("accessToken", accessToken)
+                                .fromUriString("http://localhost:3000/")
+                                .queryParam("token", accessToken)
+                                .queryParam("intraId",cadetInfo.getId())
+                                .queryParam("agreement", isAgree)
                                 .build()
                                 .toUriString()
                         // 프런트 분들에게 경로를 상의한후 만들기
-        );
+                );
     }
 }

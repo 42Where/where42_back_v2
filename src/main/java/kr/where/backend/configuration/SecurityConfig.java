@@ -1,5 +1,6 @@
 package kr.where.backend.configuration;
 
+import kr.where.backend.filter.CorsFilter;
 import kr.where.backend.jwt.JwtFilter;
 import kr.where.backend.auth.oauth.CustomOauth2UserService;
 import kr.where.backend.auth.oauth.OAuth2FailureHandler;
@@ -9,18 +10,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -37,7 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             final HttpSecurity httpSecurity,
             final HandlerMappingIntrospector introspector) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -48,13 +46,17 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
                                 .permitAll()
-                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/join/**"))
                                 .permitAll()
-                                .anyRequest().authenticated())
-                .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
+                                .anyRequest()
+                                .authenticated()
+                )
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
-                        .failureHandler(failureHandler))
-                .logout(logout -> logout.clearAuthentication(true))
+                        .failureHandler(failureHandler)
+                )
+//                .logout(logout -> logout.clearAuthentication(true))
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }

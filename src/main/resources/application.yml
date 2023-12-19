@@ -15,3 +15,13 @@ spring:
             token-uri: https://api.intra.42.fr/oauth/token
             user-info-uri: https://api.intra.42.fr/v2/me
             user-name-attribute: id
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test
+    username: parksuhwan
+    password:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
