@@ -43,7 +43,7 @@ public class GroupController {
     )
     @PostMapping("")
     public ResponseEntity createGroup(@RequestBody CreateGroupDto request) {
-        ResponseGroupDto dto = groupService.createGroup(request);
+        final ResponseGroupDto dto = groupService.createGroup(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -61,7 +61,7 @@ public class GroupController {
     )
     @GetMapping("")
     public ResponseEntity findAllGroups(@RequestParam("memberId") Integer memberId) {
-        List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
+        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -80,7 +80,7 @@ public class GroupController {
     )
     @PostMapping("/name")
     public ResponseEntity updateGroupName(@RequestBody @Valid UpdateGroupDto dto) {
-        ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
+        final ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -98,7 +98,7 @@ public class GroupController {
     )
     @DeleteMapping("")
     public ResponseEntity deleteGroup(@RequestParam Long groupId) {
-        ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+        final ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -117,7 +117,7 @@ public class GroupController {
     )
     @GetMapping("/info")
     public ResponseEntity findGroupNames(@RequestParam("memberId") Integer memberId) {
-        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
+        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -158,7 +158,7 @@ public class GroupController {
     )
     @PostMapping("/groupmember/not-ingroup")
     public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
-        List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
+        final List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
     }
@@ -177,7 +177,7 @@ public class GroupController {
     )
     @PostMapping("/groupmember/members")
     public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
-        List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
+        final List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -196,7 +196,7 @@ public class GroupController {
     )
     @GetMapping("/groupmember")
     public ResponseEntity findAllGroupFriends(@RequestParam("groupId") Long groupId) {
-        List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
+        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -215,7 +215,7 @@ public class GroupController {
     )
     @PutMapping ("/groupmember")
     public ResponseEntity removeIncludeGroupFriends(@RequestBody DeleteGroupMemberListDto request) {
-        List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request);
+        final List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseGroupMemberDTOs);
     }
