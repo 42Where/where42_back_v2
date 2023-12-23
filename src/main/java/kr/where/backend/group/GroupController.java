@@ -41,7 +41,7 @@ public class GroupController {
                             @ExampleObject(name = "example3", value = "{\"statusCode\": 2001, \"responseMsg\": \"그룹 이름 중복\"}"),})),
             }
     )
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity createGroup(@RequestBody CreateGroupDto request) {
         ResponseGroupDto dto = groupService.createGroup(request);
 
@@ -59,7 +59,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
             }
     )
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity findAllGroups(@RequestParam("memberId") Integer memberId) {
         List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
 
@@ -78,7 +78,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 409, \"responseMsg\": \"그룹 이름 중복\"}"),})),
             }
     )
-    @PostMapping("/name/")
+    @PostMapping("/name")
     public ResponseEntity updateGroupName(@RequestBody @Valid UpdateGroupDto dto) {
         ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
 
@@ -96,7 +96,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity deleteGroup(@RequestParam Long groupId) {
         ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
 
@@ -115,7 +115,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
             }
     )
-    @GetMapping("/info/")
+    @GetMapping("/info")
     public ResponseEntity findGroupNames(@RequestParam("memberId") Integer memberId) {
         List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
 
@@ -136,7 +136,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @PostMapping("/groupmember/")
+    @PostMapping("/groupmember")
     public ResponseEntity createGroupMember(@RequestBody CreateGroupMemberDTO createGroupMemberDTO) {
         final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO);
 
@@ -156,7 +156,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}")})),
             }
     )
-    @PostMapping("/groupmember/not-ingroup/")
+    @PostMapping("/groupmember/not-ingroup")
     public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
         List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
 
@@ -175,7 +175,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @PostMapping("/groupmember/add/")
+    @PostMapping("/groupmember/members")
     public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
         List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
@@ -194,7 +194,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @GetMapping("/groupmember/")
+    @GetMapping("/groupmember")
     public ResponseEntity findAllGroupFriends(@RequestParam("groupId") Long groupId) {
         List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
 
@@ -213,7 +213,7 @@ public class GroupController {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
-    @PutMapping ("/groupmember/")
+    @PutMapping ("/groupmember")
     public ResponseEntity removeIncludeGroupFriends(@RequestBody DeleteGroupMemberListDto request) {
         List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request);
 
