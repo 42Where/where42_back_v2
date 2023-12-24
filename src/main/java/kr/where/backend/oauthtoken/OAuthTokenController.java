@@ -1,5 +1,6 @@
 package kr.where.backend.oauthtoken;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v3/token")
 @RequiredArgsConstructor
+@Tag(name = "oauth", description = "oauth token API")
 public class OAuthTokenController {
 
     private final OAuthTokenService oauthTokenService;

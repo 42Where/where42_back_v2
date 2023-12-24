@@ -50,15 +50,21 @@ public class OAuthTokenService {
         return oauthToken.getAccessToken();
     }
 
+    @Transactional
     public void updateToken(final OAuthToken oauthToken) {
         final OAuthTokenDto oAuthTokenDto = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
         oauthToken.updateToken(oAuthTokenDto);
         log.info("[oAuthToken] {} Token 이 업데이트 되었습니다.", oauthToken.getName());
     }
 
+    @Transactional
     public void updateHaneToken(final String accessToken) {
         final OAuthToken oauthToken = oauthTokenRepository.findByName("hane")
-                .orElse(new OAuthToken("hane"));
+                .orElseGet(() -> {
+                    OAuthToken newToken = new OAuthToken("hane");
+                    oauthTokenRepository.save(newToken);
+                    return newToken;
+                });
         oauthToken.updateToken(accessToken);
         log.info("[oAuthToken] {} Token 이 업데이트 되었습니다.", "hane");
     }
