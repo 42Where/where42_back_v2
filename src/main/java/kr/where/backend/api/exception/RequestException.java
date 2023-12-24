@@ -15,7 +15,6 @@ public class RequestException extends CustomException {
     }
 
     public static class TooManyRequestException extends RequestException{
-
         public TooManyRequestException() {
             super(RequestErrorCode.TOO_MANY_REQUEST);
         }

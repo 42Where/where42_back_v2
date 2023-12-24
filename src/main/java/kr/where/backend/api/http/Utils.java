@@ -10,7 +10,7 @@ public class Utils {
     private static String secret;
     private static String redirectUri;
 
-    // static 함수에서 static 변수로 사용하기 위한 방법
+    // 환경변수를 static 함수에서 static 변수로 사용하기 위한 방법
     @Value("${back.client-id}")
     private void setClientId(final String clientId) {
         this.clientId = clientId;
