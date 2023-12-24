@@ -7,7 +7,7 @@ import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.oauthtoken.OauthTokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Retryable;
@@ -24,7 +24,7 @@ public class UpdateService {
     private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
     private final MemberService memberService;

@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
-import kr.where.backend.api.json.OAuthToken;
+import kr.where.backend.api.json.OAuthTokenDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OauthToken {
+public class OAuthToken {
     private static final int TOKEN_EXPIRATION_MINUTES = 60;
     
     @Id
@@ -38,37 +38,37 @@ public class OauthToken {
 
     private LocalDateTime updatedAt;
 
-    public OauthToken(final String name, final OAuthToken oAuthToken) {
+    public OAuthToken(final String name, final OAuthTokenDto oAuthTokenDto) {
         this.name = name;
-        this.accessToken = oAuthToken.getAccess_token();
-        this.refreshToken = oAuthToken.getRefresh_token();
+        this.accessToken = oAuthTokenDto.getAccess_token();
+        this.refreshToken = oAuthTokenDto.getRefresh_token();
 
         final LocalDateTime createdAt =
                 LocalDateTime.ofInstant(
-                        Instant.ofEpochSecond(oAuthToken.getCreated_at()),
+                        Instant.ofEpochSecond(oAuthTokenDto.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
         this.createdAt = createdAt;
         this.updatedAt = LocalDateTime.now();
     }
 
-    public OauthToken(final String name, final String accessToken) {
+    // hane
+    public OAuthToken(final String name) {
         this.name = name;
-        this.accessToken = accessToken;
-        this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateToken(final OAuthToken oAuthToken) {
-        this.accessToken = oAuthToken.getAccess_token();
-        this.refreshToken = oAuthToken.getRefresh_token();
+    public void updateToken(final OAuthTokenDto oAuthTokenDto) {
+        this.accessToken = oAuthTokenDto.getAccess_token();
+        this.refreshToken = oAuthTokenDto.getRefresh_token();
 
         final LocalDateTime createdAt =
                 LocalDateTime.ofInstant(
-                        Instant.ofEpochSecond(oAuthToken.getCreated_at()),
+                        Instant.ofEpochSecond(oAuthTokenDto.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
         this.createdAt = createdAt;
         this.updatedAt = LocalDateTime.now();
     }
 
+    // hane
     public void updateToken(final String accessToken) {
         this.accessToken = accessToken;
         this.updatedAt = LocalDateTime.now();
@@ -78,7 +78,7 @@ public class OauthToken {
         final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
         final Duration duration = Duration.between(currentTime, createdAt);
         final Long minute = Math.abs(duration.toMinutes());
-        log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
+        log.info("[oAuthToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
         if (minute > TOKEN_EXPIRATION_MINUTES) {
             return true;
         }

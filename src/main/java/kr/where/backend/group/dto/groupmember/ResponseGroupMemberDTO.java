@@ -16,23 +16,19 @@ public class ResponseGroupMemberDTO {
     private Integer memberId;
     private String comment;
     private String memberIntraName;
-    private String customLocation;
-    private String imacLocation;
-    private String clusterLocation;
+    private String location;
     private boolean inCluster;
     private String image;
 
 
     @Builder
-    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Integer memberId, String comment, String memberIntraName, String customLocation, String imacLocation, String clusterLocation, boolean inCluster, String image) {
+    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Integer memberId, String comment, String memberIntraName, String location, boolean inCluster, String image) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.memberId = memberId;
         this.comment = comment;
         this.memberIntraName = memberIntraName;
-        this.customLocation = customLocation;
-        this.imacLocation = imacLocation;
-        this.clusterLocation = clusterLocation;
+        this.location = location;
         this.inCluster = inCluster;
         this.image = image;
     }

@@ -5,8 +5,9 @@ import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
-import kr.where.backend.api.json.OAuthToken;
+import kr.where.backend.api.json.OAuthTokenDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v3/token")
 @RequiredArgsConstructor
-public class TokenController {
+public class OAuthTokenController {
 
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oauthTokenService;
     private final TokenApiService tokenApiService;
     private final IntraApiService intraApiService;
 
@@ -26,7 +27,6 @@ public class TokenController {
 
     /**
      * REDIRECT_URI http://localhost:8080/v3/token
-     * https://api.intra.42.fr/oauth/authorize?client_id= 로 시작하는 긴 redirect url 실행하면 이곳으로 code 반환
      */
     @GetMapping("")
     public String createAccessToken(@RequestParam("code") String code) {
@@ -37,16 +37,14 @@ public class TokenController {
     // 프론트가 없어서 위에서 받은 code 를 수동으로 넣어줘야 함
     @PostMapping("")
     public String createToken(@RequestParam("name") String name, @RequestParam("code") String code) {
-        final OAuthToken oAuthToken = tokenApiService.getOAuthToken(code);
+        final OAuthTokenDto oAuthToken = tokenApiService.getOAuthToken(code);
         oauthTokenService.createToken(name, oAuthToken);
         return oAuthToken.getAccess_token();
     }
 
-    @PostMapping("/hane")
-    public String createHaneToken() {
-        OAuthToken oAuthToken = new OAuthToken();
-        oauthTokenService.createToken("hane", oAuthToken);
-        return "hane";
+    @DeleteMapping("")
+    public void deleteToken(@RequestParam("name") String name) {
+        oauthTokenService.deleteToken(name);
     }
 
     @PostMapping("/update/hane")
