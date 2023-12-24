@@ -1,6 +1,7 @@
 package kr.where.backend.group;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import kr.where.backend.group.dto.groupmember.*;
@@ -66,6 +67,8 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findGroupMemberbyGroupId(final Long groupId){
+        final Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(groupId);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
@@ -138,6 +141,10 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final Group default_group = groupRepository.findById(default_groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
+        final Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
         final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
         final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
