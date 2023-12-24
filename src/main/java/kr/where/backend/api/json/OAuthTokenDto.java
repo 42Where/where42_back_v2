@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OAuthToken {
+public class OAuthTokenDto {
     private String access_token;
     private String token_type;
     private int expires_in;

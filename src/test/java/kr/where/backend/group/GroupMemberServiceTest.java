@@ -49,10 +49,10 @@ public class GroupMemberServiceTest {
     @BeforeEach
     public void setUp () {
 //         Given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(11111L, "hjeong", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
-        createGroupDto = new CreateGroupDto(11111L, "group");
+        createGroupDto = new CreateGroupDto(11111, "group");
         responseGroupDto = groupService.createGroup(createGroupDto);
     }
     @DisplayName("그룹 멤버 생성")
@@ -60,7 +60,7 @@ public class GroupMemberServiceTest {
     @Rollback
     public void 그룹_멤버_생성() throws Exception {
         //given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222L, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
@@ -76,15 +76,15 @@ public class GroupMemberServiceTest {
     }
 
     void 그룹_멤버_리스트_생성_후_저장(){
-        CadetPrivacy cadetPrivacy1 = CadetPrivacy.createForTest(22222L, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy1 = CadetPrivacy.createForTest(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
         Hane hane1 = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy1, hane1);
 
-        CadetPrivacy cadetPrivacy2 = CadetPrivacy.createForTest(22223L, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy2 = CadetPrivacy.createForTest(22223, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
         Hane hane2 = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy2, hane2);
 
-        CadetPrivacy cadetPrivacy3 = CadetPrivacy.createForTest(22224L, "jonhan", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy3 = CadetPrivacy.createForTest(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31");
         Hane hane3 = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy3, hane3);
 
@@ -122,7 +122,7 @@ public class GroupMemberServiceTest {
     public void 그룹_멤버_삭제() throws Exception{
 
         //given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222L, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
@@ -149,7 +149,7 @@ public class GroupMemberServiceTest {
 
         //given 기본그룹이 아닌 그룹 하나 새로 만든 후 멤버 한명 추가
         그룹_멤버_리스트_생성_후_저장();
-        createGroupDto = new CreateGroupDto(11111L, "friends List");
+        createGroupDto = new CreateGroupDto(11111, "friends List");
         ResponseGroupDto dto = groupService.createGroup(createGroupDto);
         List<String> member = new ArrayList<>();
         member.add("jnam");
@@ -167,4 +167,3 @@ public class GroupMemberServiceTest {
         //그룹의 오너는 항상 모든 그룹에 포함되어 있어서 매번 중복되어 없어짐
     }
 }
-

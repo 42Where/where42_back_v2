@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: ${POSTGRESQL_DRIVER_CLASS_NAME}
+    url: jdbc:postgresql://${POSTGRESQL_ENDPOINT}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update

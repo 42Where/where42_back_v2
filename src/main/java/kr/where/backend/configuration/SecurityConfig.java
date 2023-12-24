@@ -1,9 +1,9 @@
 package kr.where.backend.configuration;
 
 import kr.where.backend.jwt.JwtFilter;
-import kr.where.backend.auth.oauth.CustomOauth2UserService;
-import kr.where.backend.auth.oauth.OAuth2FailureHandler;
-import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
+import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
+import kr.where.backend.auth.oauth2login.OAuth2FailureHandler;
+import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -29,18 +31,24 @@ public class SecurityConfig {
     private final OAuth2FailureHandler failureHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            final HttpSecurity httpSecurity,
+            final HandlerMappingIntrospector introspector) throws Exception {
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/token").permitAll()
-                                .requestMatchers("/oauth2/*").permitAll()
-                                .requestMatchers("/join").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/token/**"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/oauth2/*"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
+                                .permitAll()
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+                                .permitAll()
                                 .anyRequest().authenticated())
-                // 여기 버전 바꿔야 합니다.
                 .oauth2Login(oauth -> oauth.userInfoEndpoint(user -> user.userService(customOauth2UserService))
                         .successHandler(successHandler)
                         .failureHandler(failureHandler))

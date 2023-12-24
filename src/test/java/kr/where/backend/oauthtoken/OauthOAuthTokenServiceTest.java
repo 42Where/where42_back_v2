@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import kr.where.backend.api.json.OAuthToken;
+import kr.where.backend.api.json.OAuthTokenDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,21 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class OauthOauthTokenServiceTest {
+public class OauthOAuthTokenServiceTest {
 
     @Autowired
-    private OauthTokenService oauthTokenService;
+    private OAuthTokenService oauthTokenService;
     @Autowired
-    private OauthTokenRepository oauthTokenRepository;
+    private OAuthTokenRepository oauthTokenRepository;
 
     @Test
     public void 토큰_생성_테스트() {
         // given
         String name = "back";
-        OAuthToken oAuthToken = new OAuthToken();
+        OAuthTokenDto oAuthTokenDto = new OAuthTokenDto();
 
         // when
-        oauthTokenService.createToken(name, oAuthToken);
+        oauthTokenService.createToken(name, oAuthTokenDto);
 
         // then
         assertDoesNotThrow(() -> oauthTokenRepository.findByName(name).orElseThrow());
@@ -37,21 +37,21 @@ public class OauthOauthTokenServiceTest {
     public void 토큰_이름_중복_테스트() {
         // given
         String name = "back";
-        OAuthToken oAuthToken = new OAuthToken();
+        OAuthTokenDto oAuthTokenDto = new OAuthTokenDto();
 
         // when
-        oauthTokenService.createToken(name, oAuthToken);
+        oauthTokenService.createToken(name, oAuthTokenDto);
 
         // then
-        assertThrows(Exception.class, () -> oauthTokenService.createToken(name, oAuthToken));
+        assertThrows(Exception.class, () -> oauthTokenService.createToken(name, oAuthTokenDto));
     }
 
     @Test
     public void 토큰_삭제_테스트() {
         // given
         String name = "back";
-        OAuthToken oAuthToken = new OAuthToken();
-        oauthTokenService.createToken(name, oAuthToken);
+        OAuthTokenDto oAuthTokenDto = new OAuthTokenDto();
+        oauthTokenService.createToken(name, oAuthTokenDto);
 
         // when
         oauthTokenService.deleteToken(name);
