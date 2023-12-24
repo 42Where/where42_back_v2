@@ -101,7 +101,7 @@ public class MemberController {
             }
     )
     @GetMapping("")
-    public ResponseEntity findOneByIntraId(@RequestParam Integer intraId) {
+    public ResponseEntity findOneByIntraId(@RequestParam("intraId") Integer intraId) {
         final ResponseMemberDto responseMemberDto = memberService.findOneByIntraId(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
@@ -134,7 +134,7 @@ public class MemberController {
             }
     )
     @DeleteMapping("")
-    public ResponseEntity deleteMember(@RequestParam Integer intraId) {
+    public ResponseEntity deleteMember(@RequestParam("intraId") Integer intraId) {
 
         // 본인인지 확인 여부가 필요할 듯!
         final ResponseMemberDto responseMemberDto = memberService.deleteMember(intraId);
