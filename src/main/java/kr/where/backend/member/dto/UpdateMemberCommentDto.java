@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateMemberDto {
+public class UpdateMemberCommentDto {
     private Integer intraId;
     private String comment;
 }

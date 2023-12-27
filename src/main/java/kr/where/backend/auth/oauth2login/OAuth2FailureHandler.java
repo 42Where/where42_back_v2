@@ -1,4 +1,4 @@
-package kr.where.backend.auth.oauth;
+package kr.where.backend.auth.oauth2login;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

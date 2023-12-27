@@ -13,7 +13,7 @@ import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.search.dto.ResponseSearch;
 import kr.where.backend.search.exception.SearchException;
-import kr.where.backend.oauthtoken.OauthTokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class SearchService {
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
 
     /**
