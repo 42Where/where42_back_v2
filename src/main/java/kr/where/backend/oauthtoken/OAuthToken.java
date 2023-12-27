@@ -51,10 +51,9 @@ public class OAuthToken {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public OAuthToken(final String name, final String accessToken) {
+    // hane
+    public OAuthToken(final String name) {
         this.name = name;
-        this.accessToken = accessToken;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateToken(final OAuthTokenDto oAuthTokenDto) {
@@ -69,6 +68,7 @@ public class OAuthToken {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // hane
     public void updateToken(final String accessToken) {
         this.accessToken = accessToken;
         this.updatedAt = LocalDateTime.now();
@@ -78,7 +78,7 @@ public class OAuthToken {
         final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
         final Duration duration = Duration.between(currentTime, createdAt);
         final Long minute = Math.abs(duration.toMinutes());
-        log.info("[accessToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
+        log.info("[oAuthToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
         if (minute > TOKEN_EXPIRATION_MINUTES) {
             return true;
         }
