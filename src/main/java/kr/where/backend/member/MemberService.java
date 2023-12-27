@@ -6,9 +6,8 @@ import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
 import kr.where.backend.location.LocationService;
-import kr.where.backend.member.dto.DeleteMemberDto;
 import kr.where.backend.member.dto.ResponseMemberDto;
-import kr.where.backend.member.dto.UpdateMemberDto;
+import kr.where.backend.member.dto.UpdateMemberCommentDto;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +71,8 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseMemberDto deleteMember(DeleteMemberDto deleteMemberDto) {
-        final Member member = memberRepository.findByIntraId(deleteMemberDto.getIntraId())
+    public ResponseMemberDto deleteMember(Integer intraId) {
+        final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
         final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
 
@@ -83,10 +82,10 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseMemberDto updateComment(final UpdateMemberDto updateMemberDto) {
-        final Member member = memberRepository.findByIntraId(updateMemberDto.getIntraId())
+    public ResponseMemberDto updateComment(final UpdateMemberCommentDto updateMemberCommentDto) {
+        final Member member = memberRepository.findByIntraId(updateMemberCommentDto.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-        member.setComment(updateMemberDto.getComment());
+        member.setComment(updateMemberCommentDto.getComment());
 
         final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
         return responseMemberDto;

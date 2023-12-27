@@ -1,5 +1,6 @@
 package kr.where.backend.api;
 
+import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
@@ -21,8 +22,8 @@ public class HaneApiService {
             return JsonMapper
                     .mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
                             Hane.class);
-        } catch (HaneRequestException e) {
-            log.info(e.toString());
+        } catch (RequestException exception) {
+            log.warn("[hane] {}", exception.toString());
             return new Hane();
         }
     }

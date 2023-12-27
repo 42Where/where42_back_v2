@@ -11,12 +11,9 @@ import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.join.dto.ResponseJoin;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,11 +35,11 @@ public class JoinController {
             }
 
     )
-    @PostMapping("/")
-    public ResponseEntity<ResponseJoin> join(@RequestParam("login") final String login) {
-        final ResponseJoin responseJoin = joinService.join(login);
+    @PostMapping("")
+    public ResponseEntity<HttpStatus> join(@RequestParam("intra_id") final Integer intraId) {
+        joinService.join(intraId);
 
         //프런트 상의 create는 201이까요
-        return ResponseEntity.ok(responseJoin);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

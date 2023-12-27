@@ -17,7 +17,6 @@ import kr.where.backend.api.json.Hane;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +75,7 @@ public class MemberController {
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity createAgreeMember(@RequestBody ObjectNode saveObj) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
@@ -102,7 +101,7 @@ public class MemberController {
             }
     )
     @GetMapping("")
-    public ResponseEntity findOneByIntraId(@RequestParam Integer intraId) {
+    public ResponseEntity findOneByIntraId(@RequestParam("intraId") Integer intraId) {
         final ResponseMemberDto responseMemberDto = memberService.findOneByIntraId(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
@@ -117,7 +116,7 @@ public class MemberController {
                     @ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<List<ResponseMemberDto>> findAll() {
         final List<ResponseMemberDto> responseMemberDtoList = memberService.findAll();
 
@@ -126,21 +125,19 @@ public class MemberController {
 
     @Operation(summary = "1.2 deleteMember API", description = "맴버 탈퇴",
             parameters = {
-                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+                @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+                @Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
             },
-            requestBody =
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = DeleteMemberDto.class)))
-            ,
             responses = {
                     @ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 삭제 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
-    @DeleteMapping("/")
-    public ResponseEntity deleteMember(@RequestBody DeleteMemberDto deleteMemberDto) {
+    @DeleteMapping("")
+    public ResponseEntity deleteMember(@RequestParam("intraId") Integer intraId) {
 
-        final ResponseMemberDto responseMemberDto = memberService.deleteMember(deleteMemberDto);
+        // 본인인지 확인 여부가 필요할 듯!
+        final ResponseMemberDto responseMemberDto = memberService.deleteMember(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -151,7 +148,7 @@ public class MemberController {
             },
             requestBody =
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = UpdateMemberDto.class)))
+                    content = @Content(schema = @Schema(implementation = UpdateMemberCommentDto.class)))
             ,
             responses = {
                     @ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
@@ -159,8 +156,8 @@ public class MemberController {
             }
     )
     @PostMapping("/comment")
-    public ResponseEntity updateComment(@RequestBody final UpdateMemberDto updateMemberDto) {
-        final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberDto);
+    public ResponseEntity updateComment(@RequestBody final UpdateMemberCommentDto updateMemberCommentDto) {
+        final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberCommentDto);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -179,7 +176,7 @@ public class MemberController {
         List<ResponseMemberDto> responseMemberDtoList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "https://i.ibb.co/M1wyzZV/IMG-6196.jpg", true, "2022-10-31");
+            CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "https://ibb.co/94KmxcT", true, "2022-10-31");
             Hane hane = Hane.createForTest("IN");
 
             Member member = memberService.createAgreeMember(cadetPrivacy, hane);

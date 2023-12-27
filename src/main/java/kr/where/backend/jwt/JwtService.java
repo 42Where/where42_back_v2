@@ -72,10 +72,10 @@ public class JwtService {
      * transactional을 사용하여, 변경점이 생기면 자동 저장, 영속성 context 관점
      */
     @Transactional
-    public void updateJsonWebToken(final Integer intraId) {
+    public void updateJsonWebToken(final Integer intraId, final String intraName) {
         final JsonWebToken jsonWebToken = findById(intraId);
 
-        jsonWebToken.updateRefreshToken(createRefreshToken(intraId));
+        jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
     }
 
     /**
@@ -89,7 +89,7 @@ public class JwtService {
 
         jsonWebToken.validateRefreshToken(reIssue.getRefreshToken());
 
-        return createAccessToken(reIssue.getIntraId());
+        return createAccessToken(reIssue.getIntraId(), "name");
     }
 
     /**
@@ -98,8 +98,8 @@ public class JwtService {
      * @param intraId : token의 주인을 token payload에 저장
      * @return Token을 생성하는 메서드 호출
      */
-    public String createAccessToken(final Integer intraId) {
-        return createToken(intraId, accessTokenExpirationTime);
+    public String createAccessToken(final Integer intraId, final String intraName) {
+        return createToken(intraId, intraName, accessTokenExpirationTime);
     }
 
     /**
@@ -108,8 +108,8 @@ public class JwtService {
      * @param intraId : token의 주인을 token payload에 저장
      * @return Token을 생성하는 메서드 호출
      */
-    public String createRefreshToken(final Integer intraId) {
-        return createToken(intraId, refreshTokenExpirationTime);
+    public String createRefreshToken(final Integer intraId, final String intraName) {
+        return createToken(intraId, intraName, refreshTokenExpirationTime);
     }
 
     /**
@@ -118,9 +118,10 @@ public class JwtService {
      * @param validateTime : 토큰의 만료시간 설정하기 위함
      * @return token
      */
-    private String createToken(final Integer intraId, final long validateTime) {
+    private String createToken(final Integer intraId, final String intraName,final long validateTime) {
         final Claims claims = Jwts.claims().setSubject("User");
         claims.put("intraId", intraId);
+        claims.put("intraName", intraName);
         claims.put("roles", "Cadet");
         Date now = new Date();
 
@@ -175,33 +176,38 @@ public class JwtService {
         return new UsernamePasswordAuthenticationToken(member, "", authorities);
     }
 
-        /**
-         * acessToken을 파싱하여, 유효한 token인지 판별
-         * 1. 유효한 토큰인지
-         * 2. 토큰 만료 시간이 다 되었는지
-         * 3. 지원 되지 않은 토큰 인지
-         * 4. 사용자 지정 유효한 토큰인지
-         * @param accessToken : 판별할 token
-         * @return 파싱된 claim
-         */
-        private Claims parseToken(final String accessToken) {
-            try {
-                return Jwts.parserBuilder()
-                        .setSigningKey(generateSecretKey(secret_code))
-                        .build()
-                        .parseClaimsJws(accessToken)
-                        .getBody();
-            } catch (MalformedJwtException e) {
-                throw new InvalidedOauthTokenException();
-            } catch (ExpiredJwtException e) {
-                // 방법 1. ExpiredJwtException 던지고 프론트에서 refresh 저장해놨다가 refresh 로 재요청 (이때 access, refresh 재발급)
-                // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access, refresh 재발급
+    /**
+     * acessToken을 파싱하여, 유효한 token인지 판별
+     * 1. 유효한 토큰인지
+     * 2. 토큰 만료 시간이 다 되었는지
+     * 3. 지원 되지 않은 토큰 인지
+     * 4. 사용자 지정 유효한 토큰인지
+     * @param accessToken : 판별할 token
+     * @return 파싱된 claim
+     */
+    private Claims parseToken(final String accessToken) {
+        log.info("토큰 검사해바라!!");
+        log.info(accessToken);
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(generateSecretKey(secret_code))
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch (MalformedJwtException e) {
+            throw new InvalidedOauthTokenException();
+        } catch (ExpiredJwtException e) {
+            // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access 재발급
+            throw new ExpiredOauthTokenTimeOutException();
+        } catch (UnsupportedJwtException e) {
+            throw new UnsupportedOauthTokenException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalOauthTokenException();
+        }
+    }
 
-                throw new ExpiredOauthTokenTimeOutException();
-            } catch (UnsupportedJwtException e) {
-                throw new UnsupportedOauthTokenException();
-            } catch (IllegalArgumentException e) {
-                throw new IllegalOauthTokenException();
-            }
+    @Transactional
+    public void save(final JsonWebToken jsonWebToken) {
+        jwtRepository.save(jsonWebToken);
     }
 }

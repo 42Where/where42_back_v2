@@ -15,6 +15,7 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDto;
 import kr.where.backend.group.entity.Group;
 import jakarta.persistence.EntityNotFoundException;
+import kr.where.backend.group.exception.GroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,14 +36,14 @@ public class GroupService {
 
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .groupId(group.getGroupId()).intraId(dto.getMemberIntraId()).isOwner(true).build();
+                .groupId(group.getGroupId()).intraId(dto.getIntraId()).isOwner(true).build();
         groupMemberService.createGroupMember(createGroupMemberDTO);
         return ResponseGroupDto.from(group);
     }
 
     private void validateGroupName(final CreateGroupDto dto) {
-        RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().memberId(dto.getMemberIntraId()).build();
-        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupIdByMemberId(dto.getMemberIntraId());
+        RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().intraId(dto.getIntraId()).build();
+        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupIdByIntraId(dto.getIntraId());
         groupIds.stream().forEach(c -> System.out.println(c));
         if (groupIds.stream()
                 .filter(id -> findGroupNameById(id.getGroupId()).equals(dto.getGroupName()))
@@ -53,7 +54,7 @@ public class GroupService {
     /* group 이 존재 하는지 유효성 검사 */
     public Group findOneGroupById(final Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 그룹이 존재하지 않습니다."));
+                .orElseThrow(GroupException.NoGroupException::new);
         return group;
     }
 

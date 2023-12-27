@@ -3,7 +3,7 @@ package kr.where.backend.jwt;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import kr.where.backend.oauthtoken.exception.OauthTokenException.IllegalOauthTokenException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.IllegalOAuthTokenException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class JsonWebToken {
 
     public void validateRefreshToken(final String refreshToken) {
         if (!refreshToken.equals(this.refreshToken)) {
-            throw new IllegalOauthTokenException();
+            throw new IllegalOAuthTokenException();
         }
     }
 

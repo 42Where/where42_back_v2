@@ -18,7 +18,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     List<GroupMember> findGroupMemberByGroup_GroupId(Long groupId);
 
-    List<GroupMember> findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(Long groupId, List<Long> MemberIntraId);
+    List<GroupMember> findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(Long groupId, List<Integer> MemberIntraId);
 
     List<GroupMember> deleteGroupMemberByGroup_GroupIdAndMember_Id(Long groupId, Long memberId);
 

@@ -132,8 +132,8 @@ public class GroupMemberServiceTest {
                 .build();
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO);
 
-        List<Long> members = new ArrayList<>();
-        members.add(22222L);
+        List<Integer> members = new ArrayList<>();
+        members.add(22222);
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(DeleteGroupMemberListDto.builder()
                 .groupId(responseGroupMemberDTO.getGroupId())

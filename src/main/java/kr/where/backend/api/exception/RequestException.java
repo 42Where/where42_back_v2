@@ -3,8 +3,15 @@ package kr.where.backend.api.exception;
 import kr.where.backend.exception.CustomException;
 
 public class RequestException extends CustomException {
+
     public RequestException(final RequestErrorCode requestErrorCode) {
         super(requestErrorCode);
+    }
+
+    public static class ApiUnauthorizedException extends RequestException{
+        public ApiUnauthorizedException() {
+            super(RequestErrorCode.UNAUTHORIZED);
+        }
     }
 
     public static class TooManyRequestException extends RequestException{
