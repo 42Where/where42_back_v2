@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class OAuthTokenService {
-
     private final OAuthTokenRepository oauthTokenRepository;
     private final TokenApiService tokenApiService;
 
