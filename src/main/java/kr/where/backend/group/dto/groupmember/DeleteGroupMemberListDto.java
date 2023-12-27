@@ -10,10 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 public class DeleteGroupMemberListDto {
     private Long groupId;
-    private List<Long> members;
+    private List<Integer> members;
 
     @Builder
-    public DeleteGroupMemberListDto(Long groupId, List<Long> members) {
+    public DeleteGroupMemberListDto(Long groupId, List<Integer> members) {
         this.groupId = groupId;
         this.members = members;
     }

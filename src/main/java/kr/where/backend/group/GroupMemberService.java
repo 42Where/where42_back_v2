@@ -1,6 +1,7 @@
 package kr.where.backend.group;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import kr.where.backend.group.dto.groupmember.*;
@@ -30,6 +31,7 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
+
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
             throw new GroupMemberException.DuplicatedGroupMemberException();
@@ -65,6 +67,8 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findGroupMemberbyGroupId(final Long groupId){
+        final Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(groupId);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
@@ -125,6 +129,7 @@ public class GroupMemberService {
 
     @Transactional
     public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDto dto){
+        groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
         groupMemberRepository.deleteAll(groupMembers);
 
@@ -137,6 +142,10 @@ public class GroupMemberService {
     }
 
     public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+        final Group default_group = groupRepository.findById(default_groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
+        final Group group = groupRepository.findById(groupId)
+                .orElseThrow(GroupException.NoGroupException::new);
         final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
         final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
