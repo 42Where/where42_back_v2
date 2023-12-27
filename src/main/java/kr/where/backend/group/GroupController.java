@@ -53,15 +53,15 @@ public class GroupController {
             summary = "2.2 그룹 목록 및 친구 API 조회",
             description = "멤버가 만든 그룹 및 그룹 내의 친구 목록을 조회합니다 (메인 화면 용)",
             parameters = {
-                    @Parameter(name = "memberId", description = "멤버 ID", required = true, in = ParameterIn.QUERY)
+                    @Parameter(name = "intraId", description = "intra ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
             }
     )
     @GetMapping("")
-    public ResponseEntity findAllGroups(@RequestParam("memberId") Integer memberId) {
-        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(memberId);
+    public ResponseEntity findAllGroups(@RequestParam("intraId") Integer intraId) {
+        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(intraId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -109,7 +109,7 @@ public class GroupController {
             summary = "2.5 get group list API",
             description = "멤버가 소유한 그룹들의 id, 이름 반환 (그룹관리)",
             parameters = {
-                    @Parameter(name = "memberId", description = "나의 member Id", required = true, in = ParameterIn.QUERY)
+                    @Parameter(name = "intraId", description = "나의 intraId", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
@@ -118,8 +118,8 @@ public class GroupController {
             }
     )
     @GetMapping("/info")
-    public ResponseEntity findGroupNames(@RequestParam("memberId") Integer memberId) {
-        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByMemberId(memberId);
+    public ResponseEntity findGroupNames(@RequestParam("intraId") Integer intraId) {
+        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByIntraId(intraId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
