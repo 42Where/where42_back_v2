@@ -42,18 +42,18 @@ public class GroupMemberService {
         final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
                 .groupId(requestDTO.getGroupId())
                 .groupName(requestDTO.getGroupName())
-                .memberId(member.getIntraId()).build();
+                .intraId(member.getIntraId()).build();
         return responseGroupMemberDTO;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupsInfoByMemberId(final Integer memberId){
-        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByMemberId(memberId);
+    public List<ResponseGroupMemberDTO> findGroupsInfoByIntraId(final Integer intraId){
+        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByIntraId(intraId);
 
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupIdByMemberId(final Integer memberId){
-        final Member owner = memberRepository.findByIntraId(memberId)
+    public List<ResponseGroupMemberDTO> findGroupIdByIntraId(final Integer intraId){
+        final Member owner = memberRepository.findByIntraId(intraId)
                                 .orElseThrow(MemberException.NoMemberException::new);
         final List<GroupMember> groupMembers = groupMemberRepository
                 .findGroupMembersByMemberAndIsOwner(owner, true);
@@ -61,7 +61,7 @@ public class GroupMemberService {
             ResponseGroupMemberDTO.builder()
                     .groupId(m.getGroup().getGroupId())
                     .groupName(m.getGroup().getGroupName())
-                    .memberId(memberId).build()).toList();
+                    .intraId(intraId).build()).toList();
 
         return responseGroupMemberDTOS;
     }
@@ -72,7 +72,7 @@ public class GroupMemberService {
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(groupId);
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
-                .memberId(m.getMember().getIntraId())
+                .intraId(m.getMember().getIntraId())
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
                 .memberIntraName(m.getMember().getIntraName())
@@ -83,8 +83,8 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Integer memberId){
-        final List<ResponseGroupMemberDTO> groups = findGroupIdByMemberId(memberId);
+    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Integer intraId){
+        final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(intraId);
         final List<ResponseGroupMemberListDTO> responseGroupMemberListDTOS = groups.stream().map(g -> {
             List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
@@ -121,7 +121,7 @@ public class GroupMemberService {
 
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
-                        .memberId(m.getMember().getIntraId())
+                        .intraId(m.getMember().getIntraId())
                         .memberIntraName(m.getMember().getIntraName())
                         .build()).toList();
         return responseGroupMemberDTOS;
@@ -136,7 +136,7 @@ public class GroupMemberService {
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
                         .groupId(dto.getGroupId())
-                        .memberId(m.getMember().getIntraId())
+                        .intraId(m.getMember().getIntraId())
                         .build()).toList();
         return responseGroupMemberDTOS;
     }
@@ -151,7 +151,7 @@ public class GroupMemberService {
 
         final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
-                        .noneMatch(groupMember -> defaultMember.getMemberId().equals(groupMember.getMemberId())))
+                        .noneMatch(groupMember -> defaultMember.getIntraId().equals(groupMember.getIntraId())))
                 .toList();
 
         return membersNotInGroup;
