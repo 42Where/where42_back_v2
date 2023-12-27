@@ -11,6 +11,7 @@ import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.oauthtoken.OauthTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class JoinService {
     private static final String TOKEN_ADMIN = "admin";
-    private static final String TOKEN_HANE = "hane";
+    @Value("${hane.token.secret}")
+    private String TOKEN_HANE;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final OauthTokenService oauthTokenService;
@@ -55,8 +57,7 @@ public class JoinService {
         member.setAgree(true);
         member.setInCluster(haneApiService
                         .getHaneInfo(
-                                member.getIntraName(),
-                                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRmdW5jIjoiV2hlcmU0MiIsImlhdCI6MTY3NTE3NzIwMCwiZXhwIjoxNzA0MDM4NDAxfQ.qHT9EtQt3fSXRx3UKfljuhSXdGXImhvH45_anKGNWsI"));
+                                member.getIntraName(), TOKEN_HANE));
         final JsonWebToken jsonWebToken = new JsonWebToken(member.getIntraId(), jwtService.createRefreshToken(member.getIntraId(), member.getIntraName()));
         jwtService.save(jsonWebToken);
     }

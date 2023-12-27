@@ -35,8 +35,8 @@ public class JoinController {
             }
 
     )
-    @PostMapping("/{intraId}")
-    public ResponseEntity<HttpStatus> join(@PathVariable("intraId") final Integer intraId) {
+    @PostMapping("")
+    public ResponseEntity<HttpStatus> join(@RequestParam("intra_id") final Integer intraId) {
         joinService.join(intraId);
 
         //프런트 상의 create는 201이까요
