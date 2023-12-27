@@ -9,7 +9,7 @@ import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.oauthtoken.OauthTokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class JoinService {
     private String TOKEN_HANE;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
-    private final OauthTokenService oauthTokenService;
+    private final OAuthTokenService oAuthTokenService;
     private final HaneApiService haneApiService;
     private final JwtService jwtService;
 
