@@ -2,9 +2,9 @@ package kr.where.backend.configuration;
 
 import kr.where.backend.filter.CorsFilter;
 import kr.where.backend.jwt.JwtFilter;
-import kr.where.backend.auth.oauth.CustomOauth2UserService;
-import kr.where.backend.auth.oauth.OAuth2FailureHandler;
-import kr.where.backend.auth.oauth.OAuth2SuccessHandler;
+import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
+import kr.where.backend.auth.oauth2login.OAuth2FailureHandler;
+import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
                                 .permitAll()
-                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/join/**"))
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
