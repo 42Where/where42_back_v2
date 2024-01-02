@@ -36,7 +36,7 @@ public class GroupMemberService {
         if (isGroupMemberExists) {
             throw new GroupMemberException.DuplicatedGroupMemberException();
         }
-        final GroupMember groupMember = new GroupMember(group, member, requestDTO.isOwner());
+        final GroupMember groupMember = new GroupMember(group, member, requestDTO.getIsOwner());
         groupMemberRepository.save(groupMember);
 
         final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
