@@ -25,7 +25,7 @@ public class CreateGroupMemberDTO {
         this.groupName = groupName;
         this.isOwner = isOwner;
     }
-    public Boolean getOwner() {
+    public Boolean getIsOwner() {
         return isOwner;
     }
 }
