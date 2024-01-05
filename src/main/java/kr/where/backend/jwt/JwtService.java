@@ -7,16 +7,18 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
 import kr.where.backend.jwt.dto.ReIssue;
+import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException.ExpiredOAuthTokenTimeOutException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException.IllegalOAuthTokenException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidedOAuthTokenException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException.UnsupportedOAuthTokenException;
@@ -195,14 +197,16 @@ public class JwtService {
                     .parseClaimsJws(accessToken)
                     .getBody();
         } catch (MalformedJwtException e) {
-            throw new InvalidedOAuthTokenException();
+            throw new JwtException.InvalidJwtToken();
         } catch (ExpiredJwtException e) {
             // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access 재발급
-            throw new OAuthTokenException.ExpiredOAuthTokenTimeOutException();
+            throw new JwtException.ExpiredJwtToken();
         } catch (UnsupportedJwtException e) {
-            throw new UnsupportedOAuthTokenException();
+            throw new JwtException.UnsupportedJwtToken();
         } catch (IllegalArgumentException e) {
-            throw new IllegalOAuthTokenException();
+            throw new JwtException.IllegalJwtToken();
+        } catch (SignatureException e) {
+            throw new JwtException.WrongSignedJwtToken();
         }
     }
 
