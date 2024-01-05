@@ -15,13 +15,10 @@ import java.util.Date;
 import java.util.stream.Stream;
 import kr.where.backend.jwt.dto.ReIssue;
 import kr.where.backend.jwt.exception.JwtException;
+import kr.where.backend.jwt.exception.JwtException.InvalidJwtToken;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.ExpiredOAuthTokenTimeOutException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.IllegalOAuthTokenException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidedOAuthTokenException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.UnsupportedOAuthTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +62,7 @@ public class JwtService {
     public JsonWebToken findById(final Integer intraId) {
         return jwtRepository
                 .findByIntraId(intraId)
-                .orElseThrow(InvalidedOAuthTokenException::new);
+                .orElseThrow(InvalidJwtToken::new);
     }
 
     /**
