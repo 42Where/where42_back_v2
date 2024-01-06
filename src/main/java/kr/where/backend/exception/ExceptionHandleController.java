@@ -39,7 +39,7 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
-    @ExceptionHandler(JwtException.class)
+    @ExceptionHandler(JwtException.ExpiredJwtToken.class)
     public ResponseEntity<String> handleJwtTokenException(final CustomException e) {
         log.info(e.toString());
 
