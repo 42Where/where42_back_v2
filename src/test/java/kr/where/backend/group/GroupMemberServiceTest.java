@@ -5,6 +5,8 @@ import kr.where.backend.api.json.Hane;
 import kr.where.backend.group.dto.group.CreateGroupDto;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.entity.Group;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.dto.ResponseMemberDto;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
@@ -46,14 +48,21 @@ public class GroupMemberServiceTest {
     private ResponseGroupDto responseGroupDto;
     private CreateGroupMemberDTO createGroupMemberDTO;
 
+    private ResponseGroupDto defaultResponseGroupDto;
+    private ResponseGroupDto generalResponseGroupDto;
+
+
     @BeforeEach
     public void setUp () {
 //         Given
         CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
-        createGroupDto = new CreateGroupDto(11111, "group");
-        responseGroupDto = groupService.createGroup(createGroupDto);
+        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+
+        defaultResponseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
+        member.setDefaultGroupId(defaultResponseGroupDto.getGroupId());
+
+        generalResponseGroupDto = groupService.createGroup(new CreateGroupDto(11111, "test_group"));
     }
     @DisplayName("그룹 멤버 생성")
     @Test
@@ -64,12 +73,12 @@ public class GroupMemberServiceTest {
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .groupId(responseGroupDto.getGroupId())
+                .groupId(generalResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
                 .isOwner(true)
                 .build();
         //when
-        ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO);
+        ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
         //then
         assertNotNull(responseGroupMemberDTO.getGroupId());
@@ -93,7 +102,7 @@ public class GroupMemberServiceTest {
         members.add("suhwpark");
         members.add("jonhan");
         AddGroupMemberListDTO addGroupMemberListDTO = AddGroupMemberListDTO.builder()
-                .groupId(responseGroupDto.getGroupId())
+                .groupId(generalResponseGroupDto.getGroupId())
                 .members(members)
                 .build();
         groupMemberService.addFriendsList(addGroupMemberListDTO);
@@ -107,13 +116,13 @@ public class GroupMemberServiceTest {
         그룹_멤버_리스트_생성_후_저장();
 
         //when
-        List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMemberService.findGroupMemberbyGroupId(responseGroupDto.getGroupId());
+        List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS = groupMemberService.findGroupMemberbyGroupId(generalResponseGroupDto.getGroupId());
 
         //then
-        for (ResponseGroupMemberDTO memberDTO : responseGroupMemberDTOS) {
+        for (ResponseOneGroupMemberDTO memberDTO : responseGroupMemberDTOS) {
             System.out.println(memberDTO);
         }
-        assertEquals(4, responseGroupMemberDTOS.size());
+        assertEquals(3, responseGroupMemberDTOS.size());
     }
 
     @DisplayName("그룹 멤버 삭제")
@@ -126,20 +135,60 @@ public class GroupMemberServiceTest {
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .groupId(responseGroupDto.getGroupId())
+                .groupId(generalResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
                 .isOwner(true)
                 .build();
-        ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO);
+        ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
         List<Integer> members = new ArrayList<>();
         members.add(22222);
+
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(DeleteGroupMemberListDto.builder()
                 .groupId(responseGroupMemberDTO.getGroupId())
                 .members(members).build());
         //then
         assertEquals(1, responseGroupMemberDTO1.size());
+    }
+
+    @DisplayName("기본 그룹의 멤버 삭제")
+    @Test
+    @Rollback
+    public void 기본_그룹_멤버_삭제() throws Exception{
+
+        //given
+        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.createForTest("IN");
+        memberService.createAgreeMember(cadetPrivacy, hane);
+        createGroupMemberDTO = CreateGroupMemberDTO.builder()
+                .groupId(defaultResponseGroupDto.getGroupId())
+                .intraId(cadetPrivacy.getId())
+                .isOwner(true)
+                .build();
+        ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
+
+        createGroupMemberDTO = CreateGroupMemberDTO.builder()
+                .groupId(generalResponseGroupDto.getGroupId())
+                .intraId(cadetPrivacy.getId())
+                .isOwner(true)
+                .build();
+        groupMemberService.createGroupMember(createGroupMemberDTO, false);
+        //기본그룹과, 일반 그룹에 22222번 멤버를 동시에 추가
+        List<Integer> members = new ArrayList<>();
+        members.add(22222);
+
+        //when
+        //기본그룹에서만 22222번 멤버를 삭제
+        List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(DeleteGroupMemberListDto.builder()
+                .groupId(responseGroupMemberDTO.getGroupId())
+                .members(members).build());
+
+        List<ResponseOneGroupMemberDTO> generalGroupMember = groupMemberService.findGroupMemberbyGroupId(generalResponseGroupDto.getGroupId());
+        //then
+
+        //기본그룹에서 삭제 될 경우 일반멤버의 멤버수도 0인걸 확인 가능
+        assertEquals(0, generalGroupMember.size());
     }
 
 
@@ -160,7 +209,7 @@ public class GroupMemberServiceTest {
         groupMemberService.addFriendsList(addGroupMemberListDTO);
 
         //when
-        List<ResponseGroupMemberDTO> responseGroupMemberDTOS= groupMemberService.findMemberNotInGroup(responseGroupDto.getGroupId(), dto.getGroupId());
+        List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS= groupMemberService.findMemberNotInGroup(generalResponseGroupDto.getGroupId(), dto.getGroupId());
 
         //then
         assertEquals(2, responseGroupMemberDTOS.size());
