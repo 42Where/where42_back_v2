@@ -12,10 +12,10 @@ public class ResponseGroupMemberListDTO {
     private Long groupId;
     private String groupName;
     private int count;
-    private List<ResponseGroupMemberDTO> members;
+    private List<ResponseOneGroupMemberDTO> members;
 
     @Builder
-    public ResponseGroupMemberListDTO(Long groupId, String groupName, int count, List<ResponseGroupMemberDTO> members){
+    public ResponseGroupMemberListDTO(Long groupId, String groupName, int count, List<ResponseOneGroupMemberDTO> members){
         this.groupId = groupId;
         this.groupName = groupName;
         this.count = count;

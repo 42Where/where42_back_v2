@@ -36,8 +36,8 @@ public class GroupService {
 
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .groupId(group.getGroupId()).intraId(dto.getIntraId()).isOwner(true).build();
-        groupMemberService.createGroupMember(createGroupMemberDTO);
+                .groupId(group.getGroupId()).intraId(dto.getIntraId()).build();
+        groupMemberService.createGroupMember(createGroupMemberDTO, true);
         return ResponseGroupDto.from(group);
     }
 
@@ -45,10 +45,10 @@ public class GroupService {
         RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().intraId(dto.getIntraId()).build();
         List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupIdByIntraId(dto.getIntraId());
         groupIds.stream().forEach(c -> System.out.println(c));
-        if (groupIds.stream()
-                .filter(id -> findGroupNameById(id.getGroupId()).equals(dto.getGroupName()))
-                .count() != 0)
-            throw new RuntimeException("그룹 이름 중복");
+//        if (groupIds.stream()
+//                .filter(id -> findGroupNameById(id.getGroupId()).equals(dto.getGroupName()))
+//                .count() != 0)
+//            throw new GroupException.DuplicatedGroupNameException();
     }
 
     /* group 이 존재 하는지 유효성 검사 */

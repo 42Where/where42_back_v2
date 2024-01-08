@@ -16,7 +16,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     List<GroupMember> findGroupMembersByMemberAndIsOwner(Member member, Boolean isOwner);
 
-    List<GroupMember> findGroupMemberByGroup_GroupId(Long groupId);
+    List<GroupMember> findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(Long groupId);
 
     List<GroupMember> findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(Long groupId, List<Integer> MemberIntraId);
 
@@ -27,4 +27,11 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     void deleteAllByGroup_GroupId(Long groupId);
 
     long countByGroup_GroupIdAndMemberIn(Long groupId, List<Member> members);
+
+    GroupMember findGroupMemberByGroup_GroupIdAndIsOwner(Long groupId, boolean isOwner);
+//
+    List<GroupMember> findGroupMembersByMember_IntraIdAndIsOwner(Integer intraId, boolean isOwner);
+//
+    List<GroupMember> findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(List<Long> groupIds, List<Integer> memberIds);
+
 }
