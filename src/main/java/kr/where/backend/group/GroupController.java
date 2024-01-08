@@ -140,7 +140,7 @@ public class GroupController {
     )
     @PostMapping("/groupmember")
     public ResponseEntity createGroupMember(@RequestBody CreateGroupMemberDTO createGroupMemberDTO) {
-        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO);
+        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -159,8 +159,8 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember/not-ingroup")
-    public ResponseEntity<List<ResponseGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
-        final List<ResponseGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
+    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
+        final List<ResponseOneGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
     }
@@ -198,7 +198,7 @@ public class GroupController {
     )
     @GetMapping("/groupmember")
     public ResponseEntity findAllGroupFriends(@RequestParam("groupId") Long groupId) {
-        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
+        final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
