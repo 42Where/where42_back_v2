@@ -4,7 +4,7 @@ import kr.where.backend.exception.CustomException;
 
 public class JwtException extends CustomException {
 
-    public JwtException(JwtErrorCode errorCode) {
+    public JwtException(final JwtErrorCode errorCode) {
         super(errorCode);
     }
 
