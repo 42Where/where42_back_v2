@@ -9,7 +9,7 @@ import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.location.LocationService;
-import kr.where.backend.member.dto.UpdateMemberCommentDto;
+import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 
 import kr.where.backend.member.exception.MemberException;
 import org.junit.Test;
@@ -161,7 +161,7 @@ public class memberServiceTest {
 		String beforeComment = member.getComment();
 
 		//when
-		UpdateMemberCommentDto updateMemberCommentDto = new UpdateMemberCommentDto();
+		UpdateMemberCommentDTO updateMemberCommentDto = new UpdateMemberCommentDTO();
 		updateMemberCommentDto.setComment("new comment");
 		updateMemberCommentDto.setIntraId(cadetPrivacy.getId());
 
