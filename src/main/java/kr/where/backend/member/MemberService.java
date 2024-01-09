@@ -2,6 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
@@ -29,6 +30,7 @@ public class MemberService {
 
     @Transactional
     public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
 
         Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
@@ -41,7 +43,7 @@ public class MemberService {
             memberRepository.save(member);
             locationService.create(member, cadetPrivacy.getLocation());
         }
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(member.getIntraId(), Group.DEFAULT_GROUP));
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());
 
 //        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
@@ -71,8 +73,8 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseMemberDTO deleteMember(Integer intraId) {
-        final Member member = memberRepository.findByIntraId(intraId)
+    public ResponseMemberDTO deleteMember(final AuthUserInfo authUser) {
+        final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
@@ -82,13 +84,14 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseMemberDTO updateComment(final UpdateMemberCommentDTO updateMemberCommentDto) {
-        final Member member = memberRepository.findByIntraId(updateMemberCommentDto.getIntraId())
+    public ResponseMemberDTO updateComment(
+            final UpdateMemberCommentDTO updateMemberCommentDto,
+            final AuthUserInfo authUser) {
+        final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         member.setComment(updateMemberCommentDto.getComment());
 
-        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
-        return responseMemberDto;
+        return ResponseMemberDTO.builder().member(member).build();
     }
 
     public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
