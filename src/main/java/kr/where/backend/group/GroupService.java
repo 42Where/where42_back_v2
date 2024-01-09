@@ -15,6 +15,10 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
+import kr.where.backend.member.Member;
+import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.MemberService;
+import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ResponseGroupDTO createGroup(final CreateGroupDTO dto){
@@ -62,8 +67,20 @@ public class GroupService {
         return group.getGroupName();
     }
 
+    public final void updateGroupValidate(final UpdateGroupDto dto)
+    {
+        Member member = memberRepository.findByIntraId(dto.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+        if (dto.getGroupId() == member.getDefaultGroupId())
+            throw new GroupException.CannotModifyGroupException();
+        List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(dto.getIntraId());
+        if (!groups.stream().map(ResponseGroupMemberDTO::getGroupId).anyMatch(groupId -> groupId.equals(dto.getGroupId()))) {
+            throw new GroupException.CannotModifyGroupException();
+        }
+    }
     @Transactional
-    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto) {
+    public ResponseGroupDto updateGroup(final UpdateGroupDto dto){
+        updateGroupValidate(dto);
         Group group = findOneGroupById(dto.getGroupId());
         group.setGroupName(dto.getGroupName());
         return ResponseGroupDTO.from(group);
