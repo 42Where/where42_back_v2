@@ -67,7 +67,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("http://13.209.149.15:8080/")
+                                .fromUriString("http://13.209.149.15/login-sucess")
                                 .queryParam("token", accessToken)
                                 .queryParam("intraId",cadetInfo.getId())
                                 .queryParam("agreement", isAgree)
