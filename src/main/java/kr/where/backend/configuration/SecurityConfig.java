@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
                                 .permitAll()
-                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/api-docs/**"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
