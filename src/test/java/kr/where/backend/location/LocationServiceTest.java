@@ -2,8 +2,8 @@ package kr.where.backend.location;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.location.dto.ResponseLocationDto;
-import kr.where.backend.location.dto.UpdateCustomLocationDto;
+import kr.where.backend.location.dto.ResponseLocationDTO;
+import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
@@ -44,8 +44,8 @@ public class LocationServiceTest {
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
         //when
-        UpdateCustomLocationDto updateCustomLocationDto = UpdateCustomLocationDto.createForTest(agreeMember.getIntraId(), "1F open lounge");
-        ResponseLocationDto responseLocationDto = locationService.updateCustomLocation(updateCustomLocationDto);
+        UpdateCustomLocationDTO updateCustomLocationDto = UpdateCustomLocationDTO.createForTest(agreeMember.getIntraId(), "1F open lounge");
+        ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocationDto);
 
         Location location = locationRepository.findByMember(agreeMember);
         Optional<Member> member = memberRepository.findByIntraId(agreeMember.getIntraId());
