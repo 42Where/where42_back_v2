@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
@@ -42,8 +43,9 @@ public class GroupController {
             }
     )
     @PostMapping("")
-    public ResponseEntity createGroup(@RequestBody @Valid final CreateGroupDTO request) {
-        final ResponseGroupDTO dto = groupService.createGroup(request);
+    public ResponseEntity<ResponseGroupDTO> createGroup(@RequestBody @Valid final CreateGroupDTO request) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseGroupDTO dto = groupService.createGroup(request, authUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -60,8 +62,9 @@ public class GroupController {
             }
     )
     @GetMapping("")
-    public ResponseEntity findAllGroups(@RequestParam("intraId") final Integer intraId) {
-        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(intraId);
+    public ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups() {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -79,8 +82,9 @@ public class GroupController {
             }
     )
     @PostMapping("/name")
-    public ResponseEntity updateGroupName(@RequestBody @Valid final UpdateGroupDTO dto) {
-        final ResponseGroupDTO responseGroupDto = groupService.updateGroup(dto);
+    public ResponseEntity<ResponseGroupDTO> updateGroupName(@RequestBody @Valid final UpdateGroupDTO dto) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseGroupDTO responseGroupDto = groupService.updateGroup(dto, authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -99,8 +103,9 @@ public class GroupController {
             }
     )
     @DeleteMapping("")
-    public ResponseEntity deleteGroup(@RequestParam final Long groupId) {
-        final ResponseGroupDTO responseGroupDto = groupService.deleteGroup(groupId);
+    public ResponseEntity<ResponseGroupDTO> deleteGroup(@RequestParam final Long groupId) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseGroupDTO responseGroupDto = groupService.deleteGroup(groupId, authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -118,8 +123,9 @@ public class GroupController {
             }
     )
     @GetMapping("/info")
-    public ResponseEntity findGroupNames(@RequestParam("intraId") final Integer intraId) {
-        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByIntraId(intraId);
+    public ResponseEntity findGroupNames() {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByIntraId(authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -140,7 +146,8 @@ public class GroupController {
     )
     @PostMapping("/groupmember")
     public ResponseEntity createGroupMember(@RequestBody @Valid final CreateGroupMemberDTO createGroupMemberDTO) {
-        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO, false);
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -159,10 +166,9 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember/not-ingroup")
-    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(
-            @RequestParam("default groupId") final Long default_groupID,
-            @RequestParam("groupId") final Long groupId) {
-        final List<ResponseOneGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
+    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("groupId") final Long groupId) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseOneGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(groupId, authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
     }
@@ -180,8 +186,9 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember/members")
-    public ResponseEntity addFriendsToGroup(@RequestBody @Valid final AddGroupMemberListDTO request) {
-        final List<ResponseOneGroupMemberDTO> response = groupMemberService.addFriendsList(request);
+    public ResponseEntity<List<ResponseOneGroupMemberDTO>> addFriendsToGroup(@RequestBody @Valid final AddGroupMemberListDTO request) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseOneGroupMemberDTO> response = groupMemberService.addFriendsList(request, authUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -199,8 +206,9 @@ public class GroupController {
             }
     )
     @GetMapping("/groupmember")
-    public ResponseEntity findAllGroupFriends(@RequestParam("groupId") final Long groupId) {
-        final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
+    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findAllGroupFriends(@RequestParam("groupId") final Long groupId) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberByGroupId(groupId, authUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -219,7 +227,8 @@ public class GroupController {
     )
     @PutMapping ("/groupmember")
     public ResponseEntity removeIncludeGroupFriends(@RequestBody @Valid final DeleteGroupMemberListDTO request) {
-        final List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request);
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request, authUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseGroupMemberDTOs);
     }
