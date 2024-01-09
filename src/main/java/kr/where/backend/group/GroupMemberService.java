@@ -41,7 +41,7 @@ public class GroupMemberService {
 
         final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
                 .groupId(requestDTO.getGroupId())
-                .groupName(requestDTO.getGroupName())
+                .groupName(group.getGroupName())
                 .intraId(member.getIntraId()).build();
         return responseGroupMemberDTO;
     }
@@ -106,7 +106,7 @@ public class GroupMemberService {
     }
 
     @Transactional
-    public List<ResponseGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto){
+    public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto){
         final Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
@@ -119,10 +119,10 @@ public class GroupMemberService {
 
         groupMemberRepository.saveAll(groupMembers);
 
-        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
-                .map(m -> ResponseGroupMemberDTO.builder()
+        final List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
+                .map(m -> ResponseOneGroupMemberDTO.builder()
                         .intraId(m.getMember().getIntraId())
-                        .memberIntraName(m.getMember().getIntraName())
+                        .intraName(m.getMember().getIntraName())
                         .build()).toList();
         return responseGroupMemberDTOS;
     }

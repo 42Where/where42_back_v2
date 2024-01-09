@@ -10,16 +10,12 @@ public class CreateGroupMemberDTO {
 
     private Integer intraId;
     private Long groupId;
-    private String groupName;
 
     @Builder
     public CreateGroupMemberDTO(
             final Integer intraId,
-            final Long groupId,
-            final String groupName,
-            final Boolean isOwner) {
+            final Long groupId) {
         this.intraId = intraId;
         this.groupId = groupId;
-        this.groupName = groupName;
     }
 }
