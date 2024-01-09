@@ -57,8 +57,8 @@ public class SecurityConfig {
                         .failureHandler(failureHandler)
                 )
 //                .logout(logout -> logout.clearAuthentication(true))
-                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandler -> exceptionHandler.authenticationEntryPoint(authenticationEntryPoint));
+                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+//                .exceptionHandling(exceptionHandler -> exceptionHandler.authenticationEntryPoint(authenticationEntryPoint));
         return httpSecurity.build();
     }
 }
