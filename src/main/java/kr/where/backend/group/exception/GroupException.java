@@ -18,4 +18,8 @@ public class GroupException extends CustomException {
             super(GroupErrorCode.DUPLICATED_GROUP_NAME);
         }
     }
+
+    public static class CannotModifyGroupException extends GroupException {
+        public CannotModifyGroupException() {super(GroupErrorCode.DUPLICATED_GROUP_NAME);}
+    }
 }
