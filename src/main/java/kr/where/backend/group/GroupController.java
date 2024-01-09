@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.where.backend.group.dto.groupmember.*;
-import kr.where.backend.group.dto.group.CreateGroupDto;
-import kr.where.backend.group.dto.group.ResponseGroupDto;
-import kr.where.backend.group.dto.group.UpdateGroupDto;
+import kr.where.backend.group.dto.group.CreateGroupDTO;
+import kr.where.backend.group.dto.group.ResponseGroupDTO;
+import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.utils.response.ResponseWithData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,16 +34,16 @@ public class GroupController {
             summary = "2.1 create new group API",
             description = "그룹 생성",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "그룹 생성 요청",
-                    required = true, content = @Content(schema = @Schema(implementation = CreateGroupDto.class))),
+                    required = true, content = @Content(schema = @Schema(implementation = CreateGroupDTO.class))),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "그룹 생성 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDto.class))),
+                    @ApiResponse(responseCode = "201", description = "그룹 생성 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDTO.class))),
                     @ApiResponse(responseCode = "409", description = "그룹 이름 중복", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example3", value = "{\"statusCode\": 2001, \"responseMsg\": \"그룹 이름 중복\"}"),})),
             }
     )
     @PostMapping("")
-    public ResponseEntity createGroup(@RequestBody CreateGroupDto request) {
-        final ResponseGroupDto dto = groupService.createGroup(request);
+    public ResponseEntity createGroup(@RequestBody @Valid final CreateGroupDTO request) {
+        final ResponseGroupDTO dto = groupService.createGroup(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
@@ -60,7 +60,7 @@ public class GroupController {
             }
     )
     @GetMapping("")
-    public ResponseEntity findAllGroups(@RequestParam("intraId") Integer intraId) {
+    public ResponseEntity findAllGroups(@RequestParam("intraId") final Integer intraId) {
         final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(intraId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -69,9 +69,9 @@ public class GroupController {
     @Operation(
             summary = "2.3 modify group name API",
             description = "그룹 이름 수정",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "변경할 새로운 이름과 아이디", required = true, content = @Content(schema = @Schema(implementation = UpdateGroupDto.class))),
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "변경할 새로운 이름과 아이디", required = true, content = @Content(schema = @Schema(implementation = UpdateGroupDTO.class))),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "그룹 이름 변경 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDto.class))),
+                    @ApiResponse(responseCode = "200", description = "그룹 이름 변경 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDTO.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}"),})),
                     @ApiResponse(responseCode = "409", description = "그룹 이름 중복", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
@@ -79,8 +79,8 @@ public class GroupController {
             }
     )
     @PostMapping("/name")
-    public ResponseEntity updateGroupName(@RequestBody @Valid UpdateGroupDto dto) {
-        final ResponseGroupDto responseGroupDto = groupService.updateGroup(dto);
+    public ResponseEntity updateGroupName(@RequestBody @Valid final UpdateGroupDTO dto) {
+        final ResponseGroupDTO responseGroupDto = groupService.updateGroup(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -99,8 +99,8 @@ public class GroupController {
             }
     )
     @DeleteMapping("")
-    public ResponseEntity deleteGroup(@RequestParam Long groupId) {
-        final ResponseGroupDto responseGroupDto = groupService.deleteGroup(groupId);
+    public ResponseEntity deleteGroup(@RequestParam final Long groupId) {
+        final ResponseGroupDTO responseGroupDto = groupService.deleteGroup(groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseGroupDto);
     }
@@ -118,7 +118,7 @@ public class GroupController {
             }
     )
     @GetMapping("/info")
-    public ResponseEntity findGroupNames(@RequestParam("intraId") Integer intraId) {
+    public ResponseEntity findGroupNames(@RequestParam("intraId") final Integer intraId) {
         final List<ResponseGroupMemberDTO> dto = groupMemberService.findGroupsInfoByIntraId(intraId);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -139,7 +139,7 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember")
-    public ResponseEntity createGroupMember(@RequestBody CreateGroupMemberDTO createGroupMemberDTO) {
+    public ResponseEntity createGroupMember(@RequestBody @Valid final CreateGroupMemberDTO createGroupMemberDTO) {
         final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
@@ -159,7 +159,9 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember/not-ingroup")
-    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("default groupId") Long default_groupID, @RequestParam("groupId") Long groupId) {
+    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(
+            @RequestParam("default groupId") final Long default_groupID,
+            @RequestParam("groupId") final Long groupId) {
         final List<ResponseOneGroupMemberDTO> groupMemberDTOS = groupMemberService.findMemberNotInGroup(default_groupID, groupId);
 
         return ResponseEntity.status(HttpStatus.OK).body(groupMemberDTOS);
@@ -178,7 +180,7 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember/members")
-    public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
+    public ResponseEntity addFriendsToGroup(@RequestBody @Valid final AddGroupMemberListDTO request) {
         final List<ResponseOneGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -197,7 +199,7 @@ public class GroupController {
             }
     )
     @GetMapping("/groupmember")
-    public ResponseEntity findAllGroupFriends(@RequestParam("groupId") Long groupId) {
+    public ResponseEntity findAllGroupFriends(@RequestParam("groupId") final Long groupId) {
         final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberbyGroupId(groupId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
@@ -206,7 +208,7 @@ public class GroupController {
     @Operation(
             summary = "2.10 delete group friend API",
             description = "친구 리스트를 받아서 해당 그룹에서 일괄 삭제함. 이때, 친구 리스트는 모두 해당 그룹에 속해있어야 함",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "삭제하려는 친구 id 리스트", required = true, content = @Content(schema = @Schema(implementation = DeleteGroupMemberListDto.class))
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "삭제하려는 친구 id 리스트", required = true, content = @Content(schema = @Schema(implementation = DeleteGroupMemberListDTO.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class), examples = {
@@ -216,7 +218,7 @@ public class GroupController {
             }
     )
     @PutMapping ("/groupmember")
-    public ResponseEntity removeIncludeGroupFriends(@RequestBody DeleteGroupMemberListDto request) {
+    public ResponseEntity removeIncludeGroupFriends(@RequestBody @Valid final DeleteGroupMemberListDTO request) {
         final List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseGroupMemberDTOs);

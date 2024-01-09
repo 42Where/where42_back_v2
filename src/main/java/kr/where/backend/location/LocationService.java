@@ -1,7 +1,7 @@
 package kr.where.backend.location;
 
-import kr.where.backend.location.dto.ResponseLocationDto;
-import kr.where.backend.location.dto.UpdateCustomLocationDto;
+import kr.where.backend.location.dto.ResponseLocationDTO;
+import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.exception.MemberException;
@@ -26,12 +26,12 @@ public class LocationService {
     }
 
     @Transactional
-    public ResponseLocationDto updateCustomLocation(final UpdateCustomLocationDto updateCustomLocationDto) {
+    public ResponseLocationDTO updateCustomLocation(final UpdateCustomLocationDTO updateCustomLocationDto) {
         final Member member = memberRepository.findByIntraId(updateCustomLocationDto.getIntraId()).orElseThrow(MemberException.NoMemberException::new);
         final Location location = locationRepository.findByMember(member);
 
         location.setCustomLocation(updateCustomLocationDto.getCustomLocation());
 
-        return ResponseLocationDto.builder().location(location).build();
+        return ResponseLocationDTO.builder().location(location).build();
     }
 }

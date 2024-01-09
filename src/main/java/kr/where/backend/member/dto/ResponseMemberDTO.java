@@ -1,12 +1,11 @@
 package kr.where.backend.member.dto;
 
-import kr.where.backend.location.Location;
 import kr.where.backend.member.Member;
 import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
-public class ResponseMemberDto {
+public class ResponseMemberDTO {
     private Integer intraId;
     private String intraName;
     private String grade;
@@ -18,7 +17,7 @@ public class ResponseMemberDto {
     private String location;
 
     @Builder
-    public ResponseMemberDto(final Member member) {
+    public ResponseMemberDTO(final Member member) {
         this.intraId = member.getIntraId();
         this.intraName = member.getIntraName();
         this.grade = member.getGrade();

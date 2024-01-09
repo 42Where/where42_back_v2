@@ -1,9 +1,6 @@
 package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
-import kr.where.backend.api.IntraApiService;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.join.dto.ResponseJoin;
 import kr.where.backend.jwt.JsonWebToken;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
@@ -11,7 +8,6 @@ import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

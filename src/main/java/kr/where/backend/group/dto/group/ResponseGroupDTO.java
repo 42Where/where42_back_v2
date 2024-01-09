@@ -4,16 +4,16 @@ import kr.where.backend.group.entity.Group;
 import lombok.Getter;
 
 @Getter
-public class ResponseGroupDto {
+public class ResponseGroupDTO {
     private Long groupId;
     private String groupName;
 
-    private ResponseGroupDto(final Long groupId, String groupName) {
+    private ResponseGroupDTO(final Long groupId, String groupName) {
         this.groupId = groupId;
         this.groupName = groupName;
     }
 
-    public static final ResponseGroupDto from(final Group group) {
-        return new ResponseGroupDto(group.getGroupId(), group.getGroupName());
+    public static final ResponseGroupDTO from(final Group group) {
+        return new ResponseGroupDTO(group.getGroupId(), group.getGroupName());
     }
 }

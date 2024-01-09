@@ -1,7 +1,6 @@
 package kr.where.backend.group;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import kr.where.backend.group.dto.groupmember.*;
@@ -128,7 +127,7 @@ public class GroupMemberService {
     }
 
     @Transactional
-    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDto dto){
+    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto){
 
         // 그룹 아이디를 받으니까 그 아이디로 그룹의 주인을 찾고//
         // 그 주인의 기본그룹 아이디와 받은 그룹id가 같다면
