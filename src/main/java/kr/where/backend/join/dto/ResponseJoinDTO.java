@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ResponseJoin {
+public class ResponseJoinDTO {
     private String accessToken;
 
     @Builder
-    public ResponseJoin(final String accessToken) {
+    public ResponseJoinDTO(final String accessToken) {
         this.accessToken = accessToken;
     }
 }

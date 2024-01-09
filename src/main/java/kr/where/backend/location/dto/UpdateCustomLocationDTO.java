@@ -1,15 +1,18 @@
 package kr.where.backend.location.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class UpdateCustomLocationDto {
+public class UpdateCustomLocationDTO {
+    @NotBlank
     private Integer intraId;
+    @NotBlank
     private String customLocation;
 
     //Test
-    public static UpdateCustomLocationDto createForTest(Integer intraId, String customLocation) {
-        UpdateCustomLocationDto updateCustomLocationDto = new UpdateCustomLocationDto();
+    public static UpdateCustomLocationDTO createForTest(Integer intraId, String customLocation) {
+        UpdateCustomLocationDTO updateCustomLocationDto = new UpdateCustomLocationDTO();
 
         updateCustomLocationDto.intraId = intraId;
         updateCustomLocationDto.customLocation = customLocation;
