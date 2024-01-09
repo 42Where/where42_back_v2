@@ -152,7 +152,7 @@ public class JwtService {
      */
     public Authentication getAuthentication(final String token) {
         // 토큰 복호화
-        Claims claims = parseToken(token);
+        final Claims claims = parseToken(token);
         log.info("token 정보 : " + claims);
 
         if (claims.get("roles") == null) {
@@ -185,8 +185,7 @@ public class JwtService {
      * @return 파싱된 claim
      */
     private Claims parseToken(final String accessToken) {
-        log.info("토큰 검사해바라!!");
-        log.info(accessToken);
+        log.info("토큰 검사해바라!!\n" + accessToken);
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(generateSecretKey(secret_code))
@@ -196,7 +195,6 @@ public class JwtService {
         } catch (MalformedJwtException e) {
             throw new JwtException.InvalidJwtToken();
         } catch (ExpiredJwtException e) {
-            // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access 재발급
             throw new JwtException.ExpiredJwtToken();
         } catch (UnsupportedJwtException e) {
             throw new JwtException.UnsupportedJwtToken();
