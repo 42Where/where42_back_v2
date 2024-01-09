@@ -56,7 +56,7 @@ public class GroupController {
                     @Parameter(name = "intraId", description = "intra ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
             }
     )
     @GetMapping("")
@@ -71,7 +71,7 @@ public class GroupController {
             description = "그룹 이름 수정",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "변경할 새로운 이름과 아이디", required = true, content = @Content(schema = @Schema(implementation = UpdateGroupDto.class))),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "그룹 이름 변경 성공", content = @Content(schema = @Schema(implementation = UpdateGroupDto.class))),
+                    @ApiResponse(responseCode = "200", description = "그룹 이름 변경 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDto.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}"),})),
                     @ApiResponse(responseCode = "409", description = "그룹 이름 중복", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
@@ -112,7 +112,7 @@ public class GroupController {
                     @Parameter(name = "intraId", description = "나의 intraId", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
                     @ApiResponse(responseCode = "401", description = "등록되지 않은 카뎃", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
             }
@@ -130,7 +130,7 @@ public class GroupController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구", required = true, content = @Content(schema = @Schema(implementation = CreateGroupMemberDTO.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
+                    @ApiResponse(responseCode = "201", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class), examples = {
                             @ExampleObject(name = "example1", value = "{ \"statusCode\": 201, \"responseMsg\": \"그룹에 친구 추가 성공\"}"),})),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
@@ -171,7 +171,7 @@ public class GroupController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구 ID 리스트와 친구를 추가할 그룹 ID", required = true, content = @Content(schema = @Schema(implementation = AddGroupMemberListDTO.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "친구 일괄 추가 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
+                    @ApiResponse(responseCode = "201", description = "친구 일괄 추가 성공", content = @Content(schema = @Schema(implementation = ResponseOneGroupMemberDTO.class), examples = {
                             @ExampleObject(name = "example1", value = "{ \"statusCode\": 201, \"responseMsg\": \"그룹에 친구 추가 성공\"}"),})),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
@@ -179,7 +179,7 @@ public class GroupController {
     )
     @PostMapping("/groupmember/members")
     public ResponseEntity addFriendsToGroup(@RequestBody AddGroupMemberListDTO request) {
-        final List<ResponseGroupMemberDTO> response = groupMemberService.addFriendsList(request);
+        final List<ResponseOneGroupMemberDTO> response = groupMemberService.addFriendsList(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -191,7 +191,7 @@ public class GroupController {
                     @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
