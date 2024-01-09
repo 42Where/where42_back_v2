@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.jwt.dto.ReIssue;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.jwt.exception.JwtException.InvalidJwtToken;
@@ -171,8 +172,14 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
 
+        final AuthUserInfo authUserInfo = AuthUserInfo.builder()
+                .intraId(member.getIntraId())
+                .intraName(member.getIntraName())
+                .defaultGroupId(member.getDefaultGroupId())
+                .build();
+
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(member, "", authorities);
+        return new UsernamePasswordAuthenticationToken(authUserInfo, "", authorities);
     }
 
     /**
