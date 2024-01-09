@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.search.dto.ResponseSearch;
+import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class SearchController {
                     @Parameter(name="keyWord", description = "검색하려는 입력값", in= ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "카뎃 검색 성공", content=@Content(schema = @Schema(implementation = ResponseSearch.class))),
+                    @ApiResponse(responseCode = "200", description = "카뎃 검색 성공", content=@Content(schema = @Schema(implementation = ResponseSearchDTO.class))),
                     @ApiResponse(responseCode = "401", description = "유효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
     @GetMapping("/")
@@ -37,8 +37,8 @@ public class SearchController {
             (@RequestParam("intraId") final Integer intraId,
              @RequestParam("keyWord") final String keyWord
             ) {
-        final List<ResponseSearch> responseSearches = searchService.search(intraId, keyWord);
+        final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(intraId, keyWord);
 
-        return ResponseEntity.ok(responseSearches);
+        return ResponseEntity.ok(responseSearchDTOS);
     }
 }

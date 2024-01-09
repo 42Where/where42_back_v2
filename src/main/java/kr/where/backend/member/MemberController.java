@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
 import kr.where.backend.member.dto.*;
@@ -71,7 +72,7 @@ public class MemberController {
             )
             ,
             responses = {
-                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
@@ -84,7 +85,7 @@ public class MemberController {
 
         // 나머지 로직은 동일
         final Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
         return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
                 .body(responseMemberDto);
@@ -96,13 +97,13 @@ public class MemberController {
                     @Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @GetMapping("")
-    public ResponseEntity findOneByIntraId(@RequestParam("intraId") Integer intraId) {
-        final ResponseMemberDto responseMemberDto = memberService.findOneByIntraId(intraId);
+    public ResponseEntity findOneByIntraId(@RequestParam("intraId") final Integer intraId) {
+        final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -112,15 +113,15 @@ public class MemberController {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @GetMapping("/all")
-    public ResponseEntity<List<ResponseMemberDto>> findAll() {
-        final List<ResponseMemberDto> responseMemberDtoList = memberService.findAll();
+    public ResponseEntity<List<ResponseMemberDTO>> findAll() {
+        final List<ResponseMemberDTO> responseMemberDTOList = memberService.findAll();
 
-        return ResponseEntity.ok(responseMemberDtoList);
+        return ResponseEntity.ok(responseMemberDTOList);
     }
 
     @Operation(summary = "1.2 deleteMember API", description = "맴버 탈퇴",
@@ -129,15 +130,15 @@ public class MemberController {
                 @Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 삭제 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @DeleteMapping("")
-    public ResponseEntity deleteMember(@RequestParam("intraId") Integer intraId) {
+    public ResponseEntity deleteMember(@RequestParam("intraId") final Integer intraId) {
 
         // 본인인지 확인 여부가 필요할 듯!
-        final ResponseMemberDto responseMemberDto = memberService.deleteMember(intraId);
+        final ResponseMemberDTO responseMemberDto = memberService.deleteMember(intraId);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -148,16 +149,16 @@ public class MemberController {
             },
             requestBody =
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = UpdateMemberCommentDto.class)))
+                    content = @Content(schema = @Schema(implementation = UpdateMemberCommentDTO.class)))
             ,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDto.class))),
+                    @ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 상태 메시지 설정 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @PostMapping("/comment")
-    public ResponseEntity updateComment(@RequestBody final UpdateMemberCommentDto updateMemberCommentDto) {
-        final ResponseMemberDto responseMemberDto = memberService.updateComment(updateMemberCommentDto);
+    public ResponseEntity updateComment(@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto) {
+        final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -167,25 +168,25 @@ public class MemberController {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             responses = {
-                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMemberDto.class)))),
+                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMemberDTO.class)))),
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @PostMapping("/dummy")
-    public ResponseEntity<List<ResponseMemberDto>> createDummyAgreeMembers() {
-        List<ResponseMemberDto> responseMemberDtoList = new ArrayList<>();
+    public ResponseEntity<List<ResponseMemberDTO>> createDummyAgreeMembers() {
+        List<ResponseMemberDTO> responseMemberDTOList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i, "https://ibb.co/94KmxcT", true, "2022-10-31");
             Hane hane = Hane.createForTest("IN");
 
             Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-            ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-            responseMemberDtoList.add(responseMemberDto);
+            ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
+            responseMemberDTOList.add(responseMemberDto);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("http://3.35.149.29:8080/v3/main"))
-                .body(responseMemberDtoList);
+                .body(responseMemberDTOList);
     }
 }

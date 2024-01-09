@@ -45,12 +45,12 @@ public class OAuthTokenController {
     }
 
     @DeleteMapping("")
-    public void deleteToken(@RequestParam("name") String name) {
+    public void deleteToken(@RequestParam("name") final String name) {
         oauthTokenService.deleteToken(name);
     }
 
     @PostMapping("/update/hane")
-    public String updateHaneToken(@RequestParam("code") String token) {
+    public String updateHaneToken(@RequestParam("code") final String token) {
         oauthTokenService.updateHaneToken(token);
         return token;
     }

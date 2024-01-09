@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.jwt.dto.ReIssue;
+import jakarta.validation.Valid;
+import kr.where.backend.jwt.dto.ReIssueDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
@@ -25,7 +26,7 @@ public class JwtController {
             summary = "reissue accessToken of Expired time API",
             description = "accessToken을 재 발급",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "토큰 재발급 요청",
-                    required = true, content = @Content(schema = @Schema(implementation = ReIssue.class))),
+                    required = true, content = @Content(schema = @Schema(implementation = ReIssueDTO.class))),
             responses = {
                     @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
                     @ApiResponse(responseCode = "401", description = "토큰 유효성 검사 실패", content = @Content(schema =@Schema(implementation = ErrorResponse.class)))
@@ -33,8 +34,8 @@ public class JwtController {
 
     )
     @PostMapping("/reissue")
-    public ResponseEntity<String> reIssue(@RequestBody final ReIssue reIssue) {
+    public ResponseEntity<String> reIssue(@RequestBody @Valid  final ReIssueDTO reIssueDTO) {
 
-        return ResponseEntity.ok(jwtService.reissueAccessToken(reIssue));
+        return ResponseEntity.ok(jwtService.reissueAccessToken(reIssueDTO));
     }
 }

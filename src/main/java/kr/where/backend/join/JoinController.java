@@ -8,8 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.api.exception.JsonException;
-import kr.where.backend.join.dto.ResponseJoin;
-import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.join.dto.ResponseJoinDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class JoinController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "맴버 생성 성공",
-                            content = @Content(schema = @Schema(implementation = ResponseJoin.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseJoinDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패",
                             content = @Content(schema = @Schema(implementation = JsonException.class)))
             }
