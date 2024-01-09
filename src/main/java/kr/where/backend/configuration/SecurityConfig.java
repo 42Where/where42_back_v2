@@ -1,6 +1,5 @@
 package kr.where.backend.configuration;
 
-import kr.where.backend.filter.CorsFilter;
 import kr.where.backend.jwt.JwtFilter;
 import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
 import kr.where.backend.auth.oauth2login.OAuth2FailureHandler;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
