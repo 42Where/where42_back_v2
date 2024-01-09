@@ -7,19 +7,19 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.jwt.dto.ReIssue;
+import kr.where.backend.jwt.exception.JwtException;
+import kr.where.backend.jwt.exception.JwtException.InvalidJwtToken;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.IllegalOAuthTokenException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidedOAuthTokenException;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.UnsupportedOAuthTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +63,7 @@ public class JwtService {
     public JsonWebToken findById(final Integer intraId) {
         return jwtRepository
                 .findByIntraId(intraId)
-                .orElseThrow(InvalidedOAuthTokenException::new);
+                .orElseThrow(InvalidJwtToken::new);
     }
 
     /**
@@ -153,7 +153,7 @@ public class JwtService {
      */
     public Authentication getAuthentication(final String token) {
         // 토큰 복호화
-        Claims claims = parseToken(token);
+        final Claims claims = parseToken(token);
         log.info("token 정보 : " + claims);
 
         if (claims.get("roles") == null) {
@@ -172,8 +172,14 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
 
+        final AuthUserInfo authUserInfo = AuthUserInfo.builder()
+                .intraId(member.getIntraId())
+                .intraName(member.getIntraName())
+                .defaultGroupId(member.getDefaultGroupId())
+                .build();
+
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(member, "", authorities);
+        return new UsernamePasswordAuthenticationToken(authUserInfo, "", authorities);
     }
 
     /**
@@ -186,8 +192,7 @@ public class JwtService {
      * @return 파싱된 claim
      */
     private Claims parseToken(final String accessToken) {
-        log.info("토큰 검사해바라!!");
-        log.info(accessToken);
+        log.info("토큰 검사해바라!!\n" + accessToken);
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(generateSecretKey(secret_code))
@@ -195,14 +200,15 @@ public class JwtService {
                     .parseClaimsJws(accessToken)
                     .getBody();
         } catch (MalformedJwtException e) {
-            throw new InvalidedOAuthTokenException();
+            throw new JwtException.InvalidJwtToken();
         } catch (ExpiredJwtException e) {
-            // 방법 2. 백에서 refresh 저장해놨다가 refresh 유효성 검사하고 access 재발급
-            throw new OAuthTokenException.ExpiredOAuthTokenTimeOutException();
+            throw new JwtException.ExpiredJwtToken();
         } catch (UnsupportedJwtException e) {
-            throw new UnsupportedOAuthTokenException();
+            throw new JwtException.UnsupportedJwtToken();
         } catch (IllegalArgumentException e) {
-            throw new IllegalOAuthTokenException();
+            throw new JwtException.IllegalJwtToken();
+        } catch (SignatureException e) {
+            throw new JwtException.WrongSignedJwtToken();
         }
     }
 

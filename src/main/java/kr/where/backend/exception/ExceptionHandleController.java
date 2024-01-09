@@ -2,6 +2,7 @@ package kr.where.backend.exception;
 
 import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.group.exception.GroupMemberException;
+import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.api.exception.RequestException;
@@ -32,7 +33,14 @@ public class ExceptionHandleController {
     }
 
     @ExceptionHandler(OAuthTokenException.class)
-    public ResponseEntity<String> handleTokenException(final CustomException e) {
+    public ResponseEntity<String> handleOAuthTokenException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<String> handleJwtTokenException(final CustomException e) {
         log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
