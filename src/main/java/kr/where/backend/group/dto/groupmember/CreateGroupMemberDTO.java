@@ -9,15 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateGroupMemberDTO {
     @NotBlank
-    private Integer intraId;
-    @NotBlank
     private Long groupId;
 
     @Builder
-    public CreateGroupMemberDTO(
-            final Integer intraId,
-            final Long groupId) {
-        this.intraId = intraId;
+    public CreateGroupMemberDTO(final Long groupId) {
         this.groupId = groupId;
     }
 }
