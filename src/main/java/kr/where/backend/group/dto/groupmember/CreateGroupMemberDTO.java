@@ -11,8 +11,6 @@ public class CreateGroupMemberDTO {
     private Integer intraId;
     private Long groupId;
     private String groupName;
-    @JsonProperty(value = "isOwner")
-    private Boolean isOwner;
 
     @Builder
     public CreateGroupMemberDTO(
@@ -23,9 +21,5 @@ public class CreateGroupMemberDTO {
         this.intraId = intraId;
         this.groupId = groupId;
         this.groupName = groupName;
-        this.isOwner = isOwner;
-    }
-    public Boolean getIsOwner() {
-        return isOwner;
     }
 }

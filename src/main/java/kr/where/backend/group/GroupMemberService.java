@@ -26,7 +26,7 @@ public class GroupMemberService {
     private final GroupRepository groupRepository;
 
     @Transactional
-    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO){
+    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
@@ -36,7 +36,7 @@ public class GroupMemberService {
         if (isGroupMemberExists) {
             throw new GroupMemberException.DuplicatedGroupMemberException();
         }
-        final GroupMember groupMember = new GroupMember(group, member, requestDTO.getIsOwner());
+        final GroupMember groupMember = new GroupMember(group, member, isOwner);
         groupMemberRepository.save(groupMember);
 
         final ResponseGroupMemberDTO responseGroupMemberDTO = ResponseGroupMemberDTO.builder()
@@ -66,16 +66,16 @@ public class GroupMemberService {
         return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findGroupMemberbyGroupId(final Long groupId){
+    public List<ResponseOneGroupMemberDTO> findGroupMemberbyGroupId(final Long groupId){
         final Group group = groupRepository.findById(groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(groupId);
-        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
-                .map(m -> ResponseGroupMemberDTO.builder()
+        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
+        final List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
+                .map(m -> ResponseOneGroupMemberDTO.builder()
                 .intraId(m.getMember().getIntraId())
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
-                .memberIntraName(m.getMember().getIntraName())
+                .intraName(m.getMember().getIntraName())
                 .inCluster(m.getMember().isInCluster())
                 .location(m.getMember().getLocation().getLocation())
                 .build()).toList();
@@ -86,7 +86,7 @@ public class GroupMemberService {
     public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final Integer intraId){
         final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(intraId);
         final List<ResponseGroupMemberListDTO> responseGroupMemberListDTOS = groups.stream().map(g -> {
-            List<ResponseGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
+            List<ResponseOneGroupMemberDTO> friends = findGroupMemberbyGroupId(g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
                     .groupId(g.getGroupId())
                     .groupName(g.getGroupName())
@@ -129,27 +129,50 @@ public class GroupMemberService {
 
     @Transactional
     public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDto dto){
-        groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
-        final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
-        groupMemberRepository.deleteAll(groupMembers);
 
-        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
+        // 그룹 아이디를 받으니까 그 아이디로 그룹의 주인을 찾고//
+        // 그 주인의 기본그룹 아이디와 받은 그룹id가 같다면
+        // 그 주인의 모든 그룹에서 해당 멤버를 찾아서 삭제
+        List<GroupMember> deleteGroupMember;
+
+        groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
+        final GroupMember owner = groupMemberRepository
+                .findGroupMemberByGroup_GroupIdAndIsOwner(dto.getGroupId(), true);
+
+        if (owner.getMember().getDefaultGroupId() == dto.getGroupId()){
+            final List<GroupMember> groupsOfOwner = groupMemberRepository
+                    .findGroupMembersByMember_IntraIdAndIsOwner(owner.getMember().getIntraId(), true);
+
+            final List<Long> groups = groupsOfOwner.stream()
+                    .map(g -> g.getGroup().getGroupId())
+                    .toList();
+
+            deleteGroupMember = groupMemberRepository
+                    .findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(groups,dto.getMembers());
+            groupMemberRepository.deleteAll(deleteGroupMember);
+        }
+        else {
+            deleteGroupMember = groupMemberRepository
+                    .findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
+            groupMemberRepository.deleteAll(deleteGroupMember);
+        }
+
+        return deleteGroupMember.stream()
                 .map(m -> ResponseGroupMemberDTO.builder()
                         .groupId(dto.getGroupId())
                         .intraId(m.getMember().getIntraId())
                         .build()).toList();
-        return responseGroupMemberDTOS;
     }
 
-    public List<ResponseGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
+    public List<ResponseOneGroupMemberDTO> findMemberNotInGroup(final Long default_groupId, final Long groupId) {
         final Group default_group = groupRepository.findById(default_groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
         final Group group = groupRepository.findById(groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
-        final List<ResponseGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
-        final List<ResponseGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
+        final List<ResponseOneGroupMemberDTO> defaultMembers = findGroupMemberbyGroupId(default_groupId);
+        final List<ResponseOneGroupMemberDTO> groupMembers = findGroupMemberbyGroupId(groupId);
 
-        final List<ResponseGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
+        final List<ResponseOneGroupMemberDTO> membersNotInGroup = defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()
                         .noneMatch(groupMember -> defaultMember.getIntraId().equals(groupMember.getIntraId())))
                 .toList();
