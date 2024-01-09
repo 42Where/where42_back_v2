@@ -75,7 +75,6 @@ public class GroupMemberServiceTest {
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .groupId(generalResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
-                .isOwner(true)
                 .build();
         //when
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
@@ -137,7 +136,6 @@ public class GroupMemberServiceTest {
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .groupId(generalResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
-                .isOwner(true)
                 .build();
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
@@ -164,14 +162,12 @@ public class GroupMemberServiceTest {
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .groupId(defaultResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
-                .isOwner(true)
                 .build();
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false);
 
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .groupId(generalResponseGroupDto.getGroupId())
                 .intraId(cadetPrivacy.getId())
-                .isOwner(true)
                 .build();
         groupMemberService.createGroupMember(createGroupMemberDTO, false);
         //기본그룹과, 일반 그룹에 22222번 멤버를 동시에 추가
