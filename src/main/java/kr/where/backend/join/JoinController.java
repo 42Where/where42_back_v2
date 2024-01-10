@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.api.exception.JsonException;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.join.dto.ResponseJoinDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,8 @@ public class JoinController {
     )
     @PostMapping("")
     public ResponseEntity<HttpStatus> join(@RequestParam("intra_id") final Integer intraId) {
-        joinService.join(intraId);
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        joinService.join(intraId, authUser);
 
         //프런트 상의 create는 201이까요
         return ResponseEntity.ok(HttpStatus.OK);
