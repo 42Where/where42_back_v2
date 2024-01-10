@@ -32,6 +32,7 @@ public class GroupService {
 
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
+                .intraId(authUser.getIntraId())
                 .groupId(group.getGroupId()).build();
         groupMemberService.createGroupMember(createGroupMemberDTO, true, authUser);
         return ResponseGroupDTO.from(group);
