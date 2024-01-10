@@ -30,9 +30,7 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public void join(final Integer intraId) {
-
-        final AuthUserInfo authUser = AuthUserInfo.of();
+    public void join(final Integer intraId, final AuthUserInfo authUser) {
         final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
         member.setAgree(true);
 //        member.setInCluster(haneApiService
