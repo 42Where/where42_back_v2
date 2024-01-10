@@ -1,6 +1,7 @@
 package kr.where.backend.configuration;
 
-import kr.where.backend.jwt.JwtFilter;
+import kr.where.backend.auth.exception.JwtAuthenticationEntryPoint;
+import kr.where.backend.auth.filter.JwtFilter;
 import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
 import kr.where.backend.auth.oauth2login.OAuth2FailureHandler;
 import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
@@ -13,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -25,11 +25,9 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Slf4j
 public class SecurityConfig {
     private final JwtService jwtService;
-    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final CustomOauth2UserService customOauth2UserService;
     private final OAuth2SuccessHandler successHandler;
     private final OAuth2FailureHandler failureHandler;
-
     @Bean
     public SecurityFilterChain securityFilterChain(
             final HttpSecurity httpSecurity,
@@ -46,7 +44,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(new MvcRequestMatcher(introspector,"/swagger-ui/**"))
                                 .permitAll()
-                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/**"))
+                                .requestMatchers(new MvcRequestMatcher(introspector, "/v3/api-docs/**"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -56,9 +54,9 @@ public class SecurityConfig {
                         .successHandler(successHandler)
                         .failureHandler(failureHandler)
                 )
+                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 //                .logout(logout -> logout.clearAuthentication(true))
-                .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandler -> exceptionHandler.authenticationEntryPoint(authenticationEntryPoint));
+
         return httpSecurity.build();
     }
 }
