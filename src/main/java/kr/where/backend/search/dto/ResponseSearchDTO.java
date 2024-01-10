@@ -15,7 +15,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(description = "http response dto")
-public class ResponseSearch {
+public class ResponseSearchDTO {
 
     @Schema(description = "카뎃의 고유 id")
     private Integer intraId;
@@ -40,7 +40,7 @@ public class ResponseSearch {
      * @param group 검색 맴버 결과가 나와 친구인지 판별하기 위한 entity
      */
     @Builder
-    public ResponseSearch(final Group group, final Member searched) {
+    public ResponseSearchDTO(final Group group, final Member searched) {
         this.intraId = searched.getIntraId();
         this.intraName = searched.getIntraName();
         this.image = searched.getImage();

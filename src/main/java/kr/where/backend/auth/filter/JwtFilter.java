@@ -1,10 +1,14 @@
-package kr.where.backend.jwt;
+package kr.where.backend.auth.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.where.backend.exception.CustomException;
+import kr.where.backend.jwt.JwtService;
 import kr.where.backend.jwt.exception.JwtException;
+import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -38,7 +42,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 final Authentication auth = jwtService.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JwtException e) {
-                request.setAttribute("jwtException", e);
+                sendRequest(response, HttpServletResponse.SC_UNAUTHORIZED, e.toString());
+                return ;
+            } catch (MemberException e) {
+                sendRequest(response, HttpServletResponse.SC_NOT_FOUND, e.toString());
+                return;
             }
         }
         filterChain.doFilter(request, response);
@@ -59,4 +67,18 @@ public class JwtFilter extends OncePerRequestFilter {
         return Optional.ofNullable(token[1]);
     }
 
+    private void sendRequest(
+            final HttpServletResponse response,
+            final int errorCode,
+            final String error
+    ) throws IOException{
+        response.setStatus(errorCode);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(error);
+
+        response.getWriter().write(result);
+    }
 }

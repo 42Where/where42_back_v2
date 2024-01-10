@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.location.dto.ResponseLocationDto;
-import kr.where.backend.location.dto.UpdateCustomLocationDto;
+import jakarta.validation.Valid;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.location.dto.ResponseLocationDTO;
+import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,16 +36,17 @@ public class LocationController {
             requestBody =
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
-                            schema = @Schema(implementation = UpdateCustomLocationDto.class))
+                            schema = @Schema(implementation = UpdateCustomLocationDTO.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseLocationDto.class))),
+                    @ApiResponse(responseCode = "200", description = "수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseLocationDTO.class))),
                     @ApiResponse(responseCode = "404", description = "멤버가 존재하지 않음", content = @Content(schema = @Schema(implementation = MemberException.class)))
             }
     )
     @PostMapping("/custom")
-    public ResponseEntity updateCustomLocation(@RequestBody final UpdateCustomLocationDto updateCustomLocation) {
-        final ResponseLocationDto responseLocationDto = locationService.updateCustomLocation(updateCustomLocation);
+    public ResponseEntity updateCustomLocation(@RequestBody @Valid final UpdateCustomLocationDTO updateCustomLocation) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocation, authUser);
 
         return ResponseEntity.ok(responseLocationDto);
     }

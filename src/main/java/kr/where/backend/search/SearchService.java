@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.search.dto.ResponseSearch;
+import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,9 @@ public class SearchService {
      * 입력 받은 값을 trim으로 공백을 없애주고, 대문자 영어가 들어와도 검색 가능하게 toLowerCase 적용
      */
 
-    public List<ResponseSearch> search(final Integer intraId, final String keyWord) {
+    public List<ResponseSearchDTO> search(final String keyWord, final AuthUserInfo authUser) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
-        final Member member = memberService.findOne(intraId)
+        final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
         return responseOfSearch(member, findActiveCadets(word));
@@ -82,7 +83,7 @@ public class SearchService {
         cadetPrivacies.stream().filter(CadetPrivacy::isActive).forEach(result::add);
     }
 
-    private List<ResponseSearch> responseOfSearch(final Member member, final List<CadetPrivacy> cadetPrivacies) {
+    private List<ResponseSearchDTO> responseOfSearch(final Member member, final List<CadetPrivacy> cadetPrivacies) {
         final Group group = groupRepository
                 .findById(member.getDefaultGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
@@ -91,7 +92,7 @@ public class SearchService {
                 .stream()
                 .map(search -> memberService.findOne(search.getId())
                         .orElse(memberService.createDisagreeMember(search)))
-                .map(search -> new ResponseSearch(group, search))
+                .map(search -> new ResponseSearchDTO(group, search))
                 .toList();
     }
 }

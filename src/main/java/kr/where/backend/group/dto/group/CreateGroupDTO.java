@@ -1,16 +1,15 @@
 package kr.where.backend.group.dto.group;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class CreateGroupDto {
-
-    private Integer intraId;
+public class CreateGroupDTO {
+    @NotBlank
     private String groupName;
 
     @Builder
-    public CreateGroupDto(final Integer intraId, final String groupName) {
-        this.intraId = intraId;
+    public CreateGroupDTO(final String groupName) {
         this.groupName = groupName;
     }
 }

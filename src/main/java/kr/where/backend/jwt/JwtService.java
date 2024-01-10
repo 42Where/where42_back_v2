@@ -13,7 +13,8 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
-import kr.where.backend.jwt.dto.ReIssue;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.jwt.dto.ReIssueDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.jwt.exception.JwtException.InvalidJwtToken;
 import kr.where.backend.member.Member;
@@ -79,16 +80,16 @@ public class JwtService {
 
     /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
-     * @param reIssue : client 측에서 들어온 intraId 와 refreshToken을 통해 재발급 용
+     * @param reIssueDTO : client 측에서 들어온 intraId 와 refreshToken을 통해 재발급 용
      * @return accessToken
      */
     @Transactional
-    public String reissueAccessToken(final ReIssue reIssue) {
-        final JsonWebToken jsonWebToken = findById(reIssue.getIntraId());
+    public String reissueAccessToken(final ReIssueDTO reIssueDTO) {
+        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId());
 
-        jsonWebToken.validateRefreshToken(reIssue.getRefreshToken());
+        jsonWebToken.validateRefreshToken(reIssueDTO.getRefreshToken());
 
-        return createAccessToken(reIssue.getIntraId(), "name");
+        return createAccessToken(reIssueDTO.getIntraId(), "name");
     }
 
     /**
@@ -171,8 +172,14 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
 
+        final AuthUserInfo authUserInfo = AuthUserInfo.builder()
+                .intraId(member.getIntraId())
+                .intraName(member.getIntraName())
+                .defaultGroupId(member.getDefaultGroupId())
+                .build();
+
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(member, "", authorities);
+        return new UsernamePasswordAuthenticationToken(authUserInfo, "", authorities);
     }
 
     /**

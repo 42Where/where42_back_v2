@@ -2,12 +2,13 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupService;
-import kr.where.backend.group.dto.group.CreateGroupDto;
-import kr.where.backend.group.dto.group.ResponseGroupDto;
+import kr.where.backend.group.dto.group.CreateGroupDTO;
+import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.location.LocationService;
-import kr.where.backend.member.dto.ResponseMemberDto;
-import kr.where.backend.member.dto.UpdateMemberCommentDto;
+import kr.where.backend.member.dto.ResponseMemberDTO;
+import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class MemberService {
 
     @Transactional
     public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
 
         Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
@@ -41,7 +43,7 @@ public class MemberService {
             memberRepository.save(member);
             locationService.create(member, cadetPrivacy.getLocation());
         }
-        ResponseGroupDto responseGroupDto = groupService.createGroup(new CreateGroupDto(member.getIntraId(), Group.DEFAULT_GROUP));
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());
 
 //        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
@@ -62,19 +64,19 @@ public class MemberService {
         return member;
     }
 
-    public List<ResponseMemberDto> findAll() {
+    public List<ResponseMemberDTO> findAll() {
         final List<Member> members = memberRepository.findAll();
-        final List<ResponseMemberDto> responseMemberDtoList = members.stream().map(member -> ResponseMemberDto.builder()
+        final List<ResponseMemberDTO> responseMemberDTOList = members.stream().map(member -> ResponseMemberDTO.builder()
                 .member(member).build()).toList();
 
-        return responseMemberDtoList;
+        return responseMemberDTOList;
     }
 
     @Transactional
-    public ResponseMemberDto deleteMember(Integer intraId) {
-        final Member member = memberRepository.findByIntraId(intraId)
+    public ResponseMemberDTO deleteMember(final AuthUserInfo authUser) {
+        final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
         memberRepository.delete(member);
 
@@ -82,19 +84,20 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseMemberDto updateComment(final UpdateMemberCommentDto updateMemberCommentDto) {
-        final Member member = memberRepository.findByIntraId(updateMemberCommentDto.getIntraId())
+    public ResponseMemberDTO updateComment(
+            final UpdateMemberCommentDTO updateMemberCommentDto,
+            final AuthUserInfo authUser) {
+        final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         member.setComment(updateMemberCommentDto.getComment());
 
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-        return responseMemberDto;
+        return ResponseMemberDTO.builder().member(member).build();
     }
 
-    public ResponseMemberDto findOneByIntraId(final Integer intraId) {
+    public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
         final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
+        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
         return responseMemberDto;
     }
