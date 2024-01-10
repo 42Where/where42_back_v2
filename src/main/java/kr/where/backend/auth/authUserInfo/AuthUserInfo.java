@@ -2,9 +2,11 @@ package kr.where.backend.auth.authUserInfo;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Getter
+@Setter
 public class AuthUserInfo {
     private Integer intraId;
     private String intraName;
