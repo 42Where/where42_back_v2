@@ -2,15 +2,18 @@ package kr.where.backend.location;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +37,11 @@ public class LocationServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
-
+    private AuthUserInfo authUser;
+    @BeforeEach
+    public void setUp() {
+        authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+    }
     @Test
     public void update_custom_location_test() {
 		//given
@@ -44,8 +51,8 @@ public class LocationServiceTest {
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
         //when
-        UpdateCustomLocationDTO updateCustomLocationDto = UpdateCustomLocationDTO.createForTest(agreeMember.getIntraId(), "1F open lounge");
-        ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocationDto);
+        UpdateCustomLocationDTO updateCustomLocationDto = UpdateCustomLocationDTO.createForTest("1F open lounge");
+        ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocationDto, authUser);
 
         Location location = locationRepository.findByMember(agreeMember);
         Optional<Member> member = memberRepository.findByIntraId(agreeMember.getIntraId());
