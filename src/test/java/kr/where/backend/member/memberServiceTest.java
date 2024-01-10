@@ -2,6 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
@@ -13,6 +14,7 @@ import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 
 import kr.where.backend.member.exception.MemberException;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,18 +35,22 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 public class memberServiceTest {
 
 	@Autowired
-	MemberService memberService;
+	private MemberService memberService;
 	@Autowired
-	MemberRepository memberRepository;
+	private MemberRepository memberRepository;
 	@Autowired
-	LocationRepository locationRepository;
+	private LocationRepository locationRepository;
 	@Autowired
-	LocationService locationService;
+	private LocationService locationService;
 	@Autowired
-	GroupRepository groupRepository;
+	private GroupRepository groupRepository;
 	@Autowired
-	GroupMemberRepository groupMemberRepository;
-
+	private GroupMemberRepository groupMemberRepository;
+	private AuthUserInfo authUser;
+	@BeforeEach
+	public void setUp() {
+		authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+	}
 	@Test
 	public void create_agree_member_test() {
 		//given
@@ -163,9 +169,8 @@ public class memberServiceTest {
 		//when
 		UpdateMemberCommentDTO updateMemberCommentDto = new UpdateMemberCommentDTO();
 		updateMemberCommentDto.setComment("new comment");
-		updateMemberCommentDto.setIntraId(cadetPrivacy.getId());
 
-		memberService.updateComment(updateMemberCommentDto);
+		memberService.updateComment(updateMemberCommentDto, authUser);
 		String afterComment = member.getComment();
 
 		//then
