@@ -29,7 +29,7 @@ public class GroupMemberService {
     public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner, final AuthUserInfo authUser){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
-        final Member member = memberRepository.findByIntraId(authUser.getIntraId())
+        final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
@@ -136,12 +136,10 @@ public class GroupMemberService {
         List<GroupMember> deleteGroupMember;
 
         groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
-        final GroupMember owner = groupMemberRepository
-                .findGroupMemberByGroup_GroupIdAndIsOwner(dto.getGroupId(), true);
 
-        if (owner.getMember().getDefaultGroupId() == dto.getGroupId()){
+        if (authUser.getDefaultGroupId() == dto.getGroupId()){
             final List<GroupMember> groupsOfOwner = groupMemberRepository
-                    .findGroupMembersByMember_IntraIdAndIsOwner(owner.getMember().getIntraId(), true);
+                    .findGroupMembersByMember_IntraIdAndIsOwner(authUser.getIntraId(), true);
 
             final List<Long> groups = groupsOfOwner.stream()
                     .map(g -> g.getGroup().getGroupId())
