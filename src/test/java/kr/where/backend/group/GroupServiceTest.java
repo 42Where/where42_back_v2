@@ -1,10 +1,8 @@
 package kr.where.backend.group;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
@@ -18,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 public class GroupServiceTest {
@@ -28,14 +28,15 @@ public class GroupServiceTest {
     @Autowired
     private MemberService memberService;
 
+    private AuthUserInfo authUser;
     @BeforeEach
     public void setUp () {
         // Given
         CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000, "phan", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
-
-        createGroupDto = new CreateGroupDTO(10000, "popopop");
+        authUser = new AuthUserInfo(10000, "popopop", 1L);
+        createGroupDto = new CreateGroupDTO("popopop");
     }
 
     @DisplayName("그룹 생성 성공")
@@ -43,7 +44,7 @@ public class GroupServiceTest {
     @Rollback
     public void testCreateGroup() {
         // When
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto);
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto, authUser);
 
         // Then
         assertNotNull(responseGroupDto.getGroupId());
@@ -55,7 +56,7 @@ public class GroupServiceTest {
     public void testFindGroupName() {
 
         //give
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto);
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto, authUser);
 
         // When
         String name = groupService.findGroupNameById(responseGroupDto.getGroupId());
@@ -69,11 +70,11 @@ public class GroupServiceTest {
     @Rollback
     public void testUpdateGroup() {
         // Given
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto);
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto, authUser);
         UpdateGroupDTO dto = new UpdateGroupDTO(responseGroupDto.getGroupId(), "group111");
 
         // When
-        ResponseGroupDTO updateDto = groupService.updateGroup(dto);
+        ResponseGroupDTO updateDto = groupService.updateGroup(dto, authUser);
 
         // Then
         assertEquals("group111", updateDto.getGroupName());
@@ -84,9 +85,9 @@ public class GroupServiceTest {
     @Rollback
     public void testDeleteGroup() {
         //give
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto);
+        ResponseGroupDTO responseGroupDto = groupService.createGroup(createGroupDto, authUser);
         // When
-        ResponseGroupDTO deleteDto = groupService.deleteGroup(responseGroupDto.getGroupId());
+        ResponseGroupDTO deleteDto = groupService.deleteGroup(responseGroupDto.getGroupId(), authUser);
         // Then
         assertEquals("popopop", deleteDto.getGroupName());
     }
