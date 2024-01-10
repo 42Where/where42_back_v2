@@ -13,8 +13,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,10 +39,12 @@ public class GroupServiceTest {
     @BeforeEach
     public void setUp () {
         // Given
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+        authUser = new AuthUserInfo(10000, "phan", 1L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000, "phan", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
-        authUser = new AuthUserInfo(10000, "popopop", 1L);
         createGroupDto = new CreateGroupDTO("popopop");
     }
 

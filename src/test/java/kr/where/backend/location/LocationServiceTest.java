@@ -8,22 +8,24 @@ import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 @Rollback
@@ -40,7 +42,9 @@ public class LocationServiceTest {
     private AuthUserInfo authUser;
     @BeforeEach
     public void setUp() {
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
     }
     @Test
     public void update_custom_location_test() {
