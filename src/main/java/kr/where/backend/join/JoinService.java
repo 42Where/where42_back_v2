@@ -13,6 +13,7 @@ import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +27,17 @@ public class JoinService {
     private final JwtService jwtService;
     private final GroupService groupService;
 
+    @Value("${hane.token.secret}")
+    private String haneToken;
     @Transactional
     public void join(final Integer intraId) {
 
         final AuthUserInfo authUser = AuthUserInfo.of();
         final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
         member.setAgree(true);
+//        member.setInCluster(haneApiService
+//                        .getHaneInfo(
+//                                member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
         member.setInCluster(haneApiService
                         .getHaneInfo(
                                 member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
