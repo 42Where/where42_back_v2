@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +34,9 @@ public class SearchController {
                     @ApiResponse(responseCode = "401", description = "유효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
     @GetMapping("/")
-    public ResponseEntity search42UserResponse
-            (@RequestParam("intraId") final Integer intraId,
-             @RequestParam("keyWord") final String keyWord
-            ) {
-        final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(intraId, keyWord);
+    public ResponseEntity search42UserResponse(@RequestParam("keyWord") final String keyWord) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(keyWord, authUser);
 
         return ResponseEntity.ok(responseSearchDTOS);
     }

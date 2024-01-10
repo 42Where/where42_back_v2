@@ -8,7 +8,5 @@ import lombok.Setter;
 @Setter
 public class UpdateMemberCommentDTO {
     @NotBlank
-    private Integer intraId;
-    @NotBlank
     private String comment;
 }

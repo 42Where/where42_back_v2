@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
@@ -135,10 +136,10 @@ public class MemberController {
             }
     )
     @DeleteMapping("")
-    public ResponseEntity deleteMember(@RequestParam("intraId") final Integer intraId) {
-
+    public ResponseEntity deleteMember() {
+        final AuthUserInfo authUser = AuthUserInfo.of();
         // 본인인지 확인 여부가 필요할 듯!
-        final ResponseMemberDTO responseMemberDto = memberService.deleteMember(intraId);
+        final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
 
         return ResponseEntity.ok(responseMemberDto);
     }
@@ -158,7 +159,8 @@ public class MemberController {
     )
     @PostMapping("/comment")
     public ResponseEntity updateComment(@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto) {
-        final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto);
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto, authUser);
 
         return ResponseEntity.ok(responseMemberDto);
     }

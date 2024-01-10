@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.exception.MemberException;
@@ -44,7 +45,8 @@ public class LocationController {
     )
     @PostMapping("/custom")
     public ResponseEntity updateCustomLocation(@RequestBody @Valid final UpdateCustomLocationDTO updateCustomLocation) {
-        final ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocation);
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocation, authUser);
 
         return ResponseEntity.ok(responseLocationDto);
     }

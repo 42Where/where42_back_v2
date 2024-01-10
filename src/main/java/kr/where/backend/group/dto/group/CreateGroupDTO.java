@@ -6,13 +6,10 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateGroupDTO {
     @NotBlank
-    private Integer intraId;
-    @NotBlank
     private String groupName;
 
     @Builder
-    public CreateGroupDTO(final Integer intraId, final String groupName) {
-        this.intraId = intraId;
+    public CreateGroupDTO(final String groupName) {
         this.groupName = groupName;
     }
 }
