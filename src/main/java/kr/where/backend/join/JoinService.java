@@ -38,7 +38,7 @@ public class JoinService {
 //                                member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
         member.setInCluster(haneApiService
                         .getHaneInfo(
-                                member.getIntraName(), TOKEN_HANE));
+                                member.getIntraName(), haneToken));
 
         ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());
