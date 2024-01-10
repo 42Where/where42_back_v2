@@ -56,7 +56,6 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 //                .logout(logout -> logout.clearAuthentication(true))
-
         return httpSecurity.build();
     }
 }
