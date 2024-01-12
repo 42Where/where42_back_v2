@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.jwt.dto.ReIssueDTO;
@@ -30,7 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-
+import javax.swing.text.html.Option;
 
 
 @Service
@@ -56,14 +57,15 @@ public class JwtService {
      * @param refreshToken : 발급 받은 refreshToken 저장
      */
     @Transactional
-    public void create(final Integer intraId, final String refreshToken) {
-        jwtRepository.save(new JsonWebToken(intraId, refreshToken));
+    public JsonWebToken create(final Integer intraId, final String refreshToken) {
+        final JsonWebToken jsonWebToken = new JsonWebToken(intraId, refreshToken);
+        jwtRepository.save(jsonWebToken);
+        return jsonWebToken;
     }
 
-    public JsonWebToken findById(final Integer intraId) {
+    public Optional<JsonWebToken> findById(final Integer intraId) {
         return jwtRepository
-                .findByIntraId(intraId)
-                .orElseThrow(InvalidJwtToken::new);
+                .findByIntraId(intraId);
     }
 
     /**
@@ -73,7 +75,8 @@ public class JwtService {
      */
     @Transactional
     public void updateJsonWebToken(final Integer intraId, final String intraName) {
-        final JsonWebToken jsonWebToken = findById(intraId);
+        final JsonWebToken jsonWebToken = findById(intraId)
+                .orElseGet(() -> create(intraId, intraName));
 
         jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
     }
@@ -85,7 +88,8 @@ public class JwtService {
      */
     @Transactional
     public String reissueAccessToken(final ReIssueDTO reIssueDTO) {
-        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId());
+        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
 
         jsonWebToken.validateRefreshToken(reIssueDTO.getRefreshToken());
 
