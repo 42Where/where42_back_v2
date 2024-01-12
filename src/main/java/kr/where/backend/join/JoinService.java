@@ -6,6 +6,7 @@ import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.entity.Group;
+import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.JsonWebToken;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
@@ -32,6 +33,9 @@ public class JoinService {
     @Transactional
     public void join(final Integer intraId, final AuthUserInfo authUser) {
         final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
+        if (member.isAgree()) {
+            throw new JoinException.DuplicatedJoinMember();
+        }
         member.setAgree(true);
 //        member.setInCluster(haneApiService
 //                        .getHaneInfo(
