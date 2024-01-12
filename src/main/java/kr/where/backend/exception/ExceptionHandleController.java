@@ -2,6 +2,7 @@ package kr.where.backend.exception;
 
 import kr.where.backend.group.exception.GroupException;
 import kr.where.backend.group.exception.GroupMemberException;
+import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.api.exception.JsonException;
@@ -60,4 +61,10 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
     }
 
+    @ExceptionHandler(JoinException.class)
+    public ResponseEntity<String> handleJoinException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
 }
