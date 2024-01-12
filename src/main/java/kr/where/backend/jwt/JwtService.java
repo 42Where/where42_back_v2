@@ -57,15 +57,14 @@ public class JwtService {
      * @param refreshToken : 발급 받은 refreshToken 저장
      */
     @Transactional
-    public JsonWebToken create(final Integer intraId, final String refreshToken) {
-        final JsonWebToken jsonWebToken = new JsonWebToken(intraId, refreshToken);
-        jwtRepository.save(jsonWebToken);
-        return jsonWebToken;
+    public void create(final Integer intraId, final String refreshToken) {
+        jwtRepository.save(new JsonWebToken(intraId, refreshToken));
     }
 
-    public Optional<JsonWebToken> findById(final Integer intraId) {
+    public JsonWebToken findById(final Integer intraId) {
         return jwtRepository
-                .findByIntraId(intraId);
+                .findByIntraId(intraId)
+                .orElseThrow(MemberException.NoMemberException::new);
     }
 
     /**
@@ -75,8 +74,8 @@ public class JwtService {
      */
     @Transactional
     public void updateJsonWebToken(final Integer intraId, final String intraName) {
-        final JsonWebToken jsonWebToken = findById(intraId)
-                .orElseGet(() -> create(intraId, intraName));
+        final JsonWebToken jsonWebToken = findById(intraId);
+        log.info("jwt intraId = " + jsonWebToken.getIntraId());
 
         jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
     }
@@ -88,8 +87,7 @@ public class JwtService {
      */
     @Transactional
     public String reissueAccessToken(final ReIssueDTO reIssueDTO) {
-        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId())
-                .orElseThrow(MemberException.NoMemberException::new);
+        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId());
 
         jsonWebToken.validateRefreshToken(reIssueDTO.getRefreshToken());
 
