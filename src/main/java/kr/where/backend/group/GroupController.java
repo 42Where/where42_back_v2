@@ -131,7 +131,7 @@ public class GroupController {
     }
 
     @Operation(
-            summary = "2.6 add friends to defualt group API",
+            summary = "2.6 add friends to default group API",
             description = "새로운 친구를 기본그룹에 추가 요청(멤버의 기본그룹 ID와, 추가할 멤버 ID)",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구", required = true, content = @Content(schema = @Schema(implementation = CreateGroupMemberDTO.class))
             ),
@@ -156,8 +156,7 @@ public class GroupController {
             summary = "2.7 get not included friends in group API",
             description = "그룹에 포함되지 않은 친구 목록을 조회. 그룹에 기본 그룹의 친구를 추가하기 위함이다. 이때, 조회되는 친구들은 멤버가 친구로 등록하되 해당 그룹에 등록되지 않은 친구들이다.",
             parameters = {
-                    @Parameter(name = "default groupId", description = "나의 기본그룹 id", required = true, in = ParameterIn.QUERY),
-                    @Parameter(name = "groupId", description = "해당 그룹 ID", required = true, in = ParameterIn.QUERY)
+                    @Parameter(name = "groupId", description = "추가할 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
