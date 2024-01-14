@@ -31,7 +31,7 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-        //그룹의 주인이 만들어지는 경우는 멤버 api에서만 호출되므로 false일때만 확인
+        //그룹의 주인이 만들어지는 경우는 멤버 컨트롤러에서만 호출되므로 api로 직접 그룹멤버를 만드는 false일때만 확인
         if(isOwner == false){
             isMyGroup(requestDTO.getGroupId(), authUser);
         }
