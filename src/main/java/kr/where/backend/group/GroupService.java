@@ -25,11 +25,8 @@ public class GroupService {
 
     @Transactional
     public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUserInfo authUser){
-        //그룹을 먼저 만들고, 그룹이 만들어지면 동시에 그 소유주 그룹 멤버는 isOwner가 true인 채로 생성되어야한다.
-//        validateGroupName(dto, authUser.getIntraId());
         Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
-
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(authUser.getIntraId())
@@ -60,18 +57,6 @@ public class GroupService {
         return group.getGroupName();
     }
 
-    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUserInfo authUser)
-    {
-//        Member member = memberRepository.findByIntraId(dto.getIntraId())
-//                .orElseThrow(MemberException.NoMemberException::new);
-        if (dto.getGroupId().equals(authUser.getDefaultGroupId())) {
-            throw new GroupException.CannotModifyGroupException();
-        }
-        List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
-        if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(groupId -> groupId.equals(dto.getGroupId()))) {
-            throw new GroupException.CannotModifyGroupException();
-        }
-    }
     @Transactional
     public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser){
         updateGroupValidate(dto, authUser);
@@ -82,6 +67,7 @@ public class GroupService {
 
     @Transactional
     public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUserInfo authUser){
+        isMyGroup(groupId, authUser);
         final Group group = findOneGroupById(groupId);
         //validate 추가
         groupRepository.delete(group);
@@ -89,4 +75,16 @@ public class GroupService {
         return ResponseGroupDTO.from(group);
     }
 
+    public final void isMyGroup(Long groupId, AuthUserInfo authUser)
+    {
+        List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
+        if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
+            throw new GroupException.CannotModifyGroupException();
+        }
+    }
+    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
+        if (dto.getGroupId().equals(authUser.getDefaultGroupId()))
+            throw new GroupException.CannotModifyGroupException();
+        isMyGroup(dto.getGroupId(), authUser);
+    }
 }
