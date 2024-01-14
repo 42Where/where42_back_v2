@@ -54,9 +54,6 @@ public class GroupController {
     @Operation(
             summary = "2.2 그룹 목록 및 친구 API 조회",
             description = "멤버가 만든 그룹 및 그룹 내의 친구 목록을 조회합니다 (메인 화면 용)",
-            parameters = {
-                    @Parameter(name = "intraId", description = "intra ID", required = true, in = ParameterIn.QUERY)
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
             }
@@ -103,7 +100,7 @@ public class GroupController {
             }
     )
     @DeleteMapping("")
-    public ResponseEntity<ResponseGroupDTO> deleteGroup(@RequestParam final Long groupId) {
+    public ResponseEntity<ResponseGroupDTO> deleteGroup(@RequestParam("groupId") final Long groupId) {
         final AuthUserInfo authUser = AuthUserInfo.of();
         final ResponseGroupDTO responseGroupDto = groupService.deleteGroup(groupId, authUser);
 
@@ -113,9 +110,6 @@ public class GroupController {
     @Operation(
             summary = "2.5 get group list API",
             description = "멤버가 소유한 그룹들의 id, 이름 반환 (그룹관리)",
-            parameters = {
-                    @Parameter(name = "intraId", description = "나의 intraId", required = true, in = ParameterIn.QUERY)
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
                     @ApiResponse(responseCode = "401", description = "등록되지 않은 카뎃", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
