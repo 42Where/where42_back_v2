@@ -20,6 +20,6 @@ public class GroupException extends CustomException {
     }
 
     public static class CannotModifyGroupException extends GroupException {
-        public CannotModifyGroupException() {super(GroupErrorCode.DUPLICATED_GROUP_NAME);}
+        public CannotModifyGroupException() {super(GroupErrorCode.CANNOT_MODIFY_GROUP);}
     }
 }

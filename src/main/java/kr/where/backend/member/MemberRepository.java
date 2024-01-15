@@ -12,4 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<List<Member>> findByIntraNameIn(List<String> name);
 
+    Optional<List<Member>> findByIntraIdIn(List<Integer> intraId);
 }
