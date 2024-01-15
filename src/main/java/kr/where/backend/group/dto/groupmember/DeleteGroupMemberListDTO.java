@@ -1,6 +1,7 @@
 package kr.where.backend.group.dto.groupmember;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class DeleteGroupMemberListDTO {
-    @NotBlank
+    @NotNull
     private Long groupId;
-    @NotBlank
+    @NotNull
     private List<Integer> members;
 
     @Builder
