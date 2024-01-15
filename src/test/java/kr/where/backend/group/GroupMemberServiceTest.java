@@ -88,6 +88,7 @@ public class GroupMemberServiceTest {
                 .build();
         //when
         authUser.setIntraId(11111);
+        authUser.setIntraName("hjeong");
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
         //then
@@ -113,10 +114,10 @@ public class GroupMemberServiceTest {
         Hane hane3 = Hane.createForTest("IN");
         memberService.createAgreeMember(cadetPrivacy3, hane3);
 
-        List<String> members = new ArrayList<>();
-        members.add("jnam");
-        members.add("suhwpark");
-        members.add("jonhan");
+        List<Integer> members = new ArrayList<>();
+        members.add(22222);
+        members.add(22223);
+        members.add(22224);
         authUser.setIntraId(11111);
         authUser.setIntraName("hjeong");
         AddGroupMemberListDTO addGroupMemberListDTO = AddGroupMemberListDTO.builder()
@@ -160,6 +161,8 @@ public class GroupMemberServiceTest {
                 .intraId(22222)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
+        authUser.setIntraId(11111);
+        authUser.setIntraName("hjeong");
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
         List<Integer> members = new ArrayList<>();
@@ -180,33 +183,36 @@ public class GroupMemberServiceTest {
     public void 기본_그룹_멤버_삭제() throws Exception{
 
         //given
+        //멤버 한명 생성
         CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.createForTest("IN");
         authUser.setIntraId(22222);
         authUser.setIntraName("jnam");
         memberService.createAgreeMember(cadetPrivacy, hane);
 
+        //클라이언트의 아이디 다시 세팅
+        authUser.setIntraId(11111);
+        authUser.setIntraName("hjeong");
+        authUser.setDefaultGroupId(defaultResponseGroupDTO.getGroupId());
+
+        //기본그룹에 추가
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(22222)
                 .groupId(defaultResponseGroupDTO.getGroupId())
                 .build();
-
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
+        //일반 그룹에 추가
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(22222)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
         groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
-        //기본그룹과, 일반 그룹에 22222번 멤버를 동시에 추가
         List<Integer> members = new ArrayList<>();
         members.add(22222);
 
         //when
         //기본그룹에서만 22222번 멤버를 삭제
-        authUser.setIntraId(11111);
-        authUser.setIntraName("hjeong");
-        authUser.setDefaultGroupId(defaultResponseGroupDTO.getGroupId());
         List<ResponseGroupMemberDTO> delete_member = groupMemberService.deleteFriendsList(DeleteGroupMemberListDTO.builder()
                 .groupId(responseGroupMemberDTO.getGroupId())
                 .members(members).build(), authUser);
@@ -227,8 +233,8 @@ public class GroupMemberServiceTest {
         그룹_멤버_리스트_생성_후_저장();
         createGroupDto = new CreateGroupDTO("friends List");
         ResponseGroupDTO dto = groupService.createGroup(createGroupDto, authUser);
-        List<String> member = new ArrayList<>();
-        member.add("jnam");
+        List<Integer> member = new ArrayList<>();
+        member.add(22222);
 
         AddGroupMemberListDTO addGroupMemberListDTO = AddGroupMemberListDTO.builder()
                 .groupId(dto.getGroupId())

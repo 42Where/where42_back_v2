@@ -31,6 +31,10 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
+        //그룹의 주인이 만들어지는 경우는 멤버 컨트롤러에서만 호출되므로 api로 직접 그룹멤버를 만드는 false일때만 확인
+        if(isOwner == false){
+            isMyGroup(requestDTO.getGroupId(), authUser);
+        }
 
         boolean isGroupMemberExists = groupMemberRepository.existsByGroupAndMember(group, member);
         if (isGroupMemberExists) {
@@ -46,6 +50,13 @@ public class GroupMemberService {
         return responseGroupMemberDTO;
     }
 
+    public void isMyGroup(Long groupId, AuthUserInfo authUser)
+    {
+        List<ResponseGroupMemberDTO> groups = findGroupsInfoByIntraId(authUser);
+        if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
+            throw new GroupException.CannotModifyGroupException();
+        }
+    }
     public List<ResponseGroupMemberDTO> findGroupsInfoByIntraId(final AuthUserInfo authUser){
         final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = findGroupIdByIntraId(authUser.getIntraId());
 
@@ -67,8 +78,8 @@ public class GroupMemberService {
     }
 
     public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId, final AuthUserInfo authUser){
-        final Group group = groupRepository.findById(groupId)
-                .orElseThrow(GroupException.NoGroupException::new);
+        groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
+
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
         final List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream()
                 .map(m -> ResponseOneGroupMemberDTO.builder()
@@ -109,7 +120,10 @@ public class GroupMemberService {
     public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto, final AuthUserInfo authUser){
         final Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
-        final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
+        isMyGroup(dto.getGroupId(), authUser);
+//        final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
+//                .orElseThrow(MemberException.NoMemberException::new);
+        final List<Member> members = memberRepository.findByIntraIdIn(dto.getMembers())
                 .orElseThrow(MemberException.NoMemberException::new);
         duplicateGroupMember(dto.getGroupId(), members);
 
@@ -130,13 +144,12 @@ public class GroupMemberService {
     @Transactional
     public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUserInfo authUser){
 
-        // 그룹 아이디를 받으니까 그 아이디로 그룹의 주인을 찾고//
-        // 그 주인의 기본그룹 아이디와 받은 그룹id가 같다면
-        // 그 주인의 모든 그룹에서 해당 멤버를 찾아서 삭제
         List<GroupMember> deleteGroupMember;
 
         groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
+        isMyGroup(dto.getGroupId(), authUser);
 
+        //지우려는 그룹이 기본 그룹이라면 해당 멤버의 모든 그룹에서 멤버 삭제
         if (authUser.getDefaultGroupId() == dto.getGroupId()){
             final List<GroupMember> groupsOfOwner = groupMemberRepository
                     .findGroupMembersByMember_IntraIdAndIsOwner(authUser.getIntraId(), true);
@@ -144,7 +157,6 @@ public class GroupMemberService {
             final List<Long> groups = groupsOfOwner.stream()
                     .map(g -> g.getGroup().getGroupId())
                     .toList();
-
             deleteGroupMember = groupMemberRepository
                     .findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(groups,dto.getMembers());
             groupMemberRepository.deleteAll(deleteGroupMember);

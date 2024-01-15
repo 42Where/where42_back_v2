@@ -13,10 +13,10 @@ public class AddGroupMemberListDTO {
     @NotBlank
     private Long groupId;
     @NotBlank
-    private List<String> members;
+    private List<Integer> members;
 
     @Builder
-    public AddGroupMemberListDTO(final Long groupId, final List<String> members) {
+    public AddGroupMemberListDTO(final Long groupId, final List<Integer> members) {
         this.groupId = groupId;
         this.members = members;
     }
