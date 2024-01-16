@@ -18,7 +18,6 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Member {
@@ -85,8 +84,7 @@ public class Member {
         this.agree = false;
     }
 
-    public void setDisagreeToAgree(final CadetPrivacy cadetPrivacy, final Hane hane) {
-        this.grade = cadetPrivacy.getCreated_at();
+    public void setDisagreeToAgree(final Hane hane) {
         this.inCluster = Objects.equals(hane.getInoutState(), "IN");
         this.agree = true;
     }

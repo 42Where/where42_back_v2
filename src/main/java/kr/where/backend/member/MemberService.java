@@ -52,7 +52,7 @@ public class MemberService {
         if (member != null && member.isAgree()) {
             throw new MemberException.DuplicatedMemberException();
         } else if (member != null && !member.isAgree()) {
-            member.setDisagreeToAgree(cadetPrivacy, hane);
+            member.setDisagreeToAgree(hane);
         } else {
             member = new Member(cadetPrivacy, hane);
             memberRepository.save(member);
