@@ -46,10 +46,6 @@ public class MemberService {
         ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-//        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-
-//        return responseMemberDto;
-
         return member;
     }
 
@@ -59,8 +55,6 @@ public class MemberService {
         memberRepository.save(member);
         locationService.create(member, cadetPrivacy.getLocation());
 
-//        final ResponseMemberDto responseMemberDto = ResponseMemberDto.builder().member(member).build();
-//        return responseMemberDto;
         return member;
     }
 
@@ -102,7 +96,6 @@ public class MemberService {
         return responseMemberDto;
     }
 
-    // 위의 findOne이랑 중복! 안쓰면 지우자!
     public Optional<Member> findOne(final Integer intraId) {
         return memberRepository.findByIntraId(intraId);
     }

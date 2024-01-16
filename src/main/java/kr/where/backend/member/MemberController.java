@@ -1,14 +1,10 @@
 package kr.where.backend.member;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,62 +31,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-
-    @Operation(summary = "1.1 createMember API", description = "동의 맴버 생성 하는 POST API (sign up 생기면 없어질 api 입니다!)",
-            parameters = {
-                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
-            },
-            requestBody =
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {
-                                    @ExampleObject(
-                                            name = "example",
-                                            value = "{\n" +
-                                                    "  \"cadetPrivacy\": {\n" +
-                                                    "    \"id\": 12345,\n" +
-                                                    "    \"login\": \"string\",\n" +
-                                                    "    \"location\": \"string\",\n" +
-                                                    "    \"image\": {\n" +
-                                                    "      \"versions\": {\n" +
-                                                    "        \"small\": \"string\"\n" +
-                                                    "      }\n" +
-                                                    "    },\n" +
-                                                    "    \"created_at\": \"string\",\n" +
-                                                    "    \"active?\": true\n" +
-                                                    "  },\n" +
-                                                    "  \"hane\": {\n" +
-                                                    "    \"login\": \"string\",\n" +
-                                                    "    \"inoutState\": \"string\",\n" +
-                                                    "    \"cluster\": \"string\",\n" +
-                                                    "    \"tag_at\": \"string\"\n" +
-                                                    "  }\n" +
-                                                    "}"                                    )
-                            },
-                            schema = @Schema(type = "object")
-                    )
-            )
-            ,
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
-                    @ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
-            }
-    )
-    @PostMapping("")
-    public ResponseEntity createAgreeMember(@RequestBody ObjectNode saveObj) throws JsonProcessingException {
-
-        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        CadetPrivacy cadetPrivacy = mapper.treeToValue(saveObj.get("cadetPrivacy"), CadetPrivacy.class);
-        Hane hane = mapper.treeToValue(saveObj.get("hane"), Hane.class);
-
-        // 나머지 로직은 동일
-        final Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
-
-        return ResponseEntity.created(URI.create("http://3.35.149.29:8080/v3/main"))
-                .body(responseMemberDto);
-    }
 
     @Operation(summary = "1.3 findOneByIntraId API", description = "맴버 1명 Dto 조회",
             parameters = {

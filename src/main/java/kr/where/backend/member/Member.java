@@ -115,11 +115,4 @@ public class Member {
         this.image = image;
     }
 
-    /*
-     * 테스트용 setter
-     */
-    public void setOtherInformation(final String comment, final boolean inCluster) {
-        this.comment = comment;
-        this.inCluster = inCluster;
-    }
 }
