@@ -15,67 +15,67 @@ import java.time.LocalDateTime;
 @Slf4j
 public class Location {
 
-    @Id
-    @Column(name = "location_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long locationId;
+	@Id
+	@Column(name = "location_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long locationId;
 
-    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
-    private Member member;
+	@OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
+	private Member member;
 
-    @Column(length = 30)
-    private String customLocation;
+	@Column(length = 30)
+	private String customLocation;
 
-    @Column(length = 7)
-    private String imacLocation;
+	@Column(length = 7)
+	private String imacLocation;
 
-    private LocalDateTime customUpdatedAt;
+	private LocalDateTime customUpdatedAt;
 
-    private LocalDateTime imacUpdatedAt;
+	private LocalDateTime imacUpdatedAt;
 
-    public Location(final Member member, final String imacLocation) {
-        this.member = member;
-        this.imacLocation = imacLocation;
-        this.imacUpdatedAt = LocalDateTime.now();
-    }
+	public Location(final Member member, final String imacLocation) {
+		this.member = member;
+		this.imacLocation = imacLocation;
+		this.imacUpdatedAt = LocalDateTime.now();
+	}
 
-    public Location(final String imacLocation) {
-        this.imacLocation = imacLocation;
-        this.imacUpdatedAt = LocalDateTime.now();
-    }
+	public Location(final String imacLocation) {
+		this.imacLocation = imacLocation;
+		this.imacUpdatedAt = LocalDateTime.now();
+	}
 
-    public  void setMember(Member member) {
-        this.member = member;
-    }
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-    public void setCustomLocation(final String customLocation) {
-        this.customLocation = customLocation;
-        this.customUpdatedAt = LocalDateTime.now();
-    }
+	public void setCustomLocation(final String customLocation) {
+		this.customLocation = customLocation;
+		this.customUpdatedAt = LocalDateTime.now();
+	}
 
-    public void setImacLocation(final String imacLocation) {
-        this.imacLocation = imacLocation;
-        this.imacUpdatedAt = LocalDateTime.now();
-    }
+	public void setImacLocation(final String imacLocation) {
+		this.imacLocation = imacLocation;
+		this.imacUpdatedAt = LocalDateTime.now();
+	}
 
-    public String getLocation() {
-        if (!this.member.isAgree()) {
-            return this.imacLocation;
-        } else {
-            if (customLocation == null && imacLocation == null) {
-                return null;
-            } else if (customLocation == null) {
-                return imacLocation;
-            } else if (imacLocation == null) {
-                return customLocation;
-            } else {
-                if (customUpdatedAt.isAfter(imacUpdatedAt)) {
-                    return customLocation;
-                } else {
-                    return imacLocation;
-                }
-            }
-        }
-    }
+	public String getLocation() {
+		if (!this.member.isAgree()) {
+			return this.imacLocation;
+		} else {
+			if (customLocation == null && imacLocation == null) {
+				return null;
+			} else if (customLocation == null) {
+				return imacLocation;
+			} else if (imacLocation == null) {
+				return customLocation;
+			} else {
+				if (customUpdatedAt.isAfter(imacUpdatedAt)) {
+					return customLocation;
+				} else {
+					return imacLocation;
+				}
+			}
+		}
+	}
 
 }
