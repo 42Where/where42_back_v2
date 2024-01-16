@@ -78,7 +78,6 @@ public class MemberController {
     @DeleteMapping("")
     public ResponseEntity deleteMember() {
         final AuthUserInfo authUser = AuthUserInfo.of();
-        // 본인인지 확인 여부가 필요할 듯!
         final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
 
         return ResponseEntity.ok(responseMemberDto);

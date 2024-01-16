@@ -85,7 +85,7 @@ public class Member {
         this.agree = false;
     }
 
-    public void setFlashToMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+    public void setDisagreeToAgree(final CadetPrivacy cadetPrivacy, final Hane hane) {
         this.grade = cadetPrivacy.getCreated_at();
         this.inCluster = Objects.equals(hane.getInoutState(), "IN");
         this.agree = true;

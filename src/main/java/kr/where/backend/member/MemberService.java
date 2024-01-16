@@ -28,6 +28,21 @@ public class MemberService {
     private final GroupService groupService;
     private final LocationService locationService;
 
+    /**
+     * if (이미 존재하는 멤버)
+     *      throw duplicate_exception
+     * else if (비동의 멤버)
+     *      disagree -> agree
+     * else if (새로 생성해야 하는 상황)
+     *      new member
+     *      new location
+     *
+     * 멤버 생성후에는 new default group을 해준다
+     *
+     * @param cadetPrivacy : 42api에게 받아온 cadet info
+     * @param hane : hane api에게 받아온 inCluster 여부
+     * @return member
+     */
     @Transactional
     public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
         final AuthUserInfo authUser = AuthUserInfo.of();
@@ -37,7 +52,7 @@ public class MemberService {
         if (member != null && member.isAgree()) {
             throw new MemberException.DuplicatedMemberException();
         } else if (member != null && !member.isAgree()) {
-            member.setFlashToMember(cadetPrivacy, hane);
+            member.setDisagreeToAgree(cadetPrivacy, hane);
         } else {
             member = new Member(cadetPrivacy, hane);
             memberRepository.save(member);
@@ -49,6 +64,12 @@ public class MemberService {
         return member;
     }
 
+    /**
+     * hane의 inCluster 정보가 없는 disagree 멤버 생성
+     *
+     * @param cadetPrivacy : 42api에게 받아온 cadet info
+     * @return member
+     */
     @Transactional
     public Member createDisagreeMember(final CadetPrivacy cadetPrivacy) {
         final Member member = new Member(cadetPrivacy);
@@ -58,6 +79,11 @@ public class MemberService {
         return member;
     }
 
+    /**
+     * find 전체 멤버 리스트
+     *
+     * @return responseMemberDTOList : member entity와 동일한 모양의 responseMemberDTO의 list
+     */
     public List<ResponseMemberDTO> findAll() {
         final List<Member> members = memberRepository.findAll();
         final List<ResponseMemberDTO> responseMemberDTOList = members.stream().map(member -> ResponseMemberDTO.builder()
@@ -66,6 +92,13 @@ public class MemberService {
         return responseMemberDTOList;
     }
 
+    /**
+     * 멤버 탈퇴
+     * accessToken에서 intraId를 얻어오므로 본인확인여부를 거치지 않는다
+     *
+     * @param authUser : accessToken 파싱한 정보
+     * @return responseMemberDto
+     */
     @Transactional
     public ResponseMemberDTO deleteMember(final AuthUserInfo authUser) {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
@@ -77,6 +110,13 @@ public class MemberService {
         return responseMemberDto;
     }
 
+    /**
+     * 존재하는 멤버인지 검사 후, 본인의 comment를 변경함
+     *
+     * @param updateMemberCommentDto : 변경할 comment
+     * @param authUser : accessToken 파싱한 정보
+     * @return responseMemberDTO
+     */
     @Transactional
     public ResponseMemberDTO updateComment(
             final UpdateMemberCommentDTO updateMemberCommentDto,
@@ -88,14 +128,26 @@ public class MemberService {
         return ResponseMemberDTO.builder().member(member).build();
     }
 
+    /**
+     * intraId에 해당하는 member 한명을 찾음
+     * findOne API(in member)을 위한 service
+     *
+     * @param intraId
+     * @return responseMemberDTO
+     */
     public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
         final Member member = memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-        final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
-
-        return responseMemberDto;
+        return ResponseMemberDTO.builder().member(member).build();
     }
 
+    /**
+     * intraId에 해당하는 member 한명을 찾음
+     * search API를 위한 service
+     *
+     * @param intraId
+     * @return Optional<Member>
+     */
     public Optional<Member> findOne(final Integer intraId) {
         return memberRepository.findByIntraId(intraId);
     }
