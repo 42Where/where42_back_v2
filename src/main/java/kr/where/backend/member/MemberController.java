@@ -118,9 +118,9 @@ public class MemberController {
 		List<ResponseMemberDTO> responseMemberDTOList = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {
-			CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(1 + i, "member" + i, "c1r1s" + i,
+			CadetPrivacy cadetPrivacy = CadetPrivacy.create(1 + i, "member" + i, "c1r1s" + i,
 				"https://ibb.co/94KmxcT", true, "2022-10-31");
-			Hane hane = Hane.createForTest("IN");
+			Hane hane = Hane.create("IN");
 
 			Member member = memberService.createAgreeMember(cadetPrivacy, hane);
 			ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();

@@ -9,7 +9,7 @@ public class Versions {
     private String small;
 
     //test
-    public static Versions createForTest(String small) {
+    public static Versions create(String small) {
         Versions versions = new Versions();
 
         versions.small = small;

@@ -39,7 +39,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         final CadetInfo cadetInfo = CadetInfo.of(userProfile.getAttributes());
         final Member member = memberService.findOne(cadetInfo.getId())
                 .orElseGet(() -> memberService.createDisagreeMember(
-                        CadetPrivacy.createForTest(cadetInfo.getId(), cadetInfo.getLogin(), cadetInfo.getLocation(), cadetInfo.getImage(), cadetInfo.isActive(), cadetInfo.getCreated_at())
+                        CadetPrivacy.create(cadetInfo.getId(), cadetInfo.getLogin(), cadetInfo.getLocation(), cadetInfo.getImage(), cadetInfo.isActive(), cadetInfo.getCreated_at())
                         )
                 );
         /**
