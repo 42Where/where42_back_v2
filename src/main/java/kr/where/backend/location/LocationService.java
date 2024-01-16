@@ -17,6 +17,12 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * member의 imac 정보를 set
+     * member와 location은 one-to-one mappling 되어있음
+     * @param member
+     * @param imac
+     */
     @Transactional
     public void create(final Member member, final String imac) {
         Location location = new Location(member, imac);
@@ -26,6 +32,13 @@ public class LocationService {
         member.setLocation(location);
     }
 
+    /**
+     * 수동자리 업데이트
+     *
+     * @param updateCustomLocationDto 수동자리정보
+     * @param authUser accessToken 파싱한 정보
+     * @return responseLocationDTO
+     */
     @Transactional
     public ResponseLocationDTO updateCustomLocation(
             final UpdateCustomLocationDTO updateCustomLocationDto,
