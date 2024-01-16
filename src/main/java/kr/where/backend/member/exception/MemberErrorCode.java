@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 public enum MemberErrorCode implements ErrorCode {
 
-    NO_MEMBER(1000, "존재하지 않는 맴버입니다."),
-    DUPLICATED_MEMBER(1001, "이미 존재하는 맴버입니다.");
+	NO_MEMBER(1000, "존재하지 않는 맴버입니다."),
+	DUPLICATED_MEMBER(1001, "이미 존재하는 맴버입니다.");
 
-    private final int errorCode;
-    private final String errorMessage;
+	private final int errorCode;
+	private final String errorMessage;
 }
