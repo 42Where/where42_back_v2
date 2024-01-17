@@ -10,7 +10,7 @@ public class JwtException extends CustomException {
 
     public static class InvalidJwtToken extends JwtException {
         public InvalidJwtToken() {
-            super(JwtErrorCode.INVALIDED_TOKEN);
+            super(JwtErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -35,6 +35,12 @@ public class JwtException extends CustomException {
     public static class IllegalJwtToken extends JwtException {
         public IllegalJwtToken() {
             super(JwtErrorCode.ILLEGAL_TOKEN);
+        }
+    }
+
+    public static class UnMatchedIp extends JwtException{
+        public UnMatchedIp() {
+            super(JwtErrorCode.UNMATCHED_IP);
         }
     }
 }
