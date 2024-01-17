@@ -12,7 +12,8 @@ public enum JwtErrorCode implements ErrorCode {
     EXPIRED_TOKEN_TIME_OUT(1502, "만료된 Jwt 토큰입니다."),
     UNSUPPORTED_TOKEN(1503, "지원 되지 않는 Jwt 토큰입니다."),
     ILLEGAL_TOKEN(1504, "잘못된 Jwt 토큰입니다."),
-    UNMATCHED_IP(1505, "발급 시 IP와 다릅니다");
+    UNMATCHED_IP(1505, "jwt 발급 시 IP와 다릅니다"),
+    UNMATCHED_USER_INFO(1506, "jwt 발급한 user와 다릅니다");
 
     private final int errorCode;
     private final String errorMessage;
