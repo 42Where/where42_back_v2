@@ -31,8 +31,9 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public void join(final Integer intraId, final AuthUserInfo authUser) {
-        final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
+    public void join(final String requestIp, final AuthUserInfo authUser) {
+        final Member member = memberService.findOne(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
         }
@@ -44,10 +45,9 @@ public class JoinService {
                         .getHaneInfo(
                                 member.getIntraName(), haneToken));
 
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
+        final ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());
 
-        final JsonWebToken jsonWebToken = new JsonWebToken(member.getIntraId(), jwtService.createRefreshToken(member.getIntraId(), member.getIntraName()));
-        jwtService.save(jsonWebToken);
+        jwtService.create(member.getIntraId(), member.getIntraName(), requestIp);
     }
 }
