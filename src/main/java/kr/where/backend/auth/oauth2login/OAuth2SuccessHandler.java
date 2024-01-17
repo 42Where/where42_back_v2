@@ -29,8 +29,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtService jwtService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
+                                        final Authentication authentication) throws IOException, ServletException {
 
         final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
@@ -55,11 +55,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("JWT 토큰 발행 시작");
 
         final String accessToken = jwtService.createAccessToken(cadetInfo.getId(), cadetInfo.getLogin());
-        boolean isAgree = false;
 
         if (member.isAgree()) {
             jwtService.updateJsonWebToken(cadetInfo.getId(), cadetInfo.getLogin());
-            isAgree = member.isAgree();
         }
 
         getRedirectStrategy()
@@ -70,7 +68,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                 .fromUriString("http://localhost:3000")
                                 .queryParam("token", accessToken)
                                 .queryParam("intraId",cadetInfo.getId())
-                                .queryParam("agreement", isAgree)
+                                .queryParam("agreement", member.isAgree())
                                 .build()
                                 .toUriString()
                         // 프런트 분들에게 경로를 상의한후 만들기
