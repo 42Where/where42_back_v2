@@ -86,11 +86,17 @@ public class JwtService {
         final AuthUserInfo authUser = AuthUserInfo.of();
         final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
                 .orElseThrow(JwtException.UnMatchedIp::new);
+
+        final Claims claims;
         try {
-            parseToken(jsonWebToken.getRefreshToken());
+            claims = parseToken(jsonWebToken.getRefreshToken());
         } catch (JwtException e) {
             jwtRepository.delete(jsonWebToken);
             throw e;
+        }
+
+        if (!authUser.getIntraId().equals(claims.get("intraId"))) {
+            throw new JwtException.UnMatchedMemberInfo();
         }
 
         return createAccessToken(jsonWebToken.getIntraId(), authUser.getIntraName());
@@ -196,7 +202,7 @@ public class JwtService {
      * @return 파싱된 claim
      */
     private Claims parseToken(final String accessToken) {
-        log.info("토큰 검사해바라!!\n" + accessToken);
+        log.info("토큰 \n" + accessToken);
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(generateSecretKey(secret_code))
