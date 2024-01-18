@@ -87,13 +87,7 @@ public class JwtService {
         final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
                 .orElseThrow(JwtException.UnMatchedIp::new);
 
-        final Claims claims;
-        try {
-            claims = parseToken(jsonWebToken.getRefreshToken());
-        } catch (JwtException e) {
-            jwtRepository.delete(jsonWebToken);
-            throw e;
-        }
+        final Claims claims = parseToken(jsonWebToken.getRefreshToken());
 
         if (!authUser.getIntraId().equals(claims.get("intraId"))) {
             throw new JwtException.UnMatchedMemberInfo();
