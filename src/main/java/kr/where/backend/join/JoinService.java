@@ -36,13 +36,14 @@ public class JoinService {
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
         }
-        member.setAgree(true);
+
 //        member.setInCluster(haneApiService
 //                        .getHaneInfo(
 //                                member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
-        member.setInCluster(haneApiService
-                        .getHaneInfo(
-                                member.getIntraName(), haneToken));
+
+        member.setDisagreeToAgree(haneApiService
+            .getHaneInfo(
+                member.getIntraName(), haneToken));
 
         ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
         member.setDefaultGroupId(responseGroupDto.getGroupId());

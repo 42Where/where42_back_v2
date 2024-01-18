@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateMemberCommentDTO {
-    @NotBlank
-    private String comment;
+	@NotBlank
+	private String comment;
 }

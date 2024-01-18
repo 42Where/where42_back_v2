@@ -9,7 +9,7 @@ public class Image {
     private Versions versions;
 
     //test
-    public static Image createForTest(Versions versions) {
+    public static Image create(Versions versions) {
         Image image = new Image();
 
         image.versions = versions;
