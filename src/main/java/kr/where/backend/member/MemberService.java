@@ -6,6 +6,9 @@ import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
+import kr.where.backend.jwt.JsonWebToken;
+import kr.where.backend.jwt.JwtRepository;
+import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
@@ -27,6 +30,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
+	private final JwtRepository jwtRepository;
 
 	/**
 	 * if (이미 존재하는 멤버)
@@ -95,6 +99,7 @@ public class MemberService {
 	/**
 	 * 멤버 탈퇴
 	 * accessToken에서 intraId를 얻어오므로 본인확인여부를 거치지 않는다
+	 * jwt token과 member entity를 삭제
 	 *
 	 * @param authUser : accessToken 파싱한 정보
 	 * @return responseMemberDto
@@ -105,6 +110,10 @@ public class MemberService {
 			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
+		final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(authUser.getIntraId())
+			.orElseThrow(JwtException.NotFoundJwtToken::new);
+
+		jwtRepository.delete(jsonWebToken);
 		memberRepository.delete(member);
 
 		return responseMemberDto;
