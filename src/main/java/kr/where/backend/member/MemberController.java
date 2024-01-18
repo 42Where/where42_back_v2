@@ -68,7 +68,6 @@ public class MemberController {
 	@Operation(summary = "1.2 deleteMember API", description = "맴버 탈퇴",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
-			@Parameter(name = "intraId", description = "5자리 intra 고유 id", in = ParameterIn.QUERY),
 		},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
