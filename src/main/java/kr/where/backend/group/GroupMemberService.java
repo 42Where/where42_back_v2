@@ -151,7 +151,7 @@ public class GroupMemberService {
 
         System.out.println(authUser.getDefaultGroupId() + " and " + dto.getGroupId());
         //지우려는 그룹이 기본 그룹이라면 해당 멤버의 모든 그룹에서 멤버 삭제
-        if (authUser.getDefaultGroupId() == dto.getGroupId()){
+        if (authUser.getDefaultGroupId().equals(dto.getGroupId())){
             System.out.println("in?");
             final List<GroupMember> groupsOfOwner = groupMemberRepository
                     .findGroupMembersByMember_IntraIdAndIsOwner(authUser.getIntraId(), true);
