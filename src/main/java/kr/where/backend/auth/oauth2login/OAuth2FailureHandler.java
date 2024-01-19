@@ -24,6 +24,6 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
 //                .toUriString();
 //
 //        getRedirectStrategy().sendRedirect(request, response, targetUri);
-        response.sendRedirect("http://13.209.149.15/login-fail");
+        response.sendRedirect("http://localhost:3000/login-fail");
     }
 }

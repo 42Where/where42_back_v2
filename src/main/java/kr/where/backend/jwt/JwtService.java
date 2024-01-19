@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
@@ -15,24 +16,20 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUserInfo.AuthUserInfo;
-import kr.where.backend.jwt.dto.ReIssueDTO;
 import kr.where.backend.jwt.exception.JwtException;
-import kr.where.backend.jwt.exception.JwtException.InvalidJwtToken;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
-import javax.swing.text.html.Option;
-
 
 @Service
 @RequiredArgsConstructor
@@ -54,17 +51,10 @@ public class JwtService {
      * 로그인할때 발급 받는 jwt token을 저장하기 위한 메서드
      *
      * @param intraId : 카뎃의 고유 id를 같이 저장한다. relation 없이 사용하기 위한 용도
-     * @param refreshToken : 발급 받은 refreshToken 저장
      */
     @Transactional
-    public void create(final Integer intraId, final String refreshToken) {
-        jwtRepository.save(new JsonWebToken(intraId, refreshToken));
-    }
-
-    public JsonWebToken findById(final Integer intraId) {
-        return jwtRepository
-                .findByIntraId(intraId)
-                .orElseThrow(MemberException.NoMemberException::new);
+    public void create(final Integer intraId, final String intraName, final String requestIp) {
+        jwtRepository.save(new JsonWebToken(intraId, requestIp, createRefreshToken(intraId, intraName)));
     }
 
     /**
@@ -74,7 +64,8 @@ public class JwtService {
      */
     @Transactional
     public void updateJsonWebToken(final Integer intraId, final String intraName) {
-        final JsonWebToken jsonWebToken = findById(intraId);
+        final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(intraId)
+                .orElseThrow(JwtException.NotFoundJwtToken::new);
         log.info("jwt intraId = " + jsonWebToken.getIntraId());
 
         jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
@@ -82,16 +73,22 @@ public class JwtService {
 
     /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
-     * @param reIssueDTO : client 측에서 들어온 intraId 와 refreshToken을 통해 재발급 용
+     * @param requestIp : client 측의 ip를 통해 동일한 client인지 판단 후 accesstoken 발행
      * @return accessToken
      */
-    @Transactional
-    public String reissueAccessToken(final ReIssueDTO reIssueDTO) {
-        final JsonWebToken jsonWebToken = findById(reIssueDTO.getIntraId());
 
-        jsonWebToken.validateRefreshToken(reIssueDTO.getRefreshToken());
+    public String reissueAccessToken(final String requestIp) {
+        final AuthUserInfo authUser = AuthUserInfo.of();
+        final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
+                .orElseThrow(JwtException.UnMatchedIp::new);
 
-        return createAccessToken(reIssueDTO.getIntraId(), "name");
+        final Claims claims = parseToken(jsonWebToken.getRefreshToken());
+
+        if (!authUser.getIntraId().equals(claims.get("intraId"))) {
+            throw new JwtException.UnMatchedMemberInfo();
+        }
+
+        return createAccessToken(jsonWebToken.getIntraId(), authUser.getIntraName());
     }
 
     /**
@@ -125,7 +122,7 @@ public class JwtService {
         claims.put("intraId", intraId);
         claims.put("intraName", intraName);
         claims.put("roles", "Cadet");
-        Date now = new Date();
+        final Date now = new Date();
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -172,7 +169,7 @@ public class JwtService {
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
-                .orElseThrow(MemberException.NoMemberException::new);
+                .orElseThrow(JwtException.NotFoundJwtToken::new);
 
         final AuthUserInfo authUserInfo = AuthUserInfo.builder()
                 .intraId(member.getIntraId())
@@ -194,7 +191,7 @@ public class JwtService {
      * @return 파싱된 claim
      */
     private Claims parseToken(final String accessToken) {
-        log.info("토큰 검사해바라!!\n" + accessToken);
+        log.info("토큰 \n" + accessToken);
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(generateSecretKey(secret_code))
@@ -214,8 +211,18 @@ public class JwtService {
         }
     }
 
-    @Transactional
-    public void save(final JsonWebToken jsonWebToken) {
-        jwtRepository.save(jsonWebToken);
+    public Optional<String> extractToken(final HttpServletRequest request) {
+        final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (Strings.isEmpty(authorization)) {
+            return Optional.empty();
+        }
+        return getToken(authorization.split(" "));
+    }
+
+    private Optional<String> getToken(final String[] token) {
+        if (token.length != 2 || !token[0].equals("Bearer")) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(token[1]);
     }
 }

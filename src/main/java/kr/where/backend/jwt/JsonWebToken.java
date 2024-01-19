@@ -16,18 +16,14 @@ public class JsonWebToken {
     @GeneratedValue
     private Long id;
     private Integer intraId;
+    private String requestIp;
     private String refreshToken;
 
 
-    public JsonWebToken(final Integer intraId, final String refreshToken) {
+    public JsonWebToken(final Integer intraId, final String requestIp, final String refreshToken) {
         this.intraId = intraId;
+        this.requestIp = requestIp;
         this.refreshToken = refreshToken;
-    }
-
-    public void validateRefreshToken(final String refreshToken) {
-        if (!refreshToken.equals(this.refreshToken)) {
-            throw new JwtException.IllegalJwtToken();
-        }
     }
 
     public void updateRefreshToken(final String refreshToken) {

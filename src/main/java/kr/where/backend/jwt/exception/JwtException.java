@@ -4,43 +4,55 @@ import kr.where.backend.exception.CustomException;
 
 public class JwtException extends CustomException {
 
-	public JwtException(final JwtErrorCode errorCode) {
-		super(errorCode);
-	}
+    public JwtException(final JwtErrorCode errorCode) {
+        super(errorCode);
+    }
 
-	public static class InvalidJwtToken extends JwtException {
-		public InvalidJwtToken() {
-			super(JwtErrorCode.INVALIDED_TOKEN);
-		}
-	}
+    public static class InvalidJwtToken extends JwtException {
+        public InvalidJwtToken() {
+            super(JwtErrorCode.INVALID_TOKEN);
+        }
+    }
 
-	public static class WrongSignedJwtToken extends JwtException {
-		public WrongSignedJwtToken() {
-			super(JwtErrorCode.WRONG_SIGNED_TOKEN);
-		}
-	}
+    public static class WrongSignedJwtToken extends JwtException {
+        public WrongSignedJwtToken() {
+            super(JwtErrorCode.WRONG_SIGNED_TOKEN);
+        }
+    }
 
-	public static class ExpiredJwtToken extends JwtException {
-		public ExpiredJwtToken() {
-			super(JwtErrorCode.EXPIRED_TOKEN_TIME_OUT);
-		}
-	}
+    public static class ExpiredJwtToken extends JwtException {
+        public ExpiredJwtToken() {
+            super(JwtErrorCode.EXPIRED_TOKEN_TIME_OUT);
+        }
+    }
 
-	public static class UnsupportedJwtToken extends JwtException {
-		public UnsupportedJwtToken() {
-			super(JwtErrorCode.UNSUPPORTED_TOKEN);
-		}
-	}
+    public static class UnsupportedJwtToken extends JwtException {
+        public UnsupportedJwtToken() {
+            super(JwtErrorCode.UNSUPPORTED_TOKEN);
+        }
+    }
 
-	public static class IllegalJwtToken extends JwtException {
-		public IllegalJwtToken() {
-			super(JwtErrorCode.ILLEGAL_TOKEN);
-		}
-	}
+    public static class IllegalJwtToken extends JwtException {
+        public IllegalJwtToken() {
+            super(JwtErrorCode.ILLEGAL_TOKEN);
+        }
+    }
 
-	public static class NotFoundJwtToken extends JwtException {
-		public NotFoundJwtToken() {
-			super(JwtErrorCode.NOTFOUND_TOKEN);
-		}
-	}
+    public static class UnMatchedIp extends JwtException {
+        public UnMatchedIp() {
+            super(JwtErrorCode.UNMATCHED_IP);
+        }
+    }
+
+    public static class UnMatchedMemberInfo extends JwtException {
+        public UnMatchedMemberInfo() {
+            super(JwtErrorCode.UNMATCHED_USER_INFO);
+        }
+    }
+
+    public static class NotFoundJwtToken extends JwtException {
+        public NotFoundJwtToken() {
+            super(JwtErrorCode.NOTFOUND_TOKEN);
+        }
+    }
 }

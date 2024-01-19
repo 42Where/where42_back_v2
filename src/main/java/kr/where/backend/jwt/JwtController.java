@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.jwt.dto.ReIssueDTO;
+import kr.where.backend.jwt.ip.Ip;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,8 +34,8 @@ public class JwtController {
 
     )
     @PostMapping("/reissue")
-    public ResponseEntity<String> reIssue(@RequestBody @Valid  final ReIssueDTO reIssueDTO) {
+    public ResponseEntity<String> reIssue(final HttpServletRequest request) {
 
-        return ResponseEntity.ok(jwtService.reissueAccessToken(reIssueDTO));
+        return ResponseEntity.ok(jwtService.reissueAccessToken(Ip.getRequestIp(request)));
     }
 }
