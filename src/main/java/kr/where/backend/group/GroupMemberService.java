@@ -149,6 +149,7 @@ public class GroupMemberService {
         groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
 
+        System.out.println(authUser.getDefaultGroupId() + " and " + dto.getGroupId());
         //지우려는 그룹이 기본 그룹이라면 해당 멤버의 모든 그룹에서 멤버 삭제
         if (authUser.getDefaultGroupId() == dto.getGroupId()){
             final List<GroupMember> groupsOfOwner = groupMemberRepository
