@@ -49,4 +49,10 @@ public class JwtException extends CustomException {
             super(JwtErrorCode.UNMATCHED_USER_INFO);
         }
     }
+
+    public static class NotFoundJwtToken extends JwtException {
+        public NotFoundJwtToken() {
+            super(JwtErrorCode.NOTFOUND_TOKEN);
+        }
+    }
 }
