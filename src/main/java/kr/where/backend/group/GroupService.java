@@ -65,14 +65,16 @@ public class GroupService {
 
     /**
      * 그룹 이름을 업데이트
+     * 그룹이 존재하는지 먼저 확인 없으면 Exception
+     * 그룹을 수정할 수 있는 그룹인지 확인 아니면 Exception
      * @param dto : UpdateGroupDTO(groupId)
      * @param authUser
      * @return ResponseGroupDTO
      */
     @Transactional
     public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
-        updateGroupValidate(dto, authUser);
         Group group = findOneGroupById(dto.getGroupId());
+        updateGroupValidate(dto, authUser);
         group.setGroupName(dto.getGroupName());
         return ResponseGroupDTO.from(group);
     }
@@ -109,7 +111,7 @@ public class GroupService {
 
     /**
      * group이름 변경 전 변경 할 권한이 있는지 확인,
-     * 변경할 그룹이 기본그룹이라면 변경 불
+     * 변경할 그룹이 기본그룹이라면 변경 불가
      * @param dto
      * @param authUser
      */
