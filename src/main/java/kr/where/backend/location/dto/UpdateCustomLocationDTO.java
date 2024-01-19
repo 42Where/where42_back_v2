@@ -5,15 +5,15 @@ import lombok.Getter;
 
 @Getter
 public class UpdateCustomLocationDTO {
-    @NotBlank
-    private String customLocation;
+	@NotBlank
+	private String customLocation;
 
-    //Test
-    public static UpdateCustomLocationDTO createForTest(String customLocation) {
-        UpdateCustomLocationDTO updateCustomLocationDto = new UpdateCustomLocationDTO();
+	//Test
+	public static UpdateCustomLocationDTO createForTest(String customLocation) {
+		UpdateCustomLocationDTO updateCustomLocationDto = new UpdateCustomLocationDTO();
 
-        updateCustomLocationDto.customLocation = customLocation;
+		updateCustomLocationDto.customLocation = customLocation;
 
-        return updateCustomLocationDto;
-    }
+		return updateCustomLocationDto;
+	}
 }

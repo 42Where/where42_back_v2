@@ -18,108 +18,99 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	private Long id;
 
-    @Column(name = "intra_id", unique = true)
-    private Integer intraId;
+	@Column(name = "intra_id", unique = true)
+	private Integer intraId;
 
-    @Column(length = 15, unique = true, nullable = false)
-    private String intraName;
+	@Column(length = 15, unique = true, nullable = false)
+	private String intraName;
 
-    @Column(length = 40)
-    private String comment;
+	@Column(length = 40)
+	private String comment;
 
-    private String image;
+	private String image;
 
-    private boolean inCluster;
+	private boolean inCluster;
 
-    @Column(nullable = false)
-    private boolean blackHole;
+	@Column(nullable = false)
+	private boolean blackHole;
 
-    @Column(nullable = false)
-    private String grade;
+	@Column(nullable = false)
+	private String grade;
 
-    @Column(nullable = false)
-    private boolean agree;
+	@Column(nullable = false)
+	private boolean agree;
 
-    private Long defaultGroupId;
+	private Long defaultGroupId;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "location_id")
+	private Location location;
 
-    @Column(nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
+	@Column(nullable = false)
+	@CreationTimestamp
+	private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false)
-    @UpdateTimestamp
-    private LocalDateTime updatedAt = LocalDateTime.now();
+	@Column(nullable = false)
+	@UpdateTimestamp
+	private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<GroupMember> groupMembers = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<GroupMember> groupMembers = new ArrayList<>();
 
-    public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
-        this.intraId = cadetPrivacy.getId();
-        this.intraName = cadetPrivacy.getLogin();
-        this.grade = cadetPrivacy.getCreated_at();
-        this.image = cadetPrivacy.getImage().getVersions().getSmall();
-        this.inCluster = hane.getInoutState().equals("IN");
-        this.agree = true;
-        this.blackHole = false;
-    }
+	public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.grade = cadetPrivacy.getCreated_at();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+		this.inCluster = hane.getInoutState().equals("IN");
+		this.agree = true;
+		this.blackHole = false;
+	}
 
-    public Member(final CadetPrivacy cadetPrivacy) {
-        this.intraId = cadetPrivacy.getId();
-        this.intraName = cadetPrivacy.getLogin();
-        this.image = cadetPrivacy.getImage().getVersions().getSmall();
-        this.grade = cadetPrivacy.getCreated_at();
-        this.blackHole = false;
-        this.agree = false;
-    }
+	public Member(final CadetPrivacy cadetPrivacy) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+		this.grade = cadetPrivacy.getCreated_at();
+		this.blackHole = false;
+		this.agree = false;
+	}
 
-    public void setFlashToMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
-        this.grade = cadetPrivacy.getCreated_at();
-        this.inCluster = Objects.equals(hane.getInoutState(), "IN");
-        this.agree = true;
-    }
+	public void setDisagreeToAgree(final Hane hane) {
+		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+		this.agree = true;
+	}
 
-    public void setComment(final String comment) {
-        this.comment = comment;
-    }
+	public void setComment(final String comment) {
+		this.comment = comment;
+	}
 
-    public void setLocation(final Location location) {
-        this.location = location;
-    }
+	public void setLocation(final Location location) {
+		this.location = location;
+	}
 
-    public void setDefaultGroupId(final Long defaultGroupId) {
-        this.defaultGroupId = defaultGroupId;
-    }
+	public void setDefaultGroupId(final Long defaultGroupId) {
+		this.defaultGroupId = defaultGroupId;
+	}
 
-    public void setBlackHole(final boolean active) {
-        this.blackHole = !active;
-    }
+	public void setBlackHole(final boolean active) {
+		this.blackHole = !active;
+	}
 
-    public void setInCluster(final Hane hane) {
-        this.inCluster = Objects.equals(hane.getInoutState(), "IN");
-    }
+	public void setInCluster(final Hane hane) {
+		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+	}
 
-    public void setImage(final String image) {
-        this.image = image;
-    }
+	public void setImage(final String image) {
+		this.image = image;
+	}
 
-    /*
-     * 테스트용 setter
-     */
-    public void setOtherInformation(final String comment, final boolean inCluster) {
-        this.comment = comment;
-        this.inCluster = inCluster;
-    }
 }

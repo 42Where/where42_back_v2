@@ -49,8 +49,8 @@ public class LocationServiceTest {
     @Test
     public void update_custom_location_test() {
 		//given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
-        Hane hane = Hane.createForTest("IN");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.create("IN");
 
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
 

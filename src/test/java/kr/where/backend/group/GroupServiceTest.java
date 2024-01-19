@@ -42,8 +42,8 @@ public class GroupServiceTest {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUserInfo(10000, "phan", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = CadetPrivacy.createForTest(10000, "phan", "c1r1s1", "image", true, "2022-10-31");
-        Hane hane = Hane.createForTest("IN");
+        CadetPrivacy cadetPrivacy = CadetPrivacy.create(10000, "phan", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.create("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupDto = new CreateGroupDTO("popopop");
     }

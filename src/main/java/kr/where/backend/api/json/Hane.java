@@ -9,7 +9,7 @@ public class Hane {
     private String inoutState;
 
     // test
-    public static Hane createForTest(String inoutState) {
+    public static Hane create(String inoutState) {
         Hane hane = new Hane();
 
         hane.inoutState = inoutState;
