@@ -1,6 +1,7 @@
 package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -38,16 +39,7 @@ public class JoinService {
             throw new JoinException.DuplicatedJoinMember();
         }
 
-//        member.setInCluster(haneApiService
-//                        .getHaneInfo(
-//                                member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
-
-        member.setDisagreeToAgree(haneApiService
-            .getHaneInfo(
-                member.getIntraName(), haneToken));
-
-        final ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
-        member.setDefaultGroupId(responseGroupDto.getGroupId());
+        memberService.createAgreeMember(new CadetPrivacy(), haneApiService.getHaneInfo(member.getIntraName(), haneToken));
 
         jwtService.create(member.getIntraId(), member.getIntraName(), requestIp);
     }

@@ -19,8 +19,6 @@ import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.member.exception.MemberException;
-import kr.where.backend.member.exception.MemberException.NoMemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -32,9 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
-import javax.swing.text.html.Option;
-
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +65,7 @@ public class JwtService {
     @Transactional
     public void updateJsonWebToken(final Integer intraId, final String intraName) {
         final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(intraId)
-                .orElseThrow(NoMemberException::new);
+                .orElseThrow(JwtException.NotFoundJwtToken::new);
         log.info("jwt intraId = " + jsonWebToken.getIntraId());
 
         jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
@@ -174,7 +169,7 @@ public class JwtService {
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
-                .orElseThrow(MemberException.NoMemberException::new);
+                .orElseThrow(JwtException.NotFoundJwtToken::new);
 
         final AuthUserInfo authUserInfo = AuthUserInfo.builder()
                 .intraId(member.getIntraId())
