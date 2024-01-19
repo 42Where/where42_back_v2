@@ -51,7 +51,7 @@ public class MemberService {
 	public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
 		final AuthUserInfo authUser = AuthUserInfo.of();
 
-		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+		Member member = memberRepository.findByIntraId(authUser.getIntraId()).orElse(null);
 
 		if (member != null && member.isAgree()) {
 			throw new MemberException.DuplicatedMemberException();

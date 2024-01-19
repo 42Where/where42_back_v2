@@ -227,10 +227,11 @@ public class GroupMemberService {
     @Transactional
     public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUserInfo authUser){
 
-        List<GroupMember> deleteGroupMember;
+        final List<GroupMember> deleteGroupMember;
 
         groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
+
         if (authUser.getDefaultGroupId().equals(dto.getGroupId())) {
             final List<GroupMember> groupsOfOwner = groupMemberRepository
                     .findGroupMembersByMember_IntraIdAndIsOwner(authUser.getIntraId(), true);
