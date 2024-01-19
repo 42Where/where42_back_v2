@@ -127,8 +127,9 @@ public class GroupController {
     @Operation(
             summary = "2.6 add friends to default group API",
             description = "새로운 친구를 기본그룹에 추가 요청(멤버의 기본그룹 ID와, 추가할 멤버 ID)",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "추가하려는 친구", required = true, content = @Content(schema = @Schema(implementation = CreateGroupMemberDTO.class))
-            ),
+            parameters = {
+                    @Parameter(name = "intraId", description = "추가할 멤버 intraId", required = true, in = ParameterIn.QUERY)
+            },
             responses = {
                     @ApiResponse(responseCode = "201", description = "친구 추가 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class), examples = {
                             @ExampleObject(name = "example1", value = "{ \"statusCode\": 201, \"responseMsg\": \"그룹에 친구 추가 성공\"}"),})),
@@ -139,9 +140,9 @@ public class GroupController {
             }
     )
     @PostMapping("/groupmember")
-    public ResponseEntity createGroupMember(@RequestBody @Valid final CreateGroupMemberDTO createGroupMemberDTO) {
+    public ResponseEntity createGroupMember(@RequestParam("intraId") final Integer intraId) {
         final AuthUserInfo authUser = AuthUserInfo.of();
-        final ResponseGroupMemberDTO dto = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
+        final ResponseGroupMemberDTO dto = groupMemberService.createDefaultGroupMember(intraId, false, authUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
