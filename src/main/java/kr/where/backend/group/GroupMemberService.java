@@ -158,8 +158,10 @@ public class GroupMemberService {
             final List<Long> groups = groupsOfOwner.stream()
                     .map(g -> g.getGroup().getGroupId())
                     .toList();
+            groups.forEach(System.out::println);
             deleteGroupMember = groupMemberRepository
                     .findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(groups,dto.getMembers());
+            deleteGroupMember.forEach(System.out::println);
             groupMemberRepository.deleteAll(deleteGroupMember);
         }
         else {
