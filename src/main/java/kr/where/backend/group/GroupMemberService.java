@@ -55,9 +55,14 @@ public class GroupMemberService {
         groupMemberRepository.save(groupMember);
 
         return ResponseGroupMemberDTO.builder()
-                .groupId(requestDTO.getGroupId())
+                .groupId(authUser.getDefaultGroupId())
                 .groupName(group.getGroupName())
-                .intraId(member.getIntraId()).build();
+                .intraId(member.getIntraId())
+                .memberIntraName(member.getIntraName())
+                .location(member.getLocation().getLocation())
+                .inCluster(member.isInCluster())
+                .comment(member.getComment())
+                .image(member.getImage()).build();
     }
 
     /**
@@ -84,7 +89,12 @@ public class GroupMemberService {
         return ResponseGroupMemberDTO.builder()
                 .groupId(authUser.getDefaultGroupId())
                 .groupName(group.getGroupName())
-                .intraId(member.getIntraId()).build();
+                .intraId(member.getIntraId())
+                .memberIntraName(member.getIntraName())
+                .location(member.getLocation().getLocation())
+                .inCluster(member.isInCluster())
+                .comment(member.getComment())
+                .image(member.getImage()).build();
     }
 
     /**
@@ -214,6 +224,10 @@ public class GroupMemberService {
                 .map(m -> ResponseOneGroupMemberDTO.builder()
                         .intraId(m.getMember().getIntraId())
                         .intraName(m.getMember().getIntraName())
+                        .location(m.getMember().getLocation().getLocation())
+                        .inCluster(m.getMember().isInCluster())
+                        .comment(m.getMember().getComment())
+                        .image(m.getMember().getImage())
                         .build()).toList();
     }
 
@@ -252,6 +266,11 @@ public class GroupMemberService {
                 .map(m -> ResponseGroupMemberDTO.builder()
                         .groupId(dto.getGroupId())
                         .intraId(m.getMember().getIntraId())
+                        .memberIntraName(m.getMember().getIntraName())
+                        .location(m.getMember().getLocation().getLocation())
+                        .inCluster(m.getMember().isInCluster())
+                        .comment(m.getMember().getComment())
+                        .image(m.getMember().getImage())
                         .build()).toList();
     }
 
