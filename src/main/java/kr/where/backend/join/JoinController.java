@@ -25,10 +25,6 @@ public class JoinController {
     private final JoinService joinService;
 
     @Operation(summary = "3.1 JoinMember API", description = "동의 맴버 생성하는 Post API",
-            parameters = {
-                    @Parameter(name = "login",
-                            description = "OAuth2 login한 카뎃의 intra Name", in = ParameterIn.QUERY),
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "맴버 생성 성공",
                             content = @Content(schema = @Schema(implementation = ResponseJoinDTO.class))),
