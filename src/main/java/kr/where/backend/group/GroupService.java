@@ -23,6 +23,12 @@ public class GroupService {
     private final GroupMemberService groupMemberService;
     private final MemberRepository memberRepository;
 
+    /**
+     * 그룹 생성
+     * @param dto : CreateGroupDTO (groupName)
+     * @param authUser : ContextHolder에 저장된 유저 정보
+     * @return ResponeGroupDTO
+     */
     @Transactional
     public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUserInfo authUser){
         Group group = new Group(dto.getGroupName());
@@ -35,38 +41,51 @@ public class GroupService {
         return ResponseGroupDTO.from(group);
     }
 
-//    private void validateGroupName(final CreateGroupDTO dto, final Integer intraId) {
-//        RequestGroupMemberDTO requestGroupMemberDTO = RequestGroupMemberDTO.builder().intraId(intraId).build();
-//        List<ResponseGroupMemberDTO> groupIds = groupMemberService.findGroupIdByIntraId(intraId);
-//        groupIds.stream().forEach(c -> System.out.println(c));
-//        if (groupIds.stream()
-//                .filter(id -> findGroupNameById(id.getGroupId()).equals(dto.getGroupName()))
-//                .count() != 0)
-//            throw new GroupException.DuplicatedGroupNameException();
-//    }
-
-    /* group 이 존재 하는지 유효성 검사 */
+    /**
+     * groupId로 group을 조회하는 메서드
+     * 인자로 들어온 그룹이 존재하지 않을 경우 Exception
+     * @param groupId
+     * @return group
+     */
     public Group findOneGroupById(final Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
         return group;
     }
 
+    /**
+     * 인자로 들어온 그룹의 이름을 반환
+     * @param groupId
+     * @return groupName
+     */
     public final String findGroupNameById(final Long groupId){
         Group group = findOneGroupById(groupId);
         return group.getGroupName();
     }
 
+    /**
+     * 그룹 이름을 업데이트
+     * @param dto : UpdateGroupDTO(groupId)
+     * @param authUser
+     * @return ResponseGroupDTO
+     */
     @Transactional
-    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser){
+    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
         updateGroupValidate(dto, authUser);
         Group group = findOneGroupById(dto.getGroupId());
         group.setGroupName(dto.getGroupName());
         return ResponseGroupDTO.from(group);
     }
 
+    /**
+     * 그룹 삭제
+     * 삭제할 그룹이 본인의 그룹이라면 삭제 불가
+     * @param groupId : 삭제할 그룹의 아이디
+     * @param authUser
+     * @return ResponseGroupDTO
+     */
     @Transactional
-    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUserInfo authUser){
+    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUserInfo authUser) {
         isMyGroup(groupId, authUser);
         final Group group = findOneGroupById(groupId);
         //validate 추가
@@ -75,13 +94,25 @@ public class GroupService {
         return ResponseGroupDTO.from(group);
     }
 
-    public final void isMyGroup(Long groupId, AuthUserInfo authUser)
-    {
+    /**
+     * 인자로 들어온 그룹ID가 authUser가 가지고 있는 그룹인지 아닌지 확인
+     * 아니라면 Exception
+     * @param groupId
+     * @param authUser
+     */
+    public final void isMyGroup(Long groupId, AuthUserInfo authUser) {
         List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
         if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
             throw new GroupException.CannotModifyGroupException();
         }
     }
+
+    /**
+     * group이름 변경 전 변경 할 권한이 있는지 확인,
+     * 변경할 그룹이 기본그룹이라면 변경 불
+     * @param dto
+     * @param authUser
+     */
     public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
         if (dto.getGroupId().equals(authUser.getDefaultGroupId()))
             throw new GroupException.CannotModifyGroupException();
