@@ -33,6 +33,13 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.toString());
     }
 
+    @ExceptionHandler(GroupException.CannotModifyGroupException.class)
+    public ResponseEntity<String> handleCannotModifiedException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
+
     @ExceptionHandler(OAuthTokenException.class)
     public ResponseEntity<String> handleOAuthTokenException(final CustomException e) {
         log.info(e.toString());
