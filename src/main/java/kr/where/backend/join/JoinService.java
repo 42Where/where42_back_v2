@@ -1,6 +1,7 @@
 package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUserInfo.AuthUserInfo;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -31,24 +32,15 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public void join(final Integer intraId, final AuthUserInfo authUser) {
-        final Member member = memberService.findOne(intraId).orElseThrow(MemberException.NoMemberException::new);
+    public void join(final String requestIp, final AuthUserInfo authUser) {
+        final Member member = memberService.findOne(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
         }
 
-//        member.setInCluster(haneApiService
-//                        .getHaneInfo(
-//                                member.getIntraName(), oAuthTokenService.findAccessToken(TOKEN_HANE)));
+        memberService.createAgreeMember(new CadetPrivacy(), haneApiService.getHaneInfo(member.getIntraName(), haneToken));
 
-        member.setDisagreeToAgree(haneApiService
-            .getHaneInfo(
-                member.getIntraName(), haneToken));
-
-        ResponseGroupDTO responseGroupDto = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
-        member.setDefaultGroupId(responseGroupDto.getGroupId());
-
-        final JsonWebToken jsonWebToken = new JsonWebToken(member.getIntraId(), jwtService.createRefreshToken(member.getIntraId(), member.getIntraName()));
-        jwtService.save(jsonWebToken);
+        jwtService.create(member.getIntraId(), member.getIntraName(), requestIp);
     }
 }

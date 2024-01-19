@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JwtRepository extends JpaRepository<JsonWebToken, Long> {
     Optional<JsonWebToken> findByIntraId(final Integer intraId);
+    Optional<JsonWebToken> findByRequestIp(final String requestIp);
 }
