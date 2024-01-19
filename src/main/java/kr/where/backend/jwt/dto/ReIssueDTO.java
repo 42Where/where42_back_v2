@@ -1,11 +1,12 @@
 package kr.where.backend.jwt.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class ReIssueDTO {
-    @NotBlank
+    @NotNull
     private Integer intraId;
     @NotBlank
     private String refreshToken;

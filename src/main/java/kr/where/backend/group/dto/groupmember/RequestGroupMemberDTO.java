@@ -1,6 +1,7 @@
 package kr.where.backend.group.dto.groupmember;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class RequestGroupMemberDTO {
-    @NotBlank
+    @NotNull
     private Integer intraId;
-    @NotBlank
+    @NotNull
     private Long groupId;
 
     @Builder

@@ -3,14 +3,15 @@ package kr.where.backend.group.dto.groupmember;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor
 public class CreateGroupMemberDTO {
-    @NotBlank
+    @NotNull
     private Integer intraId;
-    @NotBlank
+    @NotNull
     private Long groupId;
 
     @Builder
