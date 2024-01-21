@@ -2,7 +2,7 @@ package kr.where.backend.group;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
@@ -57,12 +57,12 @@ public class GroupMemberServiceTest {
     private ResponseGroupDTO defaultResponseGroupDTO;
     private ResponseGroupDTO generalResponseGroupDTO;
 
-    private AuthUserInfo authUser;
+    private AuthUser authUser;
     @BeforeEach
     public void setUp () {
 //         Given
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-        authUser = new AuthUserInfo(11111, "hjeong", 1L);
+        authUser = new AuthUser(11111, "hjeong", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = CadetPrivacy.create(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.create("IN");

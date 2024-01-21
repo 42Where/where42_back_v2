@@ -2,7 +2,7 @@ package kr.where.backend.group;
 
 import java.util.List;
 
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
@@ -30,12 +30,12 @@ public class GroupService {
      * @return ResponeGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUserInfo authUser){
+    public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUser authUser){
         Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(authUser.getIntraId())
+                .intraId(authUser.intraId())
                 .groupId(group.getGroupId()).build();
         groupMemberService.createGroupMember(createGroupMemberDTO, true, authUser);
         return ResponseGroupDTO.from(group);
@@ -72,7 +72,7 @@ public class GroupService {
      * @return ResponseGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
+    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUser authUser) {
         Group group = findOneGroupById(dto.getGroupId());
         updateGroupValidate(dto, authUser);
         group.setGroupName(dto.getGroupName());
@@ -87,7 +87,7 @@ public class GroupService {
      * @return ResponseGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUserInfo authUser) {
+    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUser authUser) {
         isMyGroup(groupId, authUser);
         final Group group = findOneGroupById(groupId);
         //validate 추가
@@ -102,7 +102,7 @@ public class GroupService {
      * @param groupId
      * @param authUser
      */
-    public final void isMyGroup(Long groupId, AuthUserInfo authUser) {
+    public final void isMyGroup(Long groupId, AuthUser authUser) {
         List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
         if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
             throw new GroupException.CannotModifyGroupException();
@@ -115,8 +115,8 @@ public class GroupService {
      * @param dto
      * @param authUser
      */
-    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
-        if (dto.getGroupId().equals(authUser.getDefaultGroupId()))
+    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUser authUser) {
+        if (dto.getGroupId().equals(authUser.defaultGroupId()))
             throw new GroupException.CannotModifyGroupException();
         isMyGroup(dto.getGroupId(), authUser);
     }

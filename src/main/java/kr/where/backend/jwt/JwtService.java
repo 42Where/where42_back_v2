@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -78,7 +78,7 @@ public class JwtService {
      */
 
     public String reissueAccessToken(final String requestIp) {
-        final AuthUserInfo authUser = AuthUserInfo.of();
+        final AuthUser authUser = AuthUser.of();
         final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
                 .orElseThrow(JwtException.UnMatchedIp::new);
 
@@ -171,14 +171,11 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
-        final AuthUserInfo authUserInfo = AuthUserInfo.builder()
-                .intraId(member.getIntraId())
-                .intraName(member.getIntraName())
-                .defaultGroupId(member.getDefaultGroupId())
-                .build();
-
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(authUserInfo, "", authorities);
+        return new UsernamePasswordAuthenticationToken(
+                new AuthUser(member.getIntraId(), member.getIntraName(), member.getDefaultGroupId()),
+                "",
+                authorities);
     }
 
     /**

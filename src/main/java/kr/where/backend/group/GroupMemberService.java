@@ -3,7 +3,7 @@ package kr.where.backend.group;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
@@ -39,7 +39,7 @@ public class GroupMemberService {
      * @return ResponseGroupMemberDTO
      */
     @Transactional
-    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner, final AuthUserInfo authUser){
+    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner, final AuthUser authUser){
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
@@ -55,7 +55,7 @@ public class GroupMemberService {
         groupMemberRepository.save(groupMember);
 
         return ResponseGroupMemberDTO.builder()
-                .groupId(authUser.getDefaultGroupId())
+                .groupId(authUser.defaultGroupId())
                 .groupName(group.getGroupName())
                 .intraId(member.getIntraId())
                 .memberIntraName(member.getIntraName())
@@ -74,8 +74,8 @@ public class GroupMemberService {
      * @return
      */
     @Transactional
-    public ResponseGroupMemberDTO createDefaultGroupMember(final Integer intraId, final boolean isOwner, final AuthUserInfo authUser){
-        final Group group = groupRepository.findById(authUser.getDefaultGroupId())
+    public ResponseGroupMemberDTO createDefaultGroupMember(final Integer intraId, final boolean isOwner, final AuthUser authUser){
+        final Group group = groupRepository.findById(authUser.defaultGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
@@ -87,7 +87,7 @@ public class GroupMemberService {
         groupMemberRepository.save(groupMember);
 
         return ResponseGroupMemberDTO.builder()
-                .groupId(authUser.getDefaultGroupId())
+                .groupId(authUser.defaultGroupId())
                 .groupName(group.getGroupName())
                 .intraId(member.getIntraId())
                 .memberIntraName(member.getIntraName())
@@ -102,7 +102,7 @@ public class GroupMemberService {
      * @param groupId
      * @param authUser
      */
-    public void isMyGroup(final Long groupId, final AuthUserInfo authUser) {
+    public void isMyGroup(final Long groupId, final AuthUser authUser) {
         final List<ResponseGroupMemberDTO> groups = findGroupsInfoByIntraId(authUser);
         if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
             throw new GroupException.CannotModifyGroupException();
@@ -114,9 +114,9 @@ public class GroupMemberService {
      * @param authUser
      * @return List<ResponseGroupMemberDTO>
      */
-    public List<ResponseGroupMemberDTO> findGroupsInfoByIntraId(final AuthUserInfo authUser) {
+    public List<ResponseGroupMemberDTO> findGroupsInfoByIntraId(final AuthUser authUser) {
 
-        return findGroupIdByIntraId(authUser.getIntraId());
+        return findGroupIdByIntraId(authUser.intraId());
     }
 
     /**
@@ -147,7 +147,7 @@ public class GroupMemberService {
      * @param authUser
      * @return List<ResponseOneGroupMemberDTO>
      */
-    public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId, final AuthUserInfo authUser) {
+    public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId, final AuthUser authUser) {
         groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
@@ -168,8 +168,8 @@ public class GroupMemberService {
      * @param authUser
      * @return List<ResponseGroupMemberListDTO>
      */
-    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final AuthUserInfo authUser){
-        final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.getIntraId());
+    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final AuthUser authUser){
+        final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.intraId());
 
         return groups.stream().map(g -> {
             List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId(), authUser);
@@ -204,7 +204,7 @@ public class GroupMemberService {
      * @return List<ResponseOneGroupMemberDTO>
      */
     @Transactional
-    public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto, final AuthUserInfo authUser){
+    public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto, final AuthUser authUser){
         final Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
@@ -239,16 +239,16 @@ public class GroupMemberService {
      * @return List<ResponseGroupMemberDTO>
      */
     @Transactional
-    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUserInfo authUser){
+    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUser authUser){
 
         final List<GroupMember> deleteGroupMember;
 
         groupRepository.findById(dto.getGroupId()).orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
 
-        if (authUser.getDefaultGroupId().equals(dto.getGroupId())) {
+        if (authUser.defaultGroupId().equals(dto.getGroupId())) {
             final List<GroupMember> groupsOfOwner = groupMemberRepository
-                    .findGroupMembersByMember_IntraIdAndIsOwner(authUser.getIntraId(), true);
+                    .findGroupMembersByMember_IntraIdAndIsOwner(authUser.intraId(), true);
             final List<Long> groups = groupsOfOwner.stream()
                     .map(g -> g.getGroup().getGroupId())
                     .toList();
@@ -282,12 +282,12 @@ public class GroupMemberService {
      * @param authUser
      * @return List<ResponseOneGroupMemberDTO>
      */
-    public List<ResponseOneGroupMemberDTO> findMemberNotInGroup(final Long groupId, final AuthUserInfo authUser) {
-        groupRepository.findById(authUser.getDefaultGroupId())
+    public List<ResponseOneGroupMemberDTO> findMemberNotInGroup(final Long groupId, final AuthUser authUser) {
+        groupRepository.findById(authUser.defaultGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         groupRepository.findById(groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
-        final List<ResponseOneGroupMemberDTO> defaultMembers = findGroupMemberByGroupId(authUser.getDefaultGroupId(), authUser);
+        final List<ResponseOneGroupMemberDTO> defaultMembers = findGroupMemberByGroupId(authUser.defaultGroupId(), authUser);
         final List<ResponseOneGroupMemberDTO> groupMembers = findGroupMemberByGroupId(groupId, authUser);
 
         return defaultMembers.stream()

@@ -1,15 +1,13 @@
 package kr.where.backend.join;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.api.exception.JsonException;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.join.dto.ResponseJoinDTO;
 import kr.where.backend.jwt.ip.Ip;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class JoinController {
     )
     @PostMapping("")
     public ResponseEntity<HttpStatus> join(final HttpServletRequest request) {
-        final AuthUserInfo authUser = AuthUserInfo.of();
+        final AuthUser authUser = AuthUser.of();
         joinService.join(Ip.getRequestIp(request), authUser);
 
         //프런트 상의 create는 201이까요

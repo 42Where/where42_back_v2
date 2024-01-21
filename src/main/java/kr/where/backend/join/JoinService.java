@@ -2,13 +2,9 @@ package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
-import kr.where.backend.group.dto.group.CreateGroupDTO;
-import kr.where.backend.group.dto.group.ResponseGroupDTO;
-import kr.where.backend.group.entity.Group;
 import kr.where.backend.join.exception.JoinException;
-import kr.where.backend.jwt.JsonWebToken;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -32,7 +28,7 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public void join(final String requestIp, final AuthUserInfo authUser) {
+    public void join(final String requestIp, final AuthUser authUser) {
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
