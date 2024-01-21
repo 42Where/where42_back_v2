@@ -3,8 +3,10 @@ package kr.where.backend.auth.authUser;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+@Setter
 @NoArgsConstructor
 public class AuthUser {
     private Integer intraId;
@@ -19,20 +21,23 @@ public class AuthUser {
     }
 
     public Integer getIntraId() {
-        return this.intraId;
+        return intraId;
     }
 
     public String getIntraName() {
-        return this.intraName;
+        return intraName;
     }
 
     public Long getDefaultGroupId() {
-        if (this.defaultGroupId != null) {
-            return this.defaultGroupId;
+        if (defaultGroupId != null) {
+            return defaultGroupId;
         }
         throw new AuthUserException.ForbiddenUserException();
     }
 
+    public void setDefaultGroupId(final Long groupId) {
+        this.defaultGroupId = groupId;
+    }
     public static AuthUser of() {
         return (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
