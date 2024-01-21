@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class MemberController {
 		}
 	)
 	@DeleteMapping("")
-	public ResponseEntity deleteMember(@AuthenticationPrincipal final AuthUser authUser) {
+	public ResponseEntity deleteMember(@AuthUserInfo final AuthUser authUser) {
 		final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
 
 		return ResponseEntity.ok(responseMemberDto);
@@ -98,7 +99,7 @@ public class MemberController {
 	@PostMapping("/comment")
 	public ResponseEntity updateComment(
 			@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
-			@AuthenticationPrincipal final AuthUser authUser) {
+			@AuthUserInfo final AuthUser authUser) {
 
 		final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto, authUser);
 

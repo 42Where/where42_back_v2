@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class SearchController {
     @GetMapping("/")
     public ResponseEntity search42UserResponse(
             @RequestParam("keyWord") final String keyWord,
-            @AuthenticationPrincipal final AuthUser authUser) {
+            @AuthUserInfo final AuthUser authUser) {
         final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(keyWord, authUser);
 
         return ResponseEntity.ok(responseSearchDTOS);

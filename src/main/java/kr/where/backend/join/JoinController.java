@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.join.dto.ResponseJoinDTO;
 import kr.where.backend.jwt.ip.Ip;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class JoinController {
     @PostMapping("")
     public ResponseEntity<HttpStatus> join(
             final HttpServletRequest request,
-            @AuthenticationPrincipal final AuthUser authUser) {
+            @AuthUserInfo final AuthUser authUser) {
         joinService.join(Ip.getRequestIp(request), authUser);
 
         //프런트 상의 create는 201이까요
