@@ -1,8 +1,7 @@
 package kr.where.backend.exception;
 
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.MissingResourceException;
-import java.util.Optional;
+import kr.where.backend.auth.authUser.exception.AuthUserException;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
 import kr.where.backend.group.exception.GroupException;
@@ -82,6 +81,13 @@ public class ExceptionHandleController {
         log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
+
+    @ExceptionHandler(AuthUserException.class)
+    public ResponseEntity<String> handleAuthUserException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
