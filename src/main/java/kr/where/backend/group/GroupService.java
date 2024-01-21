@@ -35,7 +35,7 @@ public class GroupService {
         groupRepository.save(group);
 
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(authUser.intraId())
+                .intraId(authUser.getIntraId())
                 .groupId(group.getGroupId()).build();
         groupMemberService.createGroupMember(createGroupMemberDTO, true, authUser);
         return ResponseGroupDTO.from(group);
@@ -116,7 +116,7 @@ public class GroupService {
      * @param authUser
      */
     public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUser authUser) {
-        if (dto.getGroupId().equals(authUser.defaultGroupId()))
+        if (dto.getGroupId().equals(authUser.getDefaultGroupId()))
             throw new GroupException.CannotModifyGroupException();
         isMyGroup(dto.getGroupId(), authUser);
     }
