@@ -116,7 +116,7 @@ public class GroupMemberService {
      */
     public List<ResponseGroupMemberDTO> findGroupsInfoByIntraId(final AuthUser authUser) {
 
-        return findGroupIdByIntraId(authUser.intraId());
+        return findGroupIdByIntraId(authUser.getIntraId());
     }
 
     /**
