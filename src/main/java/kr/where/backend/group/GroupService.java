@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GroupService {
-
+    private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
     private final MemberRepository memberRepository;
@@ -34,6 +34,9 @@ public class GroupService {
         Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
 
+        if (group.getGroupName().equals(DEFAULT)) {
+            authUser.setDefaultGroupId(group.getGroupId());
+        }
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(authUser.getIntraId())
                 .groupId(group.getGroupId()).build();
