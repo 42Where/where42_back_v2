@@ -34,9 +34,7 @@ public class JoinService {
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
         }
-
         memberService.createAgreeMember(new CadetPrivacy(), haneApiService.getHaneInfo(member.getIntraName(), haneToken));
-
         jwtService.create(member.getIntraId(), member.getIntraName(), requestIp);
     }
 }
