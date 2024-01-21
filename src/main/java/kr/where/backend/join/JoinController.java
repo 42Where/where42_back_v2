@@ -13,6 +13,7 @@ import kr.where.backend.jwt.ip.Ip;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +33,9 @@ public class JoinController {
 
     )
     @PostMapping("")
-    public ResponseEntity<HttpStatus> join(final HttpServletRequest request) {
-        final AuthUser authUser = AuthUser.of();
+    public ResponseEntity<HttpStatus> join(
+            final HttpServletRequest request,
+            @AuthenticationPrincipal final AuthUser authUser) {
         joinService.join(Ip.getRequestIp(request), authUser);
 
         //프런트 상의 create는 201이까요
