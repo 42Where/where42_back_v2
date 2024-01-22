@@ -1,4 +1,4 @@
-package kr.where.backend.auth.exception;
+package kr.where.backend.auth.filter.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

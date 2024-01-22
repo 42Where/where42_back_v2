@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
@@ -37,7 +37,7 @@ public class SearchService {
      * 입력 받은 값을 trim으로 공백을 없애주고, 대문자 영어가 들어와도 검색 가능하게 toLowerCase 적용
      */
 
-    public List<ResponseSearchDTO> search(final String keyWord, final AuthUserInfo authUser) {
+    public List<ResponseSearchDTO> search(final String keyWord, final AuthUser authUser) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);

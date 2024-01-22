@@ -1,4 +1,4 @@
-package kr.where.backend.auth.exception;
+package kr.where.backend.auth.filter.exception;
 
 import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
 

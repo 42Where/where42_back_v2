@@ -2,7 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
@@ -49,12 +49,12 @@ public class memberServiceTest {
 	private GroupRepository groupRepository;
 	@Autowired
 	private GroupMemberRepository groupMemberRepository;
-	private AuthUserInfo authUser;
+	private AuthUser authUser;
 
 	@BeforeEach
 	public void setUp() {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-		authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+		authUser = new AuthUser(12345, "suhwpark", 1L);
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
 	}
 	@Test

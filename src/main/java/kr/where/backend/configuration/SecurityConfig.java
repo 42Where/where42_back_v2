@@ -1,6 +1,6 @@
 package kr.where.backend.configuration;
 
-import kr.where.backend.auth.exception.CustomAccessDeniedHandler;
+import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
 import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
