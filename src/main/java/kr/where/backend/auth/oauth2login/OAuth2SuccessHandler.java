@@ -57,7 +57,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         final String accessToken = jwtService.createAccessToken(cadetInfo.getId(), cadetInfo.getLogin());
 
         if (member.isAgree()) {
-            jwtService.updateJsonWebToken(cadetInfo.getId(), cadetInfo.getLogin());
+            jwtService.updateJsonWebToken(cadetInfo.getId(), cadetInfo.getLogin(), accessToken);
         }
 
         getRedirectStrategy()
