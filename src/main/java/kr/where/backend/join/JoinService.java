@@ -1,11 +1,14 @@
 package kr.where.backend.join;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.JwtService;
+import kr.where.backend.jwt.exception.JwtException;
+import kr.where.backend.jwt.ip.Ip;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
@@ -28,13 +31,15 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public void join(final String requestIp, final AuthUser authUser) {
+    public void join(final HttpServletRequest request, final AuthUser authUser) {
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
         }
+        final String accessToken = jwtService.extractToken(request)
+                .orElseThrow(JwtException.IllegalJwtToken::new);
         memberService.createAgreeMember(new CadetPrivacy(), haneApiService.getHaneInfo(member.getIntraName(), haneToken));
-        jwtService.create(member.getIntraId(), member.getIntraName(), requestIp);
+        jwtService.create(member.getIntraId(), member.getIntraName(), accessToken, Ip.getRequestIp(request));
     }
 }
