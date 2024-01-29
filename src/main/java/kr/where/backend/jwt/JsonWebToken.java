@@ -3,7 +3,6 @@ package kr.where.backend.jwt;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import kr.where.backend.jwt.exception.JwtException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,16 +16,23 @@ public class JsonWebToken {
     private Long id;
     private Integer intraId;
     private String requestIp;
+    private String accessToken;
     private String refreshToken;
 
 
-    public JsonWebToken(final Integer intraId, final String requestIp, final String refreshToken) {
+    public JsonWebToken(
+            final Integer intraId,
+            final String requestIp,
+            final String accessToken,
+            final String refreshToken) {
         this.intraId = intraId;
         this.requestIp = requestIp;
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 
-    public void updateRefreshToken(final String refreshToken) {
+    public void updateJsonWebToken(final String accessToken, final String refreshToken) {
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 }
