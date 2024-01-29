@@ -17,9 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -109,6 +109,13 @@ public class ExceptionHandleController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_SUPPORTED_METHOD));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException() {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(HttpResourceErrorCode.NOT_METHOD_VALID_ARGUMENT));
     }
 
     @ExceptionHandler(RuntimeException.class)
