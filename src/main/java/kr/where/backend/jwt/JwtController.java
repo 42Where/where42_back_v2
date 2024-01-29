@@ -36,6 +36,6 @@ public class JwtController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reIssue(final HttpServletRequest request) {
 
-        return ResponseEntity.ok(jwtService.reissueAccessToken(Ip.getRequestIp(request)));
+        return ResponseEntity.ok(jwtService.reissueAccessToken(request));
     }
 }
