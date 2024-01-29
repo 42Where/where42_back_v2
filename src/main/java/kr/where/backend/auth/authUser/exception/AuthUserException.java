@@ -12,4 +12,10 @@ public class AuthUserException extends CustomException {
             super(AuthUserErrorCode.FORBIDDEN_USER);
         }
     }
+
+    public static class AnonymousUserException extends AuthUserException {
+        public AnonymousUserException() {
+            super(AuthUserErrorCode.ANONYMOUS_USER);
+        }
+    }
 }
