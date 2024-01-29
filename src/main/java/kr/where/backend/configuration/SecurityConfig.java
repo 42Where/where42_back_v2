@@ -81,7 +81,7 @@ public class SecurityConfig {
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) 
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -93,6 +93,8 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatcher.pattern("/v3/api-docs/**"))
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/error/**"))
+                                .permitAll()
+                                .requestMatchers(requestMatcher.pattern("/v3/jwt/reissue"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
