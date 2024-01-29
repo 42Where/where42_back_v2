@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.jwt.exception.JwtException;
+import kr.where.backend.jwt.ip.Ip;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +54,11 @@ public class JwtService {
      * @param intraId : 카뎃의 고유 id를 같이 저장한다. relation 없이 사용하기 위한 용도
      */
     @Transactional
-    public void create(final Integer intraId, final String intraName, final String requestIp) {
-        jwtRepository.save(new JsonWebToken(intraId, requestIp, createRefreshToken(intraId, intraName)));
+    public void create(final Integer intraId,
+                       final String intraName,
+                       final String accessToken,
+                       final String requestIp) {
+        jwtRepository.save(new JsonWebToken(intraId, requestIp, accessToken, createRefreshToken(intraId, intraName)));
     }
 
     /**
@@ -63,32 +67,38 @@ public class JwtService {
      * transactional을 사용하여, 변경점이 생기면 자동 저장, 영속성 context 관점
      */
     @Transactional
-    public void updateJsonWebToken(final Integer intraId, final String intraName) {
+    public void updateJsonWebToken(final Integer intraId,
+                                   final String intraName,
+                                   final String accessToken) {
         final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
         log.info("jwt intraId = " + jsonWebToken.getIntraId());
 
-        jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
+        jsonWebToken.updateJsonWebToken(accessToken, createRefreshToken(intraId, intraName));
     }
 
     /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
-     * @param requestIp : client 측의 ip를 통해 동일한 client인지 판단 후 accesstoken 발행
+     * @param request : client 측의 accesstoken과 DB의 accessToken을 비교한 하여 판단
      * @return accessToken
      */
+    @Transactional
+    public String reissueAccessToken(final HttpServletRequest request) {
+        final String accessToken = extractToken(request)
+                .orElseThrow(JwtException.NotFoundJwtToken::new);
+        final JsonWebToken jsonWebToken = jwtRepository.findByAccessToken(accessToken)
+                .orElseThrow(JwtException.UnMatchedMemberInfo::new);
 
-    public String reissueAccessToken(final String requestIp) {
-        final AuthUser authUser = AuthUser.of();
-        final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
-                .orElseThrow(JwtException.UnMatchedIp::new);
-
+        if (!jsonWebToken.getRequestIp().equals(Ip.getRequestIp(request))) {
+            throw new JwtException.UnMatchedIp();
+        }
         final Claims claims = parseToken(jsonWebToken.getRefreshToken());
 
-        if (!authUser.getIntraId().equals(claims.get("intraId"))) {
-            throw new JwtException.UnMatchedMemberInfo();
-        }
-
-        return createAccessToken(jsonWebToken.getIntraId(), authUser.getIntraName());
+        jsonWebToken.updateJsonWebToken(
+                createAccessToken(jsonWebToken.getIntraId(), (String) claims.get("intraName")),
+                jsonWebToken.getRefreshToken()
+        );
+        return jsonWebToken.getAccessToken();
     }
 
     /**
