@@ -37,8 +37,8 @@ public class JoinController {
     public ResponseEntity<HttpStatus> join(
             final HttpServletRequest request,
             @AuthUserInfo final AuthUser authUser) {
-        joinService.join(Ip.getRequestIp(request), authUser);
 
+        joinService.join(request, authUser);
         //프런트 상의 create는 201이까요
         return ResponseEntity.ok(HttpStatus.OK);
     }
