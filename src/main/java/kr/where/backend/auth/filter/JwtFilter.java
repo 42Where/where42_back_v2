@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private static final String EXCLUDE_PATH = "v3/jwt/reissue";
+    private static final String EXCLUDE_PATH = "/v3/jwt/reissue";
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) throws ServletException {
