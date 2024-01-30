@@ -40,6 +40,7 @@ public class LocationService {
 	 * @param updateCustomLocationDto 수동자리정보
 	 * @param authUser accessToken 파싱한 정보
 	 * @return responseLocationDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
 	public ResponseLocationDTO updateCustomLocation(
