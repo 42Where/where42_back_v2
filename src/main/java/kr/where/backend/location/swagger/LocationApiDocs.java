@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.where.backend.exception.CustomException;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.exception.MemberException;
@@ -29,7 +30,7 @@ public interface LocationApiDocs {
 		),
 		responses = {
 			@ApiResponse(responseCode = "200", description = "수동자리 변경 성공", content = @Content(schema = @Schema(implementation = ResponseLocationDTO.class))),
-			@ApiResponse(responseCode = "404", description = "멤버가 존재하지 않음", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
 	@PostMapping("/custom")

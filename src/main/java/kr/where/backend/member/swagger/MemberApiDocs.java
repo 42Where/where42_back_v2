@@ -32,7 +32,7 @@ public interface MemberApiDocs {
 		},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
-			@ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
 	@GetMapping("")
@@ -44,7 +44,7 @@ public interface MemberApiDocs {
 		},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
-			@ApiResponse(responseCode = "404", description = "맴버 조회 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
 	@GetMapping("/all")
@@ -56,7 +56,7 @@ public interface MemberApiDocs {
 		},
 		responses = {
 			@ApiResponse(responseCode = "200", description = "맴버 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
-			@ApiResponse(responseCode = "404", description = "맴버 삭제 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
 	@DeleteMapping("")
@@ -72,7 +72,7 @@ public interface MemberApiDocs {
 		,
 		responses = {
 			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 변경 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
-			@ApiResponse(responseCode = "404", description = "맴버 상태 메시지 설정 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
 	@PostMapping("/comment")
@@ -84,7 +84,7 @@ public interface MemberApiDocs {
 		},
 		responses = {
 			@ApiResponse(responseCode = "201", description = "맴버 생성 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMemberDTO.class)))),
-			@ApiResponse(responseCode = "404", description = "맴버 생성 실패", content = @Content(schema = @Schema(implementation = MemberException.class)))
+			@ApiResponse(responseCode = "1001", description = "이미 존재하는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.DuplicatedMemberException.class)))
 		}
 	)
 	@PostMapping("/dummy")
