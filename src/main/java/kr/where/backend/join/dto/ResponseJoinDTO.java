@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseJoinDTO {
-    private String accessToken;
+    private String refreshToken;
 
     @Builder
-    public ResponseJoinDTO(final String accessToken) {
-        this.accessToken = accessToken;
+    public ResponseJoinDTO(final String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
