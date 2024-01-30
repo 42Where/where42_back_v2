@@ -23,13 +23,24 @@ public class MemberController implements MemberApiDocs {
 
 	private final MemberService memberService;
 
+	/**
+	 * intraId에 해당하는 member 1명 조회
+	 *
+	 * @param intraId
+	 * @return ResponseEntity(ResponseMemberDTO)
+	 */
 	@GetMapping("")
-	public ResponseEntity findOneByIntraId(@RequestParam("intraId") final Integer intraId) {
-		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(intraId);
+	public ResponseEntity<ResponseMemberDTO> findOneByIntraId(@RequestParam("intraId") final Integer intraId) {
+		final ResponseMemberDTO responseMemberDTO = memberService.findOneByIntraId(intraId);
 
-		return ResponseEntity.ok(responseMemberDto);
+		return ResponseEntity.ok(responseMemberDTO);
 	}
 
+	/**
+	 * DB에 존재하는 모든 멤버 list 조회
+	 *
+	 * @return ResponseEntity(ResponseMemberDTOList)
+	 */
 	@GetMapping("/all")
 	public ResponseEntity<List<ResponseMemberDTO>> findAll() {
 		final List<ResponseMemberDTO> responseMemberDTOList = memberService.findAll();
@@ -37,22 +48,40 @@ public class MemberController implements MemberApiDocs {
 		return ResponseEntity.ok(responseMemberDTOList);
 	}
 
+	/**
+	 * 멤버 탈퇴
+	 * accessToken을 받아서 claim에 존재하는 intraId에 해당하는 멤버 delete (본인 탈퇴)
+	 *
+	 * @return ResponseEntity(ResponseMemberDTO)
+	 */
 	@DeleteMapping("")
-	public ResponseEntity deleteMember() {
+	public ResponseEntity<ResponseMemberDTO> deleteMember() {
 		final AuthUserInfo authUser = AuthUserInfo.of();
-		final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
+		final ResponseMemberDTO responseMemberDTO = memberService.deleteMember(authUser);
 
-		return ResponseEntity.ok(responseMemberDto);
+		return ResponseEntity.ok(responseMemberDTO);
 	}
 
+	/**
+	 * 상태메세지 변경
+	 *
+	 * @param updateMemberCommentDto
+	 * @return ResponseEntity(ResponseMemberDTO)
+	 */
 	@PostMapping("/comment")
-	public ResponseEntity updateComment(@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto) {
+	public ResponseEntity<ResponseMemberDTO> updateComment(@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto) {
 		final AuthUserInfo authUser = AuthUserInfo.of();
 		final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto, authUser);
 
 		return ResponseEntity.ok(responseMemberDto);
 	}
 
+	/**
+	 * dummy member 10명 생성
+	 *
+	 * @return ResponseEntity(ResponseMemberDTOList)
+	 * @deprecated test용 dummy
+	 */
 	@PostMapping("/dummy")
 	public ResponseEntity<List<ResponseMemberDTO>> createDummyAgreeMembers() {
 		List<ResponseMemberDTO> responseMemberDTOList = new ArrayList<>();
