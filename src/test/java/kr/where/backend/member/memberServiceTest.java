@@ -61,7 +61,7 @@ public class memberServiceTest {
 	public void create_agree_member_test() {
 
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -95,7 +95,7 @@ public class memberServiceTest {
 	@Test
 	public void create_disagree_member_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 
 		//when
 		Member disagreeMember = memberService.createDisagreeMember(cadetPrivacy);
@@ -118,7 +118,7 @@ public class memberServiceTest {
 	@Test
 	public void disagree_to_agree_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		memberService.createDisagreeMember(cadetPrivacy);
 		Hane hane = Hane.create("IN");
 
@@ -152,7 +152,7 @@ public class memberServiceTest {
 	@Test
 	public void member_duplicate_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -166,7 +166,7 @@ public class memberServiceTest {
 	@Test
 	public void update_comment_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 		memberService.createAgreeMember(cadetPrivacy, hane);
 
