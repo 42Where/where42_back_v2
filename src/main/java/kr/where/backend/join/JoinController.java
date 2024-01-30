@@ -35,6 +35,6 @@ public class JoinController {
             final HttpServletRequest request,
             @AuthUserInfo final AuthUser authUser) {
 
-        return ResponseEntity.ok(joinService.join(request, authUser));
+        return ResponseEntity.ok(joinService.join(authUser));
     }
 }
