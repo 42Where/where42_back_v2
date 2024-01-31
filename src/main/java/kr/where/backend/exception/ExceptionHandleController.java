@@ -1,6 +1,5 @@
 package kr.where.backend.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
@@ -119,8 +118,7 @@ public class ExceptionHandleController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Integer> handleNoResourceException(final HttpServletResponse response) {
-        int errorCode = response.getStatus();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorCode);
+    public ResponseEntity<String> handleNoResourceException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 }
