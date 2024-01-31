@@ -1,10 +1,9 @@
 package kr.where.backend.join;
 
-import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.join.dto.ResponseJoinDTO;
+import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
@@ -26,7 +25,7 @@ public class JoinService {
     @Value("${hane.token.secret}")
     private String haneToken;
     @Transactional
-    public ResponseJoinDTO join(final AuthUser authUser) {
+    public ResponseRefreshTokenDTO join(final AuthUser authUser) {
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
@@ -40,7 +39,7 @@ public class JoinService {
                         .getHaneInfo(member.getIntraName(), haneToken)
         );
 
-        return ResponseJoinDTO
+        return ResponseRefreshTokenDTO
                 .builder()
                 .refreshToken(
                         jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName())
