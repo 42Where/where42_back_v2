@@ -6,9 +6,6 @@ import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
-import kr.where.backend.jwt.JsonWebToken;
-import kr.where.backend.jwt.JwtRepository;
-import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
@@ -16,7 +13,6 @@ import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +27,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
-	private final JwtRepository jwtRepository;
 
 	/**
 	 * if (이미 존재하는 멤버)
@@ -111,10 +106,6 @@ public class MemberService {
 			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
-		final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(authUser.getIntraId())
-			.orElseThrow(JwtException.NotFoundJwtToken::new);
-
-		jwtRepository.delete(jsonWebToken);
 		memberRepository.delete(member);
 
 		return responseMemberDto;
