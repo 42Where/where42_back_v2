@@ -19,14 +19,6 @@ import java.io.IOException;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private static final String EXCLUDE_PATH = "/v3/jwt/reissue";
-
-    @Override
-    protected boolean shouldNotFilter(final HttpServletRequest request) throws ServletException {
-        final String requestPath = request.getRequestURI();
-
-        return requestPath.startsWith(EXCLUDE_PATH);
-    }
 
     @Override
     protected void doFilterInternal(
