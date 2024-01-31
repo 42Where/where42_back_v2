@@ -1,4 +1,4 @@
-package kr.where.backend.join.dto;
+package kr.where.backend.jwt.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResponseJoinDTO {
+public class ResponseRefreshTokenDTO {
     private String refreshToken;
 
     @Builder
-    public ResponseJoinDTO(final String refreshToken) {
+    public ResponseRefreshTokenDTO(final String refreshToken) {
         this.refreshToken = refreshToken;
     }
 }
