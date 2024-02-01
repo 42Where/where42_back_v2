@@ -1,5 +1,6 @@
 package kr.where.backend.configuration;
 
+import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
 import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
@@ -39,7 +40,7 @@ public class SecurityConfig {
     private final JwtExceptionFilter jwtExceptionFilter;
     private final OAuth2SuccessHandler successHandler;
     private final OAuth2FailureHandler failureHandler;
-
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     /**
      *
      * @param httpSecurity : security를 사용할 떄 옵션 적용. 인증인가 실행할때 예외 api 설정, filter 순서 설정을 위한 param
@@ -76,10 +77,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             final HttpSecurity httpSecurity,
             final HandlerMappingIntrospector introspector) throws Exception {
+
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) 
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -89,8 +91,6 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatcher.pattern("/swagger-ui/**"))
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/api-docs/**"))
-                                .permitAll()
-                                .requestMatchers(requestMatcher.pattern("/error/**"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -102,7 +102,8 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout.clearAuthentication(true))
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtExceptionFilter, JwtFilter.class);
+                .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
+                .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler));
         return httpSecurity.build();
     }
 }

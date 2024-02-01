@@ -15,7 +15,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -37,58 +38,27 @@ import org.springframework.security.core.Authentication;
 @Slf4j
 public class JwtService {
     @Value("${accesstoken.expiration.time}")
-    private Long accessTokenExpirationTime;
+    private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
-    private Long refreshTokenExpirationTime;
+    private long refreshTokenExpirationTime;
     @Value("${jwt.token.secret}")
     private String secret_code;
     @Value("${issuer}")
     private String issuer;
-    private final JwtRepository jwtRepository;
     private final MemberService memberService;
 
     /**
-     * 로그인할때 발급 받는 jwt token을 저장하기 위한 메서드
-     *
-     * @param intraId : 카뎃의 고유 id를 같이 저장한다. relation 없이 사용하기 위한 용도
-     */
-    @Transactional
-    public void create(final Integer intraId, final String intraName, final String requestIp) {
-        jwtRepository.save(new JsonWebToken(intraId, requestIp, createRefreshToken(intraId, intraName)));
-    }
-
-    /**
-     * 다시 로그인을 하거나, refresh Token 까지 만료 되었을때, DB에 저장된 token을 update해주는 메서드
-     * @param intraId : 개인 토큰을 찾기 위함
-     * transactional을 사용하여, 변경점이 생기면 자동 저장, 영속성 context 관점
-     */
-    @Transactional
-    public void updateJsonWebToken(final Integer intraId, final String intraName) {
-        final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(intraId)
-                .orElseThrow(JwtException.NotFoundJwtToken::new);
-        log.info("jwt intraId = " + jsonWebToken.getIntraId());
-
-        jsonWebToken.updateRefreshToken(createRefreshToken(intraId, intraName));
-    }
-
-    /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
-     * @param requestIp : client 측의 ip를 통해 동일한 client인지 판단 후 accesstoken 발행
+     * @param authUser : 인가 인증 받은 유저의 정보를 사용하여 token 발행
      * @return accessToken
      */
+    @Transactional
+    public ResponseRefreshTokenDTO reissueAccessToken(final AuthUser authUser) {
 
-    public String reissueAccessToken(final String requestIp) {
-        final AuthUserInfo authUser = AuthUserInfo.of();
-        final JsonWebToken jsonWebToken = jwtRepository.findByRequestIp(requestIp)
-                .orElseThrow(JwtException.UnMatchedIp::new);
-
-        final Claims claims = parseToken(jsonWebToken.getRefreshToken());
-
-        if (!authUser.getIntraId().equals(claims.get("intraId"))) {
-            throw new JwtException.UnMatchedMemberInfo();
-        }
-
-        return createAccessToken(jsonWebToken.getIntraId(), authUser.getIntraName());
+        return ResponseRefreshTokenDTO
+                .builder()
+                .refreshToken(createRefreshToken(authUser.getIntraId(), authUser.getIntraName()))
+                .build();
     }
 
     /**
@@ -117,7 +87,7 @@ public class JwtService {
      * @param validateTime : 토큰의 만료시간 설정하기 위함
      * @return token
      */
-    private String createToken(final Integer intraId, final String intraName,final long validateTime) {
+    private String createToken(final Integer intraId, final String intraName, final long validateTime) {
         final Claims claims = Jwts.claims().setSubject("User");
         claims.put("intraId", intraId);
         claims.put("intraName", intraName);
@@ -171,14 +141,11 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
-        final AuthUserInfo authUserInfo = AuthUserInfo.builder()
-                .intraId(member.getIntraId())
-                .intraName(member.getIntraName())
-                .defaultGroupId(member.getDefaultGroupId())
-                .build();
-
         //Authentication 객체 생성
-        return new UsernamePasswordAuthenticationToken(authUserInfo, "", authorities);
+        return new UsernamePasswordAuthenticationToken(
+                new AuthUser(member.getIntraId(), member.getIntraName(), member.getDefaultGroupId()),
+                "",
+                authorities);
     }
 
     /**
