@@ -1,13 +1,14 @@
 package kr.where.backend.auth.authUser;
 
 import kr.where.backend.auth.authUser.exception.AuthUserException;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthUser {
     private Integer intraId;
     private String intraName;
@@ -39,6 +40,10 @@ public class AuthUser {
         this.defaultGroupId = groupId;
     }
     public static AuthUser of() {
-        return (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principle.equals("anonymousUser")) {
+            throw new AuthUserException.AnonymousUserException();
+        }
+        return (AuthUser) principle;
     }
 }

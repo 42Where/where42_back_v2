@@ -1,6 +1,5 @@
 package kr.where.backend.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
@@ -17,9 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -111,9 +110,15 @@ public class ExceptionHandleController {
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_SUPPORTED_METHOD));
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException() {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(HttpResourceErrorCode.NOT_METHOD_VALID_ARGUMENT));
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Integer> handleNoResourceException(final HttpServletResponse response) {
-        int errorCode = response.getStatus();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorCode);
+    public ResponseEntity<String> handleNoResourceException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 }
