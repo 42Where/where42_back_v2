@@ -20,7 +20,14 @@ public class OAuthTokenService {
     @Transactional
     public void createToken(final String name, final OAuthTokenDto oAuthTokenDto) {
         validateName(name);
-        final OAuthToken oauthToken = new OAuthToken(name, oAuthTokenDto);
+
+        OAuthToken oauthToken = oauthTokenRepository.findByName(name)
+                .map(existingToken -> {
+                    existingToken.updateToken(oAuthTokenDto);
+                    return existingToken;
+                })
+                .orElseGet(() -> new OAuthToken(name, oAuthTokenDto));
+
         oauthTokenRepository.save(oauthToken);
         log.info("[oAuthToken] {} Token 이 생성되었습니다.", name);
     }
@@ -29,9 +36,6 @@ public class OAuthTokenService {
         if (name == null || name.isEmpty()) {
             throw new InvalidTokenNameException();
         }
-        oauthTokenRepository.findByName(name).ifPresent(present -> {
-            throw new DuplicatedTokenNameException();
-        });
     }
 
     @Transactional
