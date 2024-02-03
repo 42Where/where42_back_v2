@@ -49,25 +49,6 @@ public class OAuthTokenController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    /**
-     * hane token 생성 & 업데이트
-     * @param token : hane token
-     */
-    @PostMapping("/update/hane")
-    public ResponseEntity updateHaneToken(@RequestParam("code") final String token) {
-        oauthTokenService.updateHaneToken(token);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /**
-     * @param name : 삭제할 token 이름
-     */
-    @DeleteMapping("")
-    public void deleteToken(@RequestParam("name") String name) {
-        oauthTokenService.deleteToken(name);
-    }
-
-
 
 
     /**

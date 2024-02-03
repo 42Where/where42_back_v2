@@ -39,12 +39,6 @@ public class OAuthTokenService {
     }
 
     @Transactional
-    public void deleteToken(final String name) {
-        final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
-        oauthTokenRepository.delete(oauthToken);
-    }
-
-    @Transactional
     public String findAccessToken(final String name) {
         final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
         if (oauthToken.isTimeOver()) {
@@ -58,17 +52,5 @@ public class OAuthTokenService {
         final OAuthTokenDto oAuthTokenDto = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
         oauthToken.updateToken(oAuthTokenDto);
         log.info("[oAuthToken] {} Token 이 업데이트 되었습니다.", oauthToken.getName());
-    }
-
-    @Transactional
-    public void updateHaneToken(final String accessToken) {
-        final OAuthToken oauthToken = oauthTokenRepository.findByName("hane")
-                .orElseGet(() -> {
-                    OAuthToken newToken = new OAuthToken("hane");
-                    oauthTokenRepository.save(newToken);
-                    return newToken;
-                });
-        oauthToken.updateToken(accessToken);
-        log.info("[oAuthToken] {} Token 이 업데이트 되었습니다.", "hane");
     }
 }
