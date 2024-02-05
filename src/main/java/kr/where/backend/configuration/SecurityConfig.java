@@ -92,6 +92,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/api-docs/**"))
                                 .permitAll()
+                                .requestMatchers(requestMatcher.pattern("/v3/token"))
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
