@@ -51,11 +51,6 @@ public class OAuthToken {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // hane
-    public OAuthToken(final String name) {
-        this.name = name;
-    }
-
     public void updateToken(final OAuthTokenDto oAuthTokenDto) {
         this.accessToken = oAuthTokenDto.getAccess_token();
         this.refreshToken = oAuthTokenDto.getRefresh_token();
@@ -65,12 +60,6 @@ public class OAuthToken {
                         Instant.ofEpochSecond(oAuthTokenDto.getCreated_at()),
                         TimeZone.getDefault().toZoneId());
         this.createdAt = createdAt;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    // hane
-    public void updateToken(final String accessToken) {
-        this.accessToken = accessToken;
         this.updatedAt = LocalDateTime.now();
     }
 
