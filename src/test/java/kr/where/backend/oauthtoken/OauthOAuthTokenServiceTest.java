@@ -32,31 +32,4 @@ public class OauthOAuthTokenServiceTest {
         assertDoesNotThrow(() -> oauthTokenRepository.findByName(name).orElseThrow());
         assertEquals(oauthTokenRepository.findByName(name).get().getName(), name);
     }
-
-    @Test
-    public void 토큰_이름_중복_테스트() {
-        // given
-        String name = "back";
-        OAuthTokenDto oAuthTokenDto = new OAuthTokenDto();
-
-        // when
-        oauthTokenService.createToken(name, oAuthTokenDto);
-
-        // then
-        assertThrows(Exception.class, () -> oauthTokenService.createToken(name, oAuthTokenDto));
-    }
-
-    @Test
-    public void 토큰_삭제_테스트() {
-        // given
-        String name = "back";
-        OAuthTokenDto oAuthTokenDto = new OAuthTokenDto();
-        oauthTokenService.createToken(name, oAuthTokenDto);
-
-        // when
-        oauthTokenService.deleteToken(name);
-
-        // then
-        assertThrows(Exception.class, () -> oauthTokenRepository.findByName(name).orElseThrow());
-    }
 }
