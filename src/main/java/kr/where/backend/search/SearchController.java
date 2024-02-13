@@ -13,7 +13,6 @@ import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,12 +34,11 @@ public class SearchController {
                     @ApiResponse(responseCode = "200", description = "카뎃 검색 성공", content=@Content(schema = @Schema(implementation = ResponseSearchDTO.class))),
                     @ApiResponse(responseCode = "401", description = "유효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
-    @GetMapping("/")
-    public ResponseEntity search42UserResponse(
+    @GetMapping("")
+    public ResponseEntity<List<ResponseSearchDTO>> search42UserResponse(
             @RequestParam("keyWord") final String keyWord,
             @AuthUserInfo final AuthUser authUser) {
-        final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(keyWord, authUser);
 
-        return ResponseEntity.ok(responseSearchDTOS);
+        return ResponseEntity.ok(searchService.search(keyWord, authUser));
     }
 }
