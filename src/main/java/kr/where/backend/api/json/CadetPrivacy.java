@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,6 +25,7 @@ public class CadetPrivacy {
     @Schema(description = "42서울 등록일")
     private String created_at;
 
+    protected CadetPrivacy() {}
 
     @Builder
     public CadetPrivacy(Integer id, String login, String location, String small_image, boolean active, String created_at) {

@@ -69,7 +69,7 @@ public class SearchService {
         int page = 1;
         while (true) {
             final List<CadetPrivacy> searchApiResult =
-                    intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
+                    intraApiService.getCadetsInRange("34fbcec0469a8e9700b1d08433bd1f2370618b33fa8bea69abddea42895be3a2", word, page);
             isActiveCadet(result, searchApiResult);
             if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
                 break;
@@ -91,7 +91,7 @@ public class SearchService {
         return cadetPrivacies
                 .stream()
                 .map(search -> memberService.findOne(search.getId())
-                        .orElse(memberService.createDisagreeMember(search)))
+                        .orElseGet(() -> memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearchDTO(group, search))
                 .toList();
     }

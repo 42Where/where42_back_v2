@@ -35,7 +35,7 @@ public class SearchController {
                     @ApiResponse(responseCode = "200", description = "카뎃 검색 성공", content=@Content(schema = @Schema(implementation = ResponseSearchDTO.class))),
                     @ApiResponse(responseCode = "401", description = "유효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity search42UserResponse(
             @RequestParam("keyWord") final String keyWord,
             @AuthUserInfo final AuthUser authUser) {
