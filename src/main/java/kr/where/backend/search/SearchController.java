@@ -35,11 +35,10 @@ public class SearchController {
                     @ApiResponse(responseCode = "401", description = "유효하지 않은 입력값 오류", content=@Content(schema = @Schema(implementation = SearchException.class)))
             })
     @GetMapping("")
-    public ResponseEntity search42UserResponse(
+    public ResponseEntity<List<ResponseSearchDTO>> search42UserResponse(
             @RequestParam("keyWord") final String keyWord,
             @AuthUserInfo final AuthUser authUser) {
-        final List<ResponseSearchDTO> responseSearchDTOS = searchService.search(keyWord, authUser);
 
-        return ResponseEntity.ok(responseSearchDTOS);
+        return ResponseEntity.ok(searchService.search(keyWord, authUser));
     }
 }
