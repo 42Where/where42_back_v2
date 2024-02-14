@@ -2,7 +2,6 @@ package kr.where.backend.oauthtoken;
 
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.json.OAuthTokenDto;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException.DuplicatedTokenNameException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidTokenNameException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException.InvalidOAuthTokenException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class OAuthTokenService {
+    private static final String EXCEPTION_TOKEN = "hane";
     private final OAuthTokenRepository oauthTokenRepository;
     private final TokenApiService tokenApiService;
 
@@ -41,7 +41,7 @@ public class OAuthTokenService {
     @Transactional
     public String findAccessToken(final String name) {
         final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
-        if (oauthToken.isTimeOver()) {
+        if (!name.equals(EXCEPTION_TOKEN) && oauthToken.isTimeOver()) {
             updateToken(oauthToken);
         }
         return oauthToken.getAccessToken();
