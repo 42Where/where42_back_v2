@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "42seoul opnen API에 요청한 카뎃 정보")
+@AllArgsConstructor
 public class CadetPrivacy {
     @Schema(description = "카뎃의 고유 intra id")
     private Integer id;
