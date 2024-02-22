@@ -2,19 +2,20 @@ package kr.where.backend.api.http;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class HttpHeader {
     private static final String BEARER = "Bearer ";
+    private static final String INTRA_CONTENT_VALUES = "application/x-www-form-urlencoded;charset=utf-8";
+    private static final String HANE_CONTENT_VALUES = "application/json;charset=utf-8";
     private static final String GRANT_TYPE_ACCESS = "authorization_code";
     private static final String GRANT_TYPE_REFRESH = "refresh_token";
 
     public static HttpEntity<MultiValueMap<String, String>> requestToken(final String code) {
         final HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, INTRA_CONTENT_VALUES);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
@@ -30,7 +31,7 @@ public class HttpHeader {
     public static HttpEntity<MultiValueMap<String, String>> requestAccessToken(final String refreshToken) {
         final HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, INTRA_CONTENT_VALUES);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
@@ -46,7 +47,7 @@ public class HttpHeader {
         final HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, INTRA_CONTENT_VALUES);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
@@ -57,7 +58,7 @@ public class HttpHeader {
         final HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, HANE_CONTENT_VALUES);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 

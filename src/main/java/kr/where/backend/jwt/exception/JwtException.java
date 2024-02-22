@@ -38,6 +38,18 @@ public class JwtException extends CustomException {
         }
     }
 
+    public static class UnMatchedIp extends JwtException {
+        public UnMatchedIp() {
+            super(JwtErrorCode.UNMATCHED_IP);
+        }
+    }
+
+    public static class UnMatchedMemberInfo extends JwtException {
+        public UnMatchedMemberInfo() {
+            super(JwtErrorCode.UNMATCHED_USER_INFO);
+        }
+    }
+
     public static class NotFoundJwtToken extends JwtException {
         public NotFoundJwtToken() {
             super(JwtErrorCode.NOTFOUND_TOKEN);

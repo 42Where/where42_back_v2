@@ -1,7 +1,5 @@
 package kr.where.backend.auth.filter;
 
-import static com.fasterxml.jackson.core.JsonEncoding.UTF8;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,13 +9,14 @@ import java.io.IOException;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
 public class JwtExceptionFilter extends OncePerRequestFilter {
+    private static final String ENCODING = "utf-8";
+    private static final String CONTENT_TYPE ="application/json";
     private final ObjectMapper objectMapper;
 
     @Override
@@ -38,8 +37,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             final String error
     ) throws IOException {
         response.setStatus(errorCode);
-        response.setCharacterEncoding(UTF8.getJavaName());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(ENCODING);
+        response.setContentType(CONTENT_TYPE);
 
         response.getWriter().write(objectMapper.writeValueAsString(error));
     }

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,7 +81,7 @@ public class UpdateService {
      * Hane token도 적용 해야함!
      */
     @Retryable
-    @Scheduled(cron = "0 0/5 * 1/1 * ?")
+//    @Scheduled(cron = "0 0/5 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
         final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
