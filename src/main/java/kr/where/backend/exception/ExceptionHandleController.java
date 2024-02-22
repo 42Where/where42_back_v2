@@ -11,6 +11,7 @@ import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException;
+import kr.where.backend.search.exception.SearchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +78,13 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(JoinException.class)
     public ResponseEntity<String> handleJoinException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
+
+    @ExceptionHandler(SearchException.class)
+    public ResponseEntity<String> handleSearchException(final  CustomException e) {
         log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
