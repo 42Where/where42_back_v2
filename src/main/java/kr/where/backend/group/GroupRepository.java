@@ -11,5 +11,4 @@ import org.springframework.stereotype.Repository;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     Optional<Group> findById(Long groupId);
-//    Optional<Group> findByGroupMembersAndDefault(List<GroupMember> groupMembers, boolean isDefault);
 }

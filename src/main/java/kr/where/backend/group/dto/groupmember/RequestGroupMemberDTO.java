@@ -15,7 +15,7 @@ public class RequestGroupMemberDTO {
     private Long groupId;
 
     @Builder
-    public RequestGroupMemberDTO(Integer intraId, Long groupId) {
+    public RequestGroupMemberDTO(final Integer intraId, final Long groupId) {
         this.intraId = intraId;
         this.groupId = groupId;
     }

@@ -137,7 +137,7 @@ public class GroupMemberServiceTest {
 
         //when
         List<ResponseOneGroupMemberDTO> responseGroupMemberDTOS = groupMemberService.findGroupMemberByGroupId(
-                generalResponseGroupDTO.getGroupId(), authUser);
+                generalResponseGroupDTO.getGroupId());
 
         //then
         for (ResponseOneGroupMemberDTO memberDTO : responseGroupMemberDTOS) {
@@ -218,7 +218,7 @@ public class GroupMemberServiceTest {
                 .members(members).build(), authUser);
 
         List<ResponseOneGroupMemberDTO> generalGroupMember = groupMemberService.findGroupMemberByGroupId(
-                generalResponseGroupDTO.getGroupId(), authUser);
+                generalResponseGroupDTO.getGroupId());
         //then
         //기본그룹에서 삭제 될 경우 일반멤버의 멤버수도 0인걸 확인 가능
         assertEquals(0, generalGroupMember.size());

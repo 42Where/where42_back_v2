@@ -22,7 +22,15 @@ public class ResponseGroupMemberDTO {
 
 
     @Builder
-    public ResponseGroupMemberDTO(@NotNull Long groupId, String groupName, @NotNull Integer intraId, String comment, String memberIntraName, String location, boolean inCluster, String image) {
+    public ResponseGroupMemberDTO(
+            final @NotNull Long groupId,
+            final String groupName,
+            final @NotNull Integer intraId,
+            final String comment,
+            final String memberIntraName,
+            final String location,
+            final boolean inCluster,
+            final String image) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.intraId = intraId;

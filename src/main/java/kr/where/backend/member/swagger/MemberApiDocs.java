@@ -38,7 +38,7 @@ public interface MemberApiDocs {
 		}
 	)
 	@GetMapping("/one")
-	ResponseEntity findOneByIntraId(@RequestParam("intraId") final Integer intraId);
+	ResponseEntity<ResponseMemberDTO> findOneByIntraId(@RequestParam("intraId") final Integer intraId);
 
 	@Operation(summary = "1.7 findOneByAccessToken API", description = "본인 Dto 조회",
 		parameters = {
@@ -50,7 +50,7 @@ public interface MemberApiDocs {
 		}
 	)
 	@GetMapping("/")
-	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
+	ResponseEntity<ResponseMemberDTO> findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "1.6 findAll API", description = "모든 멤버 list 조회",
 		parameters = {
@@ -74,7 +74,7 @@ public interface MemberApiDocs {
 		}
 	)
 	@DeleteMapping("")
-	public ResponseEntity deleteMember(@AuthUserInfo final AuthUser authUser);
+	ResponseEntity<ResponseMemberDTO> deleteMember(@AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "1.4 updatePersonalMessage API", description = "맴버 상태 메시지 변경",
 		parameters = {
@@ -90,7 +90,7 @@ public interface MemberApiDocs {
 		}
 	)
 	@PostMapping("/comment")
-	public ResponseEntity updateComment(
+	ResponseEntity<ResponseMemberDTO> updateComment(
 		@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
 		@AuthUserInfo final AuthUser authUser);
 

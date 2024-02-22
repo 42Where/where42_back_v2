@@ -8,7 +8,6 @@ public class UpdateCustomLocationDTO {
 	@NotBlank
 	private String customLocation;
 
-	//Test
 	public static UpdateCustomLocationDTO createForTest(String customLocation) {
 		UpdateCustomLocationDTO updateCustomLocationDto = new UpdateCustomLocationDTO();
 

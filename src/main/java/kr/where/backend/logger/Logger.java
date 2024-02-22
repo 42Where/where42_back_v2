@@ -1,7 +1,5 @@
 package kr.where.backend.logger;
 
-import lombok.extern.slf4j.Slf4j;
-
 public enum Logger {
     LOGIN("[INFO] : '{}님이 로그인 하였습니다."),
     LOGOUT("[INFO] : '{}님이 로그아웃 하였습니다."),

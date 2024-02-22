@@ -31,7 +31,7 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@GetMapping("/one")
-	public ResponseEntity findOneByIntraId(@RequestParam("intraId") final Integer intraId) {
+	public ResponseEntity<ResponseMemberDTO> findOneByIntraId(@RequestParam("intraId") final Integer intraId) {
 		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(intraId);
 
 		return ResponseEntity.ok(responseMemberDto);
@@ -43,7 +43,7 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@GetMapping("/")
-	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
+	public ResponseEntity<ResponseMemberDTO> findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
 		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(authUser.getIntraId());
 
 		return ResponseEntity.ok(responseMemberDto);
@@ -68,7 +68,7 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@DeleteMapping("")
-	public ResponseEntity deleteMember(@AuthUserInfo final AuthUser authUser) {
+	public ResponseEntity<ResponseMemberDTO> deleteMember(@AuthUserInfo final AuthUser authUser) {
 		final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
 
 		return ResponseEntity.ok(responseMemberDto);
@@ -81,7 +81,7 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@PostMapping("/comment")
-	public ResponseEntity updateComment(
+	public ResponseEntity<ResponseMemberDTO> updateComment(
 			@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
 			@AuthUserInfo final AuthUser authUser) {
 

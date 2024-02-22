@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
+import kr.where.backend.jwt.swagger.JwtApiDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v3/jwt")
 @RequiredArgsConstructor
-public class JwtController {
+public class JwtController implements JwtApiDocs {
     private final JwtService jwtService;
 
     @PostMapping("/reissue")
