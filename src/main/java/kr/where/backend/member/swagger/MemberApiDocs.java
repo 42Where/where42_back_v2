@@ -37,8 +37,20 @@ public interface MemberApiDocs {
 			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
-	@GetMapping("")
+	@GetMapping("/one")
 	ResponseEntity findOneByIntraId(@RequestParam("intraId") final Integer intraId);
+
+	@Operation(summary = "1.7 findOneByAccessToken API", description = "본인 Dto 조회",
+		parameters = {
+			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+		},
+		responses = {
+			@ApiResponse(responseCode = "200", description = "맴버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
+		}
+	)
+	@GetMapping("/")
+	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "1.6 findAll API", description = "모든 멤버 list 조회",
 		parameters = {
