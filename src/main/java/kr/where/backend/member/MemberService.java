@@ -42,6 +42,7 @@ public class MemberService {
 	 * @param cadetPrivacy : 42api에게 받아온 cadet info
 	 * @param hane : hane api에게 받아온 inCluster 여부
 	 * @return member
+	 * @throws MemberException.DuplicatedMemberException 이미 존재하는 멤버입니다
 	 */
 	@Transactional
 	public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
@@ -99,6 +100,7 @@ public class MemberService {
 	 *
 	 * @param authUser : accessToken 파싱한 정보
 	 * @return responseMemberDto
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
 	public ResponseMemberDTO deleteMember(final AuthUser authUser) {
@@ -117,6 +119,7 @@ public class MemberService {
 	 * @param updateMemberCommentDto : 변경할 comment
 	 * @param authUser : accessToken 파싱한 정보
 	 * @return responseMemberDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
 	public ResponseMemberDTO updateComment(
@@ -135,6 +138,7 @@ public class MemberService {
 	 *
 	 * @param intraId
 	 * @return responseMemberDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)
