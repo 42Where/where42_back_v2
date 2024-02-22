@@ -49,7 +49,7 @@ public interface MemberApiDocs {
 			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
 		}
 	)
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "1.6 findAll API", description = "모든 멤버 list 조회",
