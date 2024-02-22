@@ -2,7 +2,7 @@ package kr.where.backend.location;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
@@ -39,17 +39,17 @@ public class LocationServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
-    private AuthUserInfo authUser;
+    private AuthUser authUser;
     @BeforeEach
     public void setUp() {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-        authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+        authUser = new AuthUser(12345, "suhwpark", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
     }
     @Test
     public void update_custom_location_test() {
 		//given
-        CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
         Hane hane = Hane.create("IN");
 
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
