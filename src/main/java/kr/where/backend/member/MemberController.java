@@ -42,7 +42,7 @@ public class MemberController implements MemberApiDocs {
 	 *
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
 		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(authUser.getIntraId());
 
