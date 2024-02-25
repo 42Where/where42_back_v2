@@ -1,18 +1,13 @@
 package kr.where.backend.oauthtoken;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Cluster;
 import kr.where.backend.api.json.OAuthTokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -10,7 +10,6 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
-import kr.where.backend.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
-    private final MemberRepository memberRepository;
 
     /**
      * 그룹 생성
@@ -105,7 +103,7 @@ public class GroupService {
      * @param groupId
      * @param authUser
      */
-    public final void isMyGroup(Long groupId, AuthUser authUser) {
+    public final void isMyGroup(final Long groupId, final AuthUser authUser) {
         List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
         if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
             throw new GroupException.CannotModifyGroupException();

@@ -144,10 +144,9 @@ public class GroupMemberService {
      * groupId를 받아 해당 그룹의 모든 그룹멤버 리스트 반환
      * 해당 그룹이 존재 하지 않는다면 Exception
      * @param groupId
-     * @param authUser
      * @return List<ResponseOneGroupMemberDTO>
      */
-    public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId, final AuthUser authUser) {
+    public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId) {
         groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
@@ -172,7 +171,7 @@ public class GroupMemberService {
         final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.getIntraId());
 
         return groups.stream().map(g -> {
-            List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId(), authUser);
+            List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId());
             return ResponseGroupMemberListDTO.builder()
                     .groupId(g.getGroupId())
                     .groupName(g.getGroupName())
@@ -208,8 +207,6 @@ public class GroupMemberService {
         final Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
-//        final List<Member> members = memberRepository.findByIntraNameIn(dto.getMembers())
-//                .orElseThrow(MemberException.NoMemberException::new);
         final List<Member> members = memberRepository.findByIntraIdIn(dto.getMembers())
                 .orElseThrow(MemberException.NoMemberException::new);
         duplicateGroupMember(dto.getGroupId(), members);
@@ -287,8 +284,8 @@ public class GroupMemberService {
                 .orElseThrow(GroupException.NoGroupException::new);
         groupRepository.findById(groupId)
                 .orElseThrow(GroupException.NoGroupException::new);
-        final List<ResponseOneGroupMemberDTO> defaultMembers = findGroupMemberByGroupId(authUser.getDefaultGroupId(), authUser);
-        final List<ResponseOneGroupMemberDTO> groupMembers = findGroupMemberByGroupId(groupId, authUser);
+        final List<ResponseOneGroupMemberDTO> defaultMembers = findGroupMemberByGroupId(authUser.getDefaultGroupId());
+        final List<ResponseOneGroupMemberDTO> groupMembers = findGroupMemberByGroupId(groupId);
 
         return defaultMembers.stream()
                 .filter(defaultMember -> groupMembers.stream()

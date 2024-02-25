@@ -66,7 +66,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("https://test.where42:3000")
+                                .fromUriString("https://test.where42.kr:3000")
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()

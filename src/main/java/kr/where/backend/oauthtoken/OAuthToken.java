@@ -68,9 +68,7 @@ public class OAuthToken {
         final Duration duration = Duration.between(currentTime, createdAt);
         final Long minute = Math.abs(duration.toMinutes());
         log.info("[oAuthToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
-        if (minute > TOKEN_EXPIRATION_MINUTES) {
-            return true;
-        }
-        return false;
+
+        return minute > TOKEN_EXPIRATION_MINUTES;
     }
 }

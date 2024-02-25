@@ -30,7 +30,6 @@ import kr.where.backend.group.dto.groupmember.DeleteGroupMemberListDTO;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO;
 import kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO;
-import kr.where.backend.utils.response.ResponseWithData;
 
 @Tag(name = "group", description = "group API")
 public interface GroupApiDocs {
@@ -47,7 +46,7 @@ public interface GroupApiDocs {
             }
     )
     @PostMapping("")
-    public ResponseEntity<ResponseGroupDTO> createGroup(
+    ResponseEntity<ResponseGroupDTO> createGroup(
         @RequestBody @Valid final CreateGroupDTO request,
         @AuthUserInfo final AuthUser authUser);
 
@@ -55,11 +54,11 @@ public interface GroupApiDocs {
             summary = "2.2 그룹 목록 및 친구 API 조회",
             description = "멤버가 만든 그룹 및 그룹 내의 친구 목록을 조회합니다 (메인 화면 용)",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberListDTO.class))),
             }
     )
     @GetMapping("")
-    public ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups(@AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups(@AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.3 modify group name API",
@@ -74,7 +73,7 @@ public interface GroupApiDocs {
             }
     )
     @PostMapping("/name")
-    public ResponseEntity<ResponseGroupDTO> updateGroupName(@RequestBody @Valid final UpdateGroupDTO dto, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseGroupDTO> updateGroupName(@RequestBody @Valid final UpdateGroupDTO dto, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.4 delete group API",
@@ -83,26 +82,26 @@ public interface GroupApiDocs {
                     @Parameter(name = "groupId", description = "삭제할 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class), examples = {
+                    @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = ResponseGroupDTO.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 200, \"responseMsg\": \"그룹 삭제 성공\", \"data\": [ {\"groupId\": 3} ] }"),})),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
     @DeleteMapping("")
-    public ResponseEntity<ResponseGroupDTO> deleteGroup(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseGroupDTO> deleteGroup(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.5 get group list API",
             description = "멤버가 소유한 그룹들의 id, 이름 반환 (그룹관리)",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseGroupMemberDTO.class))),
                     @ApiResponse(responseCode = "401", description = "등록되지 않은 카뎃", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 401, \"responseMsg\": \"등록되지 않은 카뎃\"}"),})),
             }
     )
     @GetMapping("/info")
-    public ResponseEntity findGroupNames(@AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseGroupMemberDTO>> findGroupNames(@AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.6 add friends to default group API",
@@ -120,7 +119,7 @@ public interface GroupApiDocs {
             }
     )
     @PostMapping("/groupmember")
-    public ResponseEntity createGroupMember(@RequestParam("intraId") final Integer intraId, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseGroupMemberDTO> createGroupMember(@RequestParam("intraId") final Integer intraId, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.7 get not included friends in group API",
@@ -129,13 +128,13 @@ public interface GroupApiDocs {
                     @Parameter(name = "groupId", description = "추가할 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseOneGroupMemberDTO.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"존재하지 않는 그룹\"}")})),
             }
     )
     @PostMapping("/groupmember/not-ingroup")
-    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseOneGroupMemberDTO>> findMemberListNotInGroup(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.8 add friends to group API",
@@ -150,7 +149,7 @@ public interface GroupApiDocs {
             }
     )
     @PostMapping("/groupmember/members")
-    public ResponseEntity<List<ResponseOneGroupMemberDTO>> addFriendsToGroup(@RequestBody @Valid final AddGroupMemberListDTO request, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseOneGroupMemberDTO>> addFriendsToGroup(@RequestBody @Valid final AddGroupMemberListDTO request, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.9 get group friend list API",
@@ -159,13 +158,13 @@ public interface GroupApiDocs {
                     @Parameter(name = "groupId", description = "조회를 원하는 그룹 ID", required = true, in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseWithData.class))),
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseOneGroupMemberDTO.class))),
                     @ApiResponse(responseCode = "400", description = "존재하지 않는 그룹", content = @Content(schema = @Schema(implementation = ErrorResponse.class), examples = {
                             @ExampleObject(name = "example1", value = "{\"statusCode\": 400, \"responseMsg\": \"데이터를 찾을 수 없음\"}"),})),
             }
     )
     @GetMapping("/groupmember")
-    public ResponseEntity<List<ResponseOneGroupMemberDTO>> findAllGroupFriends(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseOneGroupMemberDTO>> findAllGroupFriends(@RequestParam("groupId") final Long groupId, @AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "2.10 delete group friend API",
@@ -180,7 +179,7 @@ public interface GroupApiDocs {
             }
     )
     @PutMapping ("/groupmember")
-    public ResponseEntity removeIncludeGroupFriends(@RequestBody @Valid final DeleteGroupMemberListDTO request, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<List<ResponseGroupMemberDTO>> removeIncludeGroupFriends(@RequestBody @Valid final DeleteGroupMemberListDTO request, @AuthUserInfo final AuthUser authUser);
 
 
 }

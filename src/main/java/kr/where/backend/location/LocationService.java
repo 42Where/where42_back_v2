@@ -27,7 +27,7 @@ public class LocationService {
 	 */
 	@Transactional
 	public void create(final Member member, final String imac) {
-		Location location = new Location(member, imac);
+		final Location location = new Location(member, imac);
 
 		locationRepository.save(location);
 
@@ -45,7 +45,8 @@ public class LocationService {
 	@Transactional
 	public ResponseLocationDTO updateCustomLocation(
 		final UpdateCustomLocationDTO updateCustomLocationDto,
-		final AuthUser authUser) {
+		final AuthUser authUser
+	) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
 			.orElseThrow(MemberException.NoMemberException::new);
 		final Location location = locationRepository.findByMember(member);

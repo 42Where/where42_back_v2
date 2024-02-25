@@ -19,7 +19,16 @@ public class ResponseOneGroupMemberDTO {
     private String location;
 
     @Builder
-    public ResponseOneGroupMemberDTO(Integer intraId, String intraName, String grade, String image, String comment, boolean inCluster, boolean agree, Long defaultGroupId, String location) {
+    public ResponseOneGroupMemberDTO(
+            final Integer intraId,
+            final String intraName,
+            final String grade,
+            final String image,
+            final String comment,
+            final boolean inCluster,
+            final boolean agree,
+            final Long defaultGroupId,
+            final String location) {
         this.intraId = intraId;
         this.intraName = intraName;
         this.grade = grade;

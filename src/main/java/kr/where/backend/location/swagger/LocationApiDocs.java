@@ -33,5 +33,5 @@ public interface LocationApiDocs {
 		}
 	)
 	@PostMapping("/custom")
-	ResponseEntity updateCustomLocation(@RequestBody @Valid final UpdateCustomLocationDTO updateCustomLocation);
+	ResponseEntity<ResponseLocationDTO> updateCustomLocation(@RequestBody @Valid final UpdateCustomLocationDTO updateCustomLocation);
 }

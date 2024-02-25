@@ -12,26 +12,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
 
-    List<GroupMember> findByMember_IdAndIsOwner(Long memberId, Boolean isOwner);
-
     List<GroupMember> findGroupMembersByMemberAndIsOwner(Member member, Boolean isOwner);
 
     List<GroupMember> findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(Long groupId);
 
     List<GroupMember> findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(Long groupId, List<Integer> MemberIntraId);
 
-    List<GroupMember> deleteGroupMemberByGroup_GroupIdAndMember_Id(Long groupId, Long memberId);
-
     boolean existsByGroupAndMember(Group group, Member member);
-
-    void deleteAllByGroup_GroupId(Long groupId);
 
     long countByGroup_GroupIdAndMemberIn(Long groupId, List<Member> members);
 
-    GroupMember findGroupMemberByGroup_GroupIdAndIsOwner(Long groupId, boolean isOwner);
-//
     List<GroupMember> findGroupMembersByMember_IntraIdAndIsOwner(Integer intraId, boolean isOwner);
-//
+
     List<GroupMember> findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(List<Long> groupIds, List<Integer> memberIds);
 
     List<GroupMember> findGroupMemberByGroup_GroupId(Long defaultGroupId);

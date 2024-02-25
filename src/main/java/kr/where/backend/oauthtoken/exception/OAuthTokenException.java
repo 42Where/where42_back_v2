@@ -8,7 +8,6 @@ public class OAuthTokenException extends CustomException {
         super(errorCode);
     }
 
-    // oauth token
     public static class InvalidOAuthTokenException extends OAuthTokenException {
         public InvalidOAuthTokenException() {
             super(OAuthTokenErrorCode.INVALID_OAUTH_TOKEN);

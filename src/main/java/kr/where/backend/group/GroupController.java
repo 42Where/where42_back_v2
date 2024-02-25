@@ -10,6 +10,7 @@ import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.swagger.GroupApiDocs;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +66,7 @@ public class GroupController implements GroupApiDocs {
     }
 
     @PostMapping("/groupmember")
-    public ResponseEntity createGroupMember(
+    public ResponseEntity<ResponseGroupMemberDTO> createGroupMember(
             @RequestParam("intraId") final Integer intraId,
             @AuthUserInfo final AuthUser authUser) {
         final ResponseGroupMemberDTO dto = groupMemberService.createDefaultGroupMember(intraId, false, authUser);
@@ -95,13 +96,13 @@ public class GroupController implements GroupApiDocs {
     public ResponseEntity<List<ResponseOneGroupMemberDTO>> findAllGroupFriends(
             @RequestParam("groupId") final Long groupId,
             @AuthUserInfo final AuthUser authUser) {
-        final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberByGroupId(groupId, authUser);
+        final List<ResponseOneGroupMemberDTO> dto = groupMemberService.findGroupMemberByGroupId(groupId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PutMapping ("/groupmember")
-    public ResponseEntity removeIncludeGroupFriends(
+    public ResponseEntity<List<ResponseGroupMemberDTO>> removeIncludeGroupFriends(
             @RequestBody @Valid final DeleteGroupMemberListDTO request,
             @AuthUserInfo final AuthUser authUser) {
         final List<ResponseGroupMemberDTO> ResponseGroupMemberDTOs = groupMemberService.deleteFriendsList(request, authUser);
