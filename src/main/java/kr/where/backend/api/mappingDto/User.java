@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
+    private Integer id;
     private String login;
     private Image image;
     private String location;

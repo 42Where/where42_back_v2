@@ -71,10 +71,11 @@ public class UpdateService {
     private void updateLocation(final List<Cluster> cadets) {
         final String haneToken = tokenService.findAccessToken(HANE_TOKEN);
 
-        cadets.forEach(cadet -> memberService.findOne(cadet.getId())
+        cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(member -> {
                     member.getLocation().setImacLocation(cadet.getUser().getLocation());
                     member.setInCluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                    log.info("member {}의 클러스터 정보가 변경되었습니다", member.getIntraName());
                 }));
     }
 
