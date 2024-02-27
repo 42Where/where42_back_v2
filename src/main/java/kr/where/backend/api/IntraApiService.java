@@ -4,9 +4,9 @@ import java.util.List;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Cluster;
-import kr.where.backend.exception.request.RequestException;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Cluster;
+import kr.where.backend.api.exception.RequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Recover;
@@ -19,16 +19,6 @@ import org.springframework.stereotype.Service;
 public class IntraApiService {
 
     private static final String END_DELIMITER = "z";
-
-    /**
-     * 본인 정보 반환
-     */
-    @Retryable
-    public CadetPrivacy getMyPrivacy(final String token) {
-        return JsonMapper
-                .mapping(HttpResponse.getMethod(HttpHeader.request42Info(token),
-                        UriBuilder.me()), CadetPrivacy.class);
-    }
 
     /**
      * 특정 카텟의 정보 반환

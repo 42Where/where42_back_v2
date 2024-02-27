@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
-import kr.where.backend.api.mappingDto.CadetPrivacy;
-import kr.where.backend.api.mappingDto.Cluster;
-import kr.where.backend.api.mappingDto.Hane;
-import kr.where.backend.location.LocationService;
+import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.api.json.Cluster;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.token.TokenService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Retryable;
@@ -27,13 +25,14 @@ public class UpdateService {
     private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
-    private final TokenService tokenService;
+    private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
     private final MemberService memberService;
 
     //TODO
     /**
+     *
      * 1. 로그인한 모든 카뎃의 위치 업데이트 서비스
      * 2. 모든 5분마다 카뎃의 로그인 여부에 따른 위치 업데이트 서비스
      * 3. 새로운 기수 들어왔을 때, image 업데이트 서비스
@@ -45,7 +44,7 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        final String token = tokenService.findAccessToken(ADMIN_TOKEN);
+        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
@@ -69,7 +68,7 @@ public class UpdateService {
     }
 
     private void updateLocation(final List<Cluster> cadets) {
-        final String haneToken = tokenService.findAccessToken(HANE_TOKEN);
+        final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(member -> {
@@ -87,7 +86,7 @@ public class UpdateService {
     @Scheduled(cron = "0 0/5 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
-        final String token = tokenService.findAccessToken(ADMIN_TOKEN);
+        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
 
         final List<Cluster> status = getStatus(token);
 
@@ -136,7 +135,7 @@ public class UpdateService {
      */
     @Transactional
     public void updateMemberImage() {
-        final String token = tokenService.findAccessToken(IMAGE_TOKEN);
+        final String token = oauthTokenService.findAccessToken(IMAGE_TOKEN);
 
         final List<CadetPrivacy> cadets = getCadetsInfo(token);
         updateImage(cadets);

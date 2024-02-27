@@ -2,30 +2,27 @@ package kr.where.backend.api.http;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class HttpHeader {
     private static final String BEARER = "Bearer ";
-    private static final String CONTENT_VALUES = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String GRANT_TYPE_ACCESS = "authorization_code";
     private static final String GRANT_TYPE_REFRESH = "refresh_token";
-    private static final String CLIENT_ID = "id"; // 환경변수
-    private static final String SECRET = "secret"; // 환경변수
-    private static final String REDIRECT_URI = "callbackAddress";
 
     public static HttpEntity<MultiValueMap<String, String>> requestToken(final String code) {
         final HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.CONTENT_TYPE, CONTENT_VALUES);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         params.add("grant_type", GRANT_TYPE_ACCESS);
-        params.add("client_id", CLIENT_ID);
-        params.add("client_secret", SECRET);
+        params.add("client_id", Utils.getClientId());
+        params.add("client_secret", Utils.getSecret());
         params.add("code", code);
-        params.add("redirect_uri", REDIRECT_URI);
+        params.add("redirect_uri", Utils.getRedirectUri());
 
         return new HttpEntity<>(params, headers);
     }
@@ -33,13 +30,13 @@ public class HttpHeader {
     public static HttpEntity<MultiValueMap<String, String>> requestAccessToken(final String refreshToken) {
         final HttpHeaders headers = new HttpHeaders();
 
-        headers.add(HttpHeaders.CONTENT_TYPE, CONTENT_VALUES);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         params.add("grant_type", GRANT_TYPE_REFRESH);
-        params.add("client_id", CLIENT_ID);
-        params.add("client_secret", SECRET);
+        params.add("client_id", Utils.getClientId());
+        params.add("client_secret", Utils.getSecret());
         params.add("refresh_token", refreshToken);
 
         return new HttpEntity<>(params, headers);
@@ -49,7 +46,18 @@ public class HttpHeader {
         final HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
-        headers.add(HttpHeaders.CONTENT_TYPE, CONTENT_VALUES);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+
+        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        return new HttpEntity<>(params, headers);
+    }
+
+    public static HttpEntity<MultiValueMap<String, String>> requestHaneInfo(final String token) {
+        final HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
