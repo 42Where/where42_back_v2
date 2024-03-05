@@ -61,6 +61,7 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
+            log.info("로그인한 맴버 수: " + loginMember.size());
             if (loginMember.size() < 100) {
                 break;
             }
