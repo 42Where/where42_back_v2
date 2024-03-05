@@ -25,6 +25,7 @@ public class UpdateService {
     private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
+    private static final String UPDATE_TOKEN = "update";
     private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
@@ -44,11 +45,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+        log.info("업데이트 시작!!");
+        final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
+        log.info("업데이트 끝!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
