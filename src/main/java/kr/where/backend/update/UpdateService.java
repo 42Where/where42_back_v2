@@ -61,10 +61,12 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
-            log.info("로그인한 맴버 수: " + loginMember.size());
+            log.info("로그인한 맴버 첫번째 아이디: " + loginMember.get(0).getUser().getLogin()
+                    + " location: " + loginMember.get(0).getUser().getLocation());
             if (loginMember.size() < 100) {
                 break;
             }
+            log.info("" + page);
             page += 1;
         }
 
