@@ -35,7 +35,7 @@ public class UpdateService {
     /**
      *
      * 1. 로그인한 모든 카뎃의 위치 업데이트 서비스
-     * 2. 모든 5분마다 카뎃의 로그인 여부에 따른 위치 업데이트 서비스
+     * 2. 모든 3분마다 카뎃의 로그인 여부에 따른 위치 업데이트 서비스
      * 3. 새로운 기수 들어왔을 때, image 업데이트 서비스
      */
 
@@ -85,11 +85,11 @@ public class UpdateService {
     }
 
     /**
-     * 5분 동안 login, logout status 적용하는 메서드
+     * 3분 동안 login, logout status 적용하는 메서드
      * Hane token도 적용 해야함!
      */
     @Retryable
-    @Scheduled(cron = "0 0/5 * 1/1 * ?")
+    @Scheduled(cron = "0 0/3 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
         final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
