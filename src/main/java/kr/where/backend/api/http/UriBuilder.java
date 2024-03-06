@@ -98,7 +98,6 @@ public class UriBuilder {
                 .scheme(HTTPS.getValue())
                 .host(HOST.getValue())
                 .path(LOCATIONS_PATH.getValue())
-                .queryParam(RANGE_END.getValue(), (Date) null)
                 .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER.getValue(), page)
                 .queryParam(SORT.getValue(), "-end_at")

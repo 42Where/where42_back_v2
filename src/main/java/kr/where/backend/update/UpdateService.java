@@ -6,7 +6,10 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +48,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        log.info("업데이트 시작!!");
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 시작!!");
         final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
-        log.info("업데이트 끝!!");
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 끝!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
@@ -61,9 +64,7 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
-            log.info("로그인한 맴버 첫번째 아이디: " + loginMember.get(0).getUser().getLogin()
-                    + " location: " + loginMember.get(0).getUser().getLocation());
-            if (loginMember.size() < 100) {
+            if (loginMember.get(99).getEnd_at() != null) {
                 break;
             }
             log.info("" + page);
@@ -79,7 +80,12 @@ public class UpdateService {
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(member -> {
                     member.getLocation().setImacLocation(cadet.getUser().getLocation());
-                    member.setInCluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                    if (member.isAgree()) {
+                        member.setInCluster(
+                                haneApiService
+                                        .getHaneInfo(cadet.getUser().getLogin(), haneToken)
+                        );
+                    }
                     log.info("member {}의 클러스터 정보가 변경되었습니다", member.getIntraName());
                 }));
     }
@@ -167,5 +173,25 @@ public class UpdateService {
     private void updateImage(final List<CadetPrivacy> cadets) {
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
                 .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0/3 * 1/1 * ?")
+    public void updateInCluster() {
+        log.info("hane 자리 없데이트를 시작합니다!");
+        final List<Member> agreeMembers = memberService.findAgreeMembers()
+                .orElseThrow(NoMemberException::new);
+
+        agreeMembers.forEach(
+                m -> {
+                    m.setInCluster(
+                            haneApiService.getHaneInfo(m.getIntraName(),
+                                    oauthTokenService.findAccessToken(HANE_TOKEN)
+                            )
+                    );
+                    log.info("intraName : " + m.getIntraName() + " incluster : " + m.isInCluster() + "loaction : " + m.getLocation().getLocation());
+                }
+        );
+        log.info("hane 자리 없데이트를 끝냅니다!");
     }
 }

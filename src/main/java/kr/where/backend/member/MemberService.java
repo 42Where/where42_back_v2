@@ -157,5 +157,9 @@ public class MemberService {
 	public Optional<Member> findOne(final Integer intraId) {
 		return memberRepository.findByIntraId(intraId);
 	}
+
+	public Optional<List<Member>> findAgreeMembers() {
+		return memberRepository.findAllByAgreeTrue();
+	}
 }
 
