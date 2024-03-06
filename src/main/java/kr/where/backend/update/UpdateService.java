@@ -25,6 +25,7 @@ public class UpdateService {
     private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
+    private static final String UPDATE_TOKEN = "update";
     private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
@@ -44,11 +45,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+        log.info("업데이트 시작!!");
+        final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
+        log.info("업데이트 끝!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
@@ -58,9 +61,12 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
+            log.info("로그인한 맴버 첫번째 아이디: " + loginMember.get(0).getUser().getLogin()
+                    + " location: " + loginMember.get(0).getUser().getLocation());
             if (loginMember.size() < 100) {
                 break;
             }
+            log.info("" + page);
             page += 1;
         }
 
