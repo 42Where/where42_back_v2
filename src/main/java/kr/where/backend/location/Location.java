@@ -58,6 +58,13 @@ public class Location {
 		this.imacUpdatedAt = LocalDateTime.now();
 	}
 
+	public void initLocation() {
+		this.imacLocation = null;
+		this.imacUpdatedAt = LocalDateTime.now();
+		this.customLocation = null;
+		this.customUpdatedAt = LocalDateTime.now();
+	}
+
 	public String getLocation() {
 		if (!this.member.isAgree()) {
 			return this.imacLocation;
