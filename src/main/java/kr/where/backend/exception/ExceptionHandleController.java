@@ -1,8 +1,6 @@
 package kr.where.backend.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.MissingResourceException;
-import java.util.Optional;
+import kr.where.backend.auth.authUser.exception.AuthUserException;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
 import kr.where.backend.group.exception.GroupException;
@@ -13,14 +11,15 @@ import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException;
+import kr.where.backend.search.exception.SearchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -84,6 +83,20 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
+    @ExceptionHandler(SearchException.class)
+    public ResponseEntity<String> handleSearchException(final  CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
+
+    @ExceptionHandler(AuthUserException.class)
+    public ResponseEntity<String> handleAuthUserException(final CustomException e) {
+        log.info(e.toString());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingParameterException() {
         return ResponseEntity
@@ -105,9 +118,15 @@ public class ExceptionHandleController {
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_SUPPORTED_METHOD));
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException() {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(HttpResourceErrorCode.NOT_METHOD_VALID_ARGUMENT));
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Integer> handleNoResourceException(final HttpServletResponse response) {
-        int errorCode = response.getStatus();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorCode);
+    public ResponseEntity<String> handleNoResourceException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 }

@@ -2,13 +2,10 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
-import kr.where.backend.jwt.JsonWebToken;
-import kr.where.backend.jwt.JwtRepository;
-import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
@@ -30,7 +27,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
-	private final JwtRepository jwtRepository;
 
 	/**
 	 * if (이미 존재하는 멤버)
@@ -46,10 +42,11 @@ public class MemberService {
 	 * @param cadetPrivacy : 42api에게 받아온 cadet info
 	 * @param hane : hane api에게 받아온 inCluster 여부
 	 * @return member
+	 * @throws MemberException.DuplicatedMemberException 이미 존재하는 멤버입니다
 	 */
 	@Transactional
 	public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
-		final AuthUserInfo authUser = AuthUserInfo.of();
+		final AuthUser authUser = AuthUser.of();
 
 		Member member = memberRepository.findByIntraId(authUser.getIntraId()).orElse(null);
 
@@ -103,17 +100,14 @@ public class MemberService {
 	 *
 	 * @param authUser : accessToken 파싱한 정보
 	 * @return responseMemberDto
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
-	public ResponseMemberDTO deleteMember(final AuthUserInfo authUser) {
+	public ResponseMemberDTO deleteMember(final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
 			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 
-		final JsonWebToken jsonWebToken = jwtRepository.findByIntraId(authUser.getIntraId())
-			.orElseThrow(JwtException.NotFoundJwtToken::new);
-
-		jwtRepository.delete(jsonWebToken);
 		memberRepository.delete(member);
 
 		return responseMemberDto;
@@ -125,11 +119,12 @@ public class MemberService {
 	 * @param updateMemberCommentDto : 변경할 comment
 	 * @param authUser : accessToken 파싱한 정보
 	 * @return responseMemberDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
 	public ResponseMemberDTO updateComment(
 		final UpdateMemberCommentDTO updateMemberCommentDto,
-		final AuthUserInfo authUser) {
+		final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
 			.orElseThrow(MemberException.NoMemberException::new);
 		member.setComment(updateMemberCommentDto.getComment());
@@ -143,6 +138,7 @@ public class MemberService {
 	 *
 	 * @param intraId
 	 * @return responseMemberDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)

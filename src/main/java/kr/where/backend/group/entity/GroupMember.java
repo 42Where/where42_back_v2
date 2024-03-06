@@ -11,14 +11,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.where.backend.member.Member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "group_members")
 public class GroupMember {
 

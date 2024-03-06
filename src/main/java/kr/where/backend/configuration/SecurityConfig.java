@@ -1,6 +1,6 @@
 package kr.where.backend.configuration;
 
-import kr.where.backend.auth.exception.CustomAccessDeniedHandler;
+import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
 import kr.where.backend.auth.oauth2login.CustomOauth2UserService;
@@ -81,7 +81,7 @@ public class SecurityConfig {
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) 
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -92,7 +92,9 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/api-docs/**"))
                                 .permitAll()
-                                .requestMatchers(requestMatcher.pattern("/error/**"))
+                                .requestMatchers(requestMatcher.pattern("/v3/token"))
+                                .permitAll()
+                                .requestMatchers(requestMatcher.pattern("/actuator/prometheus"))
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

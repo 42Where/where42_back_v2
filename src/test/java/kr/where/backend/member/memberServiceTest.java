@@ -2,7 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
@@ -49,19 +49,19 @@ public class memberServiceTest {
 	private GroupRepository groupRepository;
 	@Autowired
 	private GroupMemberRepository groupMemberRepository;
-	private AuthUserInfo authUser;
+	private AuthUser authUser;
 
 	@BeforeEach
 	public void setUp() {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-		authUser = new AuthUserInfo(12345, "suhwpark", 1L);
+		authUser = new AuthUser(12345, "suhwpark", 1L);
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
 	}
 	@Test
 	public void create_agree_member_test() {
 
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -95,7 +95,7 @@ public class memberServiceTest {
 	@Test
 	public void create_disagree_member_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 
 		//when
 		Member disagreeMember = memberService.createDisagreeMember(cadetPrivacy);
@@ -118,7 +118,7 @@ public class memberServiceTest {
 	@Test
 	public void disagree_to_agree_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		memberService.createDisagreeMember(cadetPrivacy);
 		Hane hane = Hane.create("IN");
 
@@ -152,7 +152,7 @@ public class memberServiceTest {
 	@Test
 	public void member_duplicate_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -166,7 +166,7 @@ public class memberServiceTest {
 	@Test
 	public void update_comment_test() {
 		//given
-		CadetPrivacy cadetPrivacy = CadetPrivacy.create(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
 		Hane hane = Hane.create("IN");
 		memberService.createAgreeMember(cadetPrivacy, hane);
 

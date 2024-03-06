@@ -3,11 +3,14 @@ package kr.where.backend.api.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
+import java.util.Map;
+
+import lombok.*;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "42seoul opnen API에 요청한 카뎃 정보")
+@AllArgsConstructor
 public class CadetPrivacy {
     @Schema(description = "카뎃의 고유 intra id")
     private Integer id;
@@ -23,17 +26,35 @@ public class CadetPrivacy {
     @Schema(description = "42서울 등록일")
     private String created_at;
 
-    //create for Test
-    public static CadetPrivacy create(Integer id, String login, String location, String small_image, boolean active, String craeated_at) {
-        CadetPrivacy cadetPrivacy = new CadetPrivacy();
+    protected CadetPrivacy() {}
 
-        cadetPrivacy.id = id;
-        cadetPrivacy.login = login;
-        cadetPrivacy.image = Image.create(Versions.create(small_image));
-        cadetPrivacy.location = location;
-        cadetPrivacy.active = active;
-        cadetPrivacy.created_at = craeated_at;
+    @Builder
+    public CadetPrivacy(Integer id, String login, String location, String small_image, boolean active, String created_at) {
+        this.id = id;
+        this.login = login;
+        this.location = location;
+        this.image = Image.create(Versions.create(small_image));
+        this.active = active;
+        this.created_at = created_at;
+    }
 
-        return cadetPrivacy;
+    public static CadetPrivacy of(final Map<String, Object> attributes) {
+        Map<String, Object> image = (Map<String, Object>) attributes.get("image");
+        String smallUrl = "";
+        if (image != null) {
+            Map<String, String> versions = (Map<String, String>) image.get("versions");
+            if (versions != null) {
+                smallUrl = versions.get("small");
+            }
+        }
+
+        return CadetPrivacy.builder()
+                .id((Integer) attributes.get("id"))
+                .login((String) attributes.get("login"))
+                .location((String) attributes.get("location"))
+                .small_image(smallUrl)
+                .active(attributes.get("active") != null && (boolean) attributes.get("active"))
+                .created_at((String) attributes.get("created_at"))
+                .build();
     }
 }

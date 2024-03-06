@@ -6,12 +6,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import kr.where.backend.member.Member;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "groups")
 public class Group {
 

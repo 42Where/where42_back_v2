@@ -1,6 +1,6 @@
 package kr.where.backend.location;
 
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
@@ -27,7 +27,7 @@ public class LocationService {
 	 */
 	@Transactional
 	public void create(final Member member, final String imac) {
-		Location location = new Location(member, imac);
+		final Location location = new Location(member, imac);
 
 		locationRepository.save(location);
 
@@ -40,11 +40,13 @@ public class LocationService {
 	 * @param updateCustomLocationDto 수동자리정보
 	 * @param authUser accessToken 파싱한 정보
 	 * @return responseLocationDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
 	public ResponseLocationDTO updateCustomLocation(
 		final UpdateCustomLocationDTO updateCustomLocationDto,
-		final AuthUserInfo authUser) {
+		final AuthUser authUser
+	) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
 			.orElseThrow(MemberException.NoMemberException::new);
 		final Location location = locationRepository.findByMember(member);

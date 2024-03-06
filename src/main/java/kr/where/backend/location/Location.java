@@ -26,7 +26,7 @@ public class Location {
 	@Column(length = 30)
 	private String customLocation;
 
-	@Column(length = 7)
+	@Column(length = 10)
 	private String imacLocation;
 
 	private LocalDateTime customUpdatedAt;
@@ -56,6 +56,13 @@ public class Location {
 	public void setImacLocation(final String imacLocation) {
 		this.imacLocation = imacLocation;
 		this.imacUpdatedAt = LocalDateTime.now();
+	}
+
+	public void initLocation() {
+		this.imacLocation = null;
+		this.imacUpdatedAt = LocalDateTime.now();
+		this.customLocation = null;
+		this.customUpdatedAt = LocalDateTime.now();
 	}
 
 	public String getLocation() {

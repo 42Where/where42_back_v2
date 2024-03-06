@@ -2,7 +2,7 @@ package kr.where.backend.group;
 
 import java.util.List;
 
-import kr.where.backend.auth.authUserInfo.AuthUserInfo;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
@@ -10,7 +10,6 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
-import kr.where.backend.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GroupService {
-
+    private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
-    private final MemberRepository memberRepository;
 
     /**
      * 그룹 생성
@@ -30,10 +28,13 @@ public class GroupService {
      * @return ResponeGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUserInfo authUser){
+    public ResponseGroupDTO createGroup(final CreateGroupDTO dto, final AuthUser authUser){
         Group group = new Group(dto.getGroupName());
         groupRepository.save(group);
 
+        if (group.getGroupName().equals(DEFAULT)) {
+            authUser.setDefaultGroupId(group.getGroupId());
+        }
         CreateGroupMemberDTO createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(authUser.getIntraId())
                 .groupId(group.getGroupId()).build();
@@ -72,7 +73,7 @@ public class GroupService {
      * @return ResponseGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
+    public ResponseGroupDTO updateGroup(final UpdateGroupDTO dto, final AuthUser authUser) {
         Group group = findOneGroupById(dto.getGroupId());
         updateGroupValidate(dto, authUser);
         group.setGroupName(dto.getGroupName());
@@ -87,7 +88,7 @@ public class GroupService {
      * @return ResponseGroupDTO
      */
     @Transactional
-    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUserInfo authUser) {
+    public ResponseGroupDTO deleteGroup(final Long groupId, final AuthUser authUser) {
         isMyGroup(groupId, authUser);
         final Group group = findOneGroupById(groupId);
         //validate 추가
@@ -102,7 +103,7 @@ public class GroupService {
      * @param groupId
      * @param authUser
      */
-    public final void isMyGroup(Long groupId, AuthUserInfo authUser) {
+    public final void isMyGroup(final Long groupId, final AuthUser authUser) {
         List<ResponseGroupMemberDTO> groups = groupMemberService.findGroupsInfoByIntraId(authUser);
         if (groups.stream().map(ResponseGroupMemberDTO::getGroupId).noneMatch(g -> g.equals(groupId))) {
             throw new GroupException.CannotModifyGroupException();
@@ -115,7 +116,7 @@ public class GroupService {
      * @param dto
      * @param authUser
      */
-    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUserInfo authUser) {
+    public final void updateGroupValidate(final UpdateGroupDTO dto, final AuthUser authUser) {
         if (dto.getGroupId().equals(authUser.getDefaultGroupId()))
             throw new GroupException.CannotModifyGroupException();
         isMyGroup(dto.getGroupId(), authUser);

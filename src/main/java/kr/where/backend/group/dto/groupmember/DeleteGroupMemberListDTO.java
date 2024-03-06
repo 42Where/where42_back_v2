@@ -17,7 +17,7 @@ public class DeleteGroupMemberListDTO {
     private List<Integer> members;
 
     @Builder
-    public DeleteGroupMemberListDTO(Long groupId, List<Integer> members) {
+    public DeleteGroupMemberListDTO(final Long groupId, final List<Integer> members) {
         this.groupId = groupId;
         this.members = members;
     }
