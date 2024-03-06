@@ -6,7 +6,10 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ public class UpdateService {
     private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
+    private static final String UPDATE_TOKEN = "update";
     private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
@@ -34,7 +38,7 @@ public class UpdateService {
     /**
      *
      * 1. 로그인한 모든 카뎃의 위치 업데이트 서비스
-     * 2. 모든 5분마다 카뎃의 로그인 여부에 따른 위치 업데이트 서비스
+     * 2. 모든 3분마다 카뎃의 로그인 여부에 따른 위치 업데이트 서비스
      * 3. 새로운 기수 들어왔을 때, image 업데이트 서비스
      */
 
@@ -44,11 +48,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 시작!!");
+        final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 끝!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
@@ -58,9 +64,10 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
-            if (loginMember.size() < 100) {
+            if (loginMember.get(99).getEnd_at() != null) {
                 break;
             }
+            log.info("" + page);
             page += 1;
         }
 
@@ -73,17 +80,22 @@ public class UpdateService {
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(member -> {
                     member.getLocation().setImacLocation(cadet.getUser().getLocation());
-                    member.setInCluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                    if (member.isAgree()) {
+                        member.setInCluster(
+                                haneApiService
+                                        .getHaneInfo(cadet.getUser().getLogin(), haneToken)
+                        );
+                    }
                     log.info("member {}의 클러스터 정보가 변경되었습니다", member.getIntraName());
                 }));
     }
 
     /**
-     * 5분 동안 login, logout status 적용하는 메서드
+     * 3분 동안 login, logout status 적용하는 메서드
      * Hane token도 적용 해야함!
      */
     @Retryable
-    @Scheduled(cron = "0 0/5 * 1/1 * ?")
+    @Scheduled(cron = "0 0/3 * 1/1 * ?")
     @Transactional
     public void updateMemberStatus() {
         final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
@@ -161,5 +173,25 @@ public class UpdateService {
     private void updateImage(final List<CadetPrivacy> cadets) {
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
                 .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0/3 * 1/1 * ?")
+    public void updateInCluster() {
+        log.info("hane 자리 없데이트를 시작합니다!");
+        final List<Member> agreeMembers = memberService.findAgreeMembers()
+                .orElseThrow(NoMemberException::new);
+
+        agreeMembers.forEach(
+                m -> {
+                    m.setInCluster(
+                            haneApiService.getHaneInfo(m.getIntraName(),
+                                    oauthTokenService.findAccessToken(HANE_TOKEN)
+                            )
+                    );
+                    log.info("intraName : " + m.getIntraName() + " incluster : " + m.isInCluster() + "loaction : " + m.getLocation().getLocation());
+                }
+        );
+        log.info("hane 자리 없데이트를 끝냅니다!");
     }
 }
