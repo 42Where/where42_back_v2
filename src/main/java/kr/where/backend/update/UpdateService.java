@@ -63,7 +63,7 @@ public class UpdateService {
             result.addAll(loginMember);
             log.info("로그인한 맴버 첫번째 아이디: " + loginMember.get(0).getUser().getLogin()
                     + " location: " + loginMember.get(0).getUser().getLocation());
-            if (loginMember.size() < 100) {
+            if (loginMember.get(99).getEnd_at() != null) {
                 break;
             }
             log.info("" + page);
