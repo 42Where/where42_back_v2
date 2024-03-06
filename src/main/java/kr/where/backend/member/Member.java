@@ -107,6 +107,9 @@ public class Member {
 
 	public void setInCluster(final Hane hane) {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+
+		if (this.inCluster == false)
+			this.location.initLocation();
 	}
 
 	public void setImage(final String image) {

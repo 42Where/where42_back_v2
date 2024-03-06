@@ -45,13 +45,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        log.info("업데이트 시작!!");
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 시작!!");
         final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
-        log.info("업데이트 끝!!");
+        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 끝!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
@@ -61,9 +61,7 @@ public class UpdateService {
         while (true) {
             final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
-            log.info("로그인한 맴버 첫번째 아이디: " + loginMember.get(0).getUser().getLogin()
-                    + " location: " + loginMember.get(0).getUser().getLocation());
-            if (loginMember.size() < 100) {
+            if (loginMember.get(99).getEnd_at() != null) {
                 break;
             }
             log.info("" + page);
