@@ -6,7 +6,10 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +80,12 @@ public class UpdateService {
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(member -> {
                     member.getLocation().setImacLocation(cadet.getUser().getLocation());
-                    member.setInCluster(haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken));
+                    if (member.isAgree()) {
+                        member.setInCluster(
+                                haneApiService
+                                        .getHaneInfo(cadet.getUser().getLogin(), haneToken)
+                        );
+                    }
                     log.info("member {}의 클러스터 정보가 변경되었습니다", member.getIntraName());
                 }));
     }
@@ -165,5 +173,25 @@ public class UpdateService {
     private void updateImage(final List<CadetPrivacy> cadets) {
         cadets.forEach(cadet -> memberService.findOne(cadet.getId())
                 .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
+    }
+
+    @Transactional
+    @Scheduled(cron = "*/3 * * * *")
+    public void updateInCluster() {
+        log.info("hane 자리 없데이트를 시작합니다!");
+        final List<Member> agreeMembers = memberService.findAgreeMembers()
+                .orElseThrow(NoMemberException::new);
+
+        agreeMembers.forEach(
+                m -> {
+                    m.setInCluster(
+                            haneApiService.getHaneInfo(m.getIntraName(),
+                                    oauthTokenService.findAccessToken(HANE_TOKEN)
+                            )
+                    );
+                    log.info("intraName : " + m.getIntraName() + " incluster : " + m.isInCluster() + "loaction : " + m.getLocation().getLocation());
+                }
+        );
+        log.info("hane 자리 없데이트를 끝냅니다!");
     }
 }
