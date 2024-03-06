@@ -176,21 +176,18 @@ public class UpdateService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0/3 * 1/1 * ?")
+    @Scheduled(cron = "0 0 0/1 1/1 * ?")
     public void updateInCluster() {
         log.info("hane 자리 없데이트를 시작합니다!");
         final List<Member> agreeMembers = memberService.findAgreeMembers()
                 .orElseThrow(NoMemberException::new);
 
         agreeMembers.forEach(
-                m -> {
-                    m.setInCluster(
+                m -> m.setInCluster(
                             haneApiService.getHaneInfo(m.getIntraName(),
                                     oauthTokenService.findAccessToken(HANE_TOKEN)
                             )
-                    );
-                    log.info("intraName : " + m.getIntraName() + " incluster : " + m.isInCluster() + "loaction : " + m.getLocation().getLocation());
-                }
+                    )
         );
         log.info("hane 자리 없데이트를 끝냅니다!");
     }
