@@ -22,8 +22,6 @@ public class JoinService {
     private final HaneApiService haneApiService;
     private final JwtService jwtService;
 
-    @Value("${hane.token.secret}")
-    private String haneToken;
     @Transactional
     public ResponseRefreshTokenDTO join(final AuthUser authUser) {
         final Member member = memberService.findOne(authUser.getIntraId())
@@ -36,7 +34,7 @@ public class JoinService {
                         .builder()
                         .build(),
                 haneApiService
-                        .getHaneInfo(member.getIntraName(), haneToken)
+                        .getHaneInfo(member.getIntraName(), TOKEN_HANE)
         );
 
         return ResponseRefreshTokenDTO
