@@ -4,10 +4,12 @@ import java.io.IOException;
 import kr.where.backend.api.exception.RequestException.ApiUnauthorizedException;
 import kr.where.backend.api.exception.RequestException.BadRequestException;
 import kr.where.backend.api.exception.RequestException.TooManyRequestException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
+@Slf4j
 public class CustomResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
@@ -17,11 +19,12 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            new ApiUnauthorizedException();
+            throw new ApiUnauthorizedException();
         } else if (response.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS){
-            new TooManyRequestException();
+            throw new TooManyRequestException();
         } else {
-            new BadRequestException();
+            log.error("error code : {}", response.getStatusCode());
+            throw new BadRequestException();
         }
     }
 }
