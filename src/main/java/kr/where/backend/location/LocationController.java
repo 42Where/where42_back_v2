@@ -29,7 +29,7 @@ public class LocationController implements LocationApiDocs {
 	 * @return ResponseEntity(responseLocationDTO)
 	 */
 	@PostMapping("/custom")
-	public ResponseEntity<ResponseLocationDTO> updateCustomLocation(@RequestBody final UpdateCustomLocationDTO updateCustomLocation) {
+	public ResponseEntity<ResponseLocationDTO> updateCustomLocation(@RequestBody @Valid final UpdateCustomLocationDTO updateCustomLocation) {
 		final AuthUser authUser = AuthUser.of();
 		final ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocation,
 			authUser);
