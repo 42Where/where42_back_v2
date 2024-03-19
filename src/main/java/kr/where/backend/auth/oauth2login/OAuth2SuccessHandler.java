@@ -61,7 +61,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             );
         }
 
-        log.info("혹시 여기까지는 되었니?");
         getRedirectStrategy()
                 .sendRedirect(
                         request,
@@ -73,6 +72,5 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                 .build()
                                 .toUriString()
                 );
-        log.info("?????");
     }
 }
