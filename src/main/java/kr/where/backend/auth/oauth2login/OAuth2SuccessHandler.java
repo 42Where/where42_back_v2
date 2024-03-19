@@ -73,5 +73,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                 .build()
                                 .toUriString()
                 );
+        log.info("?????");
     }
 }
