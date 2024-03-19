@@ -61,12 +61,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             );
         }
 
+        log.info("혹시 여기까지는 되었니?");
         getRedirectStrategy()
                 .sendRedirect(
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("http://test.where42.kr:3000/")
+                                .fromUriString("http://test.where42.kr")
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()
