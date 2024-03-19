@@ -18,6 +18,6 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
     public void onAuthenticationFailure(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
-        response.sendRedirect("http://test.where42.kr/login-fail");
+        response.sendRedirect("https://test.where42.kr/login-fail");
     }
 }
