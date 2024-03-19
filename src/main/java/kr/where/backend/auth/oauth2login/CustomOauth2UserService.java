@@ -24,7 +24,6 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         final OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
         final Map<String, Object> attributes = oAuth2User.getAttributes();
-        log.info("load user ");
         final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         return new UserProfile(
