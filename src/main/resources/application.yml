@@ -10,7 +10,7 @@ spring:
           42seoul:
             client-id: u-s4t2ud-0404f8397c5fd585edfe6d3c8143f5f3d784ff51cca0e5c4b970291d032dbeaa
             client-secret: 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
-            redirect-uri: http://localhost:8080/login/oauth2/code/42seoul
+            redirect-uri: https://localhost:8080/login/oauth2/code/42seoul
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
         provider:
