@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
@@ -52,12 +53,11 @@ public class JwtService {
      * @param authUser : 인가 인증 받은 유저의 정보를 사용하여 token 발행
      * @return accessToken
      */
-    @Transactional
-    public ResponseRefreshTokenDTO reissueAccessToken(final AuthUser authUser) {
+    public ResponseAccessTokenDTO reissueAccessToken(final AuthUser authUser) {
 
-        return ResponseRefreshTokenDTO
+        return ResponseAccessTokenDTO
                 .builder()
-                .refreshToken(createRefreshToken(authUser.getIntraId(), authUser.getIntraName()))
+                .accessToken(createAccessToken(authUser.getIntraId(), authUser.getIntraName()))
                 .build();
     }
 
