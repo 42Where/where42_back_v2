@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class UpdateCustomLocationDTO {
-	@NotBlank
 	private String customLocation;
 
 	public static UpdateCustomLocationDTO createForTest(String customLocation) {

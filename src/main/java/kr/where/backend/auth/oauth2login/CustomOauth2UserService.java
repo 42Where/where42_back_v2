@@ -20,12 +20,10 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public UserProfile loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         final OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
         final Map<String, Object> attributes = oAuth2User.getAttributes();
-
         final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         return new UserProfile(

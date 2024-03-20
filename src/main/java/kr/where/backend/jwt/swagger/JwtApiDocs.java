@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,10 @@ public interface JwtApiDocs {
             summary = "reissue accessToken of Expired time API",
             description = "accessToken을 재 발급",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(schema = @Schema(implementation = ResponseRefreshTokenDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(schema = @Schema(implementation = ResponseAccessTokenDTO.class))),
             }
 
     )
     @PostMapping("/reissue")
-    ResponseEntity<ResponseRefreshTokenDTO> reIssue(@AuthUserInfo AuthUser authUser);
+    ResponseEntity<ResponseAccessTokenDTO> reIssue(@AuthUserInfo AuthUser authUser);
 }
