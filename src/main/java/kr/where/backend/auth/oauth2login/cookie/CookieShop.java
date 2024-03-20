@@ -13,7 +13,7 @@ public class CookieShop {
 
         cookie.setMaxAge(expiry);
         cookie.setPath("/");
-        cookie.setSecure(true);
+        // cookie.setSecure(true);
         cookie.setHttpOnly(true);
 
         response.addCookie(cookie);
