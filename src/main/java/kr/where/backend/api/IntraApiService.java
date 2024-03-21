@@ -1,14 +1,16 @@
 package kr.where.backend.api;
 
 import java.util.List;
+import kr.where.backend.api.exception.RequestException.TooManyRequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
-import kr.where.backend.api.exception.RequestException;
+import kr.where.backend.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class IntraApiService {
     /**
      * 특정 카텟의 정보 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public CadetPrivacy getCadetPrivacy(final String token, final String name) {
         return JsonMapper
                 .mapping(
@@ -34,7 +36,7 @@ public class IntraApiService {
     /**
      * index page 별로 image 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public List<CadetPrivacy> getCadetsImage(final String token, final int page) {
         return JsonMapper
                 .mappings(
@@ -45,7 +47,7 @@ public class IntraApiService {
     /**
      * 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public List<Cluster> getCadetsInCluster(final String token, final int page) {
         return JsonMapper
                 .mappings(
@@ -56,7 +58,7 @@ public class IntraApiService {
     /**
      * 5분 이내 클러스터 아이맥에 로그아웃 한 카뎃 index page 별로 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public List<Cluster> getLogoutCadetsLocation(final String token, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
@@ -66,7 +68,7 @@ public class IntraApiService {
     /**
      * 5분 이내 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public List<Cluster> getLoginCadetsLocation(final String token, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
@@ -76,7 +78,7 @@ public class IntraApiService {
     /**
      * keyWord 부터 end 까지 intra id를 가진 카뎃 10명의 정보 반환
      */
-    @Retryable
+    @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public List<CadetPrivacy> getCadetsInRange(final String token, final String keyWord, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(
@@ -89,20 +91,20 @@ public class IntraApiService {
      * 요청 3번 실패 시 실행되는 메서드
      */
     @Recover
-    public CadetPrivacy fallbackCadetPrivacy(final RuntimeException exception) {
-        log.info("[IntraApiService] CadetPrivacy fallback {}", exception.getMessage());
-        throw new RequestException.BadRequestException();
+    public CadetPrivacy fallbackCadetPrivacy(final CustomException exception) {
+        log.warn("[IntraApiService] CadetPrivacy method");
+        throw exception;
     }
 
     @Recover
-    public List<CadetPrivacy> fallbackCadetsPrivacy(final RuntimeException exception) {
-        log.info("[IntraApiService] List<CadetPrivacy> fallback {}", exception.getMessage());
-        throw new RequestException.BadRequestException();
+    public List<CadetPrivacy> fallbackCadetsPrivacy(final CustomException exception) {
+        log.warn("[IntraApiService] List<CadetPrivacy> method");
+        throw exception;
     }
 
     @Recover
-    public List<Cluster> fallbackClusterList(final RuntimeException exception) {
-        log.info("[IntraApiService] List<Cluster> fallback {}", exception.getMessage());
-        throw new RequestException.BadRequestException();
+    public List<Cluster> fallbackClusterList(final CustomException exception) {
+        log.warn("[IntraApiService] List<Cluster> method");
+        throw exception;
     }
 }
