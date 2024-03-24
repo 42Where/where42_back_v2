@@ -60,8 +60,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin())
             );
         }
-        response.setHeader("accessToken ", "123234535453");
-        response.setHeader("refreshToken " , "rrrognornvornornr");
+//        response.setHeader("accessToken ", "123234535453");
+//        response.setHeader("refreshToken " , "rrrognornvornornr");
         getRedirectStrategy()
                 .sendRedirect(
                         request,
