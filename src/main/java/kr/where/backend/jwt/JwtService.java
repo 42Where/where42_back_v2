@@ -13,11 +13,11 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -38,6 +38,8 @@ import org.springframework.security.core.Authentication;
 @Transactional(readOnly = true)
 @Slf4j
 public class JwtService {
+    private static final String TYPE_ACCESS = "accessToken";
+    private static final String TYPE_REFRESH = "refreshToken";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -47,7 +49,6 @@ public class JwtService {
     @Value("${issuer}")
     private String issuer;
     private final MemberService memberService;
-
     /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
      * @param authUser : 인가 인증 받은 유저의 정보를 사용하여 token 발행
@@ -68,7 +69,7 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createAccessToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, accessTokenExpirationTime);
+        return createToken(intraId, intraName, accessTokenExpirationTime, TYPE_ACCESS);
     }
 
     /**
@@ -78,7 +79,7 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createRefreshToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, refreshTokenExpirationTime);
+        return createToken(intraId, intraName, refreshTokenExpirationTime, TYPE_REFRESH);
     }
 
     /**
@@ -87,10 +88,13 @@ public class JwtService {
      * @param validateTime : 토큰의 만료시간 설정하기 위함
      * @return token
      */
-    private String createToken(final Integer intraId, final String intraName, final long validateTime) {
+    private String createToken(
+            final Integer intraId, final String intraName, final long validateTime, final String type
+        ) {
         final Claims claims = Jwts.claims().setSubject("User");
         claims.put("intraId", intraId);
         claims.put("intraName", intraName);
+        claims.put("type", type);
         claims.put("roles", "Cadet");
         final Date now = new Date();
 
@@ -120,14 +124,12 @@ public class JwtService {
      * @param token
      * @return
      */
-    public Authentication getAuthentication(final String token) {
+    public Authentication getAuthentication(final HttpServletRequest request, final String token) {
         // 토큰 복호화
         final Claims claims = parseToken(token);
         log.info("token 정보 : " + claims);
 
-        if (claims.get("roles") == null) {
-            throw new IllegalArgumentException("권한 정보가 없는 토큰입니다.");
-        }
+        validateJwtToken(request, claims);
 
         // 클레임에서 권한 정보 가져오기
         final Collection<? extends GrantedAuthority> authorities = Stream.of(
@@ -191,5 +193,21 @@ public class JwtService {
             return Optional.empty();
         }
         return Optional.ofNullable(token[1]);
+    }
+
+    private void validateJwtToken(final HttpServletRequest request, final Claims claims) {
+        if (!Objects.equals(request.getRequestURI(), "/v3/jwt/reissue")
+                && !Objects.equals(claims.get("type"), TYPE_ACCESS)) {
+            throw new JwtException.UnMatchedTypeJwtToken();
+        }
+
+        if (Objects.equals(request.getRequestURI(), "/v3/jwt/reissue")
+                && !Objects.equals(claims.get("type"), TYPE_REFRESH)) {
+            throw new JwtException.UnMatchedTypeJwtToken();
+        }
+
+        if (claims.get("roles") == null) {
+            throw new JwtException.IllegalJwtToken();
+        }
     }
 }
