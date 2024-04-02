@@ -38,6 +38,11 @@ public class JwtException extends CustomException {
         }
     }
 
+    public static class UnMatchedTypeJwtToken extends JwtException {
+        public UnMatchedTypeJwtToken() {
+            super(JwtErrorCode.UNMATCHED_TYPE_TOKEN);
+        }
+    }
     public static class NotFoundJwtToken extends JwtException {
         public NotFoundJwtToken() {
             super(JwtErrorCode.NOTFOUND_TOKEN);
