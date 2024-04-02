@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String token = jwtService.extractToken(request).orElse(null);
         if (token != null) {
-            final Authentication auth = jwtService.getAuthentication(token);
+            final Authentication auth = jwtService.getAuthentication(request, token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(request, response);

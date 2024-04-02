@@ -45,8 +45,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //jwt 발행
         log.info("JWT 토큰 발행 시작");
 
-//        final String accessToken = jwtService.createAccessToken(cadetInfo.getId(), cadetInfo.getLogin());
-
         CookieShop.bakedCookie(response,
                 ACCESS_TOKEN,
                 ACCESS_EXPIRY,
@@ -60,7 +58,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin())
             );
         }
-
         getRedirectStrategy()
                 .sendRedirect(
                         request,

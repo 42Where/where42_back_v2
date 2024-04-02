@@ -13,11 +13,12 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.filter.JwtConstants;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -47,7 +48,6 @@ public class JwtService {
     @Value("${issuer}")
     private String issuer;
     private final MemberService memberService;
-
     /**
      * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
      * @param authUser : 인가 인증 받은 유저의 정보를 사용하여 token 발행
@@ -68,7 +68,12 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createAccessToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, accessTokenExpirationTime);
+        return createToken(
+                intraId,
+                intraName,
+                accessTokenExpirationTime,
+                JwtConstants.ACCESS.getValue()
+        );
     }
 
     /**
@@ -78,7 +83,12 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createRefreshToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, refreshTokenExpirationTime);
+        return createToken(
+                intraId,
+                intraName,
+                refreshTokenExpirationTime,
+                JwtConstants.REFRESH.getValue()
+        );
     }
 
     /**
@@ -87,11 +97,14 @@ public class JwtService {
      * @param validateTime : 토큰의 만료시간 설정하기 위함
      * @return token
      */
-    private String createToken(final Integer intraId, final String intraName, final long validateTime) {
-        final Claims claims = Jwts.claims().setSubject("User");
-        claims.put("intraId", intraId);
-        claims.put("intraName", intraName);
-        claims.put("roles", "Cadet");
+    private String createToken(
+            final Integer intraId, final String intraName, final long validateTime, final String type
+        ) {
+        final Claims claims = Jwts.claims().setSubject(JwtConstants.USER_SUBJECTS.getValue());
+        claims.put(JwtConstants.USER_ID.getValue(), intraId);
+        claims.put(JwtConstants.USER_NAME.getValue(), intraName);
+        claims.put(JwtConstants.TOKEN_TYPE.getValue(), type);
+        claims.put(JwtConstants.ROLE_LEVEL.getValue(), JwtConstants.USER_ROLE.getValue());
         final Date now = new Date();
 
         return Jwts.builder()
@@ -120,22 +133,20 @@ public class JwtService {
      * @param token
      * @return
      */
-    public Authentication getAuthentication(final String token) {
+    public Authentication getAuthentication(final HttpServletRequest request, final String token) {
         // 토큰 복호화
         final Claims claims = parseToken(token);
         log.info("token 정보 : " + claims);
 
-        if (claims.get("roles") == null) {
-            throw new IllegalArgumentException("권한 정보가 없는 토큰입니다.");
-        }
+        validateTypeAndClaims(request, claims);
 
         // 클레임에서 권한 정보 가져오기
         final Collection<? extends GrantedAuthority> authorities = Stream.of(
-                        claims.get("roles").toString())
+                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        final Integer intraId = claims.get("intraId", Integer.class);
+        final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
@@ -187,9 +198,25 @@ public class JwtService {
     }
 
     private Optional<String> getToken(final String[] token) {
-        if (token.length != 2 || !token[0].equals("Bearer")) {
+        if (token.length != 2 || !token[0].equals(JwtConstants.HEADER_TYPE.getValue())) {
             return Optional.empty();
         }
         return Optional.ofNullable(token[1]);
+    }
+
+    private void validateTypeAndClaims(final HttpServletRequest request, final Claims claims) {
+        if (!Objects.equals(request.getRequestURI(), JwtConstants.REISSUE_URI.getValue())
+                && !Objects.equals(claims.get(JwtConstants.TOKEN_TYPE.getValue()), JwtConstants.ACCESS.getValue())) {
+            throw new JwtException.UnMatchedTypeJwtToken();
+        }
+
+        if (Objects.equals(request.getRequestURI(), JwtConstants.REISSUE_URI.getValue())
+                && !Objects.equals(claims.get(JwtConstants.TOKEN_TYPE.getValue()), JwtConstants.REFRESH.getValue())) {
+            throw new JwtException.UnMatchedTypeJwtToken();
+        }
+
+        if (claims.get(JwtConstants.TOKEN_TYPE.getValue()) == null) {
+            throw new JwtException.IllegalJwtToken();
+        }
     }
 }
