@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.filter.JwtConstants;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
@@ -38,8 +39,6 @@ import org.springframework.security.core.Authentication;
 @Transactional(readOnly = true)
 @Slf4j
 public class JwtService {
-    private static final String TYPE_ACCESS = "accessToken";
-    private static final String TYPE_REFRESH = "refreshToken";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -69,7 +68,12 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createAccessToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, accessTokenExpirationTime, TYPE_ACCESS);
+        return createToken(
+                intraId,
+                intraName,
+                accessTokenExpirationTime,
+                JwtConstants.ACCESS.getValue()
+        );
     }
 
     /**
@@ -79,7 +83,12 @@ public class JwtService {
      * @return Token을 생성하는 메서드 호출
      */
     public String createRefreshToken(final Integer intraId, final String intraName) {
-        return createToken(intraId, intraName, refreshTokenExpirationTime, TYPE_REFRESH);
+        return createToken(
+                intraId,
+                intraName,
+                refreshTokenExpirationTime,
+                JwtConstants.REFRESH.getValue()
+        );
     }
 
     /**
@@ -91,11 +100,11 @@ public class JwtService {
     private String createToken(
             final Integer intraId, final String intraName, final long validateTime, final String type
         ) {
-        final Claims claims = Jwts.claims().setSubject("User");
-        claims.put("intraId", intraId);
-        claims.put("intraName", intraName);
-        claims.put("type", type);
-        claims.put("roles", "Cadet");
+        final Claims claims = Jwts.claims().setSubject(JwtConstants.USER_SUBJECTS.getValue());
+        claims.put(JwtConstants.USER_ID.getValue(), intraId);
+        claims.put(JwtConstants.USER_NAME.getValue(), intraName);
+        claims.put(JwtConstants.TOKEN_TYPE.getValue(), type);
+        claims.put(JwtConstants.ROLE_LEVEL.getValue(), JwtConstants.USER_ROLE.getValue());
         final Date now = new Date();
 
         return Jwts.builder()
@@ -129,15 +138,15 @@ public class JwtService {
         final Claims claims = parseToken(token);
         log.info("token 정보 : " + claims);
 
-        validateJwtToken(request, claims);
+        validateTypeAndClaims(request, claims);
 
         // 클레임에서 권한 정보 가져오기
         final Collection<? extends GrantedAuthority> authorities = Stream.of(
-                        claims.get("roles").toString())
+                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        final Integer intraId = claims.get("intraId", Integer.class);
+        final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
@@ -189,24 +198,24 @@ public class JwtService {
     }
 
     private Optional<String> getToken(final String[] token) {
-        if (token.length != 2 || !token[0].equals("Bearer")) {
+        if (token.length != 2 || !token[0].equals(JwtConstants.HEADER_TYPE.getValue())) {
             return Optional.empty();
         }
         return Optional.ofNullable(token[1]);
     }
 
-    private void validateJwtToken(final HttpServletRequest request, final Claims claims) {
-        if (!Objects.equals(request.getRequestURI(), "/v3/jwt/reissue")
-                && !Objects.equals(claims.get("type"), TYPE_ACCESS)) {
+    private void validateTypeAndClaims(final HttpServletRequest request, final Claims claims) {
+        if (!Objects.equals(request.getRequestURI(), JwtConstants.REISSUE_URI.getValue())
+                && !Objects.equals(claims.get(JwtConstants.TOKEN_TYPE.getValue()), JwtConstants.ACCESS.getValue())) {
             throw new JwtException.UnMatchedTypeJwtToken();
         }
 
-        if (Objects.equals(request.getRequestURI(), "/v3/jwt/reissue")
-                && !Objects.equals(claims.get("type"), TYPE_REFRESH)) {
+        if (Objects.equals(request.getRequestURI(), JwtConstants.REISSUE_URI.getValue())
+                && !Objects.equals(claims.get(JwtConstants.TOKEN_TYPE.getValue()), JwtConstants.REFRESH.getValue())) {
             throw new JwtException.UnMatchedTypeJwtToken();
         }
 
-        if (claims.get("roles") == null) {
+        if (claims.get(JwtConstants.TOKEN_TYPE.getValue()) == null) {
             throw new JwtException.IllegalJwtToken();
         }
     }
