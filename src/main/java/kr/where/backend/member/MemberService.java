@@ -133,6 +133,22 @@ public class MemberService {
 	}
 
 	/**
+	 * 존재하는 멤버인지 검사 후, 본인의 comment를 변경함
+	 *
+	 * @param authUser : accessToken 파싱한 정보
+	 * @return responseMemberDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
+	 */
+	@Transactional
+	public ResponseMemberDTO deleteComment(final AuthUser authUser) {
+		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
+			.orElseThrow(MemberException.NoMemberException::new);
+		member.setComment(null);
+
+		return ResponseMemberDTO.builder().member(member).build();
+	}
+
+	/**
 	 * intraId에 해당하는 member 한명을 찾음
 	 * findOne API(in member)을 위한 service
 	 *
