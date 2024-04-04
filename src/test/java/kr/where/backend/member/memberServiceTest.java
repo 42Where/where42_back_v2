@@ -193,8 +193,10 @@ public class memberServiceTest {
 		memberService.createAgreeMember(cadetPrivacy, hane);
 
 		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+
 		UpdateMemberCommentDTO updateMemberCommentDto = new UpdateMemberCommentDTO();
 		updateMemberCommentDto.setComment("new comment");
+		memberService.updateComment(updateMemberCommentDto, authUser);
 		String beforeComment = member.getComment();
 
 		//when
