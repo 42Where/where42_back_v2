@@ -55,4 +55,22 @@ public class LocationService {
 
 		return ResponseLocationDTO.builder().location(location).build();
 	}
+
+	/**
+	 * 수동자리 초기화(삭제)
+	 *
+	 * @param authUser accessToken 파싱한 정보
+	 * @return responseLocationDTO
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
+	 */
+	@Transactional
+	public ResponseLocationDTO deleteCustomLocation(final AuthUser authUser) {
+		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
+			.orElseThrow(MemberException.NoMemberException::new);
+		final Location location = locationRepository.findByMember(member);
+
+		location.setCustomLocation(null);
+
+		return ResponseLocationDTO.builder().location(location).build();
+	}
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,19 @@ public class LocationController implements LocationApiDocs {
 		final AuthUser authUser = AuthUser.of();
 		final ResponseLocationDTO responseLocationDto = locationService.updateCustomLocation(updateCustomLocation,
 			authUser);
+
+		return ResponseEntity.ok(responseLocationDto);
+	}
+
+	/**
+	 * 수동자리 초기화(삭제)
+	 *
+	 * @return ResponseEntity(responseLocationDTO)
+	 */
+	@DeleteMapping("/custom")
+	public ResponseEntity<ResponseLocationDTO> deleteCustomLocation() {
+		final AuthUser authUser = AuthUser.of();
+		final ResponseLocationDTO responseLocationDto = locationService.deleteCustomLocation(authUser);
 
 		return ResponseEntity.ok(responseLocationDto);
 	}
