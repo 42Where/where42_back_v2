@@ -82,10 +82,23 @@ public class MemberController implements MemberApiDocs {
 	 */
 	@PostMapping("/comment")
 	public ResponseEntity<ResponseMemberDTO> updateComment(
-			@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
-			@AuthUserInfo final AuthUser authUser) {
+		@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
+		@AuthUserInfo final AuthUser authUser) {
 
 		final ResponseMemberDTO responseMemberDto = memberService.updateComment(updateMemberCommentDto, authUser);
+
+		return ResponseEntity.ok(responseMemberDto);
+	}
+
+	/**
+	 * 상태메세지 삭제
+	 *
+	 * @return ResponseEntity(ResponseMemberDTO)
+	 */
+	@DeleteMapping("/comment")
+	public ResponseEntity<ResponseMemberDTO> deleteComment(@AuthUserInfo final AuthUser authUser) {
+
+		final ResponseMemberDTO responseMemberDto = memberService.deleteComment(authUser);
 
 		return ResponseEntity.ok(responseMemberDto);
 	}

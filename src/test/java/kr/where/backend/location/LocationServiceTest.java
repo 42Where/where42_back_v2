@@ -70,4 +70,23 @@ public class LocationServiceTest {
         assertThat(member.get().getLocation().getLocation()).isEqualTo(location.getLocation());
         assertThat(location.getLocation()).isEqualTo("1F open lounge");
     }
+
+    @Test
+    public void delete_custom_location_test() {
+        //given
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        Hane hane = Hane.create("IN");
+
+        memberService.createAgreeMember(cadetPrivacy, hane);
+
+        UpdateCustomLocationDTO updateCustomLocationDto = UpdateCustomLocationDTO.createForTest("1F open lounge");
+        ResponseLocationDTO beforeResponseLocationDTO = locationService.updateCustomLocation(updateCustomLocationDto, authUser);
+
+        //when
+        ResponseLocationDTO afterResponseLocationDTO = locationService.deleteCustomLocation(authUser);
+
+        //then
+        assertThat(beforeResponseLocationDTO.getCustomLocation()).isEqualTo("1F open lounge");
+        assertThat(afterResponseLocationDTO.getCustomLocation()).isEqualTo(null);
+    }
 }
