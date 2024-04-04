@@ -94,6 +94,18 @@ public interface MemberApiDocs {
 		@RequestBody @Valid final UpdateMemberCommentDTO updateMemberCommentDto,
 		@AuthUserInfo final AuthUser authUser);
 
+	@Operation(summary = "1.8 deletePersonalMessage API", description = "맴버 상태 메시지 삭제",
+		parameters = {
+			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+		},
+		responses = {
+			@ApiResponse(responseCode = "200", description = "맴버 상태 메시지 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseMemberDTO.class))),
+			@ApiResponse(responseCode = "1000", description = "존재하지 않는 맴버입니다.", content = @Content(schema = @Schema(implementation = MemberException.NoMemberException.class)))
+		}
+	)
+	@DeleteMapping("/comment")
+	ResponseEntity<ResponseMemberDTO> deleteComment(@AuthUserInfo final AuthUser authUser);
+
 	@Operation(summary = "1.5 createDummyAgreeMember API", description = "dummy 동의 맴버 생성 하는 POST API, dummy 멤버 10명 생성, 인자 필요 없음 (sign up 생기면 없어질 api 입니다!)",
 		parameters = {
 			@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),

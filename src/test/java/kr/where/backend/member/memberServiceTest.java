@@ -184,4 +184,27 @@ public class memberServiceTest {
 		assertThat(beforeComment).isEqualTo(null);
 		assertThat(afterComment).isEqualTo("new comment");
 	}
+
+	@Test
+	public void delete_comment_test() {
+		//given
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		Hane hane = Hane.create("IN");
+		memberService.createAgreeMember(cadetPrivacy, hane);
+
+		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
+
+		UpdateMemberCommentDTO updateMemberCommentDto = new UpdateMemberCommentDTO();
+		updateMemberCommentDto.setComment("new comment");
+		memberService.updateComment(updateMemberCommentDto, authUser);
+		String beforeComment = member.getComment();
+
+		//when
+		memberService.deleteComment(authUser);
+		String afterComment = member.getComment();
+
+		//then
+		assertThat(beforeComment).isEqualTo("new comment");
+		assertThat(afterComment).isEqualTo(null);
+	}
 }
