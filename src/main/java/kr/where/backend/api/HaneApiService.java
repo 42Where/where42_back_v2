@@ -5,7 +5,6 @@ import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.Hane;
-import kr.where.backend.api.exception.RequestException.HaneRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class HaneApiService {
                     .mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
                             Hane.class);
         } catch (RequestException exception) {
-            log.warn("[hane] {}", exception.toString());
+            log.warn("[hane] {} : {}", name, exception.toString());
             return new Hane();
         }
     }

@@ -20,21 +20,15 @@ public class RequestException extends CustomException {
         }
     }
 
-    public static class HaneRequestException extends RequestException {
-        public HaneRequestException(RequestErrorCode requestErrorCode) {
-            super(RequestErrorCode.HANE_SERVICE);
-        }
-    }
-
-    public static class WhiteLabelException extends RequestException {
-        public WhiteLabelException() {
-            super(RequestErrorCode.WHITE_LABEL_PAGE);
-        }
-    }
-
     public static class BadRequestException extends RequestException {
         public BadRequestException() {
             super(RequestErrorCode.BAD_REQUEST);
+        }
+    }
+
+    public static class ApiServerErrorException extends RequestException{
+        public ApiServerErrorException() {
+            super(RequestErrorCode.SERVER_ERROR);
         }
     }
 }

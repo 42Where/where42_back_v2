@@ -94,6 +94,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/token"))
                                 .permitAll()
+                                .requestMatchers(requestMatcher.pattern("/v3/token/**"))
+                                .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/actuator/prometheus"))
                                 .permitAll()
                                 .anyRequest()
