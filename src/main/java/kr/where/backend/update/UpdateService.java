@@ -126,7 +126,9 @@ public class UpdateService {
             }
             if (!loginFlag) {
                 final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
-                statusResult.addAll(loginStatus);
+                loginStatus.stream()
+                        .filter(cluster -> cluster.getEnd_at() == null)
+                        .forEach(statusResult::add);
 
                 if (loginStatus.size() < 100) {
                     loginFlag = true;
