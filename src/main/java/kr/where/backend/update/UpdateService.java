@@ -2,6 +2,7 @@ package kr.where.backend.update;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
@@ -115,20 +116,20 @@ public class UpdateService {
             boolean loginFlag = false;
             boolean logoutFlag = false;
 
-            if (!loginFlag) {
-                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
-                statusResult.addAll(loginStatus);
-
-                if (loginStatus.size() < 100) {
-                    loginFlag = true;
-                }
-            }
             if (!logoutFlag) {
                 final List<Cluster> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
                 statusResult.addAll(logoutStatus);
 
                 if (logoutStatus.size() < 100) {
                     logoutFlag = true;
+                }
+            }
+            if (!loginFlag) {
+                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
+                statusResult.addAll(loginStatus);
+
+                if (loginStatus.size() < 100) {
+                    loginFlag = true;
                 }
             }
 
