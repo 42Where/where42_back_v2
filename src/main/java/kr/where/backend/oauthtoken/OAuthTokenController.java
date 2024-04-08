@@ -1,9 +1,12 @@
 package kr.where.backend.oauthtoken;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import java.util.List;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
+import kr.where.backend.api.json.Cluster;
 import kr.where.backend.api.json.OAuthTokenDto;
+import kr.where.backend.update.UpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ public class OAuthTokenController {
     private final OAuthTokenService oauthTokenService;
     private final TokenApiService tokenApiService;
     private final IntraApiService intraApiService;
+    private final UpdateService updateService;
 
     /**
      * OAuth 인증 후 해당 uri 로 code 반환됨
@@ -73,19 +77,28 @@ public class OAuthTokenController {
 //        return list;
 //    }
 //
-//    @GetMapping("/end")
-//    public List<Cluster> get42LocationEnd() {
-//        final String accessToken = oauthTokenService.findAccessToken("test");
-//        final List<Cluster> list = intraApiService.getLogoutCadetsLocation(accessToken, 1);
-//        return list;
-//    }
-//
-//    @GetMapping("/begin")
-//    public List<Cluster> get42LocationBegin() {
-//        final String accessToken = oauthTokenService.findAccessToken("test");
-//        final List<Cluster> list = intraApiService.getLoginCadetsLocation(accessToken, 1);
-//        return list;
-//    }
+    private static final String ADMIN_TOKEN = "admin";
+
+    @GetMapping("/logout")
+    public List<Cluster> get42LocationEnd() {
+        final String accessToken = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+        final List<Cluster> list = intraApiService.getLogoutCadetsLocation(accessToken, 1);
+        return list;
+    }
+
+    @GetMapping("/login")
+    public List<Cluster> get42LocationBegin() {
+        final String accessToken = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+        final List<Cluster> list = intraApiService.getLoginCadetsLocation(accessToken, 1);
+        return list;
+    }
+
+    @PostMapping("/hane")
+    public ResponseEntity<String> haneUpdate() {
+        updateService.updateInCluster();
+
+        return ResponseEntity.ok("update complete");
+    }
 //
 //    @GetMapping("/range/info")
 //    public List<CadetPrivacy> get42UsersInfoInRange() {
