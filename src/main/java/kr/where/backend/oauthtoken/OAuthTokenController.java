@@ -1,10 +1,8 @@
 package kr.where.backend.oauthtoken;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.TokenApiService;
 import kr.where.backend.api.json.OAuthTokenDto;
-import kr.where.backend.update.UpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,8 +22,6 @@ public class OAuthTokenController {
 
     private final OAuthTokenService oauthTokenService;
     private final TokenApiService tokenApiService;
-    private final IntraApiService intraApiService;
-    private final UpdateService updateService;
 
     /**
      * OAuth 인증 후 해당 uri 로 code 반환됨
