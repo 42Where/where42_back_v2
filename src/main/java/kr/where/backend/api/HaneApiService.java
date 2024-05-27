@@ -22,7 +22,7 @@ public class HaneApiService {
                     .mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
                             Hane.class);
         } catch (RequestException exception) {
-            log.warn("[hane] {}", exception.toString());
+            log.warn("[hane] {} : {}", name, exception.toString());
             return new Hane();
         }
     }

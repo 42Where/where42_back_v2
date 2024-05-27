@@ -8,7 +8,6 @@ import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
-import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
@@ -115,20 +114,22 @@ public class UpdateService {
             boolean loginFlag = false;
             boolean logoutFlag = false;
 
-            if (!loginFlag) {
-                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
-                statusResult.addAll(loginStatus);
-
-                if (loginStatus.size() < 100) {
-                    loginFlag = true;
-                }
-            }
             if (!logoutFlag) {
                 final List<Cluster> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
                 statusResult.addAll(logoutStatus);
 
                 if (logoutStatus.size() < 100) {
                     logoutFlag = true;
+                }
+            }
+            if (!loginFlag) {
+                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
+                loginStatus.stream()
+                        .filter(cluster -> cluster.getEnd_at() == null)
+                        .forEach(statusResult::add);
+
+                if (loginStatus.size() < 100) {
+                    loginFlag = true;
                 }
             }
 
