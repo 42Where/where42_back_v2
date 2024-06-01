@@ -115,7 +115,7 @@ public class MemberController implements MemberApiDocs {
 
 		for (int i = 0; i < 10; i++) {
 			CadetPrivacy cadetPrivacy = new CadetPrivacy(1 + i, "member" + i, "c1r1s" + i,
-				"https://ibb.co/94KmxcT", true, "2022-10-31");
+				"https://ibb.co/94KmxcT", true, "2022-10-31", 29);
 			Hane hane = Hane.create("IN");
 
 			Member member = memberService.createAgreeMember(cadetPrivacy, hane);
