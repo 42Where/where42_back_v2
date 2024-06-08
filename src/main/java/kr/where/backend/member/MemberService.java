@@ -1,5 +1,6 @@
 package kr.where.backend.member;
 
+import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -27,6 +28,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
+	private final HaneApiService haneApiServiceService;
 	private final static Integer CAMPUS_ID = 29;
 	/**
 	 * if (이미 존재하는 멤버)
@@ -160,6 +162,10 @@ public class MemberService {
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)
 			.orElseThrow(MemberException.NoMemberException::new);
+
+		// 하네 업데이트
+
+		haneApiServiceService.updateInClusterOne(member);
 
 		return ResponseMemberDTO.builder().member(member).build();
 	}

@@ -3,6 +3,7 @@ package kr.where.backend.group;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import kr.where.backend.api.HaneApiService;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
@@ -24,7 +25,7 @@ public class GroupMemberService {
     private final GroupMemberRepository groupMemberRepository;
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
-
+    private final HaneApiService haneApiService;
     /**
      * 그룹에 그룹 멤버를 추가
      * 인자로 들어온 groupId가 존재하지 않다면 Exception
@@ -151,15 +152,19 @@ public class GroupMemberService {
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
 
+        // 하네 업데이트
+
         return groupMembers.stream()
-                .map(m -> ResponseOneGroupMemberDTO.builder()
+            .peek(m -> haneApiService.updateInClusterOne(m.getMember()))
+            .map(m -> ResponseOneGroupMemberDTO.builder()
                 .intraId(m.getMember().getIntraId())
                 .image(m.getMember().getImage())
                 .comment(m.getMember().getComment())
                 .intraName(m.getMember().getIntraName())
                 .inCluster(m.getMember().isInCluster())
                 .location(m.getMember().getLocation().getLocation())
-                .build()).toList();
+                .build()
+            ).toList();
     }
 
     /**
