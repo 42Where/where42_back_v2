@@ -118,6 +118,7 @@ public class Member {
 
 	public void setInClusterUpdatedAtForTest() {
 		this.inClusterUpdatedAt = inClusterUpdatedAt.minusMinutes(4);
+		// this.inClusterUpdatedAt = null;
 	}
 
 	public void setImage(final String image) {
