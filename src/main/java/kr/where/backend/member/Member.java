@@ -39,6 +39,8 @@ public class Member {
 
 	private boolean inCluster;
 
+	private LocalDateTime inClusterUpdatedAt;
+
 	@Column(nullable = false)
 	private boolean blackHole;
 
@@ -71,6 +73,7 @@ public class Member {
 		this.grade = cadetPrivacy.getCreated_at();
 		this.image = cadetPrivacy.getImage().getVersions().getSmall();
 		this.inCluster = hane.getInoutState().equals("IN");
+		this.inClusterUpdatedAt = LocalDateTime.now();
 		this.agree = true;
 		this.blackHole = false;
 	}
@@ -107,9 +110,14 @@ public class Member {
 
 	public void setInCluster(final Hane hane) {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+		this.inClusterUpdatedAt = LocalDateTime.now();
 
 		if (this.inCluster == false)
 			this.location.initLocation();
+	}
+
+	public void setInClusterUpdatedAtForTest() {
+		this.inClusterUpdatedAt = inClusterUpdatedAt.minusMinutes(4);
 	}
 
 	public void setImage(final String image) {
