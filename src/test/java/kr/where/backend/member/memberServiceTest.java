@@ -240,9 +240,13 @@ public class memberServiceTest {
 		Member createMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
 		//when
+		createMember.setInClusterUpdatedAtForTest();
 		ResponseMemberDTO findMember = memberService.findOneByIntraId(135436);
+		Member member = memberRepository.findByIntraId(135436).orElse(null);
 
 		//then
+		System.out.println(createMember.getInClusterUpdatedAt());
+		System.out.println(member.getInClusterUpdatedAt());
 		assertThat(findMember.getIntraId()).isEqualTo(135436L);
 		assertThat(findMember.getIntraName()).isEqualTo("suhwpark");
 		assertThat(findMember.isInCluster()).isEqualTo(true);
