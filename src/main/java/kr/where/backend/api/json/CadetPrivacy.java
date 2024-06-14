@@ -3,6 +3,8 @@ package kr.where.backend.api.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import lombok.*;
@@ -53,7 +55,7 @@ public class CadetPrivacy {
                 smallUrl = versions.get("small");
             }
         }
-        Map<String, Object> campus = (Map<String, Object>) attributes.get("campus");
+        List<Map<String, Object>> campus = (List<Map<String, Object>>) attributes.get("campus");
 
         return CadetPrivacy.builder()
                 .id((Integer) attributes.get("id"))
@@ -62,7 +64,7 @@ public class CadetPrivacy {
                 .small_image(smallUrl)
                 .active(attributes.get("active") != null && (boolean) attributes.get("active"))
                 .created_at((String) attributes.get("created_at"))
-                .campusId((Integer) campus.get("id"))
+                .campusId((Integer) campus.get(0).get("id"))
                 .build();
     }
 }
