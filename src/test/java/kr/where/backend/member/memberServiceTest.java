@@ -9,7 +9,7 @@ import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
-import kr.where.backend.location.LocationService;
+import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 
 import kr.where.backend.member.exception.MemberException;
@@ -44,24 +44,24 @@ public class memberServiceTest {
 	@Autowired
 	private LocationRepository locationRepository;
 	@Autowired
-	private LocationService locationService;
-	@Autowired
 	private GroupRepository groupRepository;
 	@Autowired
 	private GroupMemberRepository groupMemberRepository;
 	private AuthUser authUser;
 
+	private final static Integer CAMPUS_ID = 29;
+
 	@BeforeEach
 	public void setUp() {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-		authUser = new AuthUser(12345, "suhwpark", 1L);
+		authUser = new AuthUser(135436, "suhwpark", 1L);
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
 	}
 	@Test
 	public void create_agree_member_test() {
 
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -74,7 +74,7 @@ public class memberServiceTest {
 		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(agreeMember.getDefaultGroupId());
 
 		//then
-		assertThat(agreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(agreeMember.getIntraId()).isEqualTo(135436L);
 		assertThat(agreeMember.getIntraName()).isEqualTo("suhwpark");
 		assertThat(agreeMember.getImage()).isEqualTo("image");
 		assertThat(agreeMember.getGrade()).isEqualTo("2022-10-31");
@@ -87,7 +87,7 @@ public class memberServiceTest {
 		assertThat(group.get().getGroupName()).isEqualTo("default");
 
 		assertThat(groupMembers).isNotNull();
-		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(12345L);
+		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(135436L);
 		assertThat(groupMembers.get(0).getIsOwner()).isEqualTo(true);
 
 	}
@@ -95,7 +95,7 @@ public class memberServiceTest {
 	@Test
 	public void create_disagree_member_test() {
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 
 		//when
 		Member disagreeMember = memberService.createDisagreeMember(cadetPrivacy);
@@ -105,7 +105,7 @@ public class memberServiceTest {
 		Location location = locationRepository.findByMember(member.get());
 
 		//then
-		assertThat(disagreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(disagreeMember.getIntraId()).isEqualTo(135436L);
 		assertThat(disagreeMember.getIntraName()).isEqualTo("suhwpark");
 		assertThat(disagreeMember.getImage()).isEqualTo("image");
 		assertThat(disagreeMember.getGrade()).isEqualTo("2022-10-31");
@@ -118,7 +118,7 @@ public class memberServiceTest {
 	@Test
 	public void disagree_to_agree_test() {
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		memberService.createDisagreeMember(cadetPrivacy);
 		Hane hane = Hane.create("IN");
 
@@ -132,7 +132,7 @@ public class memberServiceTest {
 		List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupId(agreeMember.getDefaultGroupId());
 
 		//then
-		assertThat(agreeMember.getIntraId()).isEqualTo(12345L);
+		assertThat(agreeMember.getIntraId()).isEqualTo(135436L);
 		assertThat(agreeMember.getIntraName()).isEqualTo("suhwpark");
 		assertThat(agreeMember.getImage()).isEqualTo("image");
 		assertThat(agreeMember.getGrade()).isEqualTo("2022-10-31");
@@ -145,14 +145,14 @@ public class memberServiceTest {
 		assertThat(group.get().getGroupName()).isEqualTo("default");
 
 		assertThat(groupMembers).isNotNull();
-		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(12345L);
+		assertThat(groupMembers.get(0).getMember().getIntraId()).isEqualTo(135436L);
 		assertThat(groupMembers.get(0).getIsOwner()).isEqualTo(true);
 	}
 
 	@Test
 	public void member_duplicate_test() {
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		Hane hane = Hane.create("IN");
 
 		//when
@@ -166,7 +166,7 @@ public class memberServiceTest {
 	@Test
 	public void update_comment_test() {
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		Hane hane = Hane.create("IN");
 		memberService.createAgreeMember(cadetPrivacy, hane);
 
@@ -188,7 +188,7 @@ public class memberServiceTest {
 	@Test
 	public void delete_comment_test() {
 		//given
-		CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		Hane hane = Hane.create("IN");
 		memberService.createAgreeMember(cadetPrivacy, hane);
 
@@ -207,4 +207,51 @@ public class memberServiceTest {
 		assertThat(beforeComment).isEqualTo("new comment");
 		assertThat(afterComment).isEqualTo(null);
 	}
+
+	@Test
+	public void invalidCampusId() throws MemberException {
+	    //given
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(
+				135436, "suhwpark", "c1r1s1",
+				"image", true, "2022-10-31", 30
+		);
+
+		//then
+		assertThatThrownBy(() -> memberService.isSeoulCampus(cadetPrivacy))
+				.isInstanceOf(MemberException.NotFromSeoulCampus.class);
+	}
+
+	@Test
+	public void anotherCampusTryToCreateDisagreeMember() throws Exception {
+	    //given
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(
+				135436, "suhwpark", "c1r1s1",
+				"image", true, "2022-10-31", 30
+		);
+	    //then
+		assertThatThrownBy(() -> memberService.createDisagreeMember(cadetPrivacy))
+				.isInstanceOf(MemberException.NotFromSeoulCampus.class);
+	}
+
+	@Test
+	public void findOneByIntraId() {
+		//given
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "", "image", true, "2022-10-31", CAMPUS_ID);
+		Hane hane = Hane.create("OUT");
+		Member createMember = memberService.createAgreeMember(cadetPrivacy, hane);
+
+		//when
+		// createMember.setInClusterUpdatedAtForTest();
+		ResponseMemberDTO findMember = memberService.findOneByIntraId(135436);
+		Member member = memberRepository.findByIntraId(135436).orElse(null);
+
+		//then
+		System.out.println(createMember.getInClusterUpdatedAt());
+		System.out.println(member.getInClusterUpdatedAt());
+		assertThat(findMember.getIntraId()).isEqualTo(135436L);
+		assertThat(findMember.getIntraName()).isEqualTo("suhwpark");
+		assertThat(findMember.isInCluster()).isEqualTo(true);
+
+	}
+
 }

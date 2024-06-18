@@ -179,7 +179,7 @@ public class UpdateService {
     @Transactional
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
     public void updateInCluster() {
-        log.info("hane 자리 없데이트를 시작합니다!");
+        log.info("hane 자리 업데이트를 시작합니다!");
         final List<Member> agreeMembers = memberService.findAgreeMembers()
                 .orElseThrow(NoMemberException::new);
 
@@ -190,6 +190,6 @@ public class UpdateService {
                             )
                     )
         );
-        log.info("hane 자리 없데이트를 끝냅니다!");
+        log.info("hane 자리 업데이트를 끝냅니다!");
     }
 }

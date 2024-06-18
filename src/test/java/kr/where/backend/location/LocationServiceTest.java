@@ -49,7 +49,7 @@ public class LocationServiceTest {
     @Test
     public void update_custom_location_test() {
 		//given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
         Hane hane = Hane.create("IN");
 
         Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
@@ -74,7 +74,7 @@ public class LocationServiceTest {
     @Test
     public void delete_custom_location_test() {
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
         Hane hane = Hane.create("IN");
 
         memberService.createAgreeMember(cadetPrivacy, hane);
