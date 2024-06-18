@@ -164,7 +164,8 @@ public class MemberService {
 		final Member member = memberRepository.findByIntraId(intraId)
 			.orElseThrow(MemberException.NoMemberException::new);
 
-		haneApiServiceService.updateInClusterForMainPage(member);
+		if (member.isPossibleToUpdateInCluster())
+			haneApiServiceService.updateInClusterForMainPage(member);
 
 		return ResponseMemberDTO.builder().member(member).build();
 	}

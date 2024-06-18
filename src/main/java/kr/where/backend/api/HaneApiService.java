@@ -37,9 +37,7 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateInClusterForMainPage(final Member member) {
-		if (member.isAgree() && (member.getInClusterUpdatedAt() == null || LocalDateTime.now()
-			.minusMinutes(3)
-			.isAfter(member.getInClusterUpdatedAt()))) {
+		if (member.isAgree()) {
 			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
 
 			log.info("member {}의 inCluster가 변경되었습니다", member.getIntraName());
