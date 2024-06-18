@@ -123,7 +123,7 @@ public class Member {
 
 	public boolean isPossibleToUpdateInCluster() {
 		if (inClusterUpdatedAt == null || LocalDateTime.now()
-			.minusMinutes(3)
+			.minusMinutes(5)
 			.isAfter(inClusterUpdatedAt))
 			return true;
 		return false;
