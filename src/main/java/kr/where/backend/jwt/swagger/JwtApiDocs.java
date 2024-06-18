@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 

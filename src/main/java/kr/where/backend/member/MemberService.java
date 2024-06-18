@@ -76,6 +76,7 @@ public class MemberService {
 	@Transactional
 	public Member createDisagreeMember(final CadetPrivacy cadetPrivacy) {
 		isSeoulCampus(cadetPrivacy);
+
 		final Member member = new Member(cadetPrivacy);
 		memberRepository.save(member);
 		locationService.create(member, cadetPrivacy.getLocation());

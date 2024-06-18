@@ -1,7 +1,5 @@
 package kr.where.backend.api;
 
-import java.time.LocalDateTime;
-
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;

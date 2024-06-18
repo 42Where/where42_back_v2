@@ -1,7 +1,6 @@
 package kr.where.backend.group;
 
 import java.util.List;
-import java.util.Optional;
 
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;

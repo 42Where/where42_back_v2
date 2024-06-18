@@ -1,6 +1,5 @@
 package kr.where.backend.location.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
