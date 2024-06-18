@@ -58,13 +58,16 @@ public class GroupMemberServiceTest {
     private ResponseGroupDTO generalResponseGroupDTO;
 
     private AuthUser authUser;
+
+    private final static Integer CAMPUS_ID = 29;
+
     @BeforeEach
     public void setUp () {
 //         Given
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(11111, "hjeong", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         authUser.setDefaultGroupId(member.getDefaultGroupId());
@@ -76,7 +79,7 @@ public class GroupMemberServiceTest {
     @Rollback
     public void 그룹_멤버_생성() throws Exception {
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
@@ -96,19 +99,19 @@ public class GroupMemberServiceTest {
     }
 
     void 그룹_멤버_리스트_생성_후_저장(){
-        CadetPrivacy cadetPrivacy1 = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy1 = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
         Hane hane1 = Hane.create("OUT");
         memberService.createAgreeMember(cadetPrivacy1, hane1);
 
-        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(135436);
         authUser.setIntraName("suhwpark");
         Hane hane2 = Hane.create("OUT");
         memberService.createAgreeMember(cadetPrivacy2, hane2);
 
-        CadetPrivacy cadetPrivacy3 = new CadetPrivacy(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy3 = new CadetPrivacy(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(22224);
         authUser.setIntraName("jonhan");
         Hane hane3 = Hane.create("IN");
@@ -152,7 +155,7 @@ public class GroupMemberServiceTest {
     public void 그룹_멤버_삭제() throws Exception{
 
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
         Hane hane = Hane.create("IN");
@@ -184,7 +187,7 @@ public class GroupMemberServiceTest {
 
         //given
         //멤버 한명 생성
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");

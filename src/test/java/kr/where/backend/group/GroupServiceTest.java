@@ -36,13 +36,16 @@ public class GroupServiceTest {
     private MemberService memberService;
 
     private AuthUser authUser;
+
+    private final static Integer CAMPUS_ID = 29;
+
     @BeforeEach
     public void setUp () {
         // Given
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(10000, "phan", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(10000, "phan", "c1r1s1", "image", true, "2022-10-31", 29);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(10000, "phan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupDto = new CreateGroupDTO("popopop");
