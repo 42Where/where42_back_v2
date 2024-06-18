@@ -58,13 +58,16 @@ public class GroupMemberServiceTest {
     private ResponseGroupDTO generalResponseGroupDTO;
 
     private AuthUser authUser;
+
+    private final static Integer CAMPUS_ID = 29;
+
     @BeforeEach
     public void setUp () {
 //         Given
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(11111, "hjeong", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         authUser.setDefaultGroupId(member.getDefaultGroupId());
@@ -76,14 +79,14 @@ public class GroupMemberServiceTest {
     @Rollback
     public void 그룹_멤버_생성() throws Exception {
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        authUser.setIntraId(22222);
+        authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
         memberService.createAgreeMember(cadetPrivacy, hane);
 
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(22222)
+                .intraId(99856)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
         //when
@@ -96,27 +99,27 @@ public class GroupMemberServiceTest {
     }
 
     void 그룹_멤버_리스트_생성_후_저장(){
-        CadetPrivacy cadetPrivacy1 = new CadetPrivacy(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
-        authUser.setIntraId(22222);
+        CadetPrivacy cadetPrivacy1 = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
-        Hane hane1 = Hane.create("IN");
+        Hane hane1 = Hane.create("OUT");
         memberService.createAgreeMember(cadetPrivacy1, hane1);
 
-        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(22223, "suhwpark", "c1r1s1", "image", true, "2022-10-31");
-        authUser.setIntraId(22223);
+        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        authUser.setIntraId(135436);
         authUser.setIntraName("suhwpark");
-        Hane hane2 = Hane.create("IN");
+        Hane hane2 = Hane.create("OUT");
         memberService.createAgreeMember(cadetPrivacy2, hane2);
 
-        CadetPrivacy cadetPrivacy3 = new CadetPrivacy(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy3 = new CadetPrivacy(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(22224);
         authUser.setIntraName("jonhan");
         Hane hane3 = Hane.create("IN");
         memberService.createAgreeMember(cadetPrivacy3, hane3);
 
         List<Integer> members = new ArrayList<>();
-        members.add(22222);
-        members.add(22223);
+        members.add(99856);
+        members.add(135436);
         members.add(22224);
         authUser.setIntraId(11111);
         authUser.setIntraName("hjeong");
@@ -141,7 +144,7 @@ public class GroupMemberServiceTest {
 
         //then
         for (ResponseOneGroupMemberDTO memberDTO : responseGroupMemberDTOS) {
-            System.out.println(memberDTO);
+            System.out.println(memberDTO.isInCluster());
         }
         assertEquals(3, responseGroupMemberDTOS.size());
     }
@@ -152,13 +155,13 @@ public class GroupMemberServiceTest {
     public void 그룹_멤버_삭제() throws Exception{
 
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
-        authUser.setIntraId(22222);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
         Hane hane = Hane.create("IN");
         memberService.createAgreeMember(cadetPrivacy, hane);
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(22222)
+                .intraId(99856)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
         authUser.setIntraId(11111);
@@ -166,7 +169,7 @@ public class GroupMemberServiceTest {
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
         List<Integer> members = new ArrayList<>();
-        members.add(22222);
+        members.add(99856);
 
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(
@@ -184,9 +187,9 @@ public class GroupMemberServiceTest {
 
         //given
         //멤버 한명 생성
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(22222, "jnam", "c1r1s1", "image", true, "2022-10-31");
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        authUser.setIntraId(22222);
+        authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
         memberService.createAgreeMember(cadetPrivacy, hane);
 
@@ -197,22 +200,22 @@ public class GroupMemberServiceTest {
 
         //기본그룹에 추가
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(22222)
+                .intraId(99856)
                 .groupId(defaultResponseGroupDTO.getGroupId())
                 .build();
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
 
         //일반 그룹에 추가
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
-                .intraId(22222)
+                .intraId(99856)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
         groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
         List<Integer> members = new ArrayList<>();
-        members.add(22222);
+        members.add(99856);
 
         //when
-        //기본그룹에서만 22222번 멤버를 삭제
+        //기본그룹에서만 99856번 멤버를 삭제
         List<ResponseGroupMemberDTO> delete_member = groupMemberService.deleteFriendsList(DeleteGroupMemberListDTO.builder()
                 .groupId(responseGroupMemberDTO.getGroupId())
                 .members(members).build(), authUser);
@@ -234,7 +237,7 @@ public class GroupMemberServiceTest {
         createGroupDto = new CreateGroupDTO("friends List");
         ResponseGroupDTO dto = groupService.createGroup(createGroupDto, authUser);
         List<Integer> member = new ArrayList<>();
-        member.add(22222);
+        member.add(99856);
 
         AddGroupMemberListDTO addGroupMemberListDTO = AddGroupMemberListDTO.builder()
                 .groupId(dto.getGroupId())

@@ -19,4 +19,10 @@ public class MemberException extends CustomException {
 			super(MemberErrorCode.DUPLICATED_MEMBER);
 		}
 	}
+
+	public static class NotFromSeoulCampus extends MemberException {
+		public NotFromSeoulCampus() {
+			super(MemberErrorCode.NOT_FROM_SEOUL_CADET);
+		}
+	}
 }

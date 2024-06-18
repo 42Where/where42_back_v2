@@ -3,6 +3,8 @@ package kr.where.backend.api.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import lombok.*;
@@ -25,17 +27,23 @@ public class CadetPrivacy {
     private boolean active;
     @Schema(description = "42서울 등록일")
     private String created_at;
-
+    @Schema(description = "캠퍼스 소속")
+    private Integer campus;
     protected CadetPrivacy() {}
 
     @Builder
-    public CadetPrivacy(Integer id, String login, String location, String small_image, boolean active, String created_at) {
+    public CadetPrivacy(
+            final Integer id, final String login, final String location,
+            final String small_image, final boolean active, final String created_at,
+            final Integer campusId
+    ) {
         this.id = id;
         this.login = login;
         this.location = location;
         this.image = Image.create(Versions.create(small_image));
         this.active = active;
         this.created_at = created_at;
+        this.campus = campusId;
     }
 
     public static CadetPrivacy of(final Map<String, Object> attributes) {
@@ -47,6 +55,7 @@ public class CadetPrivacy {
                 smallUrl = versions.get("small");
             }
         }
+        List<Map<String, Object>> campus = (List<Map<String, Object>>) attributes.get("campus");
 
         return CadetPrivacy.builder()
                 .id((Integer) attributes.get("id"))
@@ -55,6 +64,7 @@ public class CadetPrivacy {
                 .small_image(smallUrl)
                 .active(attributes.get("active") != null && (boolean) attributes.get("active"))
                 .created_at((String) attributes.get("created_at"))
+                .campusId((Integer) campus.get(0).get("id"))
                 .build();
     }
 }

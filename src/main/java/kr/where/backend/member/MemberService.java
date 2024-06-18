@@ -1,5 +1,6 @@
 package kr.where.backend.member;
 
+import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -27,7 +28,8 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
-
+	private final HaneApiService haneApiServiceService;
+	private final static Integer CAMPUS_ID = 29;
 	/**
 	 * if (이미 존재하는 멤버)
 	 *      throw duplicate_exception
@@ -73,6 +75,7 @@ public class MemberService {
 	 */
 	@Transactional
 	public Member createDisagreeMember(final CadetPrivacy cadetPrivacy) {
+		isSeoulCampus(cadetPrivacy);
 		final Member member = new Member(cadetPrivacy);
 		memberRepository.save(member);
 		locationService.create(member, cadetPrivacy.getLocation());
@@ -156,9 +159,13 @@ public class MemberService {
 	 * @return responseMemberDTO
 	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
+	@Transactional
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)
 			.orElseThrow(MemberException.NoMemberException::new);
+
+		if (member.isPossibleToUpdateInCluster())
+			haneApiServiceService.updateInClusterForMainPage(member);
 
 		return ResponseMemberDTO.builder().member(member).build();
 	}
@@ -176,6 +183,20 @@ public class MemberService {
 
 	public Optional<List<Member>> findAgreeMembers() {
 		return memberRepository.findAllByAgreeTrue();
+	}
+
+	/**
+	 * 회원 가입하려는 사용자가 서울 캠퍼스 인지 판별
+	 * Oauth2SuccessHandler.class에서 사용
+	 * disagree member entity 만들때 사용
+	 *
+	 * @param cadetPrivacy
+	 * @throws MemberException
+	 */
+	public void isSeoulCampus(final CadetPrivacy cadetPrivacy) {
+		if (!cadetPrivacy.getCampus().equals(CAMPUS_ID)) {
+			throw new MemberException.NotFromSeoulCampus();
+		}
 	}
 }
 
