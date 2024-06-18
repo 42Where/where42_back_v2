@@ -152,10 +152,8 @@ public class GroupMemberService {
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
 
-        // 하네 업데이트
-
         return groupMembers.stream()
-            .peek(m -> haneApiService.updateInClusterOne(m.getMember()))
+            .peek(m -> haneApiService.updateInClusterForMainPage(m.getMember()))
             .map(m -> ResponseOneGroupMemberDTO.builder()
                 .intraId(m.getMember().getIntraId())
                 .image(m.getMember().getImage())

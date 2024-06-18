@@ -36,7 +36,7 @@ public class HaneApiService {
 	}
 
 	@Transactional
-	public void updateInClusterOne(final Member member) {
+	public void updateInClusterForMainPage(final Member member) {
 		if (member.isAgree() && (member.getInClusterUpdatedAt() == null || LocalDateTime.now()
 			.minusMinutes(3)
 			.isAfter(member.getInClusterUpdatedAt()))) {
