@@ -172,6 +172,7 @@ public class GroupMemberService {
      * @param authUser
      * @return List<ResponseGroupMemberListDTO>
      */
+    @Transactional
     public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final AuthUser authUser){
         final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.getIntraId());
 

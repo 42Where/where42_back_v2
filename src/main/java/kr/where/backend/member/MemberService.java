@@ -159,6 +159,7 @@ public class MemberService {
 	 * @return responseMemberDTO
 	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
+	@Transactional
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)
 			.orElseThrow(MemberException.NoMemberException::new);
