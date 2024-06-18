@@ -104,6 +104,10 @@ public class Member {
 		this.defaultGroupId = defaultGroupId;
 	}
 
+	public void setImage(final String image) {
+		this.image = image;
+	}
+
 	public void setBlackHole(final boolean active) {
 		this.blackHole = !active;
 	}
@@ -118,6 +122,7 @@ public class Member {
 
 	// public void setInClusterUpdatedAtForTest() {
 	// 	this.inClusterUpdatedAt = inClusterUpdatedAt.minusMinutes(4);
+
 	// 	// this.inClusterUpdatedAt = null;
 	// }
 
@@ -127,10 +132,6 @@ public class Member {
 			.isAfter(inClusterUpdatedAt))
 			return true;
 		return false;
-	}
-
-	public void setImage(final String image) {
-		this.image = image;
 	}
 
 }

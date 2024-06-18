@@ -1,20 +1,15 @@
 package kr.where.backend.member;
 
 import jakarta.validation.Valid;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.swagger.MemberApiDocs;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,7 +38,7 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@GetMapping("")
-	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
+	public ResponseEntity<ResponseMemberDTO> findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
 		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(authUser.getIntraId());
 
 		return ResponseEntity.ok(responseMemberDto);
