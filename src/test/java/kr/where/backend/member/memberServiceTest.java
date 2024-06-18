@@ -241,7 +241,7 @@ public class memberServiceTest {
 		Member createMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
 		//when
-		createMember.setInClusterUpdatedAtForTest();
+		// createMember.setInClusterUpdatedAtForTest();
 		ResponseMemberDTO findMember = memberService.findOneByIntraId(135436);
 		Member member = memberRepository.findByIntraId(135436).orElse(null);
 
