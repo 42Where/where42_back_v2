@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-    private static final String PATTERN = "^[0-9a-z]*$";
+    private static final String PATTERN = "^[0-9a-z-]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
     private static final int MINIMUM_LENGTH = 1;
@@ -90,6 +90,7 @@ public class SearchService {
 
         return cadetPrivacies
                 .stream()
+                .peek(CadetPrivacy::setSeoulCampus)
                 .map(search -> memberService.findOne(search.getId())
                         .orElseGet(() -> memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearchDTO(group, search))
