@@ -3,7 +3,6 @@ package kr.where.backend.api.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import lombok.*;
 @Schema(description = "42seoul opnen API에 요청한 카뎃 정보")
 @AllArgsConstructor
 public class CadetPrivacy {
+    private final static Integer SEOUL_CAMPUS_ID = 29;
     @Schema(description = "카뎃의 고유 intra id")
     private Integer id;
     @Schema(description = "카뎃 Intra 아이디")
@@ -66,5 +66,9 @@ public class CadetPrivacy {
                 .created_at((String) attributes.get("created_at"))
                 .campusId((Integer) campus.get(0).get("id"))
                 .build();
+    }
+
+    public void setSeoulCampus() {
+        this.campus = SEOUL_CAMPUS_ID;
     }
 }
