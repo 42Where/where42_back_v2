@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://where42.kr", "https://www.test.where42.kr", "https://api.where42.kr")
                 .allowedMethods(HttpMethod.GET.name(), HttpMethod.PUT.name(),
                         HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name())
-                .allowedHeaders("Authorization", "Content-Type")
+                .allowedHeaders("Authorization", "Content-Type", "Origin")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
