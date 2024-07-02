@@ -81,7 +81,8 @@ public class SecurityConfig {
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) 
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
