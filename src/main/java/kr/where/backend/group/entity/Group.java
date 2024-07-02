@@ -2,8 +2,8 @@ package kr.where.backend.group.entity;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import kr.where.backend.member.Member;
 import lombok.AccessLevel;
@@ -27,7 +27,7 @@ public class Group {
     private  String groupName;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<GroupMember> groupMembers = new HashSet<>();
+    private List<GroupMember> groupMembers = new ArrayList<>();
 
     public Group(final String groupName) {
         this.groupName = groupName;
@@ -39,5 +39,9 @@ public class Group {
 
     public boolean isInGroup(final Member member){
         return this.groupMembers.contains(member);
+    }
+
+    public void addGroupMember(final GroupMember groupMember) {
+        this.groupMembers.add(groupMember);
     }
 }
