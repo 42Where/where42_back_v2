@@ -19,7 +19,9 @@ public class ResponseGroupMemberListDTO {
             final Long groupId,
             final String groupName,
             int count,
-            final List<ResponseOneGroupMemberDTO> members){
+            final List<ResponseOneGroupMemberDTO> members
+    )
+    {
         this.groupId = groupId;
         this.groupName = groupName;
         this.count = count;
