@@ -9,15 +9,14 @@ import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.swagger.GroupApiDocs;
-import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v3/group")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GroupController implements GroupApiDocs {
 
     private final GroupService groupService;
