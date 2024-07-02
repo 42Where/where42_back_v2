@@ -5,9 +5,9 @@ plugins {
 }
 
 bootJar {
-    archivesBaseName = 'where42'
-    def archiveVersion = "2.3"
-    archiveFileName = "where42-${archiveVersion}.jar"
+    archivesBaseName = 'test-where42'
+    def archiveVersion = "3.0"
+    archiveFileName = "test-where42-${archiveVersion}.jar"
 }
 
 group = 'kr.where42'
