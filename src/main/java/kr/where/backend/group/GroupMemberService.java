@@ -13,12 +13,12 @@ import kr.where.backend.group.exception.GroupMemberException;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.exception.MemberException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupMemberService {
 
@@ -85,6 +85,7 @@ public class GroupMemberService {
             throw new GroupMemberException.DuplicatedGroupMemberException();
         }
         final GroupMember groupMember = new GroupMember(group, member, isOwner);
+        group.addGroupMember(groupMember);
         groupMemberRepository.save(groupMember);
 
         return ResponseGroupMemberDTO.builder()
@@ -133,12 +134,16 @@ public class GroupMemberService {
                                 .orElseThrow(MemberException.NoMemberException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMemberAndIsOwner(owner, true);
 
-        final List<ResponseGroupMemberDTO> responseGroupMemberDTOS = groupMembers.stream().map(m ->
-            ResponseGroupMemberDTO.builder()
-                    .groupId(m.getGroup().getGroupId())
-                    .groupName(m.getGroup().getGroupName())
-                    .intraId(intraId).build()).toList();
-        return responseGroupMemberDTOS;
+        return  groupMembers
+                .stream()
+                .map(m -> ResponseGroupMemberDTO
+                        .builder()
+                        .groupId(m.getGroup().getGroupId())
+                        .groupName(m.getGroup().getGroupName())
+                        .intraId(intraId)
+                        .build()
+                )
+                .toList();
     }
 
     /**
@@ -177,15 +182,19 @@ public class GroupMemberService {
     public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final AuthUser authUser){
         final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.getIntraId());
 
-        return groups.stream().map(g -> {
-            List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId());
-            return ResponseGroupMemberListDTO.builder()
-                    .groupId(g.getGroupId())
-                    .groupName(g.getGroupName())
-                    .count(friends.size())
-                    .members(friends)
-                    .build();
-        }).toList();
+        return groups
+                .stream()
+                .map(g -> {
+                    List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId());
+                    return ResponseGroupMemberListDTO
+                            .builder()
+                            .groupId(g.getGroupId())
+                            .groupName(g.getGroupName())
+                            .count(friends.size())
+                            .members(friends)
+                            .build();}
+                )
+                .toList();
     }
 
     /**
@@ -221,7 +230,7 @@ public class GroupMemberService {
         final List<GroupMember> groupMembers = members.stream()
                 .map(member -> new GroupMember(group, member, false))
                 .collect(Collectors.toList());
-
+        groupMembers.forEach(group::addGroupMember);
         groupMemberRepository.saveAll(groupMembers);
 
         return groupMembers.stream()
