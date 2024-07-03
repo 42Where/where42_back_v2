@@ -122,18 +122,18 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Collections.singletonList("*"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowCredentials(true);
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setExposedHeaders(Collections.singletonList("*"));
-        config.setMaxAge(3600L);
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        final CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowedOrigins(Collections.singletonList("*"));
+//        config.setAllowedMethods(Collections.singletonList("*"));
+//        config.setAllowCredentials(true);
+//        config.setAllowedHeaders(Collections.singletonList("*"));
+//        config.setExposedHeaders(Collections.singletonList("*"));
+//        config.setMaxAge(3600L);
+//
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//        return source;
+//    }
 }
