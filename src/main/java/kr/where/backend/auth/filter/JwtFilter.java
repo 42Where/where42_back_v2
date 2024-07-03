@@ -35,9 +35,9 @@ public class JwtFilter extends OncePerRequestFilter {
             final Authentication auth = jwtService.getAuthentication(request, token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        if (CorsUtils.isPreFlightRequest(request)) {
-            return ;
-        }
+//        if (CorsUtils.isPreFlightRequest(request)) {
+//            return ;
+//        }
         filterChain.doFilter(request, response);
     }
 }
