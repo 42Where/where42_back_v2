@@ -123,7 +123,7 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://where42.kr", "https://www.test.where42.kr"));
+        config.setAllowedOrigins(List.of("https://where42.kr", "https://test.where42.kr"));
         config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(),
                 HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
         config.setAllowCredentials(true);
