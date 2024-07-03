@@ -25,7 +25,7 @@ public class BackendApplication {
 						.allowedMethods("*")
 						.allowedHeaders("*")
 						.exposedHeaders("*")
-						.allowCredentials(false);
+						.allowCredentials(true);
 			}
 		};
 	}
