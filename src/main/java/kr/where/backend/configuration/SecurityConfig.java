@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -125,7 +126,7 @@ public class SecurityConfig {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("https://where42.kr", "https://test.where42.kr"));
         config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(),
-                HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
+                HttpMethod.PUT.name()));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setMaxAge(3600L);
