@@ -36,6 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         if (CorsUtils.isPreFlightRequest(request)) {
+            response.addHeader("Access-Control-Allow-Origin", "*");
             return ;
         }
         filterChain.doFilter(request, response);
