@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(custom -> custom.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Collections.singletonList("*"));
+                    config.setAllowedOriginPatterns(Collections.singletonList("*"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     config.setExposedHeaders(Collections.singletonList("*"));
