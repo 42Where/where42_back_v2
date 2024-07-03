@@ -1,6 +1,5 @@
 package kr.where.backend.configuration;
 
-import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
@@ -10,6 +9,7 @@ import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Collections;
@@ -89,16 +90,7 @@ public class SecurityConfig {
 
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(custom -> custom.configurationSource(request -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("https://where42.kr", "https://www.test.where42.kr"));
-                    config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(),
-                            HttpMethod.PUT.name()));
-                    config.setAllowCredentials(true);
-                    config.setAllowedHeaders(Collections.singletonList("*"));
-                    config.setMaxAge(3600L);
-                    return config;
-                }))
+                .cors(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -126,5 +118,20 @@ public class SecurityConfig {
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
                 .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler));
         return httpSecurity.build();
+    }
+
+    @Bean
+    protected CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("https://where42.kr", "https://www.test.where42.kr"));
+        config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(),
+                HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
+        config.setAllowCredentials(true);
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setMaxAge(3600L);
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
