@@ -9,7 +9,6 @@ import kr.where.backend.auth.oauth2login.OAuth2SuccessHandler;
 import kr.where.backend.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -105,6 +104,8 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatcher.pattern("/v3/token"))
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/actuator/prometheus"))
+                                .permitAll()
+                                .requestMatchers(CorsUtils::isPreFlightRequest)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
