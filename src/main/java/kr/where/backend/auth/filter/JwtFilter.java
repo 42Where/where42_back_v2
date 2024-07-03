@@ -37,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         if (CorsUtils.isPreFlightRequest(request)) {
             response.addHeader("Access-Control-Allow-Origin", "https://test.where42.kr");
+            response.addHeader("Access-Control-Allow-Credentials", "true");
             return ;
         }
         filterChain.doFilter(request, response);
