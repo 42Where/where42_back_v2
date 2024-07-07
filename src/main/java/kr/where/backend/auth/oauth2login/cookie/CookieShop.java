@@ -11,7 +11,7 @@ public class CookieShop {
             final String token) {
         final Cookie cookie = new Cookie(key, token);
 
-        cookie.setDomain(".where42.kr");
+        cookie.setDomain("where42.kr");
         cookie.setMaxAge(expiry);
         cookie.setPath("/");
         cookie.setSecure(true);
