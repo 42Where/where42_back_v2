@@ -1,5 +1,6 @@
 package kr.where.backend.configuration;
 
+import java.util.List;
 import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
@@ -98,7 +99,7 @@ public class SecurityConfig {
                     config.setAllowedOriginPatterns(Collections.singletonList("*"));
                     config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
-                    config.setExposedHeaders(Collections.singletonList("*"));
+                    config.setExposedHeaders(List.of("x-amz-server-side-encryption", "x-amz-request-id", "x-amz-id-2"));
                     config.setAllowedHeaders(Collections.singletonList("*"));
                     config.setMaxAge(3600L);
                     return config;
