@@ -17,6 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<List<Member>> findAllByAgreeTrue();
 
 	@Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "
-			+ "from Member m where m.agree is true ")
+			+ "from Member m where m.agree = true ")
 	Optional<List<HaneRequestDto>> findAllToUseHaneApi();
 }
