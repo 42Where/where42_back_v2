@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HaneRequest {
+public class HaneRequestDto {
     private String login;
 
-    public HaneRequest(final String login) {
+    public HaneRequestDto(final String login) {
         this.login = login;
     }
 }

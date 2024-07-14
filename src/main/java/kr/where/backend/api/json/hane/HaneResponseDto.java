@@ -5,7 +5,12 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HaneResponse {
+public class HaneResponseDto {
     private String login;
     private String inOrOut;
+
+    @Override
+    public String toString() {
+        return "[hane] : login : " + this.login + ", state : " + inOrOut;
+    }
 }
