@@ -1,4 +1,4 @@
-package kr.where.backend.api.json;
+package kr.where.backend.api.json.hane;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
