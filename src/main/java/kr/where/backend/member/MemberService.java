@@ -2,7 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Hane;
+import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
