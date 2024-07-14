@@ -1,12 +1,14 @@
 package kr.where.backend.api;
 
-import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
-import kr.where.backend.api.json.Hane;
+import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.api.json.hane.HaneRequestDto;
+import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.member.Member;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class HaneApiService {
 		try {
 			return JsonMapper.mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
 				Hane.class);
-		} catch (RequestException exception) {
+		} catch (final RequestException exception) {
 			log.warn("[hane] {} : {}", name, exception.toString());
 			return new Hane();
 		}
@@ -41,6 +43,16 @@ public class HaneApiService {
 			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
 
 			log.info("member {}의 inCluster가 변경되었습니다", member.getIntraName());
+		}
+	}
+
+	public List<HaneResponseDto> getHaneInfoOfAll(final List<HaneRequestDto> haneRequestDto, final String token) {
+		try {
+			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneInfo(token),
+					UriBuilder.hane("where42All")), HaneResponseDto[].class);
+		} catch (final RequestException exception) {
+			log.warn("[hane] : {}", exception.toString());
+			return new ArrayList<>();
 		}
 	}
 }
