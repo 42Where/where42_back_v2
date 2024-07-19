@@ -1,20 +1,15 @@
 package kr.where.backend.member;
 
 import jakarta.validation.Valid;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.swagger.MemberApiDocs;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

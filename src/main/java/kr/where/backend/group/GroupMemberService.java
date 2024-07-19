@@ -156,21 +156,20 @@ public class GroupMemberService {
         groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
+        haneApiService.updateMyOwnMemberState(groupMembers);
 
-        return groupMembers.stream()
-            .peek(m -> {
-                if (m.getMember().isPossibleToUpdateInCluster())
-                    haneApiService.updateInClusterForMainPage(m.getMember());
-            })
-            .map(m -> ResponseOneGroupMemberDTO.builder()
-                .intraId(m.getMember().getIntraId())
-                .image(m.getMember().getImage())
-                .comment(m.getMember().getComment())
-                .intraName(m.getMember().getIntraName())
-                .inCluster(m.getMember().isInCluster())
-                .location(m.getMember().getLocation().getLocation())
-                .build()
-            ).toList();
+        return groupMembers
+                .stream()
+                .map(m -> ResponseOneGroupMemberDTO.builder()
+                        .intraId(m.getMember().getIntraId())
+                        .image(m.getMember().getImage())
+                        .comment(m.getMember().getComment())
+                        .intraName(m.getMember().getIntraName())
+                        .inCluster(m.getMember().isInCluster())
+                        .location(m.getMember().getLocation().getLocation())
+                        .build()
+                )
+                .toList();
     }
 
     /**

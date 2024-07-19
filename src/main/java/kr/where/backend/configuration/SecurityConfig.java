@@ -1,5 +1,6 @@
 package kr.where.backend.configuration;
 
+import java.util.List;
 import kr.where.backend.auth.filter.exception.CustomAccessDeniedHandler;
 import kr.where.backend.auth.filter.JwtExceptionFilter;
 import kr.where.backend.auth.filter.JwtFilter;
@@ -18,7 +19,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.util.Collections;
 
 /**
  * spring security 설정 config
@@ -46,9 +51,15 @@ public class SecurityConfig {
      * @param httpSecurity : security를 사용할 떄 옵션 적용. 인증인가 실행할때 예외 api 설정, filter 순서 설정을 위한 param
      * @param introspector : mvc를 사용하기에 MvcRequestMatcher를 사용하기 위한 param
      * @see #securityFilterChain(HttpSecurity, HandlerMappingIntrospector)
-     * .csrf(AbstractHttpConfigurer::disable)
-     *                  rest api을 이용하는 서버이기에 session 인증과 다르게 stateless하기에 인증 정보를 저장하지 않는다.
-     *                  그래서 굳이 불필요한 csrf 작성하지 않는다 왜냐 jwt로 인증정보를 사용하기 때문
+     * .csrf(custom -> custom.configurationSource(request....))
+     *                 cors Error에 대한 설정을 해준다.
+     *                 setAllowedOriginPatterns() Spring Security 6.x 이상 사용할 때는 setAllowedOrigin()은 사용하지 않는다.
+     *                 : 접근 허용한 Origins URL을 set 해준다.
+     *                 setAllowedMethods() : 허용 Method를 설정
+     *                 setAllowCredentials() : 쿠키 사용한다면 true로 설정
+     *                 setExposedHeaders() : clients에게 보여줄 header 설정
+     *                 setAllowedHeaders() : 허용 header를 설정
+     *                 setMaxAge() : preflight 요청 결과를 설정한 시간동안 캐시에 저장 (그 시간에는 prflight를 확인하지 않음)
      *  .formLogin(AbstractHttpConfigurer::disable)
      *                 custom한 jwtFilter를 적용하기 위해 기존의 formLogin은 사용하지 않는다
      *  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -81,7 +92,18 @@ public class SecurityConfig {
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable) 
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(custom -> custom.configurationSource(request -> {
+                    final CorsConfiguration config = new CorsConfiguration();
+
+                    config.setAllowedOriginPatterns(Collections.singletonList("*"));
+                    config.setAllowedMethods(Collections.singletonList("*"));
+                    config.setAllowCredentials(true);
+                    config.setExposedHeaders(List.of("x-amz-server-side-encryption", "x-amz-request-id", "x-amz-id-2"));
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setMaxAge(3600L);
+                    return config;
+                }))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
@@ -95,6 +117,8 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatcher.pattern("/v3/token"))
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/actuator/prometheus"))
+                                .permitAll()
+                                .requestMatchers(CorsUtils::isPreFlightRequest)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
