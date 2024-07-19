@@ -180,7 +180,7 @@ public class UpdateService {
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
     public void updateInCluster() {
         log.info("hane 자리 업데이트를 시작합니다!");
-        final List<HaneResponseDto> haneResponse = haneApiService.getHaneInfoOfAll(
+        final List<HaneResponseDto> haneResponse = haneApiService.getHaneListInfo(
                 memberService
                         .findAgreeMembers()
                         .orElseThrow(NoMemberException::new),

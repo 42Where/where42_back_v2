@@ -44,7 +44,7 @@ public class HaneServiceTest {
         //when
         List<HaneRequestDto> haneRequestDtoList = memberRepository.findAllToUseHaneApi()
                 .orElseThrow(NoMemberException::new);
-        List<HaneResponseDto> haneResponseDtoList = haneApiService.getHaneInfoOfAll(haneRequestDtoList, token);
+        List<HaneResponseDto> haneResponseDtoList = haneApiService.getHaneListInfo(haneRequestDtoList, token);
         //then
         System.out.println(haneResponseDtoList.size());
         haneResponseDtoList.forEach(h -> System.out.println(h.toString()));

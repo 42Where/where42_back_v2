@@ -46,7 +46,7 @@ public class HaneApiService {
 		}
 	}
 
-	public List<HaneResponseDto> getHaneInfoOfAll(final List<HaneRequestDto> haneRequestDto, final String token) {
+	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
 		try {
 			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
 					UriBuilder.hane("where42All")), HaneResponseDto[].class);
