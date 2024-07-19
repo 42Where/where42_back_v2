@@ -39,13 +39,14 @@ public class HaneServiceTest {
     @Test
     public void useHaneNewApi() {
         //given
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHRmdW5jIjoiV2hlcmU0MiIsImlhdCI6MTcxOTk4MzIzOSwiZXhwIjoxNzYwNTg4MDM5fQ.K5GZNdwmSLgQSn-Lp5O19b9S-cZvlBsTI8_6uiEwsAQ";
+        String token = "tt";
 
         //when
         List<HaneRequestDto> haneRequestDtoList = memberRepository.findAllToUseHaneApi()
                 .orElseThrow(NoMemberException::new);
         List<HaneResponseDto> haneResponseDtoList = haneApiService.getHaneInfoOfAll(haneRequestDtoList, token);
         //then
+        System.out.println(haneResponseDtoList.size());
         haneResponseDtoList.forEach(h -> System.out.println(h.toString()));
 
     }
