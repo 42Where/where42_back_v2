@@ -8,8 +8,7 @@ import lombok.Getter;
 public class Hane {
     private String inoutState;
 
-    // test
-    public static Hane create(String inoutState) {
+    public static Hane create(final String inoutState) {
         Hane hane = new Hane();
 
         hane.inoutState = inoutState;
