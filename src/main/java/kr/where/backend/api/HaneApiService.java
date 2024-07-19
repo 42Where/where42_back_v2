@@ -9,7 +9,10 @@ import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.api.json.hane.HaneResponseDto;
+import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.member.Member;
+import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class HaneApiService {
 	private final OAuthTokenService oauthTokenService;
+	private final MemberRepository memberRepository;
 	private static final String HANE_TOKEN = "hane";
 
 	/**
@@ -59,5 +63,28 @@ public class HaneApiService {
 	@Transactional
 	public void updateMemberInOrOutState(final Member member, final String state) {
 		member.setInCluster(Hane.create(state));
+	}
+
+	@Transactional
+	public void updateMyOwnMemberState(final List<GroupMember> friends) {
+		log.info("[hane] : 자리 업데이트를 시작합니다!");
+		final List<HaneResponseDto> responses = getHaneListInfo(
+				friends
+						.stream()
+						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
+						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
+						.toList(),
+				oauthTokenService.findAccessToken(HANE_TOKEN));
+
+		responses.stream()
+				.filter(response -> response.getInoutState() != null)
+				.forEach(response -> {
+					this.updateMemberInOrOutState(
+							memberRepository.findByIntraName(response.getLogin())
+									.orElseThrow(NoMemberException::new),
+							response.getInoutState());
+					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
+				});
+		log.info("[hane] : 자리 업데이트를 끝냅니다!");
 	}
 }
