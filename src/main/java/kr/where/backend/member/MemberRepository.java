@@ -14,7 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	Optional<List<Member>> findByIntraIdIn(List<Integer> intraId);
 
-	Optional<List<Member>> findAllByAgreeTrue();
+	Optional<Member> findByIntraName(String intraName);
 
 	@Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "
 			+ "from Member m where m.agree = true ")
