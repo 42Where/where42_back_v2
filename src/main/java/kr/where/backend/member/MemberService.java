@@ -3,6 +3,7 @@ package kr.where.backend.member;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -181,8 +182,8 @@ public class MemberService {
 		return memberRepository.findByIntraId(intraId);
 	}
 
-	public Optional<List<Member>> findAgreeMembers() {
-		return memberRepository.findAllByAgreeTrue();
+	public Optional<List<HaneRequestDto>> findAgreeMembers() {
+		return memberRepository.findAllToUseHaneApi();
 	}
 
 	/**
@@ -198,5 +199,9 @@ public class MemberService {
 			throw new MemberException.NotFromSeoulCampus();
 		}
 	}
-}
 
+
+	public Optional<Member> findByIntraName(final String intraName) {
+		return memberRepository.findByIntraName(intraName);
+	}
+}
