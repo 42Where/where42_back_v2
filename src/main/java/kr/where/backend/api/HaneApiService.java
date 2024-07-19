@@ -48,11 +48,16 @@ public class HaneApiService {
 
 	public List<HaneResponseDto> getHaneInfoOfAll(final List<HaneRequestDto> haneRequestDto, final String token) {
 		try {
-			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneInfo(token),
+			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
 					UriBuilder.hane("where42All")), HaneResponseDto[].class);
 		} catch (final RequestException exception) {
 			log.warn("[hane] : {}", exception.toString());
 			return new ArrayList<>();
 		}
+	}
+
+	@Transactional
+	public void updateMemberInOrOutState(final Member member, final String state) {
+		member.setInCluster(Hane.create(state));
 	}
 }
