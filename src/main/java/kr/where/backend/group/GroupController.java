@@ -10,7 +10,6 @@ import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
 import kr.where.backend.group.swagger.GroupApiDocs;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +34,9 @@ public class GroupController implements GroupApiDocs {
 
     @GetMapping("")
     public ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups(@AuthUserInfo final AuthUser authUser) {
-        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(authUser);
-
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupService.getGroupList(authUser));
     }
 
     @PostMapping("/name")

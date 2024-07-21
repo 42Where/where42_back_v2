@@ -173,30 +173,6 @@ public class GroupMemberService {
     }
 
     /**
-     * 메인 페이지에 표시해줄 모든 그룹, 그룹멤버에 대한 정보 반환
-     * @param authUser
-     * @return List<ResponseGroupMemberListDTO>
-     */
-    @Transactional
-    public List<ResponseGroupMemberListDTO> findMyAllGroupInformation(final AuthUser authUser){
-        final List<ResponseGroupMemberDTO> groups = findGroupIdByIntraId(authUser.getIntraId());
-
-        return groups
-                .stream()
-                .map(g -> {
-                    List<ResponseOneGroupMemberDTO> friends = findGroupMemberByGroupId(g.getGroupId());
-                    return ResponseGroupMemberListDTO
-                            .builder()
-                            .groupId(g.getGroupId())
-                            .groupName(g.getGroupName())
-                            .count(friends.size())
-                            .members(friends)
-                            .build();}
-                )
-                .toList();
-    }
-
-    /**
      * 인자로 들어온 member리스트가 중 이미 그룹에 저장되어 있는 멤버라면 Exception
      * @param groupId
      * @param members

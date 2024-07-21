@@ -13,7 +13,6 @@ import kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO;
 import kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
-import kr.where.backend.group.exception.GroupException.NoGroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +127,7 @@ public class GroupService {
     }
 
     @Transactional
-    public List<ResponseGroupMemberListDTO> getOnceQuery(final AuthUser authUser) {
+    public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
         haneApiService.updateGroupMemberState(ownGroups);
         return ownGroups
