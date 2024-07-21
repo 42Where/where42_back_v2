@@ -27,4 +27,12 @@ public class JsonMapper {
             throw new JsonException.DeserializeException();
         }
     }
+
+    public static String convertJsonForm(final List<?> requestBody) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(requestBody);
+        } catch(JsonProcessingException e) {
+            throw new JsonException.DeserializeException();
+        }
+    }
 }
