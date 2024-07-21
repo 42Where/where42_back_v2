@@ -34,9 +34,8 @@ public class GroupController implements GroupApiDocs {
 
     @GetMapping("")
     public ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups(@AuthUserInfo final AuthUser authUser) {
-        final List<ResponseGroupMemberListDTO> dto = groupMemberService.findMyAllGroupInformation(authUser);
-
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(groupService.getOnceQuery(authUser));
     }
 
     @PostMapping("/name")
