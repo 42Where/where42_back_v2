@@ -1,14 +1,17 @@
 package kr.where.backend.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
+import kr.where.backend.api.http.Uri;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.api.json.hane.HaneResponseDto;
+import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
@@ -53,7 +56,7 @@ public class HaneApiService {
 	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
 		try {
 			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
-					UriBuilder.hane("where42All")), HaneResponseDto[].class);
+					UriBuilder.hane(Uri.HANE_INFO_LIST.getValue())), HaneResponseDto[].class);
 		} catch (final RequestException exception) {
 			log.warn("[hane] : {}", exception.toString());
 			return new ArrayList<>();
@@ -86,5 +89,31 @@ public class HaneApiService {
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
 		log.info("[hane] : 자리 업데이트를 끝냅니다!");
+	}
+
+	@Transactional
+	public void updateGroupMemberState(final List<Group> groups) {
+		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 시작합니다!");
+
+		final List<HaneResponseDto> responses = getHaneListInfo(
+				groups
+						.stream()
+						.map(Group::getGroupMembers)
+						.flatMap(Collection::stream)
+						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
+						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
+						.toList(),
+				oauthTokenService.findAccessToken(HANE_TOKEN));
+		responses.stream()
+				.filter(response -> response.getInoutState() != null)
+				.forEach(response -> {
+					this.updateMemberInOrOutState(
+							memberRepository.findByIntraName(response.getLogin())
+									.orElseThrow(NoMemberException::new),
+							response.getInoutState());
+					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
+				});
+
+		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 끝냅니다!");
 	}
 }
