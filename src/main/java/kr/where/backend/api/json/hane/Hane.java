@@ -1,4 +1,4 @@
-package kr.where.backend.api.json;
+package kr.where.backend.api.json.hane;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -8,8 +8,7 @@ import lombok.Getter;
 public class Hane {
     private String inoutState;
 
-    // test
-    public static Hane create(String inoutState) {
+    public static Hane create(final String inoutState) {
         Hane hane = new Hane();
 
         hane.inoutState = inoutState;

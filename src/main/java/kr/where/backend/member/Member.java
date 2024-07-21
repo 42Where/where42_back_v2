@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.api.json.Hane;
+import kr.where.backend.api.json.hane.Hane;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

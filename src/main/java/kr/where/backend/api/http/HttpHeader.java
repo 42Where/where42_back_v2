@@ -1,10 +1,14 @@
 package kr.where.backend.api.http;
 
+import kr.where.backend.api.JsonMapper;
+import kr.where.backend.api.json.hane.HaneRequestDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.List;
 
 public class HttpHeader {
     private static final String BEARER = "Bearer ";
@@ -62,5 +66,17 @@ public class HttpHeader {
         final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         return new HttpEntity<>(params, headers);
+    }
+
+    public static HttpEntity<String> requestHaneListInfo(
+            final List<HaneRequestDto> requestBody,
+            final String token)
+    {
+        final HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        return new HttpEntity<>(JsonMapper.convertJsonForm(requestBody), headers);
     }
 }

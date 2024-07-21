@@ -6,7 +6,7 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.Cluster;
-import kr.where.backend.member.Member;
+import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
@@ -179,17 +179,22 @@ public class UpdateService {
     @Transactional
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
     public void updateInCluster() {
-        log.info("hane 자리 업데이트를 시작합니다!");
-        final List<Member> agreeMembers = memberService.findAgreeMembers()
-                .orElseThrow(NoMemberException::new);
+        log.info("[hane] : 자리 업데이트를 시작합니다!");
+        final List<HaneResponseDto> haneResponse = haneApiService.getHaneListInfo(
+                memberService
+                        .findAgreeMembers()
+                        .orElseThrow(NoMemberException::new),
+                oauthTokenService.findAccessToken(HANE_TOKEN));
 
-        agreeMembers.forEach(
-                m -> m.setInCluster(
-                            haneApiService.getHaneInfo(m.getIntraName(),
-                                    oauthTokenService.findAccessToken(HANE_TOKEN)
-                            )
-                    )
-        );
-        log.info("hane 자리 업데이트를 끝냅니다!");
+        haneResponse.stream()
+                .filter(response -> response.getInoutState() != null)
+                .forEach(response -> {
+                                haneApiService.updateMemberInOrOutState(
+                                memberService.findByIntraName(response.getLogin())
+                                        .orElseThrow(NoMemberException::new),
+                                response.getInoutState());
+                                log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
+                        });
+        log.info("[hane] : 자리 업데이트를 끝냅니다!");
     }
 }
