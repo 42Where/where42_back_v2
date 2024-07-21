@@ -1,6 +1,5 @@
 package kr.where.backend.auth.filter;
 
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.HttpMediaTypeException;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -35,11 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
             final Authentication auth = jwtService.getAuthentication(request, token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-//        if (CorsUtils.isPreFlightRequest(request)) {
-//            response.addHeader("Access-Control-Allow-Origin", "https://test.where42.kr");
-//            response.addHeader("Access-Control-Allow-Credentials", "true");
-//            return ;
-//        }
         filterChain.doFilter(request, response);
     }
 }
