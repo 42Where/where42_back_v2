@@ -2,14 +2,18 @@ package kr.where.backend.group;
 
 import java.util.List;
 
+import kr.where.backend.api.HaneApiService;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
 import kr.where.backend.group.dto.group.UpdateGroupDTO;
+import kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO;
+import kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
+import kr.where.backend.group.exception.GroupException.NoGroupException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,7 @@ public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
+    private final HaneApiService haneApiService;
 
     /**
      * 그룹 생성
@@ -121,4 +126,36 @@ public class GroupService {
             throw new GroupException.CannotModifyGroupException();
         isMyGroup(dto.getGroupId(), authUser);
     }
+
+    @Transactional
+    public List<ResponseGroupMemberListDTO> getOnceQuery(final AuthUser authUser) {
+        final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
+        haneApiService.updateGroupMemberState(ownGroups);
+        return ownGroups
+                .stream()
+                .map(group -> {
+                    List<ResponseOneGroupMemberDTO> friends = group.getGroupMembers()
+                            .stream()
+                            .filter(friend -> !friend.getIsOwner())
+                            .map(friend -> ResponseOneGroupMemberDTO
+                                    .builder()
+                                    .intraId(friend.getMember().getIntraId())
+                                    .image(friend.getMember().getImage())
+                                    .comment(friend.getMember().getComment())
+                                    .intraName(friend.getMember().getIntraName())
+                                    .inCluster(friend.getMember().isInCluster())
+                                    .location(friend.getMember().getLocation().getLocation())
+                                    .build()
+                            )
+                            .toList();
+                    return ResponseGroupMemberListDTO
+                            .builder()
+                            .groupId(group.getGroupId())
+                            .groupName(group.getGroupName())
+                            .count(friends.size())
+                            .members(friends)
+                            .build();
+                }).toList();
+    }
+
 }
