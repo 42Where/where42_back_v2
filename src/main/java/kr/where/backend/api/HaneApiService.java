@@ -5,6 +5,7 @@ import java.util.List;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
+import kr.where.backend.api.http.Uri;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.json.hane.HaneRequestDto;
@@ -53,7 +54,7 @@ public class HaneApiService {
 	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
 		try {
 			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
-					UriBuilder.hane("where42All")), HaneResponseDto[].class);
+					UriBuilder.hane(Uri.HANE_INFO_LIST.getValue())), HaneResponseDto[].class);
 		} catch (final RequestException exception) {
 			log.warn("[hane] : {}", exception.toString());
 			return new ArrayList<>();
