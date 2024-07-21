@@ -16,7 +16,8 @@ public enum Uri {
     RANGE_BEGIN("range[begin_at]"),
     RANGE_END("range[end_at]"),
     RANGE_LOGIN("range[login]"),
-    DELIMITER(",");
+    DELIMITER(","),
+    HANE_INFO_LIST("where42All");
 
     private final String value;
 
