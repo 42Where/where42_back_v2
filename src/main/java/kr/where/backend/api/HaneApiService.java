@@ -70,7 +70,7 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMyOwnMemberState(final List<GroupMember> friends) {
-		log.info("[hane] : 자리 업데이트를 시작합니다!");
+		log.info("[hane] : 자리 업데이트 스케줄링을 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				friends
 						.stream()
@@ -88,32 +88,30 @@ public class HaneApiService {
 							response.getInoutState());
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
-		log.info("[hane] : 자리 업데이트를 끝냅니다!");
+		log.info("[hane] : 자리 업데이트 스케줄링을 끝냅니다!");
 	}
 
 	@Transactional
-	public void updateGroupMemberState(final List<Group> groups) {
+	public void updateGroupMemberState(final Group group) {
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 시작합니다!");
-
 		final List<HaneResponseDto> responses = getHaneListInfo(
-				groups
+				group
+						.getGroupMembers()
 						.stream()
-						.map(Group::getGroupMembers)
-						.flatMap(Collection::stream)
 						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
 						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
 						.toList(),
-				oauthTokenService.findAccessToken(HANE_TOKEN));
+				oauthTokenService.findAccessToken(HANE_TOKEN)
+		);
 		responses.stream()
 				.filter(response -> response.getInoutState() != null)
 				.forEach(response -> {
-					this.updateMemberInOrOutState(
+					updateMemberInOrOutState(
 							memberRepository.findByIntraName(response.getLogin())
 									.orElseThrow(NoMemberException::new),
 							response.getInoutState());
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
-
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 끝냅니다!");
 	}
 }
