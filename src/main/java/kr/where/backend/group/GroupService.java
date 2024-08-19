@@ -2,6 +2,7 @@ package kr.where.backend.group;
 
 import java.util.List;
 
+import java.util.Objects;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -129,7 +130,13 @@ public class GroupService {
     @Transactional
     public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
-        haneApiService.updateGroupMemberState(ownGroups);
+
+        haneApiService.updateGroupMemberState(ownGroups.stream()
+                .filter(g -> Objects.equals(g.getGroupId(), authUser.getDefaultGroupId()))
+                .findFirst()
+                .orElseThrow(GroupException.NoGroupException::new)
+        );
+
         return ownGroups
                 .stream()
                 .map(group -> {
