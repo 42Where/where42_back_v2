@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -91,7 +92,7 @@ public class SecurityConfig {
 
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
-        httpSecurity
+        return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(custom -> custom.configurationSource(request -> {
                     final CorsConfiguration config = new CorsConfiguration();
@@ -131,7 +132,18 @@ public class SecurityConfig {
                 .logout(logout -> logout.clearAuthentication(true))
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
-                .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler));
-        return httpSecurity.build();
+                .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler))
+                .build();
+    }
+
+
+    /**
+     * 토큰 재발급 요청은 헤더가 empty 상태에서 요청하기 때문에, 아에 필터와 상관없이 controller 바로 닿게 한다.
+     *
+     * @return 커스텀한 webSecurityCustomizer
+     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/v3/jwt/reissue");
     }
 }
