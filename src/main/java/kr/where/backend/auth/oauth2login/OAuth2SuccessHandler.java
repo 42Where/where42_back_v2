@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.auth.filter.JwtConstants;
 import kr.where.backend.auth.oauth2login.cookie.CookieShop;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
@@ -21,7 +22,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private static final String ACCESS_TOKEN = "accessToken";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final int ACCESS_EXPIRY = 30 * 60;
     private static final int REFRESH_EXPIRY = 14 * 24 * 60 * 60;
@@ -46,16 +46,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("JWT 토큰 발행 시작");
 
         CookieShop.bakedCookie(response,
-                ACCESS_TOKEN,
+                JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin())
+                jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin()),
+                false
         );
 
         if (member.isAgree()) {
             CookieShop.bakedCookie(response,
-                    REFRESH_TOKEN,
+                    JwtConstants.REFRESH.getValue(),
                     REFRESH_EXPIRY,
-                    jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin())
+                    jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin()),
+                    true
             );
         }
         getRedirectStrategy()
