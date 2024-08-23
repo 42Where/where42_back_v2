@@ -5,11 +5,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Tag(name = "jwt", description = "jwt API")
@@ -23,5 +25,8 @@ public interface JwtApiDocs {
 
     )
     @PostMapping("/reissue")
-    ResponseEntity<ResponseAccessTokenDTO> reIssue(@AuthUserInfo AuthUser authUser);
+    ResponseEntity<ResponseAccessTokenDTO> reIssue(
+            final HttpServletResponse response,
+            @CookieValue(value = "refreshToken") final String refreshToken
+    );
 }
