@@ -8,12 +8,14 @@ public class CookieShop {
             final HttpServletResponse response,
             final String key,
             final int expiry,
-            final String token) {
+            final String token,
+            final boolean http) {
         final Cookie cookie = new Cookie(key, token);
 
         cookie.setDomain("where42.kr");
         cookie.setMaxAge(expiry);
         cookie.setPath("/");
+        cookie.setHttpOnly(http);
         cookie.setSecure(true);
 
         response.addCookie(cookie);
