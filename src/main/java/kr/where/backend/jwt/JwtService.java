@@ -155,7 +155,7 @@ public class JwtService {
     public Authentication getAuthentication(final HttpServletRequest request, final String token) {
         // 토큰 복호화
         final Claims claims = parseToken(token);
-        log.info("token 정보 : " + claims);
+        log.info("[where42] : 로그인한 사용자 이름 {}", claims.get(JwtConstants.USER_NAME.getValue()));
 
         validateTypeAndClaims(request, claims);
 
@@ -188,7 +188,6 @@ public class JwtService {
      * @return 파싱된 claim
      */
     private Claims parseToken(final String accessToken) {
-        log.info("토큰 \n" + accessToken);
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(generateSecretKey(secret_code))

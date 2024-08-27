@@ -1,7 +1,6 @@
 package kr.where.backend.api;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
@@ -49,7 +48,7 @@ public class HaneApiService {
 		if (member.isAgree()) {
 			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
 
-			log.info("member {}의 inCluster가 변경되었습니다", member.getIntraName());
+			log.info("[scheduling] : {}의 imacLocation이 변경되었습니다", member.getIntraName());
 		}
 	}
 
@@ -70,7 +69,7 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMyOwnMemberState(final List<GroupMember> friends) {
-		log.info("[hane] : 자리 업데이트 스케줄링을 시작합니다!");
+		log.info("[hane] : inCluster 업데이트 스케줄링을 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				friends
 						.stream()
@@ -88,12 +87,12 @@ public class HaneApiService {
 							response.getInoutState());
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
-		log.info("[hane] : 자리 업데이트 스케줄링을 끝냅니다!");
+		log.info("[hane] : inCluster 업데이트 스케줄링을 끝냅니다!");
 	}
 
 	@Transactional
 	public void updateGroupMemberState(final Group group) {
-		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 시작합니다!");
+		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				group
 						.getGroupMembers()
@@ -112,6 +111,6 @@ public class HaneApiService {
 							response.getInoutState());
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
-		log.info("[hane] : 메인 페이지 새로고침으로 인한 자리 업데이트를 끝냅니다!");
+		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 끝냅니다!");
 	}
 }

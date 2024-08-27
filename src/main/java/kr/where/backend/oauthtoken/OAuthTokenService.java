@@ -29,7 +29,7 @@ public class OAuthTokenService {
                 .orElseGet(() -> new OAuthToken(name, oAuthTokenDto));
 
         oauthTokenRepository.save(oauthToken);
-        log.info("[oAuthToken] {} Token 이 생성되었습니다.", name);
+        log.info("[oAuthToken] : {} Token 이 생성되었습니다.", name);
     }
 
     private void validateName(final String name) {
@@ -51,6 +51,6 @@ public class OAuthTokenService {
     public void updateToken(final OAuthToken oauthToken) {
         final OAuthTokenDto oAuthTokenDto = tokenApiService.getOAuthTokenWithRefreshToken(oauthToken.getRefreshToken());
         oauthToken.updateToken(oAuthTokenDto);
-        log.info("[oAuthToken] {} Token 이 업데이트 되었습니다.", oauthToken.getName());
+        log.info("[oAuthToken] : {} Token 이 업데이트 되었습니다.", oauthToken.getName());
     }
 }

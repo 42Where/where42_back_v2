@@ -67,7 +67,7 @@ public class OAuthToken {
         final LocalDateTime currentTime = LocalDateTime.now(TimeZone.getDefault().toZoneId());
         final Duration duration = Duration.between(currentTime, createdAt);
         final Long minute = Math.abs(duration.toMinutes());
-        log.info("[oAuthToken] {} Token 이 발급된지 {}분 지났습니다.", name, minute);
+        log.info("[oAuthToken] : {} Token 이 발급된지 {}분 지났습니다.", name, minute);
 
         return minute > TOKEN_EXPIRATION_MINUTES;
     }
