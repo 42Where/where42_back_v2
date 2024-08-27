@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -91,7 +92,7 @@ public class SecurityConfig {
 
         final MvcRequestMatcher.Builder requestMatcher = new MvcRequestMatcher.Builder(introspector);
 
-        httpSecurity
+        return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(custom -> custom.configurationSource(request -> {
                     final CorsConfiguration config = new CorsConfiguration();
@@ -118,6 +119,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/actuator/prometheus"))
                                 .permitAll()
+                                .requestMatchers(requestMatcher.pattern("/v3/jwt/reissue"))
+                                .permitAll()
                                 .requestMatchers(CorsUtils::isPreFlightRequest)
                                 .permitAll()
                                 .anyRequest()
@@ -131,7 +134,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.clearAuthentication(true))
                 .addFilterBefore(new JwtFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
-                .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler));
-        return httpSecurity.build();
+                .exceptionHandling(exception-> exception.accessDeniedHandler(accessDeniedHandler))
+                .build();
     }
 }

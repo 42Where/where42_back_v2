@@ -16,8 +16,11 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.filter.JwtConstants;
+import kr.where.backend.auth.oauth2login.cookie.CookieShop;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
@@ -39,6 +42,7 @@ import org.springframework.security.core.Authentication;
 @Transactional(readOnly = true)
 @Slf4j
 public class JwtService {
+    private static final int ACCESS_EXPIRY = 30 * 60;
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -49,15 +53,30 @@ public class JwtService {
     private String issuer;
     private final MemberService memberService;
     /**
-     * 헤더에 들어있는 accessToken의 시간이 만료되었을 떄, refreshToken을 사용하여 재발급
-     * @param authUser : 인가 인증 받은 유저의 정보를 사용하여 token 발행
+     * 쿠키에 있는 refreshToken을 사용하여 재발급
+     * @param refreshToken : 재발급을 위한 refreshToken을 httpOnly로 설정되어있기 때문에 값을 받아온다.
      * @return accessToken
      */
-    public ResponseAccessTokenDTO reissueAccessToken(final AuthUser authUser) {
+    public ResponseAccessTokenDTO reissueAccessToken(
+            final HttpServletResponse response,
+            final String refreshToken) {
+        final Claims claims = parseToken(refreshToken);
+        final String accessToken = createAccessToken(
+                (Integer) claims.get("intraId"),
+                (String) claims.get("intraName")
+        );
+
+        CookieShop.bakedCookie(
+                response,
+                JwtConstants.ACCESS.getValue(),
+                ACCESS_EXPIRY,
+                accessToken,
+                false
+        );
 
         return ResponseAccessTokenDTO
                 .builder()
-                .accessToken(createAccessToken(authUser.getIntraId(), authUser.getIntraName()))
+                .accessToken(accessToken)
                 .build();
     }
 
