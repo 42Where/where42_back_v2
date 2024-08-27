@@ -47,13 +47,13 @@ public class UpdateService {
     @Retryable
     @Transactional
     public void updateMemberLocations() {
-        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 시작!!");
+        log.info("[scheduling] : 로그인한 맴버의 imacLocation 업데이트를 시작합니다!!");
         final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
         final List<Cluster> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
-        log.info("cluster 내 로그인한 맴버 모든 자리 업데이트 끝!!");
+        log.info("[scheduling] : 로그인한 맴버의 imacLocation 업데이트를 끝냅니다!!");
     }
 
     private List<Cluster> getLoginMember(final String token) {
@@ -85,7 +85,7 @@ public class UpdateService {
                                         .getHaneInfo(cadet.getUser().getLogin(), haneToken)
                         );
                     }
-                    log.info("member {}의 클러스터 정보가 변경되었습니다", member.getIntraName());
+                    log.info("[scheduling] : {}의 imacLocation가 변경되었습니다", member.getIntraName());
                 }));
     }
 
@@ -179,7 +179,7 @@ public class UpdateService {
     @Transactional
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
     public void updateInCluster() {
-        log.info("[hane] : 자리 업데이트를 시작합니다!");
+        log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = haneApiService.getHaneListInfo(
                 memberService
                         .findAgreeMembers()
@@ -195,6 +195,6 @@ public class UpdateService {
                                 response.getInoutState());
                                 log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
                         });
-        log.info("[hane] : 자리 업데이트를 끝냅니다!");
+        log.info("[hane] : inCluster 업데이트를 끝냅니다!");
     }
 }
