@@ -12,10 +12,11 @@ public class CookieShop {
             final boolean http) {
         final Cookie cookie = new Cookie(key, token);
 
-        cookie.setDomain("dev.where42.kr");
+        cookie.setDomain("where42.kr");
         cookie.setMaxAge(expiry);
         cookie.setPath("/");
-        cookie.setSecure(http);
+        cookie.setHttpOnly(http);
+        cookie.setSecure(true);
 
         response.addCookie(cookie);
     }

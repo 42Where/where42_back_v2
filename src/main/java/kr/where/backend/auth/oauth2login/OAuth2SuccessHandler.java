@@ -22,7 +22,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private static final String REFRESH_TOKEN = "refreshToken";
     private static final int ACCESS_EXPIRY = 30 * 60;
     private static final int REFRESH_EXPIRY = 14 * 24 * 60 * 60;
     private final MemberService memberService;
@@ -65,7 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("https://dev.where42.kr")
+                                .fromUriString("https://where42.kr")
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()
