@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(title = "where42 API 명세서",
@@ -25,8 +26,12 @@ public class SwaggerConfig {
                 .in(SecurityScheme.In.HEADER).name("Authorization");
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
+        Server server = new Server();
+        server.setUrl("https://api.where42.kr");
+
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(Arrays.asList(securityRequirement));
+                .security(List.of(securityRequirement))
+                .servers(List.of(server));
     }
 }
