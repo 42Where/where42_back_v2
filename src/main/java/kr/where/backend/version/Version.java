@@ -1,6 +1,7 @@
 package kr.where.backend.version;
 
 import jakarta.persistence.*;
+import kr.where.backend.version.exception.VersionException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.sql.exec.spi.StandardEntityInstanceResolver;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -35,12 +33,16 @@ public class Version {
     private LocalDateTime updateTime;
 
     public Version(String latestVersion, String os) {
-
-        this.latestVersion = latestVersion;
-        this.osType = checkAllowedOs(os);
+        this.latestVersion = checkValidVersionFormat(latestVersion);
+        this.osType = OsTypes.checkAllowedOs(os).toString().toLowerCase();
     }
 
-    private String checkAllowedOs(String latestVersion) {
-        String[] AllowedOs = {"ios", "android"};
+    private String checkValidVersionFormat(String version) {
+        String versionRegex = "^\\d+\\.\\d+\\.\\d+$";
+        if (!version.matches(versionRegex)) {
+            throw new VersionException.InvalidVersionFormatException();
+        }
+
+        return version;
     }
 }

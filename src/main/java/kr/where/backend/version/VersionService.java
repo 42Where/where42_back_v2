@@ -28,7 +28,7 @@ public class VersionService {
                         .orElse(new Version(checkVersionDTO.getVersion(), checkVersionDTO.getOs()));
         // 커스텀익셉션 나중에 작성할 것임.
         //유효성 체크
-        version.
+
 
         version.setLatestVersion(checkVersionDTO.getVersion());
 
