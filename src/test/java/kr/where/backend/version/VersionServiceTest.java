@@ -47,10 +47,6 @@ public class VersionServiceTest {
         //given
         Version v = versionRepository.findByOsType("ios").orElseThrow(VersionException.InvalidVersionFormatException::new);
 
-        //when
-//        String test0 = v.checkValidVersionFormat("0.0.0");
-//        String test1 = v.checkValidVersionFormat("2.1.7");
-
         //then
         assertThat(v.checkValidVersionFormat("0.0.0")).isEqualTo("0.0.0");
         assertThat(v.checkValidVersionFormat("2.1.7")).isEqualTo("2.1.7");
@@ -70,7 +66,7 @@ public class VersionServiceTest {
     }
 
     @Test
-    @DisplayName("버전 정규 표현식 유효성 검사 및 버전 체크에 관한 테스트")
+    @DisplayName("버전 레벨 비교 및 업데이트 테스트")
     public void versionUpdate() {
         //given
         Version v = versionRepository.findByOsType("ios").orElseThrow(VersionException.NotAllowedOsException::new);
