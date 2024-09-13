@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.Assert.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -57,4 +58,18 @@ public class VersionServiceTest {
                 .isInstanceOf(VersionException.RequireVersionUpgradeException.class)
                 .hasMessage(null);
     }
+
+    @Test
+    @DisplayName("허용 OS 테스트")
+    public void allowOsTest() {
+        // 예외가 발생하지 않는 경우 (문자열이 존재하는 경우)
+        OsTypes.checkAllowedOs("ios");
+        OsTypes.checkAllowedOs("android");
+
+        // 예외가 발생하는 경우 (없는 문자열)
+        assertThrows(VersionException.NotAllowedOsException.class, () -> {
+            OsTypes.checkAllowedOs("windows"); // 없는 OS
+        });
+    }
+
 }
