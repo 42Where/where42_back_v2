@@ -31,7 +31,7 @@ public class Version {
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    private static final String versionRegex = "^\\d+\\.[0-9]\\.[0-9]$";
+    private static final String versionRegex = "^[0-9]\\.[0-9]\\.[0-9]$";
 
     public Version(final String latestVersion, final String os) {
         this.latestVersion = latestVersion;
@@ -39,6 +39,14 @@ public class Version {
     }
 
     public String checkValidVersionFormat(final String version) {
+        if (!version.matches(versionRegex)) {
+            throw new VersionException.InvalidVersionFormatException();
+        }
+        return version;
+    }
+
+    //for test
+    public static String checkValidVersionFormatForTest(final String version) {
         if (!version.matches(versionRegex)) {
             throw new VersionException.InvalidVersionFormatException();
         }
