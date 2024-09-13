@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Version {
+    private static final String versionRegex = "^\\d+\\.[0-9]\\.[0-9]$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -31,22 +33,13 @@ public class Version {
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    private static final String versionRegex = "^[0-9]\\.[0-9]\\.[0-9]$";
-
     public Version(final String latestVersion, final String os) {
+
         this.latestVersion = latestVersion;
         this.osType = os;
     }
 
     public String checkValidVersionFormat(final String version) {
-        if (!version.matches(versionRegex)) {
-            throw new VersionException.InvalidVersionFormatException();
-        }
-        return version;
-    }
-
-    //for test
-    public static String checkValidVersionFormatForTest(final String version) {
         if (!version.matches(versionRegex)) {
             throw new VersionException.InvalidVersionFormatException();
         }
