@@ -12,6 +12,7 @@ import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException;
 import kr.where.backend.search.exception.SearchException;
+import kr.where.backend.version.exception.VersionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ExceptionHandleController {
 
     @ExceptionHandler({MemberException.NoMemberException.class, GroupException.NoGroupException.class})
     public ResponseEntity<String> handleNoResultException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.toString());
     }
@@ -36,69 +37,71 @@ public class ExceptionHandleController {
     @ExceptionHandler({MemberException.DuplicatedMemberException.class, GroupException.DuplicatedGroupNameException.class,
             GroupMemberException.class})
     public ResponseEntity<String> handleDuplicatedException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.toString());
     }
 
     @ExceptionHandler(GroupException.CannotModifyGroupException.class)
     public ResponseEntity<String> handleCannotModifiedException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(OAuthTokenException.class)
     public ResponseEntity<String> handleOAuthTokenException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<String> handleJwtTokenException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(RequestException.class)
     public ResponseEntity<String> handleBadRequestException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(JsonException.class)
     public ResponseEntity<String> handleJsonException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
     }
 
     @ExceptionHandler(JoinException.class)
     public ResponseEntity<String> handleJoinException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(SearchException.class)
     public ResponseEntity<String> handleSearchException(final  CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(AuthUserException.class)
     public ResponseEntity<String> handleAuthUserException(final CustomException e) {
-        log.info(e.toString());
+        log.error(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingParameterException() {
+        log.error(HttpResourceErrorCode.NO_PARAMETERS.getErrorMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_PARAMETERS));
@@ -106,6 +109,8 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleNoRequestBodyException() {
+        log.error(HttpResourceErrorCode.NO_REQUEST_BODY.getErrorMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_REQUEST_BODY));
@@ -113,6 +118,8 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<String> handleUnsupportedMethodException() {
+        log.error(HttpResourceErrorCode.NO_SUPPORTED_METHOD.getErrorMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(HttpResourceErrorCode.NO_SUPPORTED_METHOD));
@@ -120,6 +127,7 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException() {
+        log.error(HttpResourceErrorCode.NOT_METHOD_VALID_ARGUMENT.getErrorMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(HttpResourceErrorCode.NOT_METHOD_VALID_ARGUMENT));
@@ -128,5 +136,23 @@ public class ExceptionHandleController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleNoResourceException() {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
+    }
+
+    @ExceptionHandler({VersionException.NotAllowedOsException.class, VersionException.InvalidVersionFormatException.class})
+    public ResponseEntity<String> handleInvalidRequestArgument(final CustomException e) {
+        log.error(e.toString());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.toString());
+    }
+
+    @ExceptionHandler(VersionException.RequireVersionUpgradeException.class)
+    public ResponseEntity<String> handleRequireVersionUpgrade(final CustomException e) {
+        log.error(e.toString());
+
+        return ResponseEntity
+                .status(HttpStatus.UPGRADE_REQUIRED)
+                .body(e.toString());
     }
 }
