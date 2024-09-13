@@ -10,7 +10,11 @@ public class VersionException extends CustomException {
         public NotAllowedOsException() { super(VersionErrorCode.NOT_ALLOWED_OS); }
     }
 
-    public static class InvalidVersionException extends VersionException {
-        public InvalidVersionException() { super(VersionErrorCode.INVALID_VERSION); }
+    public static class InvalidVersionFormatException extends VersionException {
+        public InvalidVersionFormatException() { super(VersionErrorCode.INVALID_VERSION_FORMAT); }
+    }
+
+    public static class InvalidVersionValueException extends VersionException {
+        public InvalidVersionValueException() { super(VersionErrorCode.INVALID_VERSION_VALUE); }
     }
 }

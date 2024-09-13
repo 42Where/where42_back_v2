@@ -1,14 +1,9 @@
 package kr.where.backend.version;
 
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.member.Member;
 import kr.where.backend.member.dto.ResponseMemberDTO;
-import kr.where.backend.member.dto.UpdateMemberCommentDTO;
-import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.version.dto.CheckVersionDTO;
 import kr.where.backend.version.dto.ResponseVersionDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
