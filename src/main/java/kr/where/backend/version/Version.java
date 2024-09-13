@@ -34,9 +34,10 @@ public class Version {
     private LocalDateTime updateTime;
 
     public Version(final String latestVersion, final String os) {
-
         this.latestVersion = latestVersion;
         this.osType = os;
+        this.createTime = LocalDateTime.now();
+        this.updateTime = LocalDateTime.now();
     }
 
     public String checkValidVersionFormat(final String version) {
