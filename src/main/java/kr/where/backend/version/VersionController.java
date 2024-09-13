@@ -1,6 +1,5 @@
 package kr.where.backend.version;
 
-import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.version.dto.CheckVersionDTO;
 import kr.where.backend.version.dto.ResponseVersionDTO;
 import lombok.RequiredArgsConstructor;
