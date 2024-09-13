@@ -13,7 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Version {
@@ -32,17 +32,21 @@ public class Version {
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    public Version(String latestVersion, String os) {
-        this.latestVersion = checkValidVersionFormat(latestVersion);
-        this.osType = OsTypes.checkAllowedOs(os).toString().toLowerCase();
+    private static final String versionRegex = "^\\d+\\.[0-9]\\.[0-9]$";
+
+    public Version(final String latestVersion, final String os) {
+        this.latestVersion = latestVersion;
+        this.osType = os;
     }
 
-    private String checkValidVersionFormat(String version) {
-        String versionRegex = "^\\d+\\.\\d+\\.\\d+$";
+    public String checkValidVersionFormat(final String version) {
         if (!version.matches(versionRegex)) {
             throw new VersionException.InvalidVersionFormatException();
         }
-
         return version;
+    }
+
+    public void updateVersion(final String version) {
+        this.latestVersion = version;
     }
 }
