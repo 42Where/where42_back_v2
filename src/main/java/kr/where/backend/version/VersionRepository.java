@@ -8,8 +8,4 @@ import java.util.Optional;
 @Repository
 public interface VersionRepository extends JpaRepository<Version, Long> {
     Optional<Version> findByOsType(String osType);
-
-    public Optional<Version> save(Version version);
-
-
 }

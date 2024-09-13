@@ -15,9 +15,10 @@ public class VersionController {
     private final VersionService versionService;
 
     @PostMapping("")
-    public ResponseEntity<String> checkVersion(@RequestBody CheckVersionDTO checkVersionDTO) {
-        final ResponseVersionDTO responseVersionDTO = versionService.checkVersion(checkVersionDTO);
+    public ResponseEntity<ResponseVersionDTO> checkVersion(@RequestBody final CheckVersionDTO checkVersionDTO) {
 
-        return ResponseEntity.ok(responseVersionDTO.getLatestVersion());
+        return ResponseEntity.ok(
+                versionService.checkVersion(checkVersionDTO)
+        );
     }
 }
