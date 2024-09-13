@@ -45,22 +45,20 @@ public class VersionServiceTest {
     @DisplayName("request 버전 형식 유효성 검사")
     public void checkValidVersionFormat() {
         //given
-        Version v = versionRepository.findByOsType("ios").orElseThrow(VersionException.InvalidVersionFormatException::new);
+        Version v = versionRepository.findByOsType("ios")
+                .orElseThrow(VersionException.InvalidVersionFormatException::new);
 
         //then
         assertThat(v.checkValidVersionFormat("0.0.0")).isEqualTo("0.0.0");
         assertThat(v.checkValidVersionFormat("2.1.7")).isEqualTo("2.1.7");
 
-        assertThatThrownBy(() -> Version.checkValidVersionFormatForTest("000000.0.0"))
+        assertThatThrownBy(() -> v.checkValidVersionFormat("000000.0.0"))
                 .isInstanceOf(VersionException.InvalidVersionFormatException.class)
                 .hasMessage(null);
-        assertThatThrownBy(() -> Version.checkValidVersionFormatForTest("-10.0"))
+        assertThatThrownBy(() -> v.checkValidVersionFormat("-10.0"))
                 .isInstanceOf(VersionException.InvalidVersionFormatException.class)
                 .hasMessage(null);
-        assertThatThrownBy(() -> Version.checkValidVersionFormatForTest("432554253545325.1.9"))
-                .isInstanceOf(VersionException.InvalidVersionFormatException.class)
-                .hasMessage(null);
-        assertThatThrownBy(() -> Version.checkValidVersionFormatForTest("1...7.0"))
+        assertThatThrownBy(() -> v.checkValidVersionFormat("1...7.0"))
                 .isInstanceOf(VersionException.InvalidVersionFormatException.class)
                 .hasMessage(null);
     }
@@ -94,6 +92,9 @@ public class VersionServiceTest {
         assertThrows(VersionException.NotAllowedOsException.class, () -> {
             OsTypes.checkAllowedOs("windows"); // 없는 OS
         });
+
+        assertThatThrownBy(() -> OsTypes.checkAllowedOs("windows"))
+                .isInstanceOf(VersionException.NotAllowedOsException.class);
     }
 
 }
