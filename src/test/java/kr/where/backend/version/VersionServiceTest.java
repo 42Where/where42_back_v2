@@ -67,7 +67,7 @@ public class VersionServiceTest {
     @DisplayName("버전 레벨 비교 및 업데이트 테스트")
     public void versionUpdate() {
         //given
-        Version v = versionRepository.findByOsType("ios").orElseThrow(VersionException.NotAllowedOsException::new);
+        Version v = versionRepository.findByOsType("IOS").orElseThrow(VersionException.NotAllowedOsException::new);
 
         //when
         boolean test1 = versionService.compareVersion(v, "1.3.1");
