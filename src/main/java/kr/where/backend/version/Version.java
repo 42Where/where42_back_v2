@@ -25,6 +25,7 @@ public class Version {
 
     private String latestVersion;
 
+    @Column(unique = true)
     private String osType;
 
     @CreationTimestamp
@@ -34,10 +35,9 @@ public class Version {
     private LocalDateTime updateTime;
 
     public Version(final String latestVersion, final String os) {
+
         this.latestVersion = latestVersion;
-        this.osType = os;
-        this.createTime = LocalDateTime.now();
-        this.updateTime = LocalDateTime.now();
+        this.osType = os.toUpperCase();
     }
 
     public String checkValidVersionFormat(final String version) {
