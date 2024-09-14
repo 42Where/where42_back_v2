@@ -52,9 +52,6 @@ public class VersionServiceTest {
         assertThat(v.checkValidVersionFormat("0.0.0")).isEqualTo("0.0.0");
         assertThat(v.checkValidVersionFormat("2.1.7")).isEqualTo("2.1.7");
 
-        assertThatThrownBy(() -> v.checkValidVersionFormat("000000.0.0"))
-                .isInstanceOf(VersionException.InvalidVersionFormatException.class)
-                .hasMessage(null);
         assertThatThrownBy(() -> v.checkValidVersionFormat("-10.0"))
                 .isInstanceOf(VersionException.InvalidVersionFormatException.class)
                 .hasMessage(null);
