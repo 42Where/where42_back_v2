@@ -37,7 +37,7 @@ public class VersionServiceTest {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(135436, "suhwpark", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        Version v = new Version("1.3.1", "ios");
+        Version v = new Version("1.3.1", "IOS");
         versionRepository.save(v);
     }
 
@@ -45,7 +45,7 @@ public class VersionServiceTest {
     @DisplayName("request 버전 형식 유효성 검사")
     public void checkValidVersionFormat() {
         //given
-        Version v = versionRepository.findByOsType("ios")
+        Version v = versionRepository.findByOsType("IOS")
                 .orElseThrow(VersionException.InvalidVersionFormatException::new);
 
         //then
@@ -85,15 +85,15 @@ public class VersionServiceTest {
     @DisplayName("허용 OS 테스트")
     public void allowOsTest() {
         // 예외가 발생하지 않는 경우 (문자열이 존재하는 경우)
-        OsType.checkAllowedOs("ios");
-        OsType.checkAllowedOs("android");
+        OsType.checkAllowedOs("IOS");
+        OsType.checkAllowedOs("ANDROID");
 
         // 예외가 발생하는 경우 (없는 문자열)
         assertThrows(VersionException.NotAllowedOsException.class, () -> {
-            OsType.checkAllowedOs("windows"); // 없는 OS
+            OsType.checkAllowedOs("WINDOWS"); // 없는 OS
         });
 
-        assertThatThrownBy(() -> OsType.checkAllowedOs("windows"))
+        assertThatThrownBy(() -> OsType.checkAllowedOs("WINDOWS"))
                 .isInstanceOf(VersionException.NotAllowedOsException.class);
     }
 
