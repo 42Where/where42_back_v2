@@ -17,7 +17,7 @@ public class VersionService {
 
     @Transactional
     public ResponseVersionDTO checkVersion(final CheckVersionDTO checkVersionDTO) {
-        OsTypes.checkAllowedOs(checkVersionDTO.getOs());
+        OsType.checkAllowedOs(checkVersionDTO.getOs());
 
         // 보안측면(request가 예상 외 값이 들어왔을 때)에서 봤을 땐 없는 os가 들어오면 예외를 던지는게 아니라 enum[IOS, ANDROID]으로 체크해서 정해진 os만 유효하게끔.
         final Version version = versionRepository.findByOsType(checkVersionDTO.getOs())
@@ -57,5 +57,20 @@ public class VersionService {
             }
         }
         return false;
+    }
+
+    @Transactional
+    public void init() {
+        for (OsType os : OsType.values()) {
+            versionRepository.findByOsType(os.name()).ifPresentOrElse(
+                    version -> version.updateVersion("0.0.0"),
+                    () -> saveDefaultVersion(os.name())
+            );
+        }
+    }
+
+    private void saveDefaultVersion(String type) {
+        Version version = new Version("0.0.0", type);
+        versionRepository.save(version);
     }
 }
