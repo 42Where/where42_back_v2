@@ -2,12 +2,12 @@ package kr.where.backend.version;
 
 import kr.where.backend.version.exception.VersionException;
 
-public enum OsTypes {
+public enum OsType {
     IOS, ANDROID;
 
-    public static OsTypes checkAllowedOs(String os) {
+    public static OsType checkAllowedOs(String os) {
         try {
-            return OsTypes.valueOf(os.toUpperCase());
+            return OsType.valueOf(os.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new VersionException.NotAllowedOsException();
         }

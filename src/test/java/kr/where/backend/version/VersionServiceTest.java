@@ -85,15 +85,15 @@ public class VersionServiceTest {
     @DisplayName("허용 OS 테스트")
     public void allowOsTest() {
         // 예외가 발생하지 않는 경우 (문자열이 존재하는 경우)
-        OsTypes.checkAllowedOs("ios");
-        OsTypes.checkAllowedOs("android");
+        OsType.checkAllowedOs("ios");
+        OsType.checkAllowedOs("android");
 
         // 예외가 발생하는 경우 (없는 문자열)
         assertThrows(VersionException.NotAllowedOsException.class, () -> {
-            OsTypes.checkAllowedOs("windows"); // 없는 OS
+            OsType.checkAllowedOs("windows"); // 없는 OS
         });
 
-        assertThatThrownBy(() -> OsTypes.checkAllowedOs("windows"))
+        assertThatThrownBy(() -> OsType.checkAllowedOs("windows"))
                 .isInstanceOf(VersionException.NotAllowedOsException.class);
     }
 
