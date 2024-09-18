@@ -135,6 +135,7 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleNoResourceException() {
+        log.error(HttpResourceErrorCode.INTERNAL_SERVER_ERROR.getErrorMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 
