@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
 public class Version {
     private static final String versionRegex = "^\\d+\\.[0-9]\\.[0-9]$";
 
