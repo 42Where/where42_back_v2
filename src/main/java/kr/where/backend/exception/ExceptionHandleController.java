@@ -37,63 +37,63 @@ public class ExceptionHandleController {
     @ExceptionHandler({MemberException.DuplicatedMemberException.class, GroupException.DuplicatedGroupNameException.class,
             GroupMemberException.class})
     public ResponseEntity<String> handleDuplicatedException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.toString());
     }
 
     @ExceptionHandler(GroupException.CannotModifyGroupException.class)
     public ResponseEntity<String> handleCannotModifiedException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(OAuthTokenException.class)
     public ResponseEntity<String> handleOAuthTokenException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<String> handleJwtTokenException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
 
     @ExceptionHandler(RequestException.class)
     public ResponseEntity<String> handleBadRequestException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(JsonException.class)
     public ResponseEntity<String> handleJsonException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
     }
 
     @ExceptionHandler(JoinException.class)
     public ResponseEntity<String> handleJoinException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(SearchException.class)
     public ResponseEntity<String> handleSearchException(final  CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
     }
 
     @ExceptionHandler(AuthUserException.class)
     public ResponseEntity<String> handleAuthUserException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.toString());
     }
