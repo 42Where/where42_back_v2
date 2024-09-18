@@ -29,7 +29,7 @@ public class ExceptionHandleController {
 
     @ExceptionHandler({MemberException.NoMemberException.class, GroupException.NoGroupException.class})
     public ResponseEntity<String> handleNoResultException(final CustomException e) {
-        log.error(e.toString());
+        log.info(e.toString());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.toString());
     }
