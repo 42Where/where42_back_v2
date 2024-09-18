@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertThrows;
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class VersionServiceTest {
 
     @Autowired
@@ -68,7 +70,7 @@ public class VersionServiceTest {
 
         //when
         boolean test1 = versionService.compareVersion(v, "1.3.1");
-        boolean test2 = versionService.compareVersion(v, "1.4.1");
+        boolean test2 = versionService.compareVersion(v, "1.4.6");
 
         //then
         assertThat(test1).isTrue();
