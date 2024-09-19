@@ -6,8 +6,4 @@ import lombok.Getter;
 public class CheckVersionDTO {
     private String version;
     private String os;
-
-    public void setOs(String os) {
-        this.os = os.toUpperCase();
-    }
 }

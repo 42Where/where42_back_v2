@@ -20,7 +20,8 @@ public class VersionService {
         OsType.checkAllowedOs(checkVersionDTO.getOs());
 
         // 보안측면(request가 예상 외 값이 들어왔을 때)에서 봤을 땐 없는 os가 들어오면 예외를 던지는게 아니라 enum[IOS, ANDROID]으로 체크해서 정해진 os만 유효하게끔.
-        final Version version = versionRepository.findByOsType(checkVersionDTO.getOs())
+        final Version version = versionRepository.findByOsType(checkVersionDTO.getOs()
+                        .toUpperCase())
                         .orElseThrow(VersionException.NotAllowedOsException::new);
 
         version.checkValidVersionFormat(checkVersionDTO.getVersion());
