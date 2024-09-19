@@ -1,7 +1,7 @@
 package kr.where.backend.version;
 
 import java.util.Objects;
-import kr.where.backend.version.dto.RequestDTO;
+import kr.where.backend.version.dto.RequestVersionDTO;
 import kr.where.backend.version.dto.ResponseVersionDTO;
 import kr.where.backend.version.exception.VersionException;
 import lombok.RequiredArgsConstructor;
@@ -16,20 +16,20 @@ public class VersionService {
     private final VersionRepository versionRepository;
 
     @Transactional
-    public ResponseVersionDTO checkVersion(final RequestDTO requestDTO) {
-        OsType.checkAllowedOs(requestDTO.getOs());
+    public ResponseVersionDTO checkVersion(final RequestVersionDTO requestVersionDTO) {
+        OsType.checkAllowedOs(requestVersionDTO.getOs());
 
         // 보안측면(request가 예상 외 값이 들어왔을 때)에서 봤을 땐 없는 os가 들어오면 예외를 던지는게 아니라 enum[IOS, ANDROID]으로 체크해서 정해진 os만 유효하게끔.
-        final Version version = versionRepository.findByOsType(requestDTO.getOs()
+        final Version version = versionRepository.findByOsType(requestVersionDTO.getOs()
                         .toUpperCase())
                         .orElseThrow(VersionException.NotAllowedOsException::new);
 
-        version.checkValidVersionFormat(requestDTO.getVersion());
+        version.checkValidVersionFormat(requestVersionDTO.getVersion());
 
         //버전 값 체크
 
-        if (!compareVersion(version, requestDTO.getVersion())) {
-            version.updateVersion(requestDTO.getVersion());
+        if (!compareVersion(version, requestVersionDTO.getVersion())) {
+            version.updateVersion(requestVersionDTO.getVersion());
         }
 
         return ResponseVersionDTO

@@ -1,6 +1,6 @@
 package kr.where.backend.version;
 
-import kr.where.backend.version.dto.RequestDTO;
+import kr.where.backend.version.dto.RequestVersionDTO;
 import kr.where.backend.version.dto.ResponseVersionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ public class VersionController {
     private final VersionService versionService;
 
     @PostMapping("")
-    public ResponseEntity<ResponseVersionDTO> checkVersion(@RequestBody final RequestDTO requestDTO) {
+    public ResponseEntity<ResponseVersionDTO> checkVersion(@RequestBody final RequestVersionDTO requestVersionDTO) {
 
         return ResponseEntity.ok(
-                versionService.checkVersion(requestDTO)
+                versionService.checkVersion(requestVersionDTO)
         );
     }
 
