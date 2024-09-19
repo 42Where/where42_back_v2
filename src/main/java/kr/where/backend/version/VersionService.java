@@ -55,7 +55,10 @@ public class VersionService {
 
             if (curr > requestV) {
                 throw new VersionException.RequireVersionUpgradeException();
+            } else if (curr < requestV){
+                return false;
             }
+
         }
         return false;
     }
