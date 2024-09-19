@@ -2,6 +2,7 @@ package kr.where.backend.version;
 
 import kr.where.backend.version.dto.RequestVersionDTO;
 import kr.where.backend.version.dto.ResponseVersionDTO;
+import kr.where.backend.version.swagger.VersionApiDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v3/version")
 @RequiredArgsConstructor
-public class VersionController {
+public class VersionController implements VersionApiDocs {
 
     private final VersionService versionService;
 
