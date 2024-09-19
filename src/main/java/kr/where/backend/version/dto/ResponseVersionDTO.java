@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseVersionDTO {
-    private String latestVersion;
+    private String Version;
 
     @Builder
     public ResponseVersionDTO(final String latestVersion) {
-        this.latestVersion = latestVersion;
+        this.Version = latestVersion;
     }
 }
