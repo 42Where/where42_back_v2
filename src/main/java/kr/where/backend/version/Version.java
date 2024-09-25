@@ -5,7 +5,6 @@ import kr.where.backend.version.exception.VersionException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Version {
-    private static final String versionRegex = "^\\d+\\.[0-9]\\.[0-9]$";
+    private static final String versionRegex = "^\\d+\\.\\d+\\.\\d+$";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
