@@ -1,6 +1,8 @@
 package kr.where.backend.api;
 
+import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
@@ -19,6 +21,7 @@ import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +67,8 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMemberInOrOutState(final Member member, final String state) {
+//		if (member.isPossibleToUpdateInCluster()) {
+//		}
 		member.setInCluster(Hane.create(state));
 	}
 
@@ -91,17 +96,23 @@ public class HaneApiService {
 	}
 
 	@Transactional
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void updateGroupMemberState(final Group group) {
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				group
 						.getGroupMembers()
 						.stream()
-						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
+//						.filter(m -> !m.getIsOwner())
+//						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
 						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
 						.toList(),
 				oauthTokenService.findAccessToken(HANE_TOKEN)
 		);
+
+//		responses.sort((o1, o2) -> o1.getLogin().charAt(0) - o2.getLogin().charAt(0));
+//		responses.forEach(System.out::println);
+
 		responses.stream()
 				.filter(response -> response.getInoutState() != null)
 				.forEach(response -> {
@@ -111,6 +122,15 @@ public class HaneApiService {
 							response.getInoutState());
 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
 				});
+//		for (HaneResponseDto dto : responses) {
+//			if (dto.getInoutState() != null) {
+//				updateMemberInOrOutState(
+//						memberRepository.findByIntraName(dto.getLogin()).orElseThrow(NoMemberException::new),
+//						dto.getInoutState()
+//				);
+//			}
+//
+//		}
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 끝냅니다!");
 	}
 }

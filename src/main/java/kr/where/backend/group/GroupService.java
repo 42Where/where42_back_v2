@@ -15,11 +15,13 @@ import kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
@@ -129,6 +131,7 @@ public class GroupService {
 
     @Transactional
     public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
+        long startTime = System.currentTimeMillis();
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
 
         haneApiService.updateGroupMemberState(ownGroups.stream()
@@ -136,7 +139,9 @@ public class GroupService {
                 .findFirst()
                 .orElseThrow(GroupException.NoGroupException::new)
         );
+        long endTime = System.currentTimeMillis();
 
+        log.info("실행 시간 이 얼마 니 ? 야쌔긲야? {}", endTime - startTime);
         return ownGroups
                 .stream()
                 .map(group -> {

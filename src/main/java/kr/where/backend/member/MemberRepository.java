@@ -1,7 +1,9 @@
 package kr.where.backend.member;
 
+import jakarta.persistence.LockModeType;
 import kr.where.backend.api.json.hane.HaneRequestDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	Optional<List<Member>> findByIntraIdIn(List<Integer> intraId);
 
+//	@Query("select m from Member m where m.intraName = :intraName")
+//	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<Member> findByIntraName(String intraName);
 
 	@Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "

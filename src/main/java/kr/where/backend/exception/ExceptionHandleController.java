@@ -156,4 +156,8 @@ public class ExceptionHandleController {
                 .status(HttpStatus.UPGRADE_REQUIRED)
                 .body(e.toString());
     }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<String> handleNoResourceException() {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
+//    }
 }
