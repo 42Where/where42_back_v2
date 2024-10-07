@@ -30,7 +30,6 @@ public class GroupController implements GroupApiDocs {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
-    //완성
 
     @GetMapping("")
     public ResponseEntity<List<ResponseGroupMemberListDTO>> findAllGroups(@AuthUserInfo final AuthUser authUser) {
