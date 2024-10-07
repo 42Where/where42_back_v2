@@ -1,7 +1,12 @@
 package kr.where.backend.api;
 
+import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
@@ -19,12 +24,14 @@ import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class HaneApiService {
 	private final OAuthTokenService oauthTokenService;
 	private final MemberRepository memberRepository;
@@ -64,7 +71,9 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMemberInOrOutState(final Member member, final String state) {
-		member.setInCluster(Hane.create(state));
+		if (member.isPossibleToUpdateInCluster()) {
+			member.setInCluster(Hane.create(state));
+		}
 	}
 
 	@Transactional
@@ -90,27 +99,40 @@ public class HaneApiService {
 		log.info("[hane] : inCluster 업데이트 스케줄링을 끝냅니다!");
 	}
 
-	@Transactional
 	public void updateGroupMemberState(final Group group) {
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				group
 						.getGroupMembers()
 						.stream()
+						.filter(m -> !m.getIsOwner())
 						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
 						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
 						.toList(),
 				oauthTokenService.findAccessToken(HANE_TOKEN)
 		);
-		responses.stream()
-				.filter(response -> response.getInoutState() != null)
-				.forEach(response -> {
-					updateMemberInOrOutState(
-							memberRepository.findByIntraName(response.getLogin())
-									.orElseThrow(NoMemberException::new),
-							response.getInoutState());
-					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
-				});
+
+		updateMemberList(responses);
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 끝냅니다!");
+	}
+
+	@Transactional
+	public void updateMemberList(final List<HaneResponseDto> responses) {
+		final Map<String, String> inOrOutStatus = responses.stream()
+				.filter(dto -> dto.getInoutState() != null)
+				.collect(Collectors.toMap(HaneResponseDto::getLogin, HaneResponseDto::getInoutState));
+
+		final List<Member> members = memberRepository
+				.findAllByIntraNameIn(responses
+						.stream()
+						.filter(r -> r.getInoutState() != null)
+						.map(HaneResponseDto::getLogin)
+						.toList()
+				);
+
+		members.forEach(m -> {
+			m.setInCluster(Hane.create(inOrOutStatus.get(m.getIntraName())));
+			log.info("[hane] : {}의 inCluster가 변경되었습니다", m.getIntraName());
+		});
 	}
 }

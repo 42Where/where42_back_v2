@@ -15,11 +15,13 @@ import kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;

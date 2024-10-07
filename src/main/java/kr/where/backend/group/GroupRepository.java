@@ -20,3 +20,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     List<Group> findAllGroupByMember(@Param("intraId") final Integer intraId);
 
 }
+/**
+ * select * from group where group.group_member.intra_id = intra_id and group.group_member.isOwner = true;
+ */

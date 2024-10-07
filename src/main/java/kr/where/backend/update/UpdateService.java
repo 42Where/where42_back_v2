@@ -1,5 +1,6 @@
 package kr.where.backend.update;
 
+import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
 import java.util.List;
 import kr.where.backend.api.HaneApiService;
@@ -12,6 +13,7 @@ import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -178,6 +180,7 @@ public class UpdateService {
 
     @Transactional
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = haneApiService.getHaneListInfo(
