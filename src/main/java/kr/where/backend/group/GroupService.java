@@ -131,7 +131,6 @@ public class GroupService {
 
     @Transactional
     public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
-        long startTime = System.currentTimeMillis();
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
 
         haneApiService.updateGroupMemberState(ownGroups.stream()
@@ -139,9 +138,7 @@ public class GroupService {
                 .findFirst()
                 .orElseThrow(GroupException.NoGroupException::new)
         );
-        long endTime = System.currentTimeMillis();
 
-        log.info("실행 시간 이 얼마 니 ? 야쌔긲야? {}", endTime - startTime);
         return ownGroups
                 .stream()
                 .map(group -> {
