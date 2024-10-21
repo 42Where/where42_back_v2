@@ -25,18 +25,4 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     List<GroupMember> findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(List<Long> groupIds, List<Integer> memberIds);
 
     List<GroupMember> findGroupMemberByGroup_GroupId(Long defaultGroupId);
-
-//    @Query("SELECT new kr.where.backend.group.dto.groupmember.ResponseGroupMemberListDTO(" +
-//            "g.groupId, g.groupName, COUNT(gm), " +
-//            "new kr.where.backend.group.dto.groupmember.ResponseOneGroupMemberDTO(m.intraId, m.intraName, m.grade, m.image, m.comment, m.inCluster, m.agree, m.defaultGroupId, l.location)) " +
-//            "FROM Group g " +
-//            "JOIN g.groupMembers gm " +
-//            "JOIN gm.member m " +
-//            "LEFT JOIN m.location l " +
-//            "WHERE g.groupId IN (" +
-//            "    SELECT gmInner.group.groupId FROM GroupMember gmInner " +
-//            "    WHERE gmInner.member.intraId = :intraId AND gmInner.isOwner = true" +
-//            ") AND gm.isOwner = false " +
-//            "GROUP BY g.groupId, g.groupName, m.intraId, m.intraName, m.grade, m.image, m.comment, m.inCluster, m.agree, m.defaultGroupId, l.location")
-//    List<ResponseGroupMemberListDTO> findAllByOwnerIntraId(@Param("intraId")final Integer intraId);
 }
