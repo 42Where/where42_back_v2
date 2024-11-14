@@ -27,7 +27,7 @@ public class RequestLogAspect {
 
 
     @AfterReturning(pointcut = POINTCUT,
-            returning = "ret", argNames = "joinPoint, authUser, ret")
+            returning = "ret", argNames = "joinPoint, ret")
     public void requestSuccessLog(JoinPoint joinPoint, Object ret) {
 
 
