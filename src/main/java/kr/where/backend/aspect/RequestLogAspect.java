@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 public class RequestLogAspect {
 
 //    private static final String POINTCUT = "@annotation(requestLogAspect)";
-    private static final String POINTCUT = "execution(* kr.where.backend..*Service.*(..))";
+    private static final String POINTCUT = "@annotation(kr.where.backend.aspect.RequestLog)";
 
 
     @AfterReturning(pointcut = POINTCUT,
