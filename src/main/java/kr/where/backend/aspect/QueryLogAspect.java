@@ -16,26 +16,26 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 public class QueryLogAspect {
 
-    @Around("execution(* kr.where.backend..*Repository.*(..))")
-    public Object measureJpaExecutionTime(final ProceedingJoinPoint point) throws Throwable {
-        final ServletRequestAttributes attributes
-                = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        final long startTime = System.currentTimeMillis();
-
-        final Object result = point.proceed();
-        final long executionTime = System.currentTimeMillis() - startTime;
-        final AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication();
-
-        if (attributes != null) {
-            log.info("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Msg : {}, Execute Method : {}",
-                    attributes.getRequest().getRemoteAddr(),
-                    attributes.getRequest().getRequestURL().toString(),
-                    attributes.getRequest().getMethod(),
-                    authUser.getIntraId(),
-                    "Query Execute time : " + executionTime + "ms",
-                    point.getSignature()
-            );
-        }
-        return result;
-    }
+//    @Around("execution(* kr.where.backend..*Repository.*(..))")
+//    public Object measureJpaExecutionTime(final ProceedingJoinPoint point) throws Throwable {
+//        final ServletRequestAttributes attributes
+//                = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        final long startTime = System.currentTimeMillis();
+//
+//        final Object result = point.proceed();
+//        final long executionTime = System.currentTimeMillis() - startTime;
+//        final AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (attributes != null) {
+//            log.info("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Msg : {}, Execute Method : {}",
+//                    attributes.getRequest().getRemoteAddr(),
+//                    attributes.getRequest().getRequestURL().toString(),
+//                    attributes.getRequest().getMethod(),
+//                    authUser.getIntraId(),
+//                    "Query Execute time : " + executionTime + "ms",
+//                    point.getSignature()
+//            );
+//        }
+//        return result;
+//    }
 }
