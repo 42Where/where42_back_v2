@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class JpaPerformanceAspect {
+public class QueryLogAspect {
 
     @Around("execution(* kr.where.backend..*Repository.*(..))")
     public Object measureJpaExecutionTime(final ProceedingJoinPoint point) throws Throwable{
