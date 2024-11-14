@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 속성 정의 -->
+    <property name="LOG_PATTERN" value="%white(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) [%blue(%thread)] %white(%X) %yellow(%logger{1}): %msg%n%throwable"/>
+
+    <!-- 콘솔 애펜더 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일 애펜더 -->
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/where42.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/where42-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 로거 설정 -->
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="rollingFile"/>
+    </logger>
+
+    <logger name="kr.where.backend" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="rollingFile"/>
+    </logger>
+
+    <!-- 루트 로거 -->
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="rollingFile"/>
+    </root>
+</configuration>
