@@ -21,15 +21,11 @@ import java.lang.reflect.Method;
 @Component
 @RequiredArgsConstructor
 public class RequestLogAspect {
-
-//    private static final String POINTCUT = "@annotation(requestLogAspect)";
     private static final String POINTCUT = "@annotation(kr.where.backend.aspect.RequestLog)";
-
 
     @AfterReturning(pointcut = POINTCUT,
             returning = "ret", argNames = "joinPoint, ret")
     public void requestSuccessLog(JoinPoint joinPoint, Object ret) {
-
 
         String responseString = (ret == null) ? "void" : ret.toString();
         sendLoggingMessage(joinPoint, responseString);
@@ -40,13 +36,12 @@ public class RequestLogAspect {
 
         final ServletRequestAttributes attributes
                 = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-
         final AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String ip = attributes.getRequest().getRemoteAddr();
-        String requestUrl = attributes.getRequest().getRequestURI();
-        String requestMethod = attributes.getRequest().getMethod();
-        Integer userId = authUser.getIntraId();
-        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        final String ip = attributes.getRequest().getRemoteAddr();
+        final String requestUrl = attributes.getRequest().getRequestURI();
+        final String requestMethod = attributes.getRequest().getMethod();
+        final Integer userId = authUser.getIntraId();
+        final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
 
         StringBuilder sb = new StringBuilder();
 
@@ -55,8 +50,8 @@ public class RequestLogAspect {
         sb.append("METHOD:").append(requestMethod).append("#");
         sb.append("USERID:").append(userId).append("#");
         sb.append("EXCUTE_METHOD:").append(method.toString()).append("#");
+        sb.append("MSG : ").append(responseString).append("#");
 
         log.info(sb.toString());
     }
-
 }
