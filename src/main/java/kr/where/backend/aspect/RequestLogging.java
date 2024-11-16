@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface RequestLog {
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface RequestLogging {
+    LogLevel level() default LogLevel.INFO;
 }
