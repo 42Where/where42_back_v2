@@ -13,9 +13,8 @@ import java.sql.SQLException;
 @Slf4j
 public class QueryLogAspect {
 
-    @Around("@annotation(kr.where.backend.aspect.QueryLog)")
+    @Around("execution(* kr.where.backend..*Repository.*(..))")
     public Object measureJpaExecutionTime(final ProceedingJoinPoint point) throws Throwable {
-        final ContextUtil contextUtil = new ContextUtil();
 
         try {
             final long startTime = System.currentTimeMillis();
@@ -23,20 +22,20 @@ public class QueryLogAspect {
             final long executionTime = System.currentTimeMillis() - startTime;
 
             log.info("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Msg : {}, Execute Method : {}",
-                    contextUtil.getRequestIp(),
-                    contextUtil.getRequestURL(),
-                    contextUtil.getRequestMethod(),
-                    contextUtil.getUserIntraId(),
+                    ContextUtil.getRequestIp(),
+                    ContextUtil.getRequestURL(),
+                    ContextUtil.getRequestMethod(),
+                    ContextUtil.getUserIntraId(),
                     "Query Execute time : " + executionTime + "ms",
                     point.getSignature()
             );
             return result;
         } catch (SQLException e) {
             log.error("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Error Msg : {}",
-                    contextUtil.getRequestIp(),
-                    contextUtil.getRequestURL(),
-                    contextUtil.getRequestMethod(),
-                    contextUtil.getUserIntraId(),
+                    ContextUtil.getRequestIp(),
+                    ContextUtil.getRequestURL(),
+                    ContextUtil.getRequestMethod(),
+                    ContextUtil.getUserIntraId(),
                     e.getMessage()
             );
             throw e;
