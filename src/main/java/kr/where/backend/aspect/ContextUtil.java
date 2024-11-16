@@ -1,43 +1,54 @@
 package kr.where.backend.aspect;
 
 import kr.where.backend.auth.authUser.AuthUser;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContextUtil {
-    private final ServletRequestAttributes attributes;
-    private final AuthUser authUser;
+    public static final String SCHEDULING = "Schedule Task";
+    public static final int DEFAULT_USER_ID = 0;
 
-    public ContextUtil() {
-        this.attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        this.authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static ServletRequestAttributes getAttributes() {
+        return (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     }
 
-    public String getRequestIp() {
-        return Optional.ofNullable(attributes)
+    public static AuthUser getAuthUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return Optional.ofNullable(authentication)
+                .map(Authentication::getPrincipal)
+                .filter(AuthUser.class::isInstance)
+                .map(AuthUser.class::cast)
+                .orElse(null);
+    }
+
+    public static String getRequestIp() {
+        return Optional.ofNullable(getAttributes())
                 .map(attributes -> attributes.getRequest().getRemoteAddr())
-                .orElse("unknown");
+                .orElse(SCHEDULING);
     }
 
-    public String getRequestURL() {
-        return Optional.ofNullable(attributes)
+    public static String getRequestURL() {
+        return Optional.ofNullable(getAttributes())
                 .map(attributes -> attributes.getRequest().getRequestURL().toString())
-                .orElse("unknown");
+                .orElse(SCHEDULING);
     }
 
-    public String getRequestMethod() {
-        return Optional.ofNullable(attributes)
+    public static String getRequestMethod() {
+        return Optional.ofNullable(getAttributes())
                 .map(attributes -> attributes.getRequest().getMethod())
-                .orElse("unknown");
+                .orElse(SCHEDULING);
     }
 
-    public Integer getUserIntraId() {
-        return Optional.ofNullable(authUser)
+    public static Integer getUserIntraId() {
+        return Optional.ofNullable(getAuthUser())
                 .map(AuthUser::getIntraId)
-                .orElse(0);
+                .orElse(DEFAULT_USER_ID);
     }
-
 }
