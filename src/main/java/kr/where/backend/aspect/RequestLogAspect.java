@@ -20,7 +20,7 @@ public class RequestLogAspect {
 
     private final LogUtil logUtil;
 
-    @AfterReturning(value = POINTCUT, argNames = "joinPoint, requestLogging")
+    @AfterReturning(value = "@annotation(requestLogging)", argNames = "joinPoint, requestLogging")
     public void requestSuccessLog(final JoinPoint joinPoint, final RequestLogging requestLogging) {
         logUtil.printLog(requestLogging.level(), joinPoint);
     }

@@ -1,12 +1,12 @@
 package kr.where.backend.aspect;
 
 public enum LogFormat {
-    IP("[IP:%s] | "),
-    URL("[URL:%s] | "),
-    METHOD("[METHOD:%s] | "),
-    USERID("[USERID:%s] | "),
-    EXECUTE_METHOD("[EXECUTE_METHOD:%s] | "),
-    MSG("[MSG: %s]");
+    IP("[IP : %s] | "),
+    URL("[URL : %s] | "),
+    METHOD("[METHOD : %s] | "),
+    USERID("[USERID : %s] | "),
+    EXECUTE_METHOD("[EXECUTE_METHOD : %s] | "),
+    MSG("[MSG : %s]");
 
     private final String format;
 

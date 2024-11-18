@@ -1,5 +1,6 @@
 package kr.where.backend.aspect;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,9 +12,11 @@ import java.sql.SQLException;
 @Aspect
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class QueryLogAspect {
+    private final LogUtil logUtil;
 
-    @Around("@annotation(kr.where.backend.aspect.QueryLog)")
+    @Around("execution(* kr.where.backend..*Repository.*(..))")
     public Object measureJpaExecutionTime(final ProceedingJoinPoint point) throws Throwable {
 
         try {
@@ -21,26 +24,11 @@ public class QueryLogAspect {
             final Object result = point.proceed();
             final long executionTime = System.currentTimeMillis() - startTime;
 
-            log.info("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Msg : {}, Execute Method : {}",
-                    ContextUtil.getRequestIp(),
-                    ContextUtil.getRequestURL(),
-                    ContextUtil.getRequestMethod(),
-                    ContextUtil.getUserIntraId(),
-                    "Query Execute time : " + executionTime + "ms",
-                    point.getSignature()
-            );
+            logUtil.printLog(LogLevel.INFO, point);
             return result;
         } catch (SQLException e) {
-            log.error("Ip : {}, Request URL : {}, Request Method : {}, UserId : {}, Error Msg : {}",
-                    ContextUtil.getRequestIp(),
-                    ContextUtil.getRequestURL(),
-                    ContextUtil.getRequestMethod(),
-                    ContextUtil.getUserIntraId(),
-                    e.getMessage()
-            );
+            logUtil.printLog(point, e);
             throw e;
         }
     }
-
-
 }
