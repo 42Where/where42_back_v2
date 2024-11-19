@@ -9,7 +9,7 @@ public enum LogFormat {
     MSG("MSG=%s"),
     SERVICE("EVENT=ServiceLog "),
     QUERY("EVENT=QueryLog "),
-    EXECUTE_TIME("%lms");
+    EXECUTE_TIME("%dms");
 
     private final String format;
 
