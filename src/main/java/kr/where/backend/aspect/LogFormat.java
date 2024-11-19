@@ -9,7 +9,8 @@ public enum LogFormat {
     MSG("MSG=%s"),
     SERVICE("EVENT=ServiceLog "),
     QUERY("EVENT=QueryLog "),
-    EXECUTE_TIME("%dms");
+    EXECUTE_TIME("EXECUTE_TIME=%s"),
+    MS("%dms");
 
     private final String format;
 
@@ -38,6 +39,11 @@ public enum LogFormat {
         sb.append(String.format(METHOD.getFormat(), requestMethod));
         sb.append(String.format(USERID.getFormat(), userId));
         sb.append(String.format(EXECUTE_METHOD.getFormat(), method));
+
+        if (logType == QUERY) {
+            sb.append(String.format(EXECUTE_TIME.getFormat(), responseString));
+            return sb.toString();
+        }
         sb.append(String.format(MSG.getFormat(), responseString));
 
         return sb.toString();

@@ -27,7 +27,7 @@ public class QueryLogAspect {
             logUtil.printLog(LogLevel.INFO,
                     point,
                     String.format(
-                            LogFormat.EXECUTE_TIME.getFormat(),
+                            LogFormat.MS.getFormat(),
                             executionTime
                     ),
                     LogFormat.QUERY
