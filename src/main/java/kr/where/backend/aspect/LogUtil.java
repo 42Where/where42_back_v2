@@ -24,9 +24,7 @@ public class LogUtil {
     }
 
     public void printLog(final JoinPoint joinPoint, final Exception exception, final LogFormat logType) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(exception.getClass().getName()).append(", ").append(exception.getMessage());
-        print(LogLevel.ERROR, sendLoggingMessage(logType, joinPoint, sb.toString()));
+        print(LogLevel.ERROR, sendLoggingMessage(logType, joinPoint, parseErrorMessage(joinPoint, exception)));
     }
 
     private void print(final LogLevel level, final String logDetail) {
@@ -40,23 +38,48 @@ public class LogUtil {
     }
 
     private String parseMessage(final JoinPoint joinPoint) {
-        final String[] classPath = joinPoint.getSignature().getDeclaringType().getName().split("\\.");
-        final String callerClass = classPath[classPath.length - 1];
         final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        final String methodName = method.getName();
         final Object[] args = joinPoint.getArgs();
         final String[] parameterNames = discoverer.getParameterNames(method);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(callerClass).append(" - ");
-        sb.append("Called ").append(methodName).append(" ");
-        if (Objects.nonNull(parameterNames)) {
-            for (int i = 0; i < args.length; i++) {
-                sb.append(parameterNames[i]).append(": ").append(args[i]).append(", ");
-            }
-        }
+        sb.append(getArgument(parameterNames, args));
         sb.delete(sb.length() - 2, sb.length() - 1);
         return sb.toString();
+    }
+
+    private String parseErrorMessage(final JoinPoint joinPoint, final Exception exception) {
+        final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        final Object[] args = joinPoint.getArgs();
+        final String[] parameterNames = discoverer.getParameterNames(method);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(exception.getClass().getName()).append(", ").append(exception.getMessage());
+        sb.append(getArgument(parameterNames, args));
+        sb.delete(sb.length() - 2, sb.length() - 1);
+        return sb.toString();
+    }
+
+    private String getArgument(String[] parameterNames, Object[] args) {
+        if (Objects.isNull(parameterNames) || parameterNames.length == 0) {
+            return "No parameters";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < args.length; i++) {
+            sb.append(parameterNames[i])
+                    .append("=")
+                    .append(formatArgument(args[i]))
+                    .append(", ");
+        }
+        return sb.toString();
+    }
+
+    private String formatArgument(Object arg) {
+        if (arg == null) {
+            return "null";
+        }
+        String argStr = arg.toString();
+        return argStr.length() > 100 ? argStr.substring(0, 97) + "..." : argStr;
     }
 
     private String sendLoggingMessage(final LogFormat logType, final JoinPoint joinPoint, final String responseString) {
