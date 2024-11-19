@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseAnnouncementListDto {
     private List<ResponseAnnouncementDto> responseAnnouncementDto;
+
+    public ResponseAnnouncementListDto(List<ResponseAnnouncementDto> responseAnnouncementDto) {
+        this.responseAnnouncementDto = responseAnnouncementDto;
+    }
 }
