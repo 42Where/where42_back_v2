@@ -2,6 +2,7 @@ package kr.where.backend.announcement;
 
 import jakarta.validation.Valid;
 import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
+import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import kr.where.backend.announcement.dto.CreateAnnouncementDto;
 import kr.where.backend.announcement.swagger.AnnouncementApiDocs;
@@ -32,11 +33,12 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(String)
      */
     @PostMapping("")
-    public ResponseEntity<String> saveAnnouncement(
+    public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
 //        announcementService.saveAnnouncement(createAnnouncementDto, authUser);
-        return ResponseEntity.status(HttpStatus.OK).body("Announcement successfully created.");
+        ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
+        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
 
     /**
@@ -71,8 +73,9 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(String)
      */
     @DeleteMapping("")
-    public ResponseEntity<String> deleteAnnouncement(@RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto, @AuthUserInfo final AuthUser authUser) {
+    public ResponseEntity<ResponseAnnouncementDto> deleteAnnouncement(@RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto, @AuthUserInfo final AuthUser authUser) {
 //        announcementService.deleteAnnouncement(authUser, deleteAnnouncementDto);
-        return ResponseEntity.status(HttpStatus.OK).body("Announcement successfully delete.");
+        ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
+        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
 }
