@@ -54,3 +54,16 @@ public interface AnnouncementApiDocs {
     @GetMapping("")
     ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
             @AuthUserInfo final AuthUser authUser, @RequestParam("page") final int page);
+
+    @Operation(summary = "Get announcement API", description = "공지 모두 가져오기",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDto.class))),
+                    @ApiResponse(responseCode = "400", description = "공지 반환 실패", content = @Content(schema = @Schema(type = "string")))
+            }
+    )
+    @GetMapping("all")
+    ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(
+            @AuthUserInfo final AuthUser authUser);
