@@ -6,9 +6,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
-
 import org.springframework.stereotype.Component;
-
 
 
 @Slf4j
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RequestLogAspect {
     private static final String POINTCUT = "@annotation(kr.where.backend.aspect.RequestLogging)";
-
     private final LogUtil logUtil;
 
     @AfterReturning(value = "@annotation(requestLogging)", argNames = "joinPoint, requestLogging")
