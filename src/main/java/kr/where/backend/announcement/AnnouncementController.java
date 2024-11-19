@@ -8,6 +8,7 @@ import kr.where.backend.announcement.swagger.AnnouncementApiDocs;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
 //        announcementService.saveAnnouncement(createAnnouncementDto, authUser);
-        return ResponseEntity.status(201).body("temp text");
+        return ResponseEntity.status(HttpStatus.OK).body("Announcement successfully created.");
     }
 
     /**
@@ -48,7 +49,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(@AuthUserInfo final AuthUser authUser, @RequestParam("page") final int page) {
         ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser, page);
-        return ResponseEntity.status(200).body(responseAnnouncementListDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 
     /**
@@ -60,7 +61,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(@AuthUserInfo final AuthUser authUser) {
         ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser);
-        return ResponseEntity.status(200).body(responseAnnouncementListDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 
     /**
@@ -72,6 +73,6 @@ public class AnnouncementController implements AnnouncementApiDocs {
     @DeleteMapping("")
     public ResponseEntity<String> deleteAnnouncement(@RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto, @AuthUserInfo final AuthUser authUser) {
 //        announcementService.deleteAnnouncement(authUser, deleteAnnouncementDto);
-        return ResponseEntity.status(200).body("");
+        return ResponseEntity.status(HttpStatus.OK).body("Announcement successfully delete.");
     }
 }
