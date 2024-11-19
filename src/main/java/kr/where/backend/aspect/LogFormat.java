@@ -8,7 +8,8 @@ public enum LogFormat {
     EXECUTE_METHOD("EXECUTE_METHOD=%s "),
     MSG("MSG=%s"),
     SERVICE("EVENT=ServiceLog "),
-    QUERY("EVENT=QueryLog ");
+    QUERY("EVENT=QueryLog "),
+    EXECUTE_TIME("%lms");
 
     private final String format;
 

@@ -24,9 +24,16 @@ public class QueryLogAspect {
             final Object result = point.proceed();
             final long executionTime = System.currentTimeMillis() - startTime;
 
-            logUtil.printLog(LogLevel.INFO, point, String.valueOf(executionTime), LogFormat.QUERY);
+            logUtil.printLog(LogLevel.INFO,
+                    point,
+                    String.format(
+                            LogFormat.EXECUTE_TIME.getFormat(),
+                            executionTime
+                    ),
+                    LogFormat.QUERY
+            );
             return result;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             logUtil.printLog(point, e, LogFormat.QUERY);
             throw e;
         }
