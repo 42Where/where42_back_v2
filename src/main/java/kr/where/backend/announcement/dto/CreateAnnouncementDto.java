@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@NotBlank
 public class CreateAnnouncementDto {
+    @NotBlank
     private String title;
+    @NotBlank
     private String comment;
 }
