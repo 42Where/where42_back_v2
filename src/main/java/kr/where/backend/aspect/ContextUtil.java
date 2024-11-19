@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContextUtil {
-    public static final String SCHEDULING = "Schedule Task";
+    public static final String SCHEDULING = "ScheduleTask";
     public static final int DEFAULT_USER_ID = 0;
 
     public static ServletRequestAttributes getAttributes() {

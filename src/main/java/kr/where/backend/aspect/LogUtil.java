@@ -27,6 +27,9 @@ public class LogUtil {
         print(LogLevel.ERROR, sendLoggingMessage(logType, joinPoint, parseErrorMessage(joinPoint, exception)));
     }
 
+    public void printLog(final LogLevel level, final JoinPoint joinPoint, final String executeTime, final LogFormat logType) {
+        print(level, sendLoggingMessage(logType, joinPoint, executeTime));
+    }
     private void print(final LogLevel level, final String logDetail) {
         switch (level) {
             case TRACE -> log.trace(logDetail);
@@ -60,25 +63,23 @@ public class LogUtil {
         return sb.toString();
     }
 
-    private String getArgument(String[] parameterNames, Object[] args) {
+    private String getArgument(final String[] parameterNames, final Object[] args) {
         if (Objects.isNull(parameterNames) || parameterNames.length == 0) {
             return "No parameters";
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            sb.append(parameterNames[i])
-                    .append("=")
-                    .append(formatArgument(args[i]))
+        for (Object arg : args) {
+            sb.append(formatArgument(arg))
                     .append(", ");
         }
         return sb.toString();
     }
 
-    private String formatArgument(Object arg) {
+    private String formatArgument(final Object arg) {
         if (arg == null) {
             return "null";
         }
-        String argStr = arg.toString();
+        final String argStr = arg.toString();
         return argStr.length() > 100 ? argStr.substring(0, 97) + "..." : argStr;
     }
 
