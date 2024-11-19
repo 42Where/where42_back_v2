@@ -34,7 +34,7 @@ public class QueryLogAspect {
             );
             return result;
         } catch (final SQLException e) {
-            logUtil.printLog(point, e, LogFormat.QUERY);
+            logUtil.printLog(LogLevel.ERROR, point, e, LogFormat.QUERY);
             throw e;
         }
     }

@@ -24,8 +24,9 @@ public class LogUtil {
         print(level, sendLoggingMessage(logType, joinPoint, parseMessage(joinPoint)));
     }
 
-    public void printLog(final JoinPoint joinPoint, final Exception exception, final LogFormat logType) {
-        print(LogLevel.ERROR, sendLoggingMessage(logType, joinPoint, parseErrorMessage(joinPoint, exception)));
+    public void printLog(final LogLevel level, final JoinPoint joinPoint,
+                         final Exception exception, final LogFormat logType) {
+        print(level, sendLoggingMessage(logType, joinPoint, parseErrorMessage(joinPoint, exception)));
     }
 
     public void printLog(final LogLevel level, final JoinPoint joinPoint, final String executeTime, final LogFormat logType) {

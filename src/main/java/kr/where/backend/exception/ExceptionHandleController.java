@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
+@RequestLogging(level = LogLevel.WARN)
 public class ExceptionHandleController {
 
     @ExceptionHandler({MemberException.NoMemberException.class, GroupException.NoGroupException.class})
