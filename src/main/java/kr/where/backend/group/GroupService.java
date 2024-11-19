@@ -132,7 +132,6 @@ public class GroupService {
     }
 
     @Transactional
-    @RequestLogging(level = LogLevel.INFO)
     public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
 
