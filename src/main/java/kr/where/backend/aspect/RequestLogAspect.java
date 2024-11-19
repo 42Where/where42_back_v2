@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RequestLogAspect {
-    private static final String POINTCUT = "@annotation(kr.where.backend.aspect.RequestLogging)";
+    private static final String POINTCUT = "@annotation(kr.where.backend.aspect.RequestLogging) && @within(kr.where.backend.aspect.RequestLogging)";
     private final LogUtil logUtil;
 
-    @AfterReturning(value = "@annotation(requestLogging)", argNames = "joinPoint, requestLogging")
+    @AfterReturning(pointcut = POINTCUT, argNames = "joinPoint, requestLogging")
     public void requestSuccessLog(final JoinPoint joinPoint, final RequestLogging requestLogging) {
         logUtil.printLog(requestLogging.level(), joinPoint, LogFormat.SERVICE);
     }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import kr.where.backend.api.HaneApiService;
-import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
@@ -153,7 +152,6 @@ public class GroupMemberService {
      * @param groupId
      * @return List<ResponseOneGroupMemberDTO>
      */
-    @RequestLogging
     public List<ResponseOneGroupMemberDTO> findGroupMemberByGroupId(final Long groupId) {
         groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
 

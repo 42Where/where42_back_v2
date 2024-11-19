@@ -8,6 +8,7 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Objects;
 
 @Slf4j
@@ -86,10 +87,11 @@ public class LogUtil {
     private String sendLoggingMessage(final LogFormat logType, final JoinPoint joinPoint, final String responseString) {
         final String ip = ContextUtil.getRequestIp();
         final String requestUrl = ContextUtil.getRequestURL();
+        final String path = URI.create(requestUrl).getPath();
         final String requestMethod = ContextUtil.getRequestMethod();
         final Integer userId = ContextUtil.getUserIntraId();
         final String method = ((MethodSignature) joinPoint.getSignature()).getMethod().getName();
 
-        return LogFormat.buildLog(logType, ip, requestUrl, requestMethod, String.valueOf(userId), method, responseString);
+        return LogFormat.buildLog(logType, ip, path, requestMethod, String.valueOf(userId), method, responseString);
     }
 }

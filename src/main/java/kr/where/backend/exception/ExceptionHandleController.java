@@ -1,5 +1,7 @@
 package kr.where.backend.exception;
 
+import kr.where.backend.aspect.LogLevel;
+import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
@@ -134,6 +136,7 @@ public class ExceptionHandleController {
     }
 
     @ExceptionHandler(RuntimeException.class)
+    @RequestLogging(level = LogLevel.ERROR)
     public ResponseEntity<String> handleNoResourceException() {
         log.error(HttpResourceErrorCode.INTERNAL_SERVER_ERROR.getErrorMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
