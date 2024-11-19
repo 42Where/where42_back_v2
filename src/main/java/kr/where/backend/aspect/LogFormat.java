@@ -1,12 +1,14 @@
 package kr.where.backend.aspect;
 
 public enum LogFormat {
-    IP("[IP : %s] | "),
-    URL("[URL : %s] | "),
-    METHOD("[METHOD : %s] | "),
-    USERID("[USERID : %s] | "),
-    EXECUTE_METHOD("[EXECUTE_METHOD : %s] | "),
-    MSG("[MSG : %s]");
+    IP("IP=%s "),
+    URL("URL=%s "),
+    METHOD("METHOD=%s "),
+    USERID("USERID=%s "),
+    EXECUTE_METHOD("EXECUTE_METHOD=%s "),
+    MSG("MSG=%s"),
+    SERVICE("EVENT=ServiceLog "),
+    QUERY("EVENT=QueryLog ");
 
     private final String format;
 
@@ -19,6 +21,7 @@ public enum LogFormat {
     }
 
     public static String buildLog(
+            final LogFormat logType,
             final String ip,
             final String requestUrl,
             final String requestMethod,
@@ -28,6 +31,7 @@ public enum LogFormat {
     ) {
         StringBuilder sb = new StringBuilder();
 
+        sb.append(logType.getFormat());
         sb.append(String.format(IP.getFormat(), ip));
         sb.append(String.format(URL.getFormat(), requestUrl));
         sb.append(String.format(METHOD.getFormat(), requestMethod));

@@ -19,14 +19,14 @@ public class LogUtil {
         this.discoverer = new DefaultParameterNameDiscoverer();
     }
 
-    public void printLog(final LogLevel level, final JoinPoint joinPoint) {
-        print(level, sendLoggingMessage(joinPoint, parseMessage(joinPoint)));
+    public void printLog(final LogLevel level, final JoinPoint joinPoint, final LogFormat logType) {
+        print(level, sendLoggingMessage(logType, joinPoint, parseMessage(joinPoint)));
     }
 
-    public void printLog(final JoinPoint joinPoint, final Exception exception) {
+    public void printLog(final JoinPoint joinPoint, final Exception exception, final LogFormat logType) {
         final StringBuilder sb = new StringBuilder();
         sb.append(exception.getClass().getName()).append(", ").append(exception.getMessage());
-        print(LogLevel.ERROR, sendLoggingMessage(joinPoint, sb.toString()));
+        print(LogLevel.ERROR, sendLoggingMessage(logType, joinPoint, sb.toString()));
     }
 
     private void print(final LogLevel level, final String logDetail) {
@@ -59,13 +59,13 @@ public class LogUtil {
         return sb.toString();
     }
 
-    private String sendLoggingMessage(JoinPoint joinPoint, String responseString) {
+    private String sendLoggingMessage(final LogFormat logType, final JoinPoint joinPoint, final String responseString) {
         final String ip = ContextUtil.getRequestIp();
         final String requestUrl = ContextUtil.getRequestURL();
         final String requestMethod = ContextUtil.getRequestMethod();
         final Integer userId = ContextUtil.getUserIntraId();
         final String method = ((MethodSignature) joinPoint.getSignature()).getMethod().getName();
 
-        return LogFormat.buildLog(ip, requestUrl, requestMethod, String.valueOf(userId), method, responseString);
+        return LogFormat.buildLog(logType, ip, requestUrl, requestMethod, String.valueOf(userId), method, responseString);
     }
 }

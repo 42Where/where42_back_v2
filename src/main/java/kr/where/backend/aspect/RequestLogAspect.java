@@ -19,11 +19,11 @@ public class RequestLogAspect {
 
     @AfterReturning(value = "@annotation(requestLogging)", argNames = "joinPoint, requestLogging")
     public void requestSuccessLog(final JoinPoint joinPoint, final RequestLogging requestLogging) {
-        logUtil.printLog(requestLogging.level(), joinPoint);
+        logUtil.printLog(requestLogging.level(), joinPoint, LogFormat.SERVICE);
     }
 
     @AfterThrowing(pointcut = POINTCUT, throwing = "exception", argNames = "joinPoint, exception")
     public void requestFailureLog(final JoinPoint joinPoint, final Exception exception) {
-        logUtil.printLog(joinPoint, exception);
+        logUtil.printLog(joinPoint, exception, LogFormat.SERVICE);
     }
 }
