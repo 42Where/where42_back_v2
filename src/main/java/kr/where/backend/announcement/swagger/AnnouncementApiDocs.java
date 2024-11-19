@@ -32,8 +32,8 @@ public interface AnnouncementApiDocs {
                     content = @Content(schema = @Schema(implementation = CreateAnnouncementDto.class)))
             ,
             responses = {
-                    @ApiResponse(responseCode = "201", description = "공지 저장 성공"),
-                    @ApiResponse(responseCode = "400", description = "공지 저장 실패")
+                    @ApiResponse(responseCode = "200", description = "공지 저장 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementDto.class))),
+                    @ApiResponse(responseCode = "400", description = "공지 저장 실패", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @PostMapping("")
