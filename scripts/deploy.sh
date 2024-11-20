@@ -16,7 +16,7 @@ docker run -d -p 8080:8080 -v /home/ec2-user:/config --name app where42/where42:
 
 docker run -d \
  --name promtail \
- -v /home/ec2-user/logs:logs \
+ -v /home/ec2-user/logs:/logs \
  -v /home/ec2-user/promtail-config.yml:/etc/promtail/config.yml \
  grafana/promtail:latest \
  -config.file=/etc/promtail/config.yml
