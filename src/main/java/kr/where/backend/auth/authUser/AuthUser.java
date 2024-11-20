@@ -1,13 +1,11 @@
 package kr.where.backend.auth.authUser;
 
 import kr.where.backend.auth.authUser.exception.AuthUserException;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthUser {
     private Integer intraId;
