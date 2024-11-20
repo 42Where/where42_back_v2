@@ -2,6 +2,9 @@ package kr.where.backend.group;
 
 import jakarta.validation.Valid;
 import java.util.List;
+
+import kr.where.backend.aspect.LogLevel;
+import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.group.dto.groupmember.*;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v3/group")
 @AllArgsConstructor
+@RequestLogging(level = LogLevel.INFO)
 public class GroupController implements GroupApiDocs {
 
     private final GroupService groupService;
