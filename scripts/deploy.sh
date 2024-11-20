@@ -12,7 +12,11 @@ sudo echo $PASSWORD | docker login -u $USERNAME --password-stdin
 sudo docker pull where42/where42:latest
 
 # 도커 run
-docker run -d -p 8080:8080 -v /home/ec2-user:/config --name app where42/where42:latest -e TZ=Asia/Seoul
+docker run -d \
+ -p 8080:8080 \
+ -v /home/ec2-user:/config --name app where42/where42:latest \
+ -v /home/ec2-user/logs:/logs \
+ -e TZ=Asia/Seoul
 
 docker run -d \
  --name promtail \
