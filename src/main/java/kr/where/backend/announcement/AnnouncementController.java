@@ -59,7 +59,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      *
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
-    @GetMapping("all")
+    @GetMapping("")
     public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(@AuthUserInfo final AuthUser authUser) {
         ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser);
