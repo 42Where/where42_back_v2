@@ -2,6 +2,7 @@ package kr.where.backend.announcement.dto;
 
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ public class ResponseAnnouncementDto {
     private LocalDate createAt;
     private LocalDate updateAt;
 
+    @Builder
     public ResponseAnnouncementDto(Long announcementId, String title, String content, String authorName, LocalDate createAt, LocalDate updateAt) {
         this.announcementId = announcementId;
         this.title = title;

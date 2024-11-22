@@ -6,6 +6,8 @@ import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import kr.where.backend.announcement.dto.CreateAnnouncementDto;
 import kr.where.backend.announcement.swagger.AnnouncementApiDocs;
+import kr.where.backend.aspect.LogLevel;
+import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v3/announcement")
 @RequiredArgsConstructor
+@RequestLogging(level = LogLevel.INFO)
 public class AnnouncementController implements AnnouncementApiDocs {
-
 //    private final AnnouncementService announcementService;
 
     /**
@@ -36,7 +38,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
-//        announcementService.saveAnnouncement(createAnnouncementDto, authUser);
+//      ResponseAnnouncementDto responseAnnouncementDto = announcementService.saveAnnouncement(createAnnouncementDto, authUser);
         ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
@@ -47,11 +49,11 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @param page 쿼리 파라미터로 전달받은 페이지 번호
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
-    @GetMapping("")
+    @GetMapping(params = ("page"))
     public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(@AuthUserInfo final AuthUser authUser, @RequestParam("page") final int page) {
         ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser, page);
-        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseAnnouncementListDto);
     }
 
     /**
@@ -65,6 +67,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
+
 
     /**
      * 공지 삭제
