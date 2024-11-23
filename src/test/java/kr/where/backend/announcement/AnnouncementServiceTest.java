@@ -32,6 +32,7 @@ public class AnnouncementServiceTest {
     @Autowired
     private AnnouncementRepository announcementRepository;
     private AuthUser authUser;
+    private final static Long INVALID_ANNOUNCEMENT_ID = 12312L;
 
     @BeforeEach
     public void setUP() {
@@ -45,8 +46,8 @@ public class AnnouncementServiceTest {
     @Rollback
     void failDeleteAnnouncementTest() {
         //given
-        announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
-        DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(1L);
+        Announcement announcement = announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
+        DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(INVALID_ANNOUNCEMENT_ID);
 
         //when
         //then
