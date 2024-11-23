@@ -7,7 +7,6 @@ import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import kr.where.backend.announcement.exception.AnnouncementException;
-import kr.where.backend.announcement.exception.AnnouncementException.NoAnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +43,21 @@ public class AnnouncementService {
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
     }
+
+    public ResponseAnnouncementListDto getAnnouncementPage(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
+                announcement -> ResponseAnnouncementDto.builder().
+                        announcementId(announcement.getId()).
+                        title(announcement.getTitle()).
+                        content(announcement.getContent()).
+                        createAt(announcement.getCreateAt()).
+                        updateAt(announcement.getUpdateAt()).
+                        build()).toList();
+
+        return new ResponseAnnouncementListDto(responseAnnouncementDtos);
+    }
+
     public ResponseAnnouncementListDto getAllAnnouncement(AuthUser authUser) {
         List<Announcement> announcements = announcementRepository.findAll();
 

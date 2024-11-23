@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
-import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -144,19 +143,21 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementSix);
 
         //when
-        Page<Announcement> announcements = announcementService.getAnnouncementPage(0);
+        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAnnouncementPage(0);
+        List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
         //then
-        assertEquals(5, announcements.getContent().size());
-        assertEquals(announcementOne, announcements.getContent().get(0));
-        assertEquals(announcementTwo, announcements.getContent().get(1));
-        assertEquals(announcementThree, announcements.getContent().get(2));
-        assertEquals(announcementFour, announcements.getContent().get(3));
-        assertEquals(announcementFive, announcements.getContent().get(4));
+        assertEquals(5, responseAnnouncementDtos.size());
+        assertEquals(announcementOne.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
+        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
+        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
+        assertEquals(announcementFour.getId(), responseAnnouncementDtos.get(3).getAnnouncementId());
+        assertEquals(announcementFive.getId(), responseAnnouncementDtos.get(4).getAnnouncementId());
 
         //when
-        Page<Announcement> announcements2 = announcementService.getAnnouncementPage(1);
+        ResponseAnnouncementListDto responseAnnouncementListDto2 = announcementService.getAnnouncementPage(1);
+        List<ResponseAnnouncementDto> responseAnnouncementDtos2 = responseAnnouncementListDto2.getResponseAnnouncementDto();
         //then
-        assertEquals(1, announcements2.getContent().size());
-        assertEquals(announcementSix, announcements2.getContent().get(0));
+        assertEquals(1, responseAnnouncementDtos2.size());
+        assertEquals(announcementSix.getId(), responseAnnouncementDtos2.get(0).getAnnouncementId());
     }
 }
