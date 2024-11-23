@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestLogging(level = LogLevel.INFO)
 public class AnnouncementController implements AnnouncementApiDocs {
     private final AnnouncementService announcementService;
+    private final AnnouncementRepository announcementRepository;
 
     /**
      * 공지 저장
@@ -80,8 +81,17 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementDto> deleteAnnouncement(
             @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
-//        announcementService.deleteAnnouncement(authUser, deleteAnnouncementDto);
-        ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
+        //Delete 요청시 응답바디가 없어야 할것 같아 응답값 변경을 회의시 제안할 예정입니다. 그리하여 아래 코드는 임시 응답값만을 위한 임시 코드입니다.
+        Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId()).get();
+        ResponseAnnouncementDto responseAnnouncementDto = ResponseAnnouncementDto.builder().
+                announcementId(announcement.getId()).
+                title(announcement.getTitle()).
+                content(announcement.getContent()).
+                createAt(announcement.getCreateAt()).
+                updateAt(announcement.getUpdateAt()).
+                build();
+
+        announcementService.deleteAnnouncement(deleteAnnouncementDto, authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
 }
