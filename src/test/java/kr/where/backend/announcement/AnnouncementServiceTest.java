@@ -111,7 +111,7 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementTwo);
         announcementRepository.save(announcementThree);
 
-        List<Announcement> announcements = announcementRepository.findAll();
+        List<Announcement> announcements = announcementService.getAllAnnouncement();
         assertEquals(announcementOne, announcements.get(0));
         assertEquals(announcementTwo, announcements.get(1));
         assertEquals(announcementThree, announcements.get(2));
