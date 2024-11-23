@@ -54,7 +54,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
             @AuthUserInfo final AuthUser authUser,
             @RequestParam("page") final int page) {
         ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAnnouncementPage(page);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseAnnouncementListDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 
     /**
