@@ -62,8 +62,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      */
     @GetMapping("")
     public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(@AuthUserInfo final AuthUser authUser) {
-        ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
-//        responseAnnouncementListDto = announcementService.getAnnouncement(authUser);
+        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 
