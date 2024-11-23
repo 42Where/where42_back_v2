@@ -1,10 +1,13 @@
 package kr.where.backend.announcement;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -49,6 +52,22 @@ public class AnnouncementServiceTest {
         //then
         assertThatThrownBy(() -> announcementService.delete(deleteAnnouncementDto, authUser)).
                 isInstanceOf(AnnouncementException.NoAnnouncementException.class);
+    }
+
+    @DisplayName("공지를 삭제 성공하는 기능 테스트")
+    @Test
+    @Rollback
+    void successDeleteAnnouncementTest() {
+        //given
+        Announcement announcement = announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
+        DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
+
+        //when
+        announcementService.delete(deleteAnnouncementDto, authUser);
+
+        //then
+        Optional<Announcement> deletedAnnouncementDto = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId());
+        assertThat(deletedAnnouncementDto.isEmpty());
     }
 
 }
