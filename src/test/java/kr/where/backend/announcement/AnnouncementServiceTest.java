@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import kr.where.backend.announcement.dto.CreateAnnouncementDto;
 import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -44,7 +45,7 @@ public class AnnouncementServiceTest {
     @DisplayName("공지를 삭제 실패하는 기능 테스트")
     @Test
     @Rollback
-    void failDeleteAnnouncementTest() {
+    public void failDeleteAnnouncementTest() {
         //given
         Announcement announcement = announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(INVALID_ANNOUNCEMENT_ID);
@@ -58,7 +59,7 @@ public class AnnouncementServiceTest {
     @DisplayName("공지를 삭제 성공하는 기능 테스트")
     @Test
     @Rollback
-    void successDeleteAnnouncementTest() {
+    public void successDeleteAnnouncementTest() {
         //given
         Announcement announcement = announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
@@ -71,4 +72,17 @@ public class AnnouncementServiceTest {
         assertThat(deletedAnnouncementDto.isEmpty());
     }
 
+    @DisplayName("공지를 추가하는 기능 테스트")
+    @Test
+    @Rollback
+    public void addAnnouncementTest() {
+        //given
+        Announcement announcement = new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now());
+
+        //when
+        announcementRepository.save(announcement);
+
+        //then
+        assertEquals(announcement, announcementRepository.findById(announcement.getId()).get());
+    }
 }
