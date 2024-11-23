@@ -39,7 +39,7 @@ public class AnnouncementService {
                 .build();
     }
 
-    public void delete(DeleteAnnouncementDto deleteAnnouncementDto, AuthUser authUser) {
+    public void deleteAnnouncement(DeleteAnnouncementDto deleteAnnouncementDto, AuthUser authUser) {
         Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
