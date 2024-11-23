@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
+@ActiveProfiles("test")
 public class AnnouncementServiceTest {
 
     @Autowired
