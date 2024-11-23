@@ -49,7 +49,9 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
     @GetMapping(params = ("page"))
-    public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(@AuthUserInfo final AuthUser authUser, @RequestParam("page") final int page) {
+    public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
+            @AuthUserInfo final AuthUser authUser,
+            @RequestParam("page") final int page) {
         ResponseAnnouncementListDto responseAnnouncementListDto = new ResponseAnnouncementListDto();
 //        responseAnnouncementListDto = announcementService.getAnnouncement(authUser, page);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseAnnouncementListDto);
@@ -61,7 +63,8 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
     @GetMapping("")
-    public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(@AuthUserInfo final AuthUser authUser) {
+    public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(
+            @AuthUserInfo final AuthUser authUser) {
         ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement(authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
@@ -74,7 +77,9 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(String)
      */
     @DeleteMapping("")
-    public ResponseEntity<ResponseAnnouncementDto> deleteAnnouncement(@RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto, @AuthUserInfo final AuthUser authUser) {
+    public ResponseEntity<ResponseAnnouncementDto> deleteAnnouncement(
+            @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto,
+            @AuthUserInfo final AuthUser authUser) {
 //        announcementService.deleteAnnouncement(authUser, deleteAnnouncementDto);
         ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
