@@ -24,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -142,8 +143,7 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementSix);
 
         //when
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Announcement> announcements = announcementRepository.findAll(pageable);
+        Page<Announcement> announcements = announcementService.getAnnouncementPage(0);
         //then
         assertEquals(5, announcements.getContent().size());
         assertEquals(announcementOne, announcements.getContent().get(0));
@@ -153,8 +153,7 @@ public class AnnouncementServiceTest {
         assertEquals(announcementFive, announcements.getContent().get(4));
 
         //when
-        Pageable pageable2 = PageRequest.of(1, 5);
-        Page<Announcement> announcements2 = announcementRepository.findAll(pageable2);
+        Page<Announcement> announcements2 = announcementService.getAnnouncementPage(1);
         //then
         assertEquals(1, announcements2.getContent().size());
         assertEquals(announcementSix, announcements2.getContent().get(0));
