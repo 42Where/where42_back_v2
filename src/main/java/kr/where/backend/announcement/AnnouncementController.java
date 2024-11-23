@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestLogging(level = LogLevel.INFO)
 public class AnnouncementController implements AnnouncementApiDocs {
-//    private final AnnouncementService announcementService;
+    private final AnnouncementService announcementService;
 
     /**
      * 공지 저장
@@ -38,8 +38,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
-//      ResponseAnnouncementDto responseAnnouncementDto = announcementService.saveAnnouncement(createAnnouncementDto, authUser);
-        ResponseAnnouncementDto responseAnnouncementDto = new ResponseAnnouncementDto();
+        ResponseAnnouncementDto responseAnnouncementDto = announcementService.saveAnnouncement(createAnnouncementDto, authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
 
