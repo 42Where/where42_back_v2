@@ -43,7 +43,7 @@ public class AnnouncementServiceTest {
     @DisplayName("공지를 삭제 실패하는 기능 테스트")
     @Test
     @Rollback
-    void deleteAnnouncementTest() {
+    void failDeleteAnnouncementTest() {
         //given
         announcementRepository.save(new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(1L);
