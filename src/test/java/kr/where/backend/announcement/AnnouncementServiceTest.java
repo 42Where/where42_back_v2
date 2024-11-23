@@ -85,4 +85,22 @@ public class AnnouncementServiceTest {
         //then
         assertEquals(announcement, announcementRepository.findById(announcement.getId()).get());
     }
+
+    @DisplayName("공지를 모두 조회하는 기능 테스트")
+    @Test
+    @Rollback
+    public void getAllAnnouncementTest() {
+        Announcement announcementOne = new Announcement("점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now());
+        Announcement announcementTWO = new Announcement("기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDate.now(), LocalDate.now());
+        Announcement announcementTHREE = new Announcement("이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+
+        announcementRepository.save(announcementOne);
+        announcementRepository.save(announcementTWO);
+        announcementRepository.save(announcementTHREE);
+
+        List<Announcement> announcements = announcementRepository.findAll();
+        assertEquals(announcementOne, announcements.get(0));
+        assertEquals(announcementTWO, announcements.get(1));
+        assertEquals(announcementTHREE, announcements.get(2));
+    }
 }
