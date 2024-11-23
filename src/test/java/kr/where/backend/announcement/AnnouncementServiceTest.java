@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
+import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
+import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
@@ -111,10 +113,11 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementTwo);
         announcementRepository.save(announcementThree);
 
-        List<Announcement> announcements = announcementService.getAllAnnouncement();
-        assertEquals(announcementOne, announcements.get(0));
-        assertEquals(announcementTwo, announcements.get(1));
-        assertEquals(announcementThree, announcements.get(2));
+        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement(authUser);
+        List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
+        assertEquals(announcementOne.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
+        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
+        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
     }
 
     @DisplayName("페이지 번호로 공지 조회하는 기능 테스트")
