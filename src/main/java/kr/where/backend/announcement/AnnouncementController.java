@@ -39,7 +39,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
-        ResponseAnnouncementDto responseAnnouncementDto = announcementService.saveAnnouncement(createAnnouncementDto, authUser);
+        final ResponseAnnouncementDto responseAnnouncementDto = announcementService.saveAnnouncement(createAnnouncementDto, authUser);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementDto);
     }
 
@@ -51,9 +51,8 @@ public class AnnouncementController implements AnnouncementApiDocs {
      */
     @GetMapping(params = ("page"))
     public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
-            @AuthUserInfo final AuthUser authUser,
             @RequestParam("page") final int page) {
-        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAnnouncementPage(page);
+        final ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAnnouncementPage(page);
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 
@@ -63,9 +62,8 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
     @GetMapping("")
-    public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(
-            @AuthUserInfo final AuthUser authUser) {
-        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement(authUser);
+    public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement() {
+        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement();
         return ResponseEntity.status(HttpStatus.OK).body(responseAnnouncementListDto);
     }
 

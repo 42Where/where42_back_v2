@@ -54,7 +54,7 @@ public interface AnnouncementApiDocs {
     )
     @GetMapping(value = "", params = ("page"))
     ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
-            @AuthUserInfo final AuthUser authUser, @RequestParam("page") final int page);
+            @RequestParam("page") final int page);
 
     @Operation(summary = "Get announcement API", description = "공지 모두 가져오기",
             parameters = {
@@ -66,8 +66,7 @@ public interface AnnouncementApiDocs {
             }
     )
     @GetMapping("")
-    ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement(
-            @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement();
 
     @Operation(summary = "Delete announcement API", description = "공지 삭제",
             parameters = {

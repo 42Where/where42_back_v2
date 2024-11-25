@@ -59,7 +59,7 @@ public class AnnouncementServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> announcementService.deleteAnnouncement(deleteAnnouncementDto, authUser)).
+        assertThatThrownBy(() -> announcementService.deleteAnnouncement(deleteAnnouncementDto)).
                 isInstanceOf(AnnouncementException.NoAnnouncementException.class);
     }
 
@@ -73,7 +73,7 @@ public class AnnouncementServiceTest {
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
 
         //when
-        announcementService.deleteAnnouncement(deleteAnnouncementDto, authUser);
+        announcementService.deleteAnnouncement(deleteAnnouncementDto);
 
         //then
         Optional<Announcement> deletedAnnouncementDto = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId());
@@ -110,7 +110,7 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementTwo);
         announcementRepository.save(announcementThree);
 
-        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement(authUser);
+        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement();
         List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
         assertEquals(announcementOne.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
         assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());

@@ -20,13 +20,7 @@ public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
 
     public ResponseAnnouncementDto saveAnnouncement(CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
-        Announcement announcement = new Announcement(
-                createAnnouncementDto.getTitle(),
-                createAnnouncementDto.getComment(),
-                authUser.getIntraName(),
-                LocalDate.now(),
-                LocalDate.now());
-
+        Announcement announcement = CreateAnnouncementDto.toEntity(createAnnouncementDto, authUser);
         Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDto.builder()
                 .announcementId(savedAnnouncement.getId())
@@ -38,7 +32,7 @@ public class AnnouncementService {
                 .build();
     }
 
-    public void deleteAnnouncement(DeleteAnnouncementDto deleteAnnouncementDto, AuthUser authUser) {
+    public void deleteAnnouncement(DeleteAnnouncementDto deleteAnnouncementDto) {
         Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
@@ -58,7 +52,7 @@ public class AnnouncementService {
         return new ResponseAnnouncementListDto(responseAnnouncementDtos);
     }
 
-    public ResponseAnnouncementListDto getAllAnnouncement(AuthUser authUser) {
+    public ResponseAnnouncementListDto getAllAnnouncement() {
         List<Announcement> announcements = announcementRepository.findAll();
 
         List<ResponseAnnouncementDto> responseAnnouncementDtos
