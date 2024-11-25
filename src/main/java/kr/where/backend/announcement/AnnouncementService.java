@@ -33,13 +33,7 @@ public class AnnouncementService {
     public ResponseAnnouncementListDto getAnnouncementPage(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, 5);
         List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
-                announcement -> ResponseAnnouncementDto.builder().
-                        announcementId(announcement.getId()).
-                        title(announcement.getTitle()).
-                        content(announcement.getContent()).
-                        createAt(announcement.getCreateAt()).
-                        updateAt(announcement.getUpdateAt()).
-                        build()).toList();
+                announcement -> ResponseAnnouncementDto.of(announcement)).toList();
 
         return new ResponseAnnouncementListDto(responseAnnouncementDtos);
     }
@@ -48,13 +42,7 @@ public class AnnouncementService {
         List<Announcement> announcements = announcementRepository.findAll();
 
         List<ResponseAnnouncementDto> responseAnnouncementDtos
-                = announcements.stream().map(announcement -> ResponseAnnouncementDto.builder().
-                        announcementId(announcement.getId()).
-                        title(announcement.getTitle()).
-                        content(announcement.getContent()).
-                        createAt(announcement.getCreateAt()).
-                        updateAt(announcement.getUpdateAt()).
-                        build()).toList();
+                = announcements.stream().map(announcement -> ResponseAnnouncementDto.of(announcement)).toList();
 
         return new ResponseAnnouncementListDto(responseAnnouncementDtos);
     }
