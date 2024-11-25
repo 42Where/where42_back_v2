@@ -18,19 +18,19 @@ import org.springframework.stereotype.Service;
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
 
-    public ResponseAnnouncementDto saveAnnouncement(CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
+    public ResponseAnnouncementDto saveAnnouncement(final CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
         Announcement announcement = CreateAnnouncementDto.toEntity(createAnnouncementDto, authUser);
         Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDto.of(savedAnnouncement);
     }
 
-    public void deleteAnnouncement(DeleteAnnouncementDto deleteAnnouncementDto) {
+    public void deleteAnnouncement(final DeleteAnnouncementDto deleteAnnouncementDto) {
         Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
     }
 
-    public ResponseAnnouncementListDto getAnnouncementPage(int pageNumber) {
+    public ResponseAnnouncementListDto getAnnouncementPage(final int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, 5);
         List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
                 announcement -> ResponseAnnouncementDto.of(announcement)).toList();

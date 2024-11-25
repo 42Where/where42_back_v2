@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ResponseAnnouncementListDto {
     private List<ResponseAnnouncementDto> responseAnnouncementDto;
 
-    public ResponseAnnouncementListDto(List<ResponseAnnouncementDto> responseAnnouncementDto) {
+    public ResponseAnnouncementListDto(final List<ResponseAnnouncementDto> responseAnnouncementDto) {
         this.responseAnnouncementDto = responseAnnouncementDto;
     }
 }

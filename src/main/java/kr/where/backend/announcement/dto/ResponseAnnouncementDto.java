@@ -19,7 +19,7 @@ public class ResponseAnnouncementDto {
     private LocalDate updateAt;
 
     @Builder
-    public ResponseAnnouncementDto(Long announcementId, String title, String content, String authorName, LocalDate createAt, LocalDate updateAt) {
+    public ResponseAnnouncementDto(final Long announcementId, final String title, final String content, final String authorName, final LocalDate createAt, final LocalDate updateAt) {
         this.announcementId = announcementId;
         this.title = title;
         this.content = content;
@@ -28,7 +28,7 @@ public class ResponseAnnouncementDto {
         this.updateAt = updateAt;
     }
 
-    public static ResponseAnnouncementDto of(Announcement savedAnnouncement) {
+    public static ResponseAnnouncementDto of(final Announcement savedAnnouncement) {
         return ResponseAnnouncementDto.builder()
                 .announcementId(savedAnnouncement.getId())
                 .title(savedAnnouncement.getTitle())

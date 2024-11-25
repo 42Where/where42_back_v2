@@ -35,7 +35,11 @@ public class Announcement {
     @Column(nullable = false)
     private LocalDate updateAt;
 
-    public Announcement(String title, String content, String authorName, LocalDate createAt, LocalDate updateAt) {
+    public Announcement(final String title,
+                        final String content,
+                        final String authorName,
+                        final LocalDate createAt,
+                        final LocalDate updateAt) {
         this.title = title;
         this.content = content;
         this.authorName = authorName;

@@ -18,7 +18,7 @@ public class CreateAnnouncementDto {
     @NotBlank
     private String comment;
 
-    public static Announcement toEntity(CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
+    public static Announcement toEntity(final CreateAnnouncementDto createAnnouncementDto, final AuthUser authUser) {
         return new Announcement(
             createAnnouncementDto.getTitle(),
             createAnnouncementDto.getComment(),

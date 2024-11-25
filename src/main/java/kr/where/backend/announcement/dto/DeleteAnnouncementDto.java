@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class DeleteAnnouncementDto {
     private Long announcementId;
 
-    public DeleteAnnouncementDto (Long announcementId) {
+    public DeleteAnnouncementDto (final Long announcementId) {
         this.announcementId = announcementId;
     }
 }

@@ -76,7 +76,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      */
     @DeleteMapping("")
     public ResponseEntity<Void> deleteAnnouncement(
-            @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto) {
+            @RequestBody @Valid final DeleteAnnouncementDto deleteAnnouncementDto) {
         announcementService.deleteAnnouncement(deleteAnnouncementDto);
         return ResponseEntity.ok().build();
     }
