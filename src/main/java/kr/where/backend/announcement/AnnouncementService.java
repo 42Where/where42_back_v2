@@ -27,14 +27,14 @@ public class AnnouncementService {
                 LocalDate.now(),
                 LocalDate.now());
 
-        announcementRepository.save(announcement);
+        Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDto.builder()
-                .announcementId(announcement.getId())
-                .title(announcement.getTitle())
-                .content(announcement.getContent())
-                .authorName(announcement.getAuthorName())
-                .createAt(announcement.getCreateAt())
-                .updateAt(announcement.getUpdateAt())
+                .announcementId(savedAnnouncement.getId())
+                .title(savedAnnouncement.getTitle())
+                .content(savedAnnouncement.getContent())
+                .authorName(savedAnnouncement.getAuthorName())
+                .createAt(savedAnnouncement.getCreateAt())
+                .updateAt(savedAnnouncement.getUpdateAt())
                 .build();
     }
 
