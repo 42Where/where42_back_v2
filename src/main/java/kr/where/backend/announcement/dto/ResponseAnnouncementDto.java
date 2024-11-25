@@ -1,6 +1,7 @@
 package kr.where.backend.announcement.dto;
 
 import java.time.LocalDate;
+import kr.where.backend.announcement.Announcement;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +26,16 @@ public class ResponseAnnouncementDto {
         this.authorName = authorName;
         this.createAt = createAt;
         this.updateAt = updateAt;
+    }
+
+    public static ResponseAnnouncementDto of(Announcement savedAnnouncement) {
+        return ResponseAnnouncementDto.builder()
+                .announcementId(savedAnnouncement.getId())
+                .title(savedAnnouncement.getTitle())
+                .content(savedAnnouncement.getContent())
+                .authorName(savedAnnouncement.getAuthorName())
+                .createAt(savedAnnouncement.getCreateAt())
+                .updateAt(savedAnnouncement.getUpdateAt())
+                .build();
     }
 }

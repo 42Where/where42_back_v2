@@ -9,7 +9,6 @@ import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,7 @@ public class AnnouncementService {
     public ResponseAnnouncementDto saveAnnouncement(CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
         Announcement announcement = CreateAnnouncementDto.toEntity(createAnnouncementDto, authUser);
         Announcement savedAnnouncement = announcementRepository.save(announcement);
-        return ResponseAnnouncementDto.builder()
-                .announcementId(savedAnnouncement.getId())
-                .title(savedAnnouncement.getTitle())
-                .content(savedAnnouncement.getContent())
-                .authorName(savedAnnouncement.getAuthorName())
-                .createAt(savedAnnouncement.getCreateAt())
-                .updateAt(savedAnnouncement.getUpdateAt())
-                .build();
+        return ResponseAnnouncementDto.of(savedAnnouncement);
     }
 
     public void deleteAnnouncement(DeleteAnnouncementDto deleteAnnouncementDto) {
