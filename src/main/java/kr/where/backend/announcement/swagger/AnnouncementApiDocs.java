@@ -73,12 +73,11 @@ public interface AnnouncementApiDocs {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementDto.class))),
+                    @ApiResponse(responseCode = "200", description = "공지 삭제 성공", content = @Content(schema = @Schema(type = "string"))),
                     @ApiResponse(responseCode = "400", description = "공지 삭제 실패", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @DeleteMapping("")
-    ResponseEntity<ResponseAnnouncementDto> deleteAnnouncement(
-            @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto,
-            @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<Void> deleteAnnouncement(
+            @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto);
 }
