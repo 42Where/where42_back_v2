@@ -20,7 +20,7 @@ public class Announcement {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(length = 100, nullable = false)
