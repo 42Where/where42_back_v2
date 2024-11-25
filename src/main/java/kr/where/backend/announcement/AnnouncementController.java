@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestLogging(level = LogLevel.INFO)
 public class AnnouncementController implements AnnouncementApiDocs {
     private final AnnouncementService announcementService;
-    private final AnnouncementRepository announcementRepository;
 
     /**
      * 공지 저장
