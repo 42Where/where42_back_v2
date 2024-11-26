@@ -47,20 +47,11 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @param page 쿼리 파라미터로 전달받은 페이지 번호
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
-    @GetMapping(params = ("page"))
+    @GetMapping()
     public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
-            @RequestParam("page") final int page) {
-        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncementPage(page));
-    }
-
-    /**
-     * 공지 모두 조회
-     *
-     * @return ResponseEntity(ResponseAnnouncementListDto)
-     */
-    @GetMapping("")
-    public ResponseEntity<ResponseAnnouncementListDTO> getAllAnnouncement() {
-        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAllAnnouncement());
+            @RequestParam(value = "page", required = false) final Integer page,
+            @RequestParam(value = "size", required = false) final Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncement(page, size));
     }
 
     /**

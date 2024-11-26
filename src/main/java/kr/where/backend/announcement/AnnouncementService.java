@@ -32,20 +32,33 @@ public class AnnouncementService {
         announcementRepository.delete(announcement);
     }
 
-    public ResponseAnnouncementListDTO getAnnouncementPage(final int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Direction.DESC, "createAt"));
-        List<ResponseAnnouncementDTO> responseAnnouncementDTO = announcementRepository.findAll(pageable).stream().map(
-                ResponseAnnouncementDTO::of).toList();
-
-        return ResponseAnnouncementListDTO.of(responseAnnouncementDTO);
+    public ResponseAnnouncementListDTO getAnnouncement(final Integer pageNumber, final Integer size) {
+        if (pageNumber == null || size == null) {
+            return getAllAnnouncement();
+        }
+        return getAnnouncementPage(pageNumber, size);
     }
 
     public ResponseAnnouncementListDTO getAllAnnouncement() {
-        List<Announcement> announcements = announcementRepository.findAll();
+        final List<Announcement> announcements = announcementRepository.findAllByOrderByCreateAtDesc().orElse(List.of());
 
-        List<ResponseAnnouncementDTO> responseAnnouncementDTOS
+        final List<ResponseAnnouncementDTO> responseAnnouncementDTOS
                 = announcements.stream().map(ResponseAnnouncementDTO::of).toList();
 
         return ResponseAnnouncementListDTO.of(responseAnnouncementDTOS);
+    }
+
+    public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
+
+        final Page<Announcement> announcements = announcementRepository.findAll(
+                PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, "createAt"))
+        );
+
+        final int totalPages = announcements.getTotalPages();
+        final long totalElements = announcements.getTotalElements();
+
+        final List<ResponseAnnouncementDTO> responseAnnouncementDTO = announcements.stream().map(
+                ResponseAnnouncementDTO::of).toList();
+        return ResponseAnnouncementListDTO.of(responseAnnouncementDTO, totalPages, totalElements);
     }
 }
