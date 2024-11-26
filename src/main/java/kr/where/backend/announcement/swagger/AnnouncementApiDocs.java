@@ -34,7 +34,7 @@ public interface AnnouncementApiDocs {
             ,
             responses = {
                     @ApiResponse(responseCode = "200", description = "공지 저장 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "공지 저장 실패", content = @Content(schema = @Schema(type = "string")))
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청값", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @PostMapping("")
@@ -42,14 +42,14 @@ public interface AnnouncementApiDocs {
             @RequestBody @Valid final CreateAnnouncementDTO createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser);
 
-    @Operation(summary = "(Pageable) Get announcement API", description = "공지 한 페이지(5개) 가져오기",
+    @Operation(summary = "Get announcement API", description = "쿼리 파라미터(page, size)가 있으면  페이지 단위로 조회합니다. 쿼리 파라미터(page,size)가 없으면 모두 조회합니다.",
             parameters = {
                     @Parameter(name = "page", description = "가져올 페이지 번호 (1부터 시작)", in = ParameterIn.QUERY, required = true),
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "공지 반환 실패", content = @Content(schema = @Schema(type = "string")))
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청값", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @GetMapping(value = "", params = ("page"))
@@ -73,8 +73,8 @@ public interface AnnouncementApiDocs {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 삭제 성공", content = @Content(schema = @Schema(type = "string"))),
-                    @ApiResponse(responseCode = "400", description = "공지 삭제 실패", content = @Content(schema = @Schema(type = "string")))
+                    @ApiResponse(responseCode = "200", description = "공지 삭제 성공"),
+                    @ApiResponse(responseCode = "400", description = "잘못된 요청값", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @DeleteMapping("")
