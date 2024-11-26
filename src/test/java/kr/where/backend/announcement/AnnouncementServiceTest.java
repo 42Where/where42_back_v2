@@ -117,6 +117,17 @@ public class AnnouncementServiceTest {
         assertEquals(announcementThree.getId(), responseAnnouncementDTO.get(2).getAnnouncementId());
     }
 
+    @DisplayName("공지가 없을때 공지 모두 조회하는 기능 테스트")
+    @Test
+    @Rollback
+    public void getAllAnnouncementWhenEmptyTest() {
+
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAllAnnouncement();
+        List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
+
+        assertTrue(responseAnnouncementDTO.isEmpty());
+    }
+
     @DisplayName("페이지 번호로 공지 조회하는 기능 테스트")
     @Test
     @Rollback
@@ -159,5 +170,16 @@ public class AnnouncementServiceTest {
         //then
         assertEquals(1, responseAnnouncementDtos2.size());
         assertEquals(announcementOne.getId(), responseAnnouncementDtos2.get(0).getAnnouncementId());
+    }
+
+    @DisplayName("공지가 없을때 페이지 번호로 공지 조회하는 기능 테스트")
+    @Test
+    @Rollback
+    public void getAnnouncementPageWhenEmptyTest() {
+        //when
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0, 5);
+        List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
+        //then
+        assertTrue(responseAnnouncementDTO.isEmpty());
     }
 }
