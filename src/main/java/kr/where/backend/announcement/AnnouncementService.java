@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
+    private static final int PAGE_SIZE = 5;
 
     public ResponseAnnouncementDto create(final CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
         Announcement announcement = createAnnouncementDto.toEntity(authUser);
@@ -30,7 +31,7 @@ public class AnnouncementService {
     }
 
     public ResponseAnnouncementListDto getAnnouncementPage(final int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
                 ResponseAnnouncementDto::of).toList();
 
