@@ -32,7 +32,7 @@ public class AnnouncementService {
     public ResponseAnnouncementListDto getAnnouncementPage(final int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, 5);
         List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
-                announcement -> ResponseAnnouncementDto.of(announcement)).toList();
+                ResponseAnnouncementDto::of).toList();
 
         return ResponseAnnouncementListDto.of(responseAnnouncementDtos);
     }
@@ -41,7 +41,7 @@ public class AnnouncementService {
         List<Announcement> announcements = announcementRepository.findAll();
 
         List<ResponseAnnouncementDto> responseAnnouncementDtos
-                = announcements.stream().map(announcement -> ResponseAnnouncementDto.of(announcement)).toList();
+                = announcements.stream().map(ResponseAnnouncementDto::of).toList();
 
         return ResponseAnnouncementListDto.of(responseAnnouncementDtos);
     }
