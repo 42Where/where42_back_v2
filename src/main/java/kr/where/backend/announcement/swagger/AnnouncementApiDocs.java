@@ -78,6 +78,6 @@ public interface AnnouncementApiDocs {
             }
     )
     @DeleteMapping("")
-    ResponseEntity<Void> deleteAnnouncement(
-            @RequestBody @Valid DeleteAnnouncementDTO deleteAnnouncementDto);
+    void deleteAnnouncement(
+            @RequestBody @Valid final DeleteAnnouncementDTO deleteAnnouncementDto);
 }
