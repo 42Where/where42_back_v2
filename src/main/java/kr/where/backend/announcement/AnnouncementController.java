@@ -63,7 +63,6 @@ public class AnnouncementController implements AnnouncementApiDocs {
         return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAllAnnouncement());
     }
 
-
     /**
      * 공지 삭제
      *
