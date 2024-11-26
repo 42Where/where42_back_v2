@@ -38,7 +38,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
             @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(announcementService.saveAnnouncement(createAnnouncementDto, authUser));
+        return ResponseEntity.status(HttpStatus.OK).body(announcementService.create(createAnnouncementDto, authUser));
     }
 
     /**
@@ -72,7 +72,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     @DeleteMapping("")
     public ResponseEntity<Void> deleteAnnouncement(
             @RequestBody @Valid final DeleteAnnouncementDto deleteAnnouncementDto) {
-        announcementService.deleteAnnouncement(deleteAnnouncementDto);
+        announcementService.delete(deleteAnnouncementDto);
         return ResponseEntity.ok().build();
     }
 }

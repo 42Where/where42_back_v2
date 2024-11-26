@@ -59,7 +59,7 @@ public class AnnouncementServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> announcementService.deleteAnnouncement(deleteAnnouncementDto)).
+        assertThatThrownBy(() -> announcementService.delete(deleteAnnouncementDto)).
                 isInstanceOf(AnnouncementException.NoAnnouncementException.class);
     }
 
@@ -73,7 +73,7 @@ public class AnnouncementServiceTest {
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
 
         //when
-        announcementService.deleteAnnouncement(deleteAnnouncementDto);
+        announcementService.delete(deleteAnnouncementDto);
 
         //then
         Optional<Announcement> deletedAnnouncementDto = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId());
