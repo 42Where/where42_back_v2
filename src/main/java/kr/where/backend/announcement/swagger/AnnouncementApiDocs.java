@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
-import kr.where.backend.announcement.dto.CreateAnnouncementDto;
+import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
+import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +30,16 @@ public interface AnnouncementApiDocs {
             },
             requestBody =
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(schema = @Schema(implementation = CreateAnnouncementDto.class)))
+                    content = @Content(schema = @Schema(implementation = CreateAnnouncementDTO.class)))
             ,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 저장 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementDto.class))),
+                    @ApiResponse(responseCode = "200", description = "공지 저장 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementDTO.class))),
                     @ApiResponse(responseCode = "400", description = "공지 저장 실패", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @PostMapping("")
-    ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
-            @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
+    ResponseEntity<ResponseAnnouncementDTO> saveAnnouncement(
+            @RequestBody @Valid final CreateAnnouncementDTO createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser);
 
     @Operation(summary = "(Pageable) Get announcement API", description = "공지 한 페이지(5개) 가져오기",
@@ -48,12 +48,12 @@ public interface AnnouncementApiDocs {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDto.class))),
+                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDTO.class))),
                     @ApiResponse(responseCode = "400", description = "공지 반환 실패", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @GetMapping(value = "", params = ("page"))
-    ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
+    ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
             @RequestParam("page") final int page);
 
     @Operation(summary = "Get announcement API", description = "공지 모두 가져오기",
@@ -61,12 +61,12 @@ public interface AnnouncementApiDocs {
                     @Parameter(name = "accessTokens", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDto.class))),
+                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDTO.class))),
                     @ApiResponse(responseCode = "400", description = "공지 반환 실패", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @GetMapping("")
-    ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement();
+    ResponseEntity<ResponseAnnouncementListDTO> getAllAnnouncement();
 
     @Operation(summary = "Delete announcement API", description = "공지 삭제",
             parameters = {
@@ -79,5 +79,5 @@ public interface AnnouncementApiDocs {
     )
     @DeleteMapping("")
     ResponseEntity<Void> deleteAnnouncement(
-            @RequestBody @Valid DeleteAnnouncementDto deleteAnnouncementDto);
+            @RequestBody @Valid DeleteAnnouncementDTO deleteAnnouncementDto);
 }

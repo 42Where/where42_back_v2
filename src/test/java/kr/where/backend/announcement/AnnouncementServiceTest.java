@@ -5,13 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
-import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
-import java.time.LocalDate;
+import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +55,7 @@ public class AnnouncementServiceTest {
         //given
         Announcement announcement = announcementRepository.save(new Announcement(
                 "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
-        DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(INVALID_ANNOUNCEMENT_ID);
+        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(INVALID_ANNOUNCEMENT_ID);
 
         //when
         //then
@@ -71,7 +70,7 @@ public class AnnouncementServiceTest {
         //given
         Announcement announcement = announcementRepository.save(new Announcement(
                 "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
-        DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
+        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(announcement.getId());
 
         //when
         announcementService.delete(deleteAnnouncementDto);
@@ -111,11 +110,11 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementTwo);
         announcementRepository.save(announcementThree);
 
-        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAllAnnouncement();
-        List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
-        assertEquals(announcementOne.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
-        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
-        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAllAnnouncement();
+        List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
+        assertEquals(announcementOne.getId(), responseAnnouncementDTO.get(0).getAnnouncementId());
+        assertEquals(announcementTwo.getId(), responseAnnouncementDTO.get(1).getAnnouncementId());
+        assertEquals(announcementThree.getId(), responseAnnouncementDTO.get(2).getAnnouncementId());
     }
 
     @DisplayName("페이지 번호로 공지 조회하는 기능 테스트")
@@ -144,19 +143,19 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementSix);
 
         //when
-        ResponseAnnouncementListDto responseAnnouncementListDto = announcementService.getAnnouncementPage(0);
-        List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0);
+        List<ResponseAnnouncementDTO> ResponseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
         //then
-        assertEquals(5, responseAnnouncementDtos.size());
-        assertEquals(announcementSix.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
-        assertEquals(announcementFive.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
-        assertEquals(announcementFour.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
-        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(3).getAnnouncementId());
-        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(4).getAnnouncementId());
+        assertEquals(5, ResponseAnnouncementDTO.size());
+        assertEquals(announcementSix.getId(), ResponseAnnouncementDTO.get(0).getAnnouncementId());
+        assertEquals(announcementFive.getId(), ResponseAnnouncementDTO.get(1).getAnnouncementId());
+        assertEquals(announcementFour.getId(), ResponseAnnouncementDTO.get(2).getAnnouncementId());
+        assertEquals(announcementThree.getId(), ResponseAnnouncementDTO.get(3).getAnnouncementId());
+        assertEquals(announcementTwo.getId(), ResponseAnnouncementDTO.get(4).getAnnouncementId());
 
         //when
-        ResponseAnnouncementListDto responseAnnouncementListDto2 = announcementService.getAnnouncementPage(1);
-        List<ResponseAnnouncementDto> responseAnnouncementDtos2 = responseAnnouncementListDto2.getResponseAnnouncementDto();
+        ResponseAnnouncementListDTO responseAnnouncementListDTO2 = announcementService.getAnnouncementPage(1);
+        List<ResponseAnnouncementDTO> responseAnnouncementDtos2 = responseAnnouncementListDTO2.getAnnouncements();
         //then
         assertEquals(1, responseAnnouncementDtos2.size());
         assertEquals(announcementOne.getId(), responseAnnouncementDtos2.get(0).getAnnouncementId());

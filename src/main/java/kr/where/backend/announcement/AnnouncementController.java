@@ -1,10 +1,10 @@
 package kr.where.backend.announcement;
 
 import jakarta.validation.Valid;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
-import kr.where.backend.announcement.dto.CreateAnnouncementDto;
+import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
+import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
 import kr.where.backend.announcement.swagger.AnnouncementApiDocs;
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
@@ -35,8 +35,8 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(String)
      */
     @PostMapping("")
-    public ResponseEntity<ResponseAnnouncementDto> saveAnnouncement(
-            @RequestBody @Valid final CreateAnnouncementDto createAnnouncementDto,
+    public ResponseEntity<ResponseAnnouncementDTO> saveAnnouncement(
+            @RequestBody @Valid final CreateAnnouncementDTO createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser) {
         return ResponseEntity.status(HttpStatus.OK).body(announcementService.create(createAnnouncementDto, authUser));
     }
@@ -48,7 +48,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
     @GetMapping(params = ("page"))
-    public ResponseEntity<ResponseAnnouncementListDto> getAnnouncement(
+    public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
             @RequestParam("page") final int page) {
         return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncementPage(page));
     }
@@ -59,7 +59,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * @return ResponseEntity(ResponseAnnouncementListDto)
      */
     @GetMapping("")
-    public ResponseEntity<ResponseAnnouncementListDto> getAllAnnouncement() {
+    public ResponseEntity<ResponseAnnouncementListDTO> getAllAnnouncement() {
         return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAllAnnouncement());
     }
 
@@ -71,7 +71,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      */
     @DeleteMapping("")
     public ResponseEntity<Void> deleteAnnouncement(
-            @RequestBody @Valid final DeleteAnnouncementDto deleteAnnouncementDto) {
+            @RequestBody @Valid final DeleteAnnouncementDTO deleteAnnouncementDto) {
         announcementService.delete(deleteAnnouncementDto);
         return ResponseEntity.ok().build();
     }

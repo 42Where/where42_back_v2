@@ -1,10 +1,10 @@
 package kr.where.backend.announcement;
 
 import java.util.List;
-import kr.where.backend.announcement.dto.CreateAnnouncementDto;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
-import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
+import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
+import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
+import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.auth.authUser.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -20,32 +20,32 @@ public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private static final int PAGE_SIZE = 5;
 
-    public ResponseAnnouncementDto create(final CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
+    public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, AuthUser authUser) {
         Announcement announcement = createAnnouncementDto.toEntity(authUser);
         Announcement savedAnnouncement = announcementRepository.save(announcement);
-        return ResponseAnnouncementDto.of(savedAnnouncement);
+        return ResponseAnnouncementDTO.of(savedAnnouncement);
     }
 
-    public void delete(final DeleteAnnouncementDto deleteAnnouncementDto) {
+    public void delete(final DeleteAnnouncementDTO deleteAnnouncementDto) {
         Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
     }
 
-    public ResponseAnnouncementListDto getAnnouncementPage(final int pageNumber) {
+    public ResponseAnnouncementListDTO getAnnouncementPage(final int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Direction.DESC, "createAt"));
-        List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
-                ResponseAnnouncementDto::of).toList();
+        List<ResponseAnnouncementDTO> responseAnnouncementDTO = announcementRepository.findAll(pageable).stream().map(
+                ResponseAnnouncementDTO::of).toList();
 
-        return ResponseAnnouncementListDto.of(responseAnnouncementDtos);
+        return ResponseAnnouncementListDTO.of(responseAnnouncementDTO);
     }
 
-    public ResponseAnnouncementListDto getAllAnnouncement() {
+    public ResponseAnnouncementListDTO getAllAnnouncement() {
         List<Announcement> announcements = announcementRepository.findAll();
 
-        List<ResponseAnnouncementDto> responseAnnouncementDtos
-                = announcements.stream().map(ResponseAnnouncementDto::of).toList();
+        List<ResponseAnnouncementDTO> responseAnnouncementDTOS
+                = announcements.stream().map(ResponseAnnouncementDTO::of).toList();
 
-        return ResponseAnnouncementListDto.of(responseAnnouncementDtos);
+        return ResponseAnnouncementListDTO.of(responseAnnouncementDTOS);
     }
 }

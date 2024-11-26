@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CreateAnnouncementDto {
+public class CreateAnnouncementDTO {
     @NotBlank
     private String title;
     @NotBlank

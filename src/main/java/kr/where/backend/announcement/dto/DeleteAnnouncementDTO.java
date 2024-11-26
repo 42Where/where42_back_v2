@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DeleteAnnouncementDto {
+public class DeleteAnnouncementDTO {
     private Long announcementId;
 
-    public DeleteAnnouncementDto (final Long announcementId) {
+    public DeleteAnnouncementDTO(final Long announcementId) {
         this.announcementId = announcementId;
     }
 }
