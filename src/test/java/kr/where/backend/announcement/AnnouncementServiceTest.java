@@ -3,6 +3,7 @@ package kr.where.backend.announcement;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
@@ -112,9 +113,9 @@ public class AnnouncementServiceTest {
 
         ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAllAnnouncement();
         List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
-        assertEquals(announcementOne.getId(), responseAnnouncementDTO.get(0).getAnnouncementId());
+        assertEquals(announcementThree.getId(), responseAnnouncementDTO.get(0).getAnnouncementId());
         assertEquals(announcementTwo.getId(), responseAnnouncementDTO.get(1).getAnnouncementId());
-        assertEquals(announcementThree.getId(), responseAnnouncementDTO.get(2).getAnnouncementId());
+        assertEquals(announcementOne.getId(), responseAnnouncementDTO.get(2).getAnnouncementId());
     }
 
     @DisplayName("공지가 없을때 공지 모두 조회하는 기능 테스트")
@@ -131,7 +132,7 @@ public class AnnouncementServiceTest {
     @DisplayName("페이지 번호로 공지 조회하는 기능 테스트")
     @Test
     @Rollback
-    public void getAnnouncementTest() {
+    public void getAnnouncementPageTest() {
         //given
         Announcement announcementOne = new Announcement(
                 "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
@@ -154,7 +155,7 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementSix);
 
         //when
-        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0);
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0, 5);
         List<ResponseAnnouncementDTO> ResponseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
         //then
         assertEquals(5, ResponseAnnouncementDTO.size());
@@ -165,7 +166,7 @@ public class AnnouncementServiceTest {
         assertEquals(announcementTwo.getId(), ResponseAnnouncementDTO.get(4).getAnnouncementId());
 
         //when
-        ResponseAnnouncementListDTO responseAnnouncementListDTO2 = announcementService.getAnnouncementPage(1);
+        ResponseAnnouncementListDTO responseAnnouncementListDTO2 = announcementService.getAnnouncementPage(1, 5);
         List<ResponseAnnouncementDTO> responseAnnouncementDtos2 = responseAnnouncementListDTO2.getAnnouncements();
         //then
         assertEquals(1, responseAnnouncementDtos2.size());
