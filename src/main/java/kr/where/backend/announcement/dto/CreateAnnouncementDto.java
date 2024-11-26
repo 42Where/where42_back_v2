@@ -18,10 +18,10 @@ public class CreateAnnouncementDto {
     @NotBlank
     private String comment;
 
-    public static Announcement toEntity(final CreateAnnouncementDto createAnnouncementDto, final AuthUser authUser) {
+    public Announcement toEntity(final AuthUser authUser) {
         return new Announcement(
-            createAnnouncementDto.getTitle(),
-            createAnnouncementDto.getComment(),
+            this.title,
+            this.comment,
             authUser.getIntraName(),
             LocalDate.now(),
             LocalDate.now());

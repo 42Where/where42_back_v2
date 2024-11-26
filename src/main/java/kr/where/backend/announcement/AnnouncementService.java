@@ -1,6 +1,5 @@
 package kr.where.backend.announcement;
 
-import java.time.LocalDate;
 import java.util.List;
 import kr.where.backend.announcement.dto.CreateAnnouncementDto;
 import kr.where.backend.announcement.dto.DeleteAnnouncementDto;
@@ -19,7 +18,7 @@ public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
 
     public ResponseAnnouncementDto saveAnnouncement(final CreateAnnouncementDto createAnnouncementDto, AuthUser authUser) {
-        Announcement announcement = CreateAnnouncementDto.toEntity(createAnnouncementDto, authUser);
+        Announcement announcement = createAnnouncementDto.toEntity(authUser);
         Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDto.of(savedAnnouncement);
     }
