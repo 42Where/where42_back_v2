@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnnouncementRepository extends JpaRepository<Announcement, Long> {
     Optional<Announcement> findById(Long id);
-    Optional<List<Announcement>> findAllByOrderByCreateAtDesc();
+    List<Announcement> findAllByOrderByCreateAtDesc();
 }

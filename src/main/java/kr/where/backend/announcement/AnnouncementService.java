@@ -39,7 +39,7 @@ public class AnnouncementService {
     }
 
     public ResponseAnnouncementListDTO getAllAnnouncement() {
-        final List<Announcement> announcements = announcementRepository.findAllByOrderByCreateAtDesc().orElse(List.of());
+        final List<Announcement> announcements = announcementRepository.findAllByOrderByCreateAtDesc();
 
         final List<ResponseAnnouncementDTO> responseAnnouncementDTOS
                 = announcements.stream().map(ResponseAnnouncementDTO::of).toList();
