@@ -44,6 +44,6 @@ public class AnnouncementService {
         List<ResponseAnnouncementDto> responseAnnouncementDtos
                 = announcements.stream().map(announcement -> ResponseAnnouncementDto.of(announcement)).toList();
 
-        return new ResponseAnnouncementListDto(responseAnnouncementDtos);
+        return ResponseAnnouncementListDto.of(responseAnnouncementDtos);
     }
 }

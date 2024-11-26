@@ -13,4 +13,8 @@ public class ResponseAnnouncementListDto {
     public ResponseAnnouncementListDto(final List<ResponseAnnouncementDto> responseAnnouncementDto) {
         this.responseAnnouncementDto = responseAnnouncementDto;
     }
+
+    public static ResponseAnnouncementListDto of(final List<ResponseAnnouncementDto> responseAnnouncementDto) {
+        return new ResponseAnnouncementListDto(responseAnnouncementDto);
+    }
 }
