@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -17,6 +16,7 @@ import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,7 +67,6 @@ public interface AnnouncementApiDocs {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청값", content = @Content(schema = @Schema(type = "string")))
             }
     )
-    @DeleteMapping("")
-    void deleteAnnouncement(
-            @RequestBody @Valid final DeleteAnnouncementDTO deleteAnnouncementDto);
+    @DeleteMapping("{id}")
+    void deleteAnnouncement(@PathVariable("id") Long id);
 }

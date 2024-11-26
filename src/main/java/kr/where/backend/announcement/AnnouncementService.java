@@ -2,7 +2,6 @@ package kr.where.backend.announcement;
 
 import java.util.List;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.announcement.exception.AnnouncementException;
@@ -25,8 +24,8 @@ public class AnnouncementService {
         return ResponseAnnouncementDTO.of(savedAnnouncement);
     }
 
-    public void delete(final DeleteAnnouncementDTO deleteAnnouncementDto) {
-        final Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
+    public void delete(final Long announcementId) {
+        final Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
     }

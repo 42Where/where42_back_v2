@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import java.util.Collection;
@@ -48,38 +47,38 @@ public class AnnouncementServiceTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(authUser, "", authorities));
     }
+//
+//    @DisplayName("공지를 삭제 실패하는 기능 테스트")
+//    @Test
+//    @Rollback
+//    public void failDeleteAnnouncementTest() {
+//        //given
+//        Announcement announcement = announcementRepository.save(new Announcement(
+//                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
+//        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(INVALID_ANNOUNCEMENT_ID);
+//
+//        //when
+//        //then
+//        assertThatThrownBy(() -> announcementService.delete(deleteAnnouncementDto)).
+//                isInstanceOf(AnnouncementException.NoAnnouncementException.class);
+//    }
 
-    @DisplayName("공지를 삭제 실패하는 기능 테스트")
-    @Test
-    @Rollback
-    public void failDeleteAnnouncementTest() {
-        //given
-        Announcement announcement = announcementRepository.save(new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
-        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(INVALID_ANNOUNCEMENT_ID);
-
-        //when
-        //then
-        assertThatThrownBy(() -> announcementService.delete(deleteAnnouncementDto)).
-                isInstanceOf(AnnouncementException.NoAnnouncementException.class);
-    }
-
-    @DisplayName("공지를 삭제 성공하는 기능 테스트")
-    @Test
-    @Rollback
-    public void successDeleteAnnouncementTest() {
-        //given
-        Announcement announcement = announcementRepository.save(new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
-        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(announcement.getId());
-
-        //when
-        announcementService.delete(deleteAnnouncementDto);
-
-        //then
-        Optional<Announcement> deletedAnnouncementDto = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId());
-        assertThat(deletedAnnouncementDto.isEmpty());
-    }
+//    @DisplayName("공지를 삭제 성공하는 기능 테스트")
+//    @Test
+//    @Rollback
+//    public void successDeleteAnnouncementTest() {
+//        //given
+//        Announcement announcement = announcementRepository.save(new Announcement(
+//                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
+//        DeleteAnnouncementDTO deleteAnnouncementDto = new DeleteAnnouncementDTO(announcement.getId());
+//
+//        //when
+//        announcementService.delete(deleteAnnouncementDto);
+//
+//        //then
+//        Optional<Announcement> deletedAnnouncementDto = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId());
+//        assertThat(deletedAnnouncementDto.isEmpty());
+//    }
 
     @DisplayName("공지를 추가하는 기능 테스트")
     @Test

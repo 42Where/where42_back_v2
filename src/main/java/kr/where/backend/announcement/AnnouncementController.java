@@ -1,7 +1,6 @@
 package kr.where.backend.announcement;
 
 import jakarta.validation.Valid;
-import kr.where.backend.announcement.dto.DeleteAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +57,10 @@ public class AnnouncementController implements AnnouncementApiDocs {
     /**
      * 공지 삭제
      *
-     * @param deleteAnnouncementDto
      * @return ResponseEntity(String)
      */
-    @DeleteMapping("")
-    public void deleteAnnouncement(
-            @RequestBody @Valid final DeleteAnnouncementDTO deleteAnnouncementDto) {
-        announcementService.delete(deleteAnnouncementDto);
+    @DeleteMapping("{id}")
+    public void deleteAnnouncement(@PathVariable ("id") Long id) {
+        announcementService.delete(id);
     }
 }
