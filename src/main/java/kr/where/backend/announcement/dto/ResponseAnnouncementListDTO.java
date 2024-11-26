@@ -1,25 +1,18 @@
 package kr.where.backend.announcement.dto;
 
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class ResponseAnnouncementListDTO {
     private static final int UNUSED_TOTAL_PAGES = 0;
     private static final long UNUSED_TOTAL_ELEMENTS = 0L;
 
-    private List<ResponseAnnouncementDTO> announcements;
-    private int totalPages;
-    private long totalElements;
-
-    public ResponseAnnouncementListDTO(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, final int totalPages, final long totalElements) {
-        this.announcements = ResponseAnnouncementDTO;
-        this.totalPages = totalPages;
-        this.totalElements = totalElements;
-    }
+    private final List<ResponseAnnouncementDTO> announcements;
+    private final int totalPages;
+    private final long totalElements;
 
     public static ResponseAnnouncementListDTO of(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, final int totalPages, final long totalElements) {
         return new ResponseAnnouncementListDTO(ResponseAnnouncementDTO, totalPages, totalElements);
