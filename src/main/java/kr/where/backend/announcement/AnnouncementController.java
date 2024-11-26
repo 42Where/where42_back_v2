@@ -59,7 +59,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      *
      * @return ResponseEntity(String)
      */
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteAnnouncement(@PathVariable ("id") Long id) {
         announcementService.delete(id);
     }
