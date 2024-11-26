@@ -18,16 +18,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
-    private static final int PAGE_SIZE = 5;
 
-    public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, AuthUser authUser) {
-        Announcement announcement = createAnnouncementDto.toEntity(authUser);
-        Announcement savedAnnouncement = announcementRepository.save(announcement);
+    public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, final AuthUser authUser) {
+        final Announcement announcement = createAnnouncementDto.toEntity(authUser);
+        final Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDTO.of(savedAnnouncement);
     }
 
     public void delete(final DeleteAnnouncementDTO deleteAnnouncementDto) {
-        Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
+        final Announcement announcement = announcementRepository.findById(deleteAnnouncementDto.getAnnouncementId())
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
         announcementRepository.delete(announcement);
     }
