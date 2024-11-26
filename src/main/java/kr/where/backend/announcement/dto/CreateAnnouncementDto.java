@@ -1,7 +1,7 @@
 package kr.where.backend.announcement.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import kr.where.backend.announcement.Announcement;
 import kr.where.backend.auth.authUser.AuthUser;
 import lombok.AccessLevel;
@@ -23,7 +23,7 @@ public class CreateAnnouncementDto {
             this.title,
             this.comment,
             authUser.getIntraName(),
-            LocalDate.now(),
-            LocalDate.now());
+            LocalDateTime.now(),
+            LocalDateTime.now());
     }
 }

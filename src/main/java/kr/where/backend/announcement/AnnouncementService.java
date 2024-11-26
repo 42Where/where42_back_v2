@@ -10,6 +10,8 @@ import kr.where.backend.auth.authUser.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +33,7 @@ public class AnnouncementService {
     }
 
     public ResponseAnnouncementListDto getAnnouncementPage(final int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Direction.DESC, "createAt"));
         List<ResponseAnnouncementDto> responseAnnouncementDtos = announcementRepository.findAll(pageable).stream().map(
                 ResponseAnnouncementDto::of).toList();
 

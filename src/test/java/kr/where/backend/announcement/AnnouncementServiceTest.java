@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDto;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDto;
 import java.time.LocalDate;
@@ -54,7 +55,7 @@ public class AnnouncementServiceTest {
     public void failDeleteAnnouncementTest() {
         //given
         Announcement announcement = announcementRepository.save(new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
+                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(INVALID_ANNOUNCEMENT_ID);
 
         //when
@@ -69,7 +70,7 @@ public class AnnouncementServiceTest {
     public void successDeleteAnnouncementTest() {
         //given
         Announcement announcement = announcementRepository.save(new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now()));
+                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now()));
         DeleteAnnouncementDto deleteAnnouncementDto = new DeleteAnnouncementDto(announcement.getId());
 
         //when
@@ -86,7 +87,7 @@ public class AnnouncementServiceTest {
     public void addAnnouncementTest() {
         //given
         Announcement announcement = new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now());
+                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
 
         //when
         announcementRepository.save(announcement);
@@ -100,11 +101,11 @@ public class AnnouncementServiceTest {
     @Rollback
     public void getAllAnnouncementTest() {
         Announcement announcementOne = new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now());
+                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementTwo = new Announcement(
-                "기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDate.now(), LocalDate.now());
+                "기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementThree = new Announcement(
-                "이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+                "이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
 
         announcementRepository.save(announcementOne);
         announcementRepository.save(announcementTwo);
@@ -123,17 +124,17 @@ public class AnnouncementServiceTest {
     public void getAnnouncementTest() {
         //given
         Announcement announcementOne = new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDate.now(), LocalDate.now());
+                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementTwo = new Announcement(
-                "기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDate.now(), LocalDate.now());
+                "기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementThree = new Announcement(
-                "이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+                "이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementFour = new Announcement(
-                "이벤트 공지 4", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+                "이벤트 공지 4", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementFive = new Announcement(
-                "이벤트 공지 5", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+                "이벤트 공지 5", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
         Announcement announcementSix = new Announcement(
-                "이벤트 공지 6", "오늘은 이벤트가 있어요", "soohlee", LocalDate.now(), LocalDate.now());
+                "이벤트 공지 6", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
 
         announcementRepository.save(announcementOne);
         announcementRepository.save(announcementTwo);
@@ -147,17 +148,17 @@ public class AnnouncementServiceTest {
         List<ResponseAnnouncementDto> responseAnnouncementDtos = responseAnnouncementListDto.getResponseAnnouncementDto();
         //then
         assertEquals(5, responseAnnouncementDtos.size());
-        assertEquals(announcementOne.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
-        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
-        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
-        assertEquals(announcementFour.getId(), responseAnnouncementDtos.get(3).getAnnouncementId());
-        assertEquals(announcementFive.getId(), responseAnnouncementDtos.get(4).getAnnouncementId());
+        assertEquals(announcementSix.getId(), responseAnnouncementDtos.get(0).getAnnouncementId());
+        assertEquals(announcementFive.getId(), responseAnnouncementDtos.get(1).getAnnouncementId());
+        assertEquals(announcementFour.getId(), responseAnnouncementDtos.get(2).getAnnouncementId());
+        assertEquals(announcementThree.getId(), responseAnnouncementDtos.get(3).getAnnouncementId());
+        assertEquals(announcementTwo.getId(), responseAnnouncementDtos.get(4).getAnnouncementId());
 
         //when
         ResponseAnnouncementListDto responseAnnouncementListDto2 = announcementService.getAnnouncementPage(1);
         List<ResponseAnnouncementDto> responseAnnouncementDtos2 = responseAnnouncementListDto2.getResponseAnnouncementDto();
         //then
         assertEquals(1, responseAnnouncementDtos2.size());
-        assertEquals(announcementSix.getId(), responseAnnouncementDtos2.get(0).getAnnouncementId());
+        assertEquals(announcementOne.getId(), responseAnnouncementDtos2.get(0).getAnnouncementId());
     }
 }

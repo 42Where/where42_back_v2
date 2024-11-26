@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,16 +30,16 @@ public class Announcement {
     private String authorName;
 
     @Column(nullable = false)
-    private LocalDate createAt;
+    private LocalDateTime createAt;
 
     @Column(nullable = false)
-    private LocalDate updateAt;
+    private LocalDateTime updateAt;
 
     public Announcement(final String title,
                         final String content,
                         final String authorName,
-                        final LocalDate createAt,
-                        final LocalDate updateAt) {
+                        final LocalDateTime createAt,
+                        final LocalDateTime updateAt) {
         this.title = title;
         this.content = content;
         this.authorName = authorName;
