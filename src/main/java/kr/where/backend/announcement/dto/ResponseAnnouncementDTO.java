@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import kr.where.backend.announcement.Announcement;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +17,12 @@ public class ResponseAnnouncementDTO {
     private LocalDate createAt;
     private LocalDate updateAt;
 
-    @Builder
-    public ResponseAnnouncementDTO(final Long announcementId, final String title, final String content, final String authorName, final LocalDateTime createAt, final LocalDateTime updateAt) {
+    public ResponseAnnouncementDTO(final Long announcementId,
+                                   final String title,
+                                   final String content,
+                                   final String authorName,
+                                   final LocalDateTime createAt,
+                                   final LocalDateTime updateAt) {
         this.announcementId = announcementId;
         this.title = title;
         this.content = content;
@@ -29,13 +32,12 @@ public class ResponseAnnouncementDTO {
     }
 
     public static ResponseAnnouncementDTO of(final Announcement savedAnnouncement) {
-        return ResponseAnnouncementDTO.builder()
-                .announcementId(savedAnnouncement.getId())
-                .title(savedAnnouncement.getTitle())
-                .content(savedAnnouncement.getContent())
-                .authorName(savedAnnouncement.getAuthorName())
-                .createAt(savedAnnouncement.getCreateAt())
-                .updateAt(savedAnnouncement.getUpdateAt())
-                .build();
+        return new ResponseAnnouncementDTO(
+                savedAnnouncement.getId(),
+                savedAnnouncement.getTitle(),
+                savedAnnouncement.getContent(),
+                savedAnnouncement.getAuthorName(),
+                savedAnnouncement.getCreateAt(),
+                savedAnnouncement.getUpdateAt());
     }
 }
