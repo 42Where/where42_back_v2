@@ -44,7 +44,8 @@ public interface AnnouncementApiDocs {
 
     @Operation(summary = "Get announcement API", description = "쿼리 파라미터(page, size)가 있으면  페이지 단위로 조회합니다. 쿼리 파라미터(page,size)가 없으면 모두 조회합니다.",
             parameters = {
-                    @Parameter(name = "page", description = "가져올 페이지 번호 (1부터 시작)", in = ParameterIn.QUERY, required = true),
+                    @Parameter(name = "page", description = "가져올 페이지 번호 (0부터 시작)", in = ParameterIn.QUERY, required = false),
+                    @Parameter(name = "size", description = "페이지 사이즈", in = ParameterIn.QUERY, required = false),
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {
@@ -54,19 +55,8 @@ public interface AnnouncementApiDocs {
     )
     @GetMapping(value = "", params = ("page"))
     ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
-            @RequestParam("page") final int page);
-
-    @Operation(summary = "Get announcement API", description = "공지 모두 가져오기",
-            parameters = {
-                    @Parameter(name = "accessTokens", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "공지 반환 성공", content = @Content(schema = @Schema(implementation = ResponseAnnouncementListDTO.class))),
-                    @ApiResponse(responseCode = "400", description = "공지 반환 실패", content = @Content(schema = @Schema(type = "string")))
-            }
-    )
-    @GetMapping("")
-    ResponseEntity<ResponseAnnouncementListDTO> getAllAnnouncement();
+            @RequestParam("page") final Integer page,
+            @RequestParam("size") final Integer size);
 
     @Operation(summary = "Delete announcement API", description = "공지 삭제",
             parameters = {
