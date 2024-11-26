@@ -9,12 +9,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseAnnouncementListDTO {
     private List<ResponseAnnouncementDTO> announcements;
+    private int totalPages;
+    private long totalElements;
 
-    public ResponseAnnouncementListDTO(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO) {
+    public ResponseAnnouncementListDTO(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, int totalPages, long totalElements) {
         this.announcements = ResponseAnnouncementDTO;
+        this.totalPages = totalPages;
+        this.totalElements = totalElements;
+    }
+
+    public static ResponseAnnouncementListDTO of(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, int totalPages, long totalElements) {
+        return new ResponseAnnouncementListDTO(ResponseAnnouncementDTO, totalPages, totalElements);
     }
 
     public static ResponseAnnouncementListDTO of(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO) {
-        return new ResponseAnnouncementListDTO(ResponseAnnouncementDTO);
+        return new ResponseAnnouncementListDTO(ResponseAnnouncementDTO, 0, 0);
     }
 }
