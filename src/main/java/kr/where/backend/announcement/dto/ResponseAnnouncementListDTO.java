@@ -12,13 +12,13 @@ public class ResponseAnnouncementListDTO {
     private int totalPages;
     private long totalElements;
 
-    public ResponseAnnouncementListDTO(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, int totalPages, long totalElements) {
+    public ResponseAnnouncementListDTO(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, final int totalPages, final long totalElements) {
         this.announcements = ResponseAnnouncementDTO;
         this.totalPages = totalPages;
         this.totalElements = totalElements;
     }
 
-    public static ResponseAnnouncementListDTO of(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, int totalPages, long totalElements) {
+    public static ResponseAnnouncementListDTO of(final List<ResponseAnnouncementDTO> ResponseAnnouncementDTO, final int totalPages, final long totalElements) {
         return new ResponseAnnouncementListDTO(ResponseAnnouncementDTO, totalPages, totalElements);
     }
 
