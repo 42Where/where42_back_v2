@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
+    private static final String CREATE_AT = "createAt";
 
     public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, final AuthUser authUser) {
         final Announcement announcement = createAnnouncementDto.toEntity(authUser);
@@ -49,7 +50,7 @@ public class AnnouncementService {
     public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
 
         final Page<Announcement> announcements = announcementRepository.findAll(
-                PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, "createAt"))
+                PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, CREATE_AT))
         );
 
         final int totalPages = announcements.getTotalPages();
