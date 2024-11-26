@@ -32,7 +32,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * 공지 저장
      *
      * @param createAnnouncementDto
-     * @return ResponseEntity(String)
+     * @return ResponseEntity(ResponseAnnouncementDTO)
      */
     @PostMapping("")
     public ResponseEntity<ResponseAnnouncementDTO> saveAnnouncement(
@@ -45,7 +45,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
      * 공지 페이지 단위로 조회
      *
      * @param page 쿼리 파라미터로 전달받은 페이지 번호
-     * @return ResponseEntity(ResponseAnnouncementListDto)
+     * @return ResponseEntity(ResponseAnnouncementListDTO)
      */
     @GetMapping()
     public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
@@ -57,7 +57,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     /**
      * 공지 삭제
      *
-     * @return ResponseEntity(String)
+     * @return void
      */
     @DeleteMapping("/{id}")
     public void deleteAnnouncement(@PathVariable ("id") Long id) {
