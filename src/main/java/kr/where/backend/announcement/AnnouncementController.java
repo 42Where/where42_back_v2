@@ -51,7 +51,7 @@ public class AnnouncementController implements AnnouncementApiDocs {
     public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
             @RequestParam(value = "page", required = false) final Integer page,
             @RequestParam(value = "size", required = false) final Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncement(page, size));
+        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncementPage(page, size));
     }
 
     /**

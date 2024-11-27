@@ -31,24 +31,7 @@ public class AnnouncementService {
         announcementRepository.delete(announcement);
     }
 
-    public ResponseAnnouncementListDTO getAnnouncement(final Integer pageNumber, final Integer size) {
-        if (pageNumber == null || size == null) {
-            return getAllAnnouncement();
-        }
-        return getAnnouncementPage(pageNumber, size);
-    }
-
-    public ResponseAnnouncementListDTO getAllAnnouncement() {
-        final List<Announcement> announcements = announcementRepository.findAllByOrderByCreateAtDesc();
-
-        final List<ResponseAnnouncementDTO> responseAnnouncementDTOS
-                = announcements.stream().map(ResponseAnnouncementDTO::of).toList();
-
-        return ResponseAnnouncementListDTO.of(responseAnnouncementDTOS);
-    }
-
     public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
-
         final Page<Announcement> announcements = announcementRepository.findAll(
                 PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, CREATE_AT))
         );

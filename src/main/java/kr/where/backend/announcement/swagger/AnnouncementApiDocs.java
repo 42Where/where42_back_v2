@@ -42,10 +42,10 @@ public interface AnnouncementApiDocs {
             @RequestBody @Valid final CreateAnnouncementDTO createAnnouncementDto,
             @AuthUserInfo final AuthUser authUser);
 
-    @Operation(summary = "Get announcement API", description = "쿼리 파라미터(page, size)가 있으면  페이지 단위로 조회합니다. 응답 바디의 쿼리 파라미터(page,size)가 없으면 모두 조회합니다. totalPage는 \"전체 공지수 / size\"입니다. totalElements는 전체 공지수입니다.",
+    @Operation(summary = "Get announcement API", description = "페이지 단위로 조회합니다. totalPage는 \"전체 공지수 / size\"입니다. totalElements는 전체 공지수입니다.",
             parameters = {
-                    @Parameter(name = "page", description = "가져올 페이지 번호 (0부터 시작)", in = ParameterIn.QUERY, required = false),
-                    @Parameter(name = "size", description = "페이지 사이즈", in = ParameterIn.QUERY, required = false),
+                    @Parameter(name = "page", description = "가져올 페이지 번호 (0부터 시작)", in = ParameterIn.QUERY, required = true),
+                    @Parameter(name = "size", description = "페이지 사이즈", in = ParameterIn.QUERY, required = true),
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER)
             },
             responses = {

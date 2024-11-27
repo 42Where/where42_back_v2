@@ -90,39 +90,6 @@ public class AnnouncementServiceTest {
         assertEquals(announcement, announcementRepository.findById(announcement.getId()).get());
     }
 
-    @DisplayName("공지를 모두 조회하는 기능 테스트")
-    @Test
-    @Rollback
-    public void getAllAnnouncementTest() {
-        Announcement announcementOne = new Announcement(
-                "점검 공지", "오늘 10시 ~ 12시까지 점검입니다.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
-        Announcement announcementTwo = new Announcement(
-                "기능 추가 공지", "실시간 자리 확인 기능이 추가되었어요.", "soohlee", LocalDateTime.now(), LocalDateTime.now());
-        Announcement announcementThree = new Announcement(
-                "이벤트 공지", "오늘은 이벤트가 있어요", "soohlee", LocalDateTime.now(), LocalDateTime.now());
-
-        announcementRepository.save(announcementOne);
-        announcementRepository.save(announcementTwo);
-        announcementRepository.save(announcementThree);
-
-        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAllAnnouncement();
-        List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
-        assertEquals(announcementThree.getId(), responseAnnouncementDTO.get(0).getAnnouncementId());
-        assertEquals(announcementTwo.getId(), responseAnnouncementDTO.get(1).getAnnouncementId());
-        assertEquals(announcementOne.getId(), responseAnnouncementDTO.get(2).getAnnouncementId());
-    }
-
-    @DisplayName("공지가 없을때 공지 모두 조회하는 기능 테스트")
-    @Test
-    @Rollback
-    public void getAllAnnouncementWhenEmptyTest() {
-
-        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAllAnnouncement();
-        List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
-
-        assertTrue(responseAnnouncementDTO.isEmpty());
-    }
-
     @DisplayName("페이지 번호로 공지 조회하는 기능 테스트")
     @Test
     @Rollback
