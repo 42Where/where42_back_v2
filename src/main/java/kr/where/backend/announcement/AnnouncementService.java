@@ -12,12 +12,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Service
 @RequiredArgsConstructor
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private static final String CREATE_AT = "createAt";
+    private final CharacterEncodingFilter characterEncodingFilter;
 
     public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, final AuthUser authUser) {
         final Announcement announcement = createAnnouncementDto.toEntity(authUser);
@@ -32,9 +34,14 @@ public class AnnouncementService {
     }
 
     public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
-        final Page<Announcement> announcements = announcementRepository.findAll(
-                PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, CREATE_AT))
-        );
+        Page<Announcement> announcements;
+
+        try {
+            announcements = announcementRepository.findAll(
+                    PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, CREATE_AT)));
+        } catch (IllegalArgumentException e) {
+            throw new AnnouncementException.InvalidArgumentException();
+        }
 
         final int totalPages = announcements.getTotalPages();
         final long totalElements = announcements.getTotalElements();

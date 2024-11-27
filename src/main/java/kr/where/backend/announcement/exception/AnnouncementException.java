@@ -1,5 +1,6 @@
 package kr.where.backend.announcement.exception;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import kr.where.backend.exception.CustomException;
 
 public class AnnouncementException extends CustomException {
@@ -10,6 +11,12 @@ public class AnnouncementException extends CustomException {
     public static class NoAnnouncementException extends AnnouncementException {
         public NoAnnouncementException() {
             super(AnnouncementErrorCode.NO_ANNOUNCEMENT);
+        }
+    }
+
+    public static class InvalidArgumentException extends AnnouncementException {
+        public InvalidArgumentException() {
+            super(AnnouncementErrorCode.INVALID_ARGUMENTS);
         }
     }
 }

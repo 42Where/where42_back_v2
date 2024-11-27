@@ -1,5 +1,6 @@
 package kr.where.backend.exception;
 
+import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
@@ -143,7 +144,9 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 
-    @ExceptionHandler({VersionException.NotAllowedOsException.class, VersionException.InvalidVersionFormatException.class})
+    @ExceptionHandler({VersionException.NotAllowedOsException.class,
+            VersionException.InvalidVersionFormatException.class,
+            AnnouncementException.InvalidArgumentException.class})
     public ResponseEntity<String> handleInvalidRequestArgument(final CustomException e) {
         log.error(e.toString());
 
