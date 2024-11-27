@@ -1,6 +1,5 @@
 package kr.where.backend.announcement.exception;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import kr.where.backend.exception.CustomException;
 
 public class AnnouncementException extends CustomException {
