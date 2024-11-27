@@ -159,11 +159,11 @@ public class JwtService {
 
         validateTypeAndClaims(request, claims);
 
-        // 클레임에서 권한 정보 가져오기
-        final Collection<? extends GrantedAuthority> authorities = Stream.of(
-                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+//        // 클레임에서 권한 정보 가져오기
+//        final Collection<? extends GrantedAuthority> authorities = Stream.of(
+//                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
+//                .map(SimpleGrantedAuthority::new)
+//                .toList();
 
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
@@ -171,9 +171,16 @@ public class JwtService {
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
+        final Collection<? extends GrantedAuthority> authorities
+                = Stream.of("ROLE_" + member.getRole())
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
         //Authentication 객체 생성
         return new UsernamePasswordAuthenticationToken(
-                new AuthUser(member.getIntraId(), member.getIntraName(), member.getDefaultGroupId()),
+                new AuthUser(member.getIntraId(),
+                        member.getIntraName(),
+                        member.getDefaultGroupId()),
                 "",
                 authorities);
     }

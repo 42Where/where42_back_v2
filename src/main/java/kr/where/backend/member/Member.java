@@ -52,6 +52,8 @@ public class Member {
 
 	private Long defaultGroupId;
 
+	private String role;
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id")
 	private Location location;
@@ -73,6 +75,7 @@ public class Member {
 		this.grade = cadetPrivacy.getCreated_at();
 		this.image = cadetPrivacy.getImage().getVersions().getSmall();
 		this.inCluster = hane.getInoutState().equals("IN");
+		this.role = "user";
 		this.inClusterUpdatedAt = LocalDateTime.now();
 		this.agree = true;
 		this.blackHole = false;
@@ -83,6 +86,7 @@ public class Member {
 		this.intraName = cadetPrivacy.getLogin();
 		this.image = cadetPrivacy.getImage().getVersions().getSmall();
 		this.grade = cadetPrivacy.getCreated_at();
+		this.role = "user";
 		this.blackHole = false;
 		this.agree = false;
 	}
