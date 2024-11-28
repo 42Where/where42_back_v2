@@ -163,12 +163,7 @@ public class JwtService {
 
         validateTypeAndClaims(request, claims);
 
-//        // 클레임에서 권한 정보 가져오기
-//        final Collection<? extends GrantedAuthority> authorities = Stream.of(
-//                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
-//                .map(SimpleGrantedAuthority::new)
-//                .toList();
-
+        // 클레임에서 권한 정보 가져오기
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
