@@ -124,13 +124,12 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/jwt/reissue"))
                                 .permitAll()
-                                .requestMatchers(requestMatcher.pattern("/v3/announcement"))
+                                .requestMatchers(requestMatcher.pattern(HttpMethod.DELETE, "/v3/announcement/**"))
                                 .hasRole("ADMIN")
-//                                .requestMatchers(requestMatcher.pattern("/v3/announcement"))
-//                                .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern(HttpMethod.POST, "/v3/announcement"))
+                                .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
-
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(user -> user.userService(customOauth2UserService))
