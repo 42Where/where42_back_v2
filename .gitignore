@@ -7,3 +7,4 @@ out/
 src/main/resources/application-db.yml
 src/main/resources/application.properties
 src/main/resources/application.yml
+src/test/resources/application-test.yml
