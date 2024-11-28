@@ -16,12 +16,12 @@ public class CreateAnnouncementDTO {
     @NotBlank
     private String title;
     @NotBlank
-    private String comment;
+    private String content;
 
     public Announcement toEntity(final AuthUser authUser) {
         return new Announcement(
             this.title,
-            this.comment,
+            this.content,
             authUser.getIntraName(),
             LocalDateTime.now(),
             LocalDateTime.now());
