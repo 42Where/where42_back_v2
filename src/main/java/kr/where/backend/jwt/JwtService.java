@@ -155,7 +155,11 @@ public class JwtService {
     public Authentication getAuthentication(final HttpServletRequest request, final String token) {
         // 토큰 복호화
         final Claims claims = parseToken(token);
-        log.info("[login] : 이름 {}, 토큰 {}", claims.get(JwtConstants.USER_NAME.getValue()), token);
+        log.info("[login] : 이름 {}, 토큰 {}, 롤 {}", claims.get(
+                JwtConstants.USER_NAME.getValue()),
+                token,
+                claims.get(JwtConstants.ROLE_LEVEL.getValue())
+        );
 
         validateTypeAndClaims(request, claims);
 
