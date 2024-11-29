@@ -67,6 +67,6 @@ public interface AnnouncementApiDocs {
                     @ApiResponse(responseCode = "400", description = "잘못된 요청값", content = @Content(schema = @Schema(type = "string")))
             }
     )
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     void deleteAnnouncement(@PathVariable("id") Long id);
 }
