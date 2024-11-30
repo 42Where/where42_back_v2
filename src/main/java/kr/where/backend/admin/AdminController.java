@@ -4,7 +4,7 @@ import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
 import kr.where.backend.admin.swagger.AdminApiDocs;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
-import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v3/admin")
 @RequiredArgsConstructor
 public class AdminController implements AdminApiDocs {
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @GetMapping("/status")
     public ResponseEntity<ResponseAdminStatusDTO> getAdminStatus(@AuthUserInfo final AuthUser authUser) {
