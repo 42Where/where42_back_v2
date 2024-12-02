@@ -1,5 +1,6 @@
 package kr.where.backend.exception;
 
+import kr.where.backend.admin.exception.AdminException;
 import kr.where.backend.announcement.exception.AnnouncementException;
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
@@ -161,6 +162,15 @@ public class ExceptionHandleController {
 
         return ResponseEntity
                 .status(HttpStatus.UPGRADE_REQUIRED)
+                .body(e.toString());
+    }
+
+    @ExceptionHandler(AdminException.permissionDeniedException.class)
+    public ResponseEntity<String> handlePermissionDenied(final CustomException e) {
+        log.error(e.toString());
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(e.toString());
     }
 }

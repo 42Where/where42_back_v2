@@ -112,6 +112,10 @@ public class Member {
 		this.blackHole = !active;
 	}
 
+	public void setRole(final String role) {
+		this.role = role;
+	}
+
 	public void setInCluster(final Hane hane) {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 		this.inClusterUpdatedAt = LocalDateTime.now();

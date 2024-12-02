@@ -1,12 +1,17 @@
 package kr.where.backend.admin.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestAdminStatusDTO {
     @NotBlank
-    private final String role;
+    private String role;
+    @NotNull
+    private Integer intraId;
 }
