@@ -1,12 +1,14 @@
 package kr.where.backend.admin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 import jakarta.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 import kr.where.backend.admin.dto.RequestAdminStatusDTO;
 import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
+import kr.where.backend.admin.exception.AdminException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -64,13 +66,47 @@ public class AdminServiceTest {
         assertEquals("ADMIN", responseAdminStatusDTO.getRole());
     }
 
-    @DisplayName("유저 권한 변경하는 테스트")
+    @DisplayName("유저 권한 변경 성공하는 테스트")
     @Test
     @Rollback
-    void changeAdminStatusTest() {
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("admin");
+    void SuccessChangeAdminStatusTest() {
+        Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
+        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        Hane hane2 = Hane.create("IN");
+        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
+        memberRepository.save(member2);
+
+        //given
+        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", 222222);
+
+        //when
         ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO, authUser);
 
-        assertEquals(requestAdminStatusDTO.getRole(), responseAdminStatusDTO.getRole());
+        //then
+        assertEquals("ADMIN", responseAdminStatusDTO.getRole());
+    }
+
+    @DisplayName("유저 권한 변경 실패하는 테스트")
+    @Test
+    @Rollback
+    void failChangeAdminStatusTest() {
+        Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
+        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        Hane hane2 = Hane.create("IN");
+        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
+        memberRepository.save(member2);
+
+        //given
+        Member requester = memberRepository.findByIntraId(authUser.getIntraId()).get();
+        requester.setRole("USER");
+        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", 222222);
+
+        //when
+        //then
+        assertThrows(AdminException.permissionDeniedException.class, () -> adminService.changeAdminStatus(requestAdminStatusDTO, authUser));
     }
 }
