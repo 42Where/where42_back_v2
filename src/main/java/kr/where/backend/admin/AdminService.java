@@ -1,7 +1,9 @@
 package kr.where.backend.admin;
 
+import java.util.List;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
 import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
@@ -38,5 +40,12 @@ public class AdminService {
         if (!role.equals(ADMIN_ROLE) && !role.equals(USER_ROLE)) {
             throw new RequestException.BadRequestException();
         }
+    }
+
+    public ResponseRoleStatusListDTO getAllAdmin() {
+        final List<Member> members = memberRepository.findAllByRole("ADMIN");
+        final List<ResponseRoleStatusDTO> statuses = members.
+                stream().map(member -> ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole())).toList();
+        return ResponseRoleStatusListDTO.of(statuses);
     }
 }

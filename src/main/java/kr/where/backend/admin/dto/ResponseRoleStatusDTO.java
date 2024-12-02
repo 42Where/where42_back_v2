@@ -8,4 +8,8 @@ import lombok.RequiredArgsConstructor;
 public class ResponseRoleStatusDTO {
     private final String intraName;
     private final String role;
+
+    public static ResponseRoleStatusDTO of(final String intraName, final String role) {
+        return new ResponseRoleStatusDTO(intraName, role);
+    }
 }
