@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestRoleStatusDTO {
     @NotBlank
-    private String role;
-    @NotBlank
     private String intraName;
+    @NotBlank
+    private String role;
 }
