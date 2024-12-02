@@ -32,7 +32,7 @@ public class AdminService {
             throw new AdminException.permissionDeniedException();
         }
 
-        validRoll(requestAdminStatusDTO.getRole());
+        validateRole(requestAdminStatusDTO.getRole());
 
         Member targerMember = memberRepository.findByIntraId(requestAdminStatusDTO.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
@@ -40,7 +40,7 @@ public class AdminService {
         return new ResponseAdminStatusDTO(targerMember.getRole());
     }
 
-    private void validRoll(final String role) {
+    private void validateRole(final String role) {
         if (!role.equals(ADMIN_ROLE) && !role.equals(USER_ROLE)) {
             throw new RequestException.BadRequestException();
         }
