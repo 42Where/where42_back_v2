@@ -24,4 +24,25 @@ public class AdminService {
 
         return new ResponseAdminStatusDTO(member.getRole());
     }
+
+    public ResponseAdminStatusDTO changeAdminStatus(final RequestAdminStatusDTO requestAdminStatusDTO, final AuthUser authUser) {
+        Member requesterMember = memberRepository.findByIntraId(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+        if (!requesterMember.getRole().equals(ADMIN_ROLE)) {
+            throw new AdminException.permissionDeniedException();
+        }
+
+        validRoll(requestAdminStatusDTO.getRole());
+
+        Member targerMember = memberRepository.findByIntraId(requestAdminStatusDTO.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+        targerMember.setRole(requestAdminStatusDTO.getRole());
+        return new ResponseAdminStatusDTO(targerMember.getRole());
+    }
+
+    private void validRoll(final String role) {
+        if (!role.equals(ADMIN_ROLE) && !role.equals(USER_ROLE)) {
+            throw new RequestException.BadRequestException();
+        }
+    }
 }
