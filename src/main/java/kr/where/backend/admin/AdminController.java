@@ -30,7 +30,7 @@ public class AdminController implements AdminApiDocs {
     }
 
     @PostMapping("/status")
-    public ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid RequestAdminStatusDTO requestAdminStatusDTO,
+    public ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestAdminStatusDTO requestAdminStatusDTO,
                                                                     @AuthUserInfo final AuthUser authUser) {
         final ResponseAdminStatusDTO responseAdminStatusDTO = new ResponseAdminStatusDTO("USER");
 //        final ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO, authUser);
