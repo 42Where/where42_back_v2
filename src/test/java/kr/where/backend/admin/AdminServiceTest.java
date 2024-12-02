@@ -33,6 +33,8 @@ public class AdminServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private AdminService adminService;
 
     private final static Integer CAMPUS_ID = 29;
 
@@ -46,16 +48,20 @@ public class AdminServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "soohlee", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        member.setRole("ADMIN");
         memberRepository.save(member);
     }
 
-    @DisplayName("유저 권한 확인하는 테스트")
+    @DisplayName("유저 권한 조회하는 테스트")
     @Test
     @Rollback
     void getAdminStatusTest() {
+        //given
+        //when
         ResponseAdminStatusDTO responseAdminStatusDTO = adminService.getAdminStatus(authUser);
 
-        assertEquals("user", responseAdminStatusDTO.getRole());
+        //then
+        assertEquals("ADMIN", responseAdminStatusDTO.getRole());
     }
 
     @DisplayName("유저 권한 변경하는 테스트")
