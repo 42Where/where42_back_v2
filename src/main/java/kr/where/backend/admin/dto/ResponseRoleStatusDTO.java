@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ResponseAdminStatusDTO {
+public class ResponseRoleStatusDTO {
     private final String role;
 }

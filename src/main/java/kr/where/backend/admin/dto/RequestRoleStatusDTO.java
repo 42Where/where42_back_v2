@@ -1,7 +1,6 @@
 package kr.where.backend.admin.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestAdminStatusDTO {
+public class RequestRoleStatusDTO {
     @NotBlank
     private String role;
     @NotBlank

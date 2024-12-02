@@ -1,8 +1,8 @@
 package kr.where.backend.admin;
 
 import jakarta.validation.Valid;
-import kr.where.backend.admin.dto.RequestAdminStatusDTO;
-import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
+import kr.where.backend.admin.dto.RequestRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
 import kr.where.backend.admin.swagger.AdminApiDocs;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
@@ -27,7 +27,7 @@ public class AdminController implements AdminApiDocs {
     }
 
     @PostMapping("/status")
-    public ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestAdminStatusDTO requestAdminStatusDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.changeAdminStatus(requestAdminStatusDTO));
+    public ResponseEntity<ResponseRoleStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestRoleStatusDTO requestRoleStatusDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.changeAdminStatus(requestRoleStatusDTO));
     }
 }

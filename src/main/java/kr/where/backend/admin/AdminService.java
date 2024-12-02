@@ -1,8 +1,7 @@
 package kr.where.backend.admin;
 
-import kr.where.backend.admin.dto.RequestAdminStatusDTO;
-import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
-import kr.where.backend.admin.exception.AdminException;
+import kr.where.backend.admin.dto.RequestRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
@@ -22,17 +21,17 @@ public class AdminService {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
-        return new ResponseAdminStatusDTO(member.getRole());
+        return new ResponseRoleStatusDTO(member.getRole());
     }
 
-    public ResponseAdminStatusDTO changeAdminStatus(final RequestAdminStatusDTO requestAdminStatusDTO) {
-        validateRole(requestAdminStatusDTO.getRole());
+    public ResponseRoleStatusDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
+        validateRole(requestRoleStatusDTO.getRole());
 
-        Member targerMember = memberRepository.findByIntraName(requestAdminStatusDTO.getIntraName())
+        Member targerMember = memberRepository.findByIntraName(requestRoleStatusDTO.getIntraName())
                 .orElseThrow(MemberException.NoMemberException::new);
-        if (!targerMember.getRole().equals(requestAdminStatusDTO.getRole()))
-            targerMember.setRole(requestAdminStatusDTO.getRole());
-        return new ResponseAdminStatusDTO(targerMember.getRole());
+        if (!targerMember.getRole().equals(requestRoleStatusDTO.getRole()))
+            targerMember.setRole(requestRoleStatusDTO.getRole());
+        return new ResponseRoleStatusDTO(targerMember.getRole());
     }
 
     private void validateRole(final String role) {

@@ -6,8 +6,8 @@ import static org.junit.Assert.assertThrows;
 import jakarta.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
-import kr.where.backend.admin.dto.RequestAdminStatusDTO;
-import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
+import kr.where.backend.admin.dto.RequestRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
@@ -63,7 +63,7 @@ public class AdminServiceTest {
         ResponseRoleStatusDTO responseRoleStatusDTO = adminService.getRoleStatus(authUser);
 
         //then
-        assertEquals("ADMIN", responseAdminStatusDTO.getRole());
+        assertEquals("ADMIN", responseRoleStatusDTO.getRole());
     }
 
     @DisplayName("유저 권한 변경 성공하는 테스트")
@@ -79,13 +79,13 @@ public class AdminServiceTest {
         memberRepository.save(member2);
 
         //given
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", "jonhan");
+        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("ADMIN", "jonhan");
 
         //when
-        ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO);
+        ResponseRoleStatusDTO responseRoleStatusDTO = adminService.changeAdminStatus(requestRoleStatusDTO);
 
         //then
-        assertEquals("ADMIN", responseAdminStatusDTO.getRole());
+        assertEquals("ADMIN", responseRoleStatusDTO.getRole());
     }
 
     @DisplayName("유저 권한 변경 실패하는 테스트")
@@ -102,10 +102,11 @@ public class AdminServiceTest {
 
         //given
         Member requester = memberRepository.findByIntraId(authUser.getIntraId()).get();
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("inValidRole", "jonhan");
+        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("inValidRole", "jonhan");
 
         //when
         //then
-        assertThrows(RequestException.BadRequestException.class, () -> adminService.changeAdminStatus(requestAdminStatusDTO));
+        assertThrows(RequestException.BadRequestException.class, () -> adminService.changeAdminStatus(
+                requestRoleStatusDTO));
     }
 }
