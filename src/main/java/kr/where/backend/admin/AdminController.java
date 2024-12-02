@@ -6,7 +6,6 @@ import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
 import kr.where.backend.admin.swagger.AdminApiDocs;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
-import kr.where.backend.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v3/admin")
 @RequiredArgsConstructor
 public class AdminController implements AdminApiDocs {
-    private final MemberService memberService;
+    private final AdminService adminService;
 
     @GetMapping("/status")
     public ResponseEntity<ResponseAdminStatusDTO> getAdminStatus(@AuthUserInfo final AuthUser authUser) {
-        final ResponseAdminStatusDTO responseAdminStatusDTO = new ResponseAdminStatusDTO("USER");
-//        final ResponseAdminStatusDTO responseAdminStatusDTO = adminService.getAdminStatus(authUser);
-        return ResponseEntity.status(HttpStatus.OK).body(responseAdminStatusDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminStatus(authUser));
     }
 
     @PostMapping("/status")
     public ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestAdminStatusDTO requestAdminStatusDTO,
                                                                     @AuthUserInfo final AuthUser authUser) {
-        final ResponseAdminStatusDTO responseAdminStatusDTO = new ResponseAdminStatusDTO("USER");
-//        final ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO, authUser);
-        return ResponseEntity.status(HttpStatus.OK).body(responseAdminStatusDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.changeAdminStatus(requestAdminStatusDTO, authUser));
     }
 }
