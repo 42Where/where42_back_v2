@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import kr.where.backend.admin.dto.RequestAdminStatusDTO;
 import kr.where.backend.admin.dto.ResponseAdminStatusDTO;
-import kr.where.backend.admin.exception.AdminException;
+import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -82,7 +82,7 @@ public class AdminServiceTest {
         RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", "jonhan");
 
         //when
-        ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO, authUser);
+        ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO);
 
         //then
         assertEquals("ADMIN", responseAdminStatusDTO.getRole());
@@ -102,11 +102,10 @@ public class AdminServiceTest {
 
         //given
         Member requester = memberRepository.findByIntraId(authUser.getIntraId()).get();
-        requester.setRole("USER");
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", "jonhan");
+        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("inValidRole", "jonhan");
 
         //when
         //then
-        assertThrows(AdminException.permissionDeniedException.class, () -> adminService.changeAdminStatus(requestAdminStatusDTO, authUser));
+        assertThrows(RequestException.BadRequestException.class, () -> adminService.changeAdminStatus(requestAdminStatusDTO));
     }
 }

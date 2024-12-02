@@ -128,6 +128,8 @@ public class SecurityConfig {
                                 .hasRole("ADMIN")
                                 .requestMatchers(requestMatcher.pattern(HttpMethod.POST, "/v3/announcement"))
                                 .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern("/v3/admin/**"))
+                                .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
