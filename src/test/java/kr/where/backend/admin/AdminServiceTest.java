@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
 import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
@@ -57,13 +58,25 @@ public class AdminServiceTest {
     @DisplayName("유저 권한 조회하는 테스트")
     @Test
     @Rollback
-    void getAdminStatusTest() {
+    void getRoleStatusTest() {
         //given
         //when
         ResponseRoleStatusDTO responseRoleStatusDTO = adminService.getRoleStatus(authUser);
 
         //then
         assertEquals("ADMIN", responseRoleStatusDTO.getRole());
+    }
+
+    @DisplayName("관리자인 유저 모두 조회하는 테스트")
+    @Test
+    @Rollback
+    void getAllAdminTest() {
+        //given
+        //when
+        ResponseRoleStatusListDTO statuses = adminService.getAllAdmin();
+
+        //then
+        assertEquals(1, statuses.getRoleStatuses().size());
     }
 
     @DisplayName("유저 권한 변경 성공하는 테스트")
