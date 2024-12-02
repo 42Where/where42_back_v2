@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
 import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
+import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +22,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AdminApiDocs {
     @Operation(
             summary = "Admin status check API",
-            description = "관리자인지 확인하는 API",
+            description = "본인 접근 권한 레벨 확인하는 API",
             parameters = {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "관리자인지 확인 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "접근 권한 확인 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusDTO.class))),
             }
     )
     @GetMapping("/status")
-    ResponseEntity<ResponseAdminStatusDTO> getAdminStatus(@AuthUserInfo final AuthUser authUser);
     ResponseEntity<ResponseRoleStatusDTO> getRoleStatus(@AuthUserInfo final AuthUser authUser);
 
     @Operation(
+            summary = "get all admin API",
+            description = "관리자인 유저 전체 조회",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusListDTO.class)))
+            }
+    )
+    @GetMapping("/status/all")
+    ResponseEntity<ResponseRoleStatusListDTO> getAllAdmin();
+
+    @Operation(
             summary = "Admin post API",
-            description = "관리자 역할 변경하는 API",
+            description = "권한 변경하는 API",
             parameters = {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },

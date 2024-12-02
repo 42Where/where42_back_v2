@@ -21,7 +21,7 @@ public class AdminService {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
-        return new ResponseRoleStatusDTO(member.getRole());
+        return new ResponseRoleStatusDTO(member.getIntraName(), member.getRole());
     }
 
     public ResponseRoleStatusDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
@@ -31,7 +31,7 @@ public class AdminService {
                 .orElseThrow(MemberException.NoMemberException::new);
         if (!targerMember.getRole().equals(requestRoleStatusDTO.getRole()))
             targerMember.setRole(requestRoleStatusDTO.getRole());
-        return new ResponseRoleStatusDTO(targerMember.getRole());
+        return new ResponseRoleStatusDTO(targerMember.getIntraName(), targerMember.getRole());
     }
 
     private void validateRole(final String role) {
