@@ -46,5 +46,5 @@ public interface AdminApiDocs {
             }
     )
     @PostMapping("/status")
-    ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid RequestAdminStatusDTO requestAdminStatusDTO, @AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseAdminStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestAdminStatusDTO requestAdminStatusDTO, @AuthUserInfo final AuthUser authUser);
 }
