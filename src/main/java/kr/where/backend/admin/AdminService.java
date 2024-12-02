@@ -26,7 +26,7 @@ public class AdminService {
     }
 
     public ResponseAdminStatusDTO changeAdminStatus(final RequestAdminStatusDTO requestAdminStatusDTO, final AuthUser authUser) {
-        Member requesterMember = memberRepository.findByIntraId(authUser.getIntraId())
+        final Member requesterMember = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
         if (!requesterMember.getRole().equals(ADMIN_ROLE)) {
             throw new AdminException.permissionDeniedException();
