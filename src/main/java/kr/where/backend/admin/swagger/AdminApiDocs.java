@@ -31,6 +31,7 @@ public interface AdminApiDocs {
     )
     @GetMapping("/status")
     ResponseEntity<ResponseAdminStatusDTO> getAdminStatus(@AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseRoleStatusDTO> getRoleStatus(@AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "Admin post API",

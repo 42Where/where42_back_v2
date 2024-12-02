@@ -18,7 +18,7 @@ public class AdminService {
     private static final String ADMIN_ROLE = "ADMIN";
     private static final String USER_ROLE = "USER";
 
-    public ResponseAdminStatusDTO getAdminStatus(final AuthUser authUser) {
+    public ResponseRoleStatusDTO getRoleStatus(final AuthUser authUser) {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 

@@ -60,7 +60,7 @@ public class AdminServiceTest {
     void getAdminStatusTest() {
         //given
         //when
-        ResponseAdminStatusDTO responseAdminStatusDTO = adminService.getAdminStatus(authUser);
+        ResponseRoleStatusDTO responseRoleStatusDTO = adminService.getRoleStatus(authUser);
 
         //then
         assertEquals("ADMIN", responseAdminStatusDTO.getRole());

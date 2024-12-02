@@ -22,8 +22,8 @@ public class AdminController implements AdminApiDocs {
     private final AdminService adminService;
 
     @GetMapping("/status")
-    public ResponseEntity<ResponseAdminStatusDTO> getAdminStatus(@AuthUserInfo final AuthUser authUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminStatus(authUser));
+    public ResponseEntity<ResponseRoleStatusDTO> getRoleStatus(@AuthUserInfo final AuthUser authUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.getRoleStatus(authUser));
     }
 
     @PostMapping("/status")
