@@ -34,7 +34,9 @@ public class AdminService {
 
         validateRole(requestAdminStatusDTO.getRole());
 
-        Member targerMember = memberRepository.findByIntraId(requestAdminStatusDTO.getIntraId())
+//        Member targerMember = memberRepository.findByIntraId(requestAdminStatusDTO.getIntraId())
+//                .orElseThrow(MemberException.NoMemberException::new);
+        Member targerMember = memberRepository.findByIntraName(requestAdminStatusDTO.getIntraName())
                 .orElseThrow(MemberException.NoMemberException::new);
         targerMember.setRole(requestAdminStatusDTO.getRole());
         return new ResponseAdminStatusDTO(targerMember.getRole());

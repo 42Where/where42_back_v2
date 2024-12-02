@@ -79,7 +79,7 @@ public class AdminServiceTest {
         memberRepository.save(member2);
 
         //given
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", 222222);
+        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", "jonhan");
 
         //when
         ResponseAdminStatusDTO responseAdminStatusDTO = adminService.changeAdminStatus(requestAdminStatusDTO, authUser);
@@ -103,7 +103,7 @@ public class AdminServiceTest {
         //given
         Member requester = memberRepository.findByIntraId(authUser.getIntraId()).get();
         requester.setRole("USER");
-        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", 222222);
+        RequestAdminStatusDTO requestAdminStatusDTO = new RequestAdminStatusDTO("ADMIN", "jonhan");
 
         //when
         //then

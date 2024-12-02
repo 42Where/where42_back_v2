@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class RequestAdminStatusDTO {
     @NotBlank
     private String role;
-    @NotNull
-    private Integer intraId;
+    @NotBlank
+    private String intraName;
 }
