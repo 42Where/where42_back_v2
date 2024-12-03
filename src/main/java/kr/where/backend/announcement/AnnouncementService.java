@@ -12,21 +12,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private static final String CREATE_AT = "createAt";
     private final CharacterEncodingFilter characterEncodingFilter;
 
+    @Transactional
     public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, final AuthUser authUser) {
         final Announcement announcement = createAnnouncementDto.toEntity(authUser);
         final Announcement savedAnnouncement = announcementRepository.save(announcement);
         return ResponseAnnouncementDTO.of(savedAnnouncement);
     }
 
+    @Transactional
     public void delete(final Long announcementId) {
         final Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(AnnouncementException.NoAnnouncementException::new);
