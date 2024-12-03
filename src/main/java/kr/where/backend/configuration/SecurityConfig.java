@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -109,6 +110,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
+                                .requestMatchers(CorsUtils::isPreFlightRequest)
+                                .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/oauth2/**"))
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/swagger-ui/**"))
@@ -121,8 +124,12 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(requestMatcher.pattern("/v3/jwt/reissue"))
                                 .permitAll()
-                                .requestMatchers(CorsUtils::isPreFlightRequest)
-                                .permitAll()
+                                .requestMatchers(requestMatcher.pattern(HttpMethod.DELETE, "/v3/announcement/**"))
+                                .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern(HttpMethod.POST, "/v3/announcement"))
+                                .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern("/v3/admin/**"))
+                                .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )

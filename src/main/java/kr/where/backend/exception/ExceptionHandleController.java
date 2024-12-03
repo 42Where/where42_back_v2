@@ -1,5 +1,9 @@
 package kr.where.backend.exception;
 
+import kr.where.backend.admin.exception.AdminException;
+import kr.where.backend.announcement.exception.AnnouncementErrorCode;
+import kr.where.backend.announcement.exception.AnnouncementException;
+import kr.where.backend.announcement.exception.AnnouncementException.NoAnnouncementException;
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
@@ -16,6 +20,7 @@ import kr.where.backend.oauthtoken.exception.OAuthTokenException;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.version.exception.VersionException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -143,7 +148,9 @@ public class ExceptionHandleController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 
-    @ExceptionHandler({VersionException.NotAllowedOsException.class, VersionException.InvalidVersionFormatException.class})
+    @ExceptionHandler({VersionException.NotAllowedOsException.class,
+            VersionException.InvalidVersionFormatException.class,
+            AnnouncementException.InvalidArgumentException.class})
     public ResponseEntity<String> handleInvalidRequestArgument(final CustomException e) {
         log.error(e.toString());
 
@@ -159,5 +166,30 @@ public class ExceptionHandleController {
         return ResponseEntity
                 .status(HttpStatus.UPGRADE_REQUIRED)
                 .body(e.toString());
+    }
+
+    @ExceptionHandler(AdminException.permissionDeniedException.class)
+    public ResponseEntity<String> handlePermissionDenied(final CustomException e) {
+        log.error(e.toString());
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(e.toString());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDtoNotValidException() {
+        log.error(HttpResourceErrorCode.INVALID_REQUEST_BODY.getErrorMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(HttpResourceErrorCode.INVALID_REQUEST_BODY));
+    }
+
+    @ExceptionHandler(NoAnnouncementException.class)
+    public ResponseEntity<String> handleNoAnnouncementException() {
+        log.error(AnnouncementErrorCode.NO_ANNOUNCEMENTS.getErrorMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(AnnouncementErrorCode.NO_ANNOUNCEMENTS));
     }
 }
