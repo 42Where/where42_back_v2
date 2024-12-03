@@ -51,7 +51,7 @@ public class AdminServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "soohlee", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-        member.setRole("ADMIN");
+        member.updateRole("ADMIN");
         memberRepository.save(member);
     }
 
@@ -92,7 +92,7 @@ public class AdminServiceTest {
         memberRepository.save(member2);
 
         //given
-        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("ADMIN", "jonhan");
+        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("jonhan", "ADMIN");
 
         //when
         ResponseRoleStatusDTO responseRoleStatusDTO = adminService.changeAdminStatus(requestRoleStatusDTO);
@@ -115,7 +115,7 @@ public class AdminServiceTest {
 
         //given
         Member requester = memberRepository.findByIntraId(authUser.getIntraId()).get();
-        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("inValidRole", "jonhan");
+        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("jonhan", "inValidRole");
 
         //when
         //then

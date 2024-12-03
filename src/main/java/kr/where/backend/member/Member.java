@@ -1,6 +1,7 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.*;
+import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
@@ -21,6 +22,9 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Member {
+	private static final String ADMIN_ROLE = "ADMIN";
+	private static final String USER_ROLE = "USER";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
@@ -112,10 +116,6 @@ public class Member {
 		this.blackHole = !active;
 	}
 
-	public void setRole(final String role) {
-		this.role = role;
-	}
-
 	public void setInCluster(final Hane hane) {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 		this.inClusterUpdatedAt = LocalDateTime.now();
@@ -136,4 +136,14 @@ public class Member {
 		this.image = image;
 	}
 
+	public void updateRole(final String role) {
+		validateRole(role);
+		this.role = role;
+	}
+
+	private void validateRole(final String role) {
+		if (!role.equals(ADMIN_ROLE) && !role.equals(USER_ROLE)) {
+			throw new RequestException.BadRequestException();
+		}
+	}
 }
