@@ -19,8 +19,7 @@ public class AdminService {
     public ResponseRoleStatusDTO getRoleStatus(final AuthUser authUser) {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-
-        return new ResponseRoleStatusDTO(member.getIntraName(), member.getRole());
+        return ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole());
     }
 
     public ResponseRoleStatusDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
@@ -28,7 +27,7 @@ public class AdminService {
                 .orElseThrow(MemberException.NoMemberException::new);
         if (!targerMember.getRole().equals(requestRoleStatusDTO.getRole()))
             targerMember.updateRole(requestRoleStatusDTO.getRole());
-        return new ResponseRoleStatusDTO(targerMember.getIntraName(), targerMember.getRole());
+        return ResponseRoleStatusDTO.of(targerMember.getIntraName(), targerMember.getRole());
     }
 
     public ResponseRoleStatusListDTO getAllAdmin() {
