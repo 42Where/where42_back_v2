@@ -9,7 +9,7 @@ public enum JwtConstants {
     USER_NAME("intraName"),
     USER_ROLE("Cadet"),
     TOKEN_TYPE("type"),
-    ROLE_LEVEL("roles"),
+    ROLE_LEVEL("role"),
     REISSUE_URI("/v3/jwt/reissue");
 
     private final String value;

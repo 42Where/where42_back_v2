@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
         log.info("Principal에서 꺼낸 OAuth2User Name= {}", userProfile.getName());
-
+        log.info("authentication : {}", authentication.getAuthorities().toString());
         final CadetPrivacy cadetPrivacy = CadetPrivacy.of(userProfile.getAttributes());
         final Member member = memberService.findOne(cadetPrivacy.getId())
                 .orElseGet(
@@ -64,7 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("https://where42.kr")
+                                .fromUriString("https://dev.where42.kr")
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()

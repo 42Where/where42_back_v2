@@ -155,25 +155,31 @@ public class JwtService {
     public Authentication getAuthentication(final HttpServletRequest request, final String token) {
         // 토큰 복호화
         final Claims claims = parseToken(token);
-        log.info("[login] : 이름 {}, 토큰 {}", claims.get(JwtConstants.USER_NAME.getValue()), token);
+        log.info("[login] : 이름 {}, 토큰 {}, 롤 {}", claims.get(
+                JwtConstants.USER_NAME.getValue()),
+                token,
+                claims.get(JwtConstants.ROLE_LEVEL.getValue())
+        );
 
         validateTypeAndClaims(request, claims);
 
         // 클레임에서 권한 정보 가져오기
-        final Collection<? extends GrantedAuthority> authorities = Stream.of(
-                        claims.get(JwtConstants.ROLE_LEVEL.getValue()).toString())
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
+        final Collection<? extends GrantedAuthority> authorities
+                = Stream.of("ROLE_" + member.getRole())
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
         //Authentication 객체 생성
         return new UsernamePasswordAuthenticationToken(
-                new AuthUser(member.getIntraId(), member.getIntraName(), member.getDefaultGroupId()),
+                new AuthUser(member.getIntraId(),
+                        member.getIntraName(),
+                        member.getDefaultGroupId()),
                 "",
                 authorities);
     }
