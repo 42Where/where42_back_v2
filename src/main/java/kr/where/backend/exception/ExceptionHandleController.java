@@ -173,4 +173,11 @@ public class ExceptionHandleController {
                 .status(HttpStatus.FORBIDDEN)
                 .body(e.toString());
     }
+    @ExceptionHandler(NoAnnouncementException.class)
+    public ResponseEntity<String> handleNoAnnouncementException() {
+        log.error(AnnouncementErrorCode.NO_ANNOUNCEMENTS.getErrorMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(AnnouncementErrorCode.NO_ANNOUNCEMENTS));
+    }
 }
