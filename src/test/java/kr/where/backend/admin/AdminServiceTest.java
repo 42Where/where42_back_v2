@@ -92,13 +92,14 @@ public class AdminServiceTest {
         memberRepository.save(member2);
 
         //given
-        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("jonhan", "ADMIN");
+        RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("jonhan", "USER");
 
         //when
         ResponseRoleStatusDTO responseRoleStatusDTO = adminService.changeAdminStatus(requestRoleStatusDTO);
+        Member resMember = memberRepository.findByIntraName("jonhan").get();
 
         //then
-        assertEquals("ADMIN", responseRoleStatusDTO.getRole());
+        assertEquals("USER", resMember.getRole());
     }
 
     @DisplayName("유저 권한 변경 실패하는 테스트")

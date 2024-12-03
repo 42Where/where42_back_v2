@@ -10,9 +10,11 @@ import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AdminService {
     private static final String ADMIN_ROLE = "ADMIN";
     private final MemberRepository memberRepository;
@@ -23,6 +25,7 @@ public class AdminService {
         return ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole());
     }
 
+    @Transactional
     public ResponseRoleStatusDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
         Member targerMember = memberRepository.findByIntraName(requestRoleStatusDTO.getIntraName())
                 .orElseThrow(MemberException.NoMemberException::new);
