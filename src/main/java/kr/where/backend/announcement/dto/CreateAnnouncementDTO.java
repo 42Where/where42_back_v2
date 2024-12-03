@@ -15,10 +15,10 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class CreateAnnouncementDTO {
     @NotBlank
-    @Length(max = 200)
+    @Length(max = 100)
     private String title;
-    @Length(max = 200)
     @NotBlank
+    @Length(max = 100)
     private String content;
 
     public Announcement toEntity(final AuthUser authUser) {
