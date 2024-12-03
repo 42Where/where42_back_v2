@@ -8,13 +8,16 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CreateAnnouncementDTO {
     @NotBlank
+    @Length(max = 200)
     private String title;
+    @Length(max = 200)
     @NotBlank
     private String content;
 
