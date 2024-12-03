@@ -39,6 +39,8 @@ public class AnnouncementService {
 
     public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
         Page<Announcement> announcements;
+        if (pageNumber == null || size == null)
+            throw new AnnouncementException.InvalidArgumentException();
 
         try {
             announcements = announcementRepository.findAll(
