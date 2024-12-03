@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+    private static final String ADMIN_ROLE = "ADMIN";
     private final MemberRepository memberRepository;
 
     public ResponseRoleStatusDTO getRoleStatus(final AuthUser authUser) {
@@ -31,7 +32,7 @@ public class AdminService {
     }
 
     public ResponseRoleStatusListDTO getAllAdmin() {
-        final List<Member> members = memberRepository.findAllByRole("ADMIN");
+        final List<Member> members = memberRepository.findAllByRole(ADMIN_ROLE);
         final List<ResponseRoleStatusDTO> statuses = members.
                 stream().map(member -> ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole())).toList();
         return ResponseRoleStatusListDTO.of(statuses);
