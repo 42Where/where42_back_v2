@@ -30,4 +30,8 @@ public class Cluster {
         this.row = row;
         this.seat = seat;
     }
+
+    public void updateMember(final Member member) {
+        this.member = member;
+    }
 }
