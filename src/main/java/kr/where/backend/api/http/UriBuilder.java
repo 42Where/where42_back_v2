@@ -101,6 +101,7 @@ public class UriBuilder {
                 .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER.getValue(), page)
                 .queryParam(SORT.getValue(), "-end_at")
+                .queryParam("filter[active]", "true")
                 .build()
                 .toUri();
     }

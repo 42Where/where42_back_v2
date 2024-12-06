@@ -1,19 +1,25 @@
 package kr.where.backend.cluster;
 
+import kr.where.backend.api.IntraApiService;
+import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ClusterService {
 
     private final ClusterRepository clusterRepository;
+    private final IntraApiService intraApiService;
+    private final OAuthTokenService oauthTokenService;
+
+    private static final String ADMIN_TOKEN = "admin";
 
     @Transactional
     public void init() {
@@ -41,8 +47,23 @@ public class ClusterService {
         }
     }
 
-    public void updateClusterSeat(List<Cluster> clusterList) {
+    public List<kr.where.backend.api.json.Cluster> getClusterSeat() {
+        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
 
+        final List<kr.where.backend.api.json.Cluster> result = new ArrayList<>();
+        int page = 1;
+
+        while (true) {
+            final List<kr.where.backend.api.json.Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
+            result.addAll(loginMember);
+            if (loginMember.size() <= 99 || loginMember.get(99).getEnd_at() != null) {
+                break;
+            }
+            log.info("" + page);
+            page += 1;
+        }
+        log.info(String.valueOf(result.size()));
+        return result;
     }
 
 

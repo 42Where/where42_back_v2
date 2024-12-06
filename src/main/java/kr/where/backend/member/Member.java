@@ -3,6 +3,7 @@ package kr.where.backend.member;
 import jakarta.persistence.*;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
+import kr.where.backend.cluster.Cluster;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.api.json.hane.Hane;
