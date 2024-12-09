@@ -39,7 +39,7 @@ public class JoinService {
         );
 
         String refreshToken = jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName());
-        redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken, 1000L * 60 * 60 * 24 * 7);
+        redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
 
         return ResponseRefreshTokenDTO
                 .builder()

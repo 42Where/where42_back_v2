@@ -30,13 +30,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final RedisTokenService redisTokenService;
 
     @Override
-    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
+    public void onAuthenticationSuccess(final HttpServletRequest request,
+                                        final HttpServletResponse response,
                                         final Authentication authentication) throws IOException, ServletException {
 
         final UserProfile userProfile = (UserProfile) authentication.getPrincipal();
 
         log.info("Principal에서 꺼낸 OAuth2User Name= {}", userProfile.getName());
-        log.info("authentication : {}", authentication.getAuthorities().toString());
         final CadetPrivacy cadetPrivacy = CadetPrivacy.of(userProfile.getAttributes());
         final Member member = memberService.findOne(cadetPrivacy.getId())
                 .orElseGet(
@@ -44,28 +44,27 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 );
 
         //jwt 발행
-        log.info("JWT 토큰 발행 시작");
+        final String accessToken = jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
+        redisTokenService.saveAccessToken(member.getIntraId().toString(), accessToken);
 
-        String accessToken = jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
         CookieShop.bakedCookie(response,
                 JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                accessToken
-                ,
+                accessToken,
                 false
         );
-        redisTokenService.saveAccessToken(member.getIntraId().toString(), accessToken);
+
 
         if (member.isAgree()) {
-            String refreshToken = jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
+            final String refreshToken = jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
+            redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
             CookieShop.bakedCookie(response,
                     JwtConstants.REFRESH.getValue(),
                     REFRESH_EXPIRY,
-                    refreshToken
-                    ,
+                    refreshToken,
                     true
             );
-            redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken, 1000L * 60 * 60 * 24 * 7);
+
         }
 
         getRedirectStrategy()

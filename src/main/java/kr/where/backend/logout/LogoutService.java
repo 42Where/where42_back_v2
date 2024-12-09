@@ -15,6 +15,7 @@ public class LogoutService {
 
         redisTokenService.deleteTokens(authUser.getIntraId().toString());
         //여기서 블랙리스트 추가 해야할 듯 합니다.
+        redisTokenService.saveInBlackList(authUser.getIntraId().toString());
         return authUser.getIntraName();
     }
 }

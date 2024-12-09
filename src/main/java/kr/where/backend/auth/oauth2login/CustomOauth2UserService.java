@@ -35,8 +35,8 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         final Map<String, Object> attributes = oAuth2User.getAttributes();
         final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        Integer intraId = (Integer) attributes.get("id");
-        Member member = memberRepository.findByIntraId(intraId)
+        final Integer intraId = (Integer) attributes.get("id");
+        final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
 
         final Collection<? extends GrantedAuthority> authorities

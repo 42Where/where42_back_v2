@@ -63,11 +63,15 @@ public class JwtService {
                                                      final String refreshToken) {
 
         final Claims claims = parseToken(refreshToken);
-        Integer memberId = (Integer) claims.get("intraId");
-        String intraName = (String) claims.get("intraName");
+        final Integer memberId = (Integer) claims.get("intraId");
+        final String intraName = (String) claims.get("intraName");
 
-        String savedRefreshToken = redisTokenService.getRefreshToken("refreshToken" + memberId);
-        if (!refreshToken.equals(savedRefreshToken)) {
+        final String savedRefreshToken = redisTokenService.getRefreshToken("refreshToken" + memberId);
+        if (!Objects.equals(refreshToken, savedRefreshToken)) {
+            throw new JwtException.InvalidJwtToken();
+        }
+
+        if (redisTokenService.isRefreshTokenInBlackList(memberId.toString(), refreshToken)) {
             throw new JwtException.InvalidJwtToken();
         }
 
@@ -176,6 +180,10 @@ public class JwtService {
 
         // 클레임에서 권한 정보 가져오기
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
+
+        if (redisTokenService.isAccessTokenInBlackList(intraId.toString(), token)) {
+            throw new JwtException.InvalidJwtToken();
+        }
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberService.findOne(intraId)
