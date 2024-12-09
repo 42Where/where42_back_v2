@@ -8,6 +8,7 @@ import kr.where.backend.auth.filter.JwtConstants;
 import kr.where.backend.auth.oauth2login.cookie.CookieShop;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
+import kr.where.backend.redisToken.RedisTokenService;
 import kr.where.backend.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static final int REFRESH_EXPIRY = 14 * 24 * 60 * 60;
     private final MemberService memberService;
     private final JwtService jwtService;
+    private final RedisTokenService redisTokenService;
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
@@ -44,21 +46,28 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //jwt 발행
         log.info("JWT 토큰 발행 시작");
 
+        String accessToken = jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
         CookieShop.bakedCookie(response,
                 JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin()),
+                accessToken
+                ,
                 false
         );
+        redisTokenService.saveAccessToken(member.getIntraId().toString(), accessToken);
 
         if (member.isAgree()) {
+            String refreshToken = jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
             CookieShop.bakedCookie(response,
                     JwtConstants.REFRESH.getValue(),
                     REFRESH_EXPIRY,
-                    jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin()),
+                    refreshToken
+                    ,
                     true
             );
+            redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken, 1000L * 60 * 60 * 24 * 7);
         }
+
         getRedirectStrategy()
                 .sendRedirect(
                         request,

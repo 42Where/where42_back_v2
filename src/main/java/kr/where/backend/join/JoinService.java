@@ -9,8 +9,8 @@ import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +21,7 @@ public class JoinService {
     private final MemberService memberService;
     private final HaneApiService haneApiService;
     private final JwtService jwtService;
+    private final RedisTokenService redisTokenService;
 
     @Transactional
     public ResponseRefreshTokenDTO join(final AuthUser authUser) {
@@ -37,11 +38,12 @@ public class JoinService {
                         .getHaneInfo(member.getIntraName(), TOKEN_HANE)
         );
 
+        String refreshToken = jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName());
+        redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken, 1000L * 60 * 60 * 24 * 7);
+
         return ResponseRefreshTokenDTO
                 .builder()
-                .refreshToken(
-                        jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName())
-                )
+                .refreshToken(refreshToken)
                 .build();
     }
 }
