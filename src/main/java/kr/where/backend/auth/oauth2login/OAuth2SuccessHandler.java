@@ -54,7 +54,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 false
         );
 
-
         if (member.isAgree()) {
             final String refreshToken = jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
             redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
@@ -64,15 +63,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     refreshToken,
                     true
             );
-
         }
 
-        getRedirectStrategy()
-                .sendRedirect(
+        getRedirectStrategy().sendRedirect(
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("https://where42.kr")
+                                .fromUriString("https://dev.where42.kr")
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()

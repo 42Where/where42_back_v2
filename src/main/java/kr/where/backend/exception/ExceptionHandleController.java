@@ -143,8 +143,8 @@ public class ExceptionHandleController {
 
     @ExceptionHandler(RuntimeException.class)
     @RequestLogging(level = LogLevel.ERROR)
-    public ResponseEntity<String> handleNoResourceException() {
-        log.error(HttpResourceErrorCode.INTERNAL_SERVER_ERROR.getErrorMessage());
+    public ResponseEntity<String> handleNoResourceException(final RuntimeException e) {
+        log.error(HttpResourceErrorCode.INTERNAL_SERVER_ERROR.getErrorMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자에게 요청하세요.");
     }
 

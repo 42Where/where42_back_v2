@@ -11,11 +11,10 @@ import org.springframework.stereotype.Service;
 public class LogoutService {
     private final RedisTokenService redisTokenService;
     public String logout(final AuthUser authUser) {
-        SecurityContextHolder.clearContext();
-
-        redisTokenService.deleteTokens(authUser.getIntraId().toString());
         //여기서 블랙리스트 추가 해야할 듯 합니다.
         redisTokenService.saveInBlackList(authUser.getIntraId().toString());
+        redisTokenService.deleteTokens(authUser.getIntraId().toString());
+        SecurityContextHolder.clearContext();
         return authUser.getIntraName();
     }
 }
