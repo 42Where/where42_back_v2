@@ -14,4 +14,7 @@ public interface ClusterRepository extends JpaRepository<Cluster, Long> {
     @Modifying
     @Query("UPDATE Cluster c SET c.member = null")
     void updateAllMembersToNull();
+
+
+    Optional<Cluster> findByClusterStartingWithAndMemberIsNotNull(final String prefix);
 }

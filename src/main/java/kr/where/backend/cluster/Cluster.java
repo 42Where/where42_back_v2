@@ -12,8 +12,8 @@ public class Cluster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cluster_id", nullable = false)
-    private Long cluster_id;
+    @Column(nullable = false)
+    private Long id;
 
     private String cluster;
 
