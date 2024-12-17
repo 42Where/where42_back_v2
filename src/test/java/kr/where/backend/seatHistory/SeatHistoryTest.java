@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,21 +32,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SeatHistoryTest {
 
     @Autowired
-    MemberService memberService;
+    private MemberService memberService;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    SeatHistoryRepository seatHistoryRepository;
+    private SeatHistoryRepository seatHistoryRepository;
 
     @Autowired
-    SeatHistoryService seatHistoryService;
+    private SeatHistoryService seatHistoryService;
+
+    private AuthUser authUser;
 
     private final static Integer CAMPUS_ID = 29;
     @BeforeEach
     void setUp() {
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+        authUser = new AuthUser(12345, "suhwpark", 1L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
     }
@@ -57,13 +63,15 @@ public class SeatHistoryTest {
         String seat = "c1r2s1";
 
         //when
-        Long id = seatHistoryService(seat, 111111);
+        Long id = seatHistoryService.create(seat, 12345);
 
         //then
         SeatHistory seatHistory = seatHistoryRepository.findById(id)
                 .orElseThrow(SeatHistoryException.NoSeatHistoryException::new);
-        Member member = memberRepository.findByIntraId(11111).orElseThrow(MemberException.NoMemberException::new)
-        List<SeatHistory> seatHistoryList = member.getSeatHistory();
+        Member member = memberRepository.findByIntraId(12345)
+                .orElseThrow(MemberException.NoMemberException::new);
+
+        List<SeatHistory> seatHistoryList = member.getSeatHistories();
 
         assertThat(seatHistoryList.contains(seatHistory)).isTrue();
     }
