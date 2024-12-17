@@ -57,7 +57,7 @@ public class SeatHistoryTest {
     }
 
     @Test
-    @DisplayName("맴버가 자리에 로그인 했을 때, 로그인 한 자리 정보 추가")
+    @DisplayName("맴버가 자리에 로그인 했을 때, 로그인 한 자리 정보 추가하는 test")
     void createSeatHistory() {
         //given
         String seat = "c1r2s1";
@@ -76,4 +76,25 @@ public class SeatHistoryTest {
         assertThat(seatHistoryList.contains(seatHistory)).isTrue();
     }
 
+    @Test
+    @DisplayName("사용했던 자리면, 사용한 수를 증가하고 처음 앉는 자리라면 새로 만들어서 기록하는 test")
+    void createOrIncreaseHistory() {
+        //given
+        List<String> seats = List.of("c1r1s1", "cx2r2s4", "c1r5s7", "c6r5s9", "c2r2s2", "c1r1s1");
+
+        //when
+        for (String seat : seats) {
+            seatHistoryService.report(seat, 12345);
+        }
+
+        //then
+        Member member = memberRepository.findByIntraId(12345).orElseThrow(MemberException.NoMemberException::new);
+
+        assertThat(member.getSeatHistories().size()).isEqualTo(5);
+        SeatHistory seatHistory = member.getSeatHistories().stream()
+                .filter(s -> "c1r1s1".equals(s.getImac()))
+                .findFirst()
+                .orElse(null);
+        assertThat(seatHistory.getCount()).isEqualTo(2);
+    }
 }
