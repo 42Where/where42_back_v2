@@ -29,9 +29,9 @@ public class ClusterController implements ClusterApiDocs {
     }
 
     @GetMapping("/{cluster}")
-    public ResponseEntity<ResponseClusterListDTO> getCluster(@PathVariable("cluster") String cluster,
+    public ResponseEntity<ResponseClusterListDTO> getCluster(@PathVariable("cluster") final String cluster,
                                                              @AuthUserInfo final AuthUser authUser) {
-        final ResponseClusterListDTO responseClusterListDTO = new ResponseClusterListDTO();
+        final ResponseClusterListDTO responseClusterListDTO = clusterService.getLoginMember(authUser, cluster);
         return ResponseEntity.status(HttpStatus.OK).body(responseClusterListDTO);
     }
 }

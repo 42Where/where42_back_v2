@@ -24,7 +24,7 @@ public interface ClusterApiDocs {
             }
     )
     @GetMapping("/{cluster}")
-    public ResponseEntity<ResponseClusterListDTO> getCluster(@PathVariable("cluster") String cluster, @AuthUserInfo final AuthUser authUser);
+    public ResponseEntity<ResponseClusterListDTO> getCluster(@PathVariable("cluster") final String cluster, @AuthUserInfo final AuthUser authUser);
 
     @Operation(summary = "initCluster API", description = "DB의 Cluster 데이터 모두 초기화",
             parameters = {

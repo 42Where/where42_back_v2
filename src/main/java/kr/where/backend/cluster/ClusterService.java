@@ -1,12 +1,18 @@
 package kr.where.backend.cluster;
 
 import kr.where.backend.api.IntraApiService;
+import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.cluster.dto.ResponseClusterDTO;
+import kr.where.backend.cluster.dto.ResponseClusterListDTO;
+import kr.where.backend.cluster.exception.ClusterException;
+import kr.where.backend.group.GroupMemberRepository;
+import kr.where.backend.location.Location;
+import kr.where.backend.location.LocationRepository;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.antlr.v4.runtime.misc.Triple;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +28,8 @@ public class ClusterService {
     private final IntraApiService intraApiService;
     private final OAuthTokenService oauthTokenService;
     private final MemberRepository memberRepository;
-
-    private static final String ADMIN_TOKEN = "admin";
+    private final LocationRepository locationRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
     public void init() {
@@ -45,67 +51,47 @@ public class ClusterService {
         for (int r = 1; r <= clusterLayout.getRow(); r++) {
             for (int s = 1; s <= clusterLayout.getSeat(); s++) {
                 Cluster cluster = new Cluster(String.valueOf(c), r, s);
-                if (!clusterRepository.findByClusterAndRowAndSeat(String.valueOf(c), r, s).isPresent())
+                if (!clusterRepository.findByClusterAndRowIndexAndSeat(String.valueOf(c), r, s).isPresent())
                     clusterRepository.save(cluster);
             }
         }
     }
 
-    @Transactional
-    public List<kr.where.backend.api.json.Cluster> getClusterSeat() {
-        final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
+    public ResponseClusterListDTO getLoginMember(final AuthUser authUser, final String cluster) {
+        validateCluster(cluster);
+        final List<Location> locations = locationRepository.findByImacLocationStartingWith(cluster);
 
-        final List<kr.where.backend.api.json.Cluster> result = new ArrayList<>();
-        int page = 1;
+        final List<ResponseClusterDTO> responseClusterDTOS = new ArrayList<>();
+        for (Location location : locations) {
+            final List<Member> members = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
 
-        while (true) {
-            final List<kr.where.backend.api.json.Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
-            result.addAll(loginMember);
-            if (loginMember.size() <= 99 || loginMember.get(99).getEnd_at() != null) {
-                break;
-            }
-            log.info("" + page);
-            page += 1;
+            responseClusterDTOS.add(new ResponseClusterDTO(
+                    location.getMember().getId(),
+                    location.getMember().getIntraName(),
+                    location.getMember().getImage(),
+                    location.getImacLocation(),
+                    members.contains(location.getMember()))
+            );
         }
-        log.info(String.valueOf(result.size()));
-
-        //업데이트
-        updateCluster(result);
-
-        return result;
+        return ResponseClusterListDTO.of(responseClusterDTOS);
     }
 
-    private void updateCluster(final List<kr.where.backend.api.json.Cluster> result) {
-        clusterRepository.updateAllMembersToNull(); //초기화
+    private void validateCluster(final String cluster) {
+        final String CLUSTER_REGEX = "^c(x)?\\d+$";
 
-        for (kr.where.backend.api.json.Cluster activeSeat : result) {
-            final Triple<String, Integer, Integer> parsedSeat = parsingSeat(activeSeat.getUser().getLocation());
-
-            final Optional<Cluster> cluster = clusterRepository.findByClusterAndRowAndSeat(parsedSeat.a, parsedSeat.b, parsedSeat.c);
-            if (cluster.isEmpty()) //존재하지 않는 자리. ex)"c1r21s3"
-                continue;
-            final Optional<Member> member = memberRepository.findByIntraId(activeSeat.getUser().getId());
-            if (member.isEmpty()) //없는 멤버. ex)"mamuraka"
-                continue;
-            cluster.get().updateMember(member.get());
-            clusterRepository.save(cluster.get());
+        //포맷형식이 맞는가? ex: "cx1" or "c1"
+        if (!cluster.matches(CLUSTER_REGEX)) {
+            throw new ClusterException.InvalidPathVariable();
         }
-    }
 
-    private Triple<String, Integer, Integer> parsingSeat(final String location) {
-
-        int start = 1;
-        int end = location.indexOf('r');
-        String c = location.substring(start, end);
-
-        start = end + 1;
-        end = location.indexOf('s');
-        int r = Integer.parseInt(location.substring(start, end));
-
-        start = end + 1;
-        end = location.length();
-        int s = Integer.parseInt(location.substring(start, end));
-
-        return new Triple<>(c, r, s);
+        //클러스터 숫자범위가 유효한가? ex: "c7"은 에러이다.
+        final String area = cluster.replaceAll("\\d", "");
+        final int number = Integer.parseInt(cluster.replaceAll("[^\\d]", ""));
+        if (area.equals("c") && !(number >= 1 && number <= 6)) {
+            throw new ClusterException.InvalidPathVariable();
+        }
+        if (area.equals("cx") && !(number >= 1 && number <= 2)) {
+            throw new ClusterException.InvalidPathVariable();
+        }
     }
 }

@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseClusterListDTO {
     private List<ResponseClusterDTO> members;
+
+    public static ResponseClusterListDTO of(List<ResponseClusterDTO> members) {
+        return new ResponseClusterListDTO(members);
+    }
 }

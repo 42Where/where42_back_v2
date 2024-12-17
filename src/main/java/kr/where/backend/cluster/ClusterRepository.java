@@ -9,12 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface ClusterRepository extends JpaRepository<Cluster, Long> {
-    Optional<Cluster> findByClusterAndRowAndSeat(String c, Integer r, Integer s);
+    Optional<Cluster> findByClusterAndRowIndexAndSeat(String c, Integer r, Integer s);
 
     @Modifying
     @Query("UPDATE Cluster c SET c.member = null")
     void updateAllMembersToNull();
-
-
-    Optional<Cluster> findByClusterStartingWithAndMemberIsNotNull(final String prefix);
 }

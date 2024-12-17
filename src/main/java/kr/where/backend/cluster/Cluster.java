@@ -3,11 +3,15 @@ package kr.where.backend.cluster;
 import jakarta.persistence.*;
 import kr.where.backend.member.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
 public class Cluster {
 
     @Id
@@ -17,7 +21,7 @@ public class Cluster {
 
     private String cluster;
 
-    private Integer row;
+    private Integer rowIndex;
 
     private Integer seat;
 
@@ -27,7 +31,7 @@ public class Cluster {
 
     public Cluster(String cluster, Integer row, Integer seat) {
         this.cluster = cluster;
-        this.row = row;
+        this.rowIndex = row;
         this.seat = seat;
     }
 
