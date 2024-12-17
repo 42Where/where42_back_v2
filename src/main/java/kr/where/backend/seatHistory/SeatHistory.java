@@ -18,7 +18,7 @@ public class SeatHistory {
     private String imac;
 
     private Long count;
-정
+
     @ManyToOne
     @JoinColumn(name = "intra_id")
     private Member member;
