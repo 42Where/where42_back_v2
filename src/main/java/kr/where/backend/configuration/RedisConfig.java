@@ -1,6 +1,5 @@
 package kr.where.backend.configuration;
 
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
