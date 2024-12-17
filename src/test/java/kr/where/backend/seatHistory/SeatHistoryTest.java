@@ -3,15 +3,21 @@ package kr.where.backend.seatHistory;
 import com.fasterxml.classmate.MemberResolver;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.seatHistory.exception.SeatHistoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +41,7 @@ public class SeatHistoryTest {
 
     @Autowired
     SeatHistoryService seatHistoryService;
+
     private final static Integer CAMPUS_ID = 29;
     @BeforeEach
     void setUp() {
@@ -53,8 +60,12 @@ public class SeatHistoryTest {
         Long id = seatHistoryService(seat, 111111);
 
         //then
-        SeatHistory seatHistory = seatHistoryRepository.findById(id);
+        SeatHistory seatHistory = seatHistoryRepository.findById(id)
+                .orElseThrow(SeatHistoryException.NoSeatHistoryException::new);
+        Member member = memberRepository.findByIntraId(11111).orElseThrow(MemberException.NoMemberException::new)
         List<SeatHistory> seatHistoryList = member.getSeatHistory();
+
         assertThat(seatHistoryList.contains(seatHistory)).isTrue();
     }
+
 }
