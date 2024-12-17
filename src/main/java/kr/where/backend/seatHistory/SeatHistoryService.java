@@ -20,8 +20,9 @@ public class SeatHistoryService {
                 .orElseThrow(MemberException.NoMemberException::new);
 
         final SeatHistory seatHistory = new SeatHistory(seat, member);
-        member.getSeatHistories().add(seatHistory);
+        seatHistoryRepository.save(seatHistory);
 
+        member.getSeatHistories().add(seatHistory);
         return seatHistory.getId();
     }
 }
