@@ -18,8 +18,18 @@ public class SeatHistory {
     private String imac;
 
     private Long count;
-
+정
     @ManyToOne
     @JoinColumn(name = "intra_id")
     private Member member;
+
+    public SeatHistory(final String imac, final Member member) {
+        this.imac = imac;
+        this.count = 1L;
+        this.member = member;
+    }
+
+    public void increaseCount() {
+        this.count++;
+    }
 }
