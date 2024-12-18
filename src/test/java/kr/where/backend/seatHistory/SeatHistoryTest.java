@@ -8,6 +8,7 @@ import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.seatHistory.dto.ResponseHistoryDTO;
 import kr.where.backend.seatHistory.exception.SeatHistoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,9 +52,11 @@ public class SeatHistoryTest {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(12345, "suhwpark", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+
+        memberService.createAgreeMember(
+                new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID),
+                Hane.create("IN")
+        );
     }
 
     @Test
@@ -97,5 +100,26 @@ public class SeatHistoryTest {
                 .findFirst()
                 .orElse(null);
         assertThat(seatHistory.getCount()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("가장 많이 사용하는 자리 3곳과 총 사용자리 대비 퍼센트 구하는 test")
+    void getPopularSeatHistories() {
+        //given
+        List<String> seats = List.of("c1r1s1", "cx2r2s4", "c1r5s7", "c1r1s1", "cx2r2s4", "c1r1s1");
+        for (String seat : seats) {
+            seatHistoryService.report(seat, 12345);
+        }
+        //when
+        List<ResponseHistoryDTO> seatHistories = seatHistoryService.getPopularSeatHistory(authUser.getIntraId());
+
+        //then
+        assertThat(seatHistories.size()).isEqualTo(3);
+        assertThat(seatHistories.get(0).getImac()).isEqualTo("c1r1s1");
+        assertThat(seatHistories.get(0).getPercent()).isEqualTo(50.0);
+        assertThat(seatHistories.get(1).getImac()).isEqualTo("cx2r2s4");
+        assertThat(seatHistories.get(1).getPercent()).isEqualTo(33.3);
+        assertThat(seatHistories.get(2).getImac()).isEqualTo("c1r5s7");
+        assertThat(seatHistories.get(2).getPercent()).isEqualTo(16.7);
     }
 }
