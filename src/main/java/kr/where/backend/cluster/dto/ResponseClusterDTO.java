@@ -16,6 +16,8 @@ public class ResponseClusterDTO {
     private int seat;
     private Boolean isFriend;
 
+    private static final String LOCATION_SPLIT_REGEX = "r|s";
+
     public ResponseClusterDTO (final Integer intraId,
                                final String intraName,
                                final String image,
@@ -29,7 +31,7 @@ public class ResponseClusterDTO {
     }
 
     private void setLocation(final String location) {
-        final String[] parsedLocation = location.split("r|s");
+        final String[] parsedLocation = location.split(LOCATION_SPLIT_REGEX);
 
         this.cluster = parsedLocation[0];
         this.row = Integer.parseInt(parsedLocation[1]);
