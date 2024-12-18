@@ -71,10 +71,10 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedAt = LocalDateTime.now();
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<GroupMember> groupMembers = new ArrayList<>();
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<SeatHistory> seatHistories = new ArrayList<>();
 	public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
 		this.intraId = cadetPrivacy.getId();
