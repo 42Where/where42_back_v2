@@ -74,6 +74,7 @@ public class SeatHistoryTest {
         List<SeatHistory> seatHistoryList = member.getSeatHistories();
 
         assertThat(seatHistoryList.contains(seatHistory)).isTrue();
+        assertThat(seatHistoryList.size()).isEqualTo(1);
     }
 
     @Test
