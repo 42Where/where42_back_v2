@@ -7,10 +7,12 @@ import java.util.List;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.cluster.dto.ResponseClusterDTO;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class ClusterInfoServiceTest {
+public class ClusterServiceTest {
 
     @Autowired
     private ClusterService clusterService;
@@ -79,8 +81,25 @@ public class ClusterInfoServiceTest {
     @Rollback
     void getLoginMember() {
         final ResponseClusterListDTO responseClusterListDTO = clusterService.getLoginMember(authUser, "c1");
+        //로그인된 아이맥 개수 확인
+        assertEquals(2, responseClusterListDTO.getMembers().size());
 
-        assertEquals(1, responseClusterListDTO.getMembers().size());
-        assertEquals("soohlee", responseClusterListDTO.getMembers().get(0).getIntraName());
+        ResponseClusterDTO responseClusterDTO_1 = responseClusterListDTO.getMembers().stream()
+                .filter(responseClusterDTO -> "soohlee".equals(responseClusterDTO.getIntraName())) // "soohlee"를 찾기 위한 필터
+                .findFirst() // 첫 번째로 찾은 멤버를 반환
+                .orElse(null); // 없으면 null을 반환
+        // "soohlee"라는 이름을 가진 멤버가 존재하면, 그 멤버의 정보가 정확한지 검증
+        Assertions.assertNotNull(responseClusterDTO_1, "responseClusterDTO is null");
+        // 멤버의 정보가 예상대로인지 확인
+        assertEquals("soohlee", responseClusterDTO_1.getIntraName());
+
+        ResponseClusterDTO responseClusterDTO_2 = responseClusterListDTO.getMembers().stream()
+                .filter(responseClusterDTO -> "jonhan".equals(responseClusterDTO.getIntraName())) // "soohlee"를 찾기 위한 필터
+                .findFirst() // 첫 번째로 찾은 멤버를 반환
+                .orElse(null); // 없으면 null을 반환
+        // "soohlee"라는 이름을 가진 멤버가 존재하면, 그 멤버의 정보가 정확한지 검증
+        Assertions.assertNotNull(responseClusterDTO_2, "responseClusterDTO is null");
+        // 멤버의 정보가 예상대로인지 확인
+        assertEquals("jonhan", responseClusterDTO_2.getIntraName());
     }
 }
