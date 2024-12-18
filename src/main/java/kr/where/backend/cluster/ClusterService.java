@@ -1,6 +1,5 @@
 package kr.where.backend.cluster;
 
-import kr.where.backend.api.IntraApiService;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.cluster.dto.ResponseClusterDTO;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
@@ -9,8 +8,6 @@ import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberRepository;
-import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,11 +22,14 @@ import java.util.*;
 public class ClusterService {
 
     private final ClusterRepository clusterRepository;
-    private final IntraApiService intraApiService;
-    private final OAuthTokenService oauthTokenService;
-    private final MemberRepository memberRepository;
     private final LocationRepository locationRepository;
     private final GroupMemberRepository groupMemberRepository;
+
+    private final static String CLUSTER_REGEX = "^c(x)?\\d+$";
+    private static final int CLUSTER_C_MIN = 1;
+    private static final int CLUSTER_C_MAX = 6;
+    private static final int CLUSTER_CX_MIN = 1;
+    private static final int CLUSTER_CX_MAX = 2;
 
     @Transactional
     public void init() {
@@ -44,7 +44,7 @@ public class ClusterService {
         for (int cluster = 1; cluster <= 6; cluster++) {
             initClusterSeat(cluster, initClusterSeat.get(cluster));
         }
-        //x 클러스터 초기화
+        //x클러스터 초기화 코드 추가해야함.
     }
 
     private void initClusterSeat(int c, ClusterLayout clusterLayout) {
@@ -66,7 +66,7 @@ public class ClusterService {
             final List<Member> members = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
 
             responseClusterDTOS.add(new ResponseClusterDTO(
-                    location.getMember().getId(),
+                    location.getMember().getIntraId(),
                     location.getMember().getIntraName(),
                     location.getMember().getImage(),
                     location.getImacLocation(),
@@ -76,22 +76,43 @@ public class ClusterService {
         return ResponseClusterListDTO.of(responseClusterDTOS);
     }
 
-    private void validateCluster(final String cluster) {
-        final String CLUSTER_REGEX = "^c(x)?\\d+$";
 
+    private void validateCluster(final String cluster) {
         //포맷형식이 맞는가? ex: "cx1" or "c1"
-        if (!cluster.matches(CLUSTER_REGEX)) {
+        if (!isValidFormat(cluster)) {
             throw new ClusterException.InvalidPathVariable();
         }
+
+        //"c1"에서 "c" 추출
+        final String prefix = extractPrefix(cluster);
+        //"c1"에서 "1"을 추출
+        final int clusterNumber = extractClusterNumber(cluster);
 
         //클러스터 숫자범위가 유효한가? ex: "c7"은 에러이다.
-        final String area = cluster.replaceAll("\\d", "");
-        final int number = Integer.parseInt(cluster.replaceAll("[^\\d]", ""));
-        if (area.equals("c") && !(number >= 1 && number <= 6)) {
+        if (!isValidClusterRange(prefix, clusterNumber)) {
             throw new ClusterException.InvalidPathVariable();
         }
-        if (area.equals("cx") && !(number >= 1 && number <= 2)) {
-            throw new ClusterException.InvalidPathVariable();
+    }
+
+    private boolean isValidFormat(final String cluster) {
+        return cluster.matches(CLUSTER_REGEX);
+    }
+
+    private String extractPrefix(final String cluster) {
+        return cluster.replaceAll("\\d", "");
+    }
+
+    private int extractClusterNumber(final String cluster) {
+        return Integer.parseInt(cluster.replaceAll("[^\\d]", ""));
+    }
+
+    private boolean isValidClusterRange(final String prefix, final int clusterNumber) {
+        if ("c".equals(prefix)) {
+            return clusterNumber >= CLUSTER_C_MIN && clusterNumber <= CLUSTER_C_MAX;
         }
+        if ("cx".equals(prefix)) {
+            return clusterNumber >= CLUSTER_CX_MIN && clusterNumber <= CLUSTER_CX_MAX;
+        }
+        return false;
     }
 }

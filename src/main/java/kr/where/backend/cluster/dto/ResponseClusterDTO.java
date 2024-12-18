@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class ResponseClusterDTO {
-    private Long memberId;
+    private Integer intraId;
     private String intraName;
     private String image;
     private String cluster;
@@ -16,12 +16,12 @@ public class ResponseClusterDTO {
     private int seat;
     private Boolean isFriend;
 
-    public ResponseClusterDTO (final Long memberId,
+    public ResponseClusterDTO (final Integer intraId,
                                final String intraName,
                                final String image,
                                final String location,
                                final Boolean isFriend) {
-        this.memberId = memberId;
+        this.intraId = intraId;
         this.intraName = intraName;
         this.image = image;
         this.isFriend = isFriend;
