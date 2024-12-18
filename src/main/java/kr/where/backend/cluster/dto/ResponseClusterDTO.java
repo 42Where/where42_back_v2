@@ -37,4 +37,12 @@ public class ResponseClusterDTO {
         this.row = Integer.parseInt(parsedLocation[1]);
         this.seat = Integer.parseInt(parsedLocation[2]);
     }
+
+    public static ResponseClusterDTO of(final Integer intraId,
+                                        final String intraName,
+                                        final String image,
+                                        final String location,
+                                        final Boolean isFriend) {
+        return new ResponseClusterDTO(intraId, intraName, image, location, isFriend);
+    }
 }
