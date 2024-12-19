@@ -16,7 +16,7 @@ public enum ClusterLayout {
         return seat;
     }
 
-    ClusterLayout(int row, int seat) {
+    ClusterLayout(final int row, final int seat) {
         this.row = row;
         this.seat = seat;
     }
