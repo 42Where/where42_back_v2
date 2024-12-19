@@ -6,7 +6,6 @@ import kr.where.backend.cluster.dto.ResponseClusterListDTO;
 import kr.where.backend.cluster.swagger.ClusterApiDocs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +30,6 @@ public class ClusterController implements ClusterApiDocs {
     @GetMapping("/{cluster}")
     public ResponseEntity<ResponseClusterListDTO> getCluster(@PathVariable("cluster") final String cluster,
                                                              @AuthUserInfo final AuthUser authUser) {
-        final ResponseClusterListDTO responseClusterListDTO = clusterService.getLoginMember(authUser, cluster);
-        return ResponseEntity.status(HttpStatus.OK).body(responseClusterListDTO);
+        return ResponseEntity.ok(clusterService.getLoginMember(authUser, cluster));
     }
 }
