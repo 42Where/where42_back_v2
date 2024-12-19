@@ -58,7 +58,6 @@ public class ClusterServiceTest {
                 .cluster("c1")
                 .rowIndex(1)
                 .seat(2)
-                .member(member)
                 .build());
 
         Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
@@ -73,7 +72,7 @@ public class ClusterServiceTest {
                 .cluster("c1")
                 .rowIndex(4)
                 .seat(5)
-                .member(member2).build());
+                .build());
     }
 
     @DisplayName("imac에 로그인되어 있는 멤버를 조회하는 기능 테스트")

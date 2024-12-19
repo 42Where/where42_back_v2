@@ -1,7 +1,6 @@
 package kr.where.backend.cluster;
 
 import jakarta.persistence.*;
-import kr.where.backend.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,17 +24,9 @@ public class Cluster {
 
     private Integer seat;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id") // `Member`의 외래 키
-    private Member member;
-
-    public Cluster(String cluster, Integer row, Integer seat) {
+    public Cluster(final String cluster, final Integer row, final Integer seat) {
         this.cluster = cluster;
         this.rowIndex = row;
         this.seat = seat;
-    }
-
-    public void updateMember(final Member member) {
-        this.member = member;
     }
 }
