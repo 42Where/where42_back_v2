@@ -25,17 +25,6 @@ public class ClusterService {
     private final LocationRepository locationRepository;
     private final GroupMemberRepository groupMemberRepository;
 
-    private final static String CLUSTER_REGEX = "^c(x)?\\d+$";
-    private final static String ALL_NUMBER = "\\d";
-    private final static String ALL_STRING = "[^\\d]";
-    private final static String EMPTY_STRING = "";
-    private final static String CLUSTER_C = "c";
-    private final static String CLUSTER_CX = "cx";
-    private static final int CLUSTER_C_MIN = 1;
-    private static final int CLUSTER_C_MAX = 6;
-    private static final int CLUSTER_CX_MIN = 1;
-    private static final int CLUSTER_CX_MAX = 2;
-
     @Transactional
     public void init() {
         Map<Integer, ClusterLayout> initClusterSeat = new HashMap<>();
@@ -46,7 +35,7 @@ public class ClusterService {
         initClusterSeat.put(5, ClusterLayout.CLUSTER_5);
         initClusterSeat.put(6, ClusterLayout.CLUSTER_6);
         clusterRepository.deleteAll();
-        for (int cluster = CLUSTER_C_MIN; cluster <= CLUSTER_C_MAX; cluster++) {
+        for (int cluster = ClusterConstant.CLUSTER_C.getMinValue(); cluster <= ClusterConstant.CLUSTER_C.getMaxValue(); cluster++) {
             initClusterSeat(cluster, initClusterSeat.get(cluster));
         }
         //x클러스터 초기화 코드 추가해야함.
@@ -55,7 +44,7 @@ public class ClusterService {
     private void initClusterSeat(final int c, final ClusterLayout clusterLayout) {
         for (int r = 1; r <= clusterLayout.getRow(); r++) {
             for (int s = 1; s <= clusterLayout.getSeat(); s++) {
-                Cluster cluster = new Cluster(String.valueOf(c), r, s);
+                final Cluster cluster = new Cluster(String.valueOf(c), r, s);
                 if (clusterRepository.findByClusterAndRowIndexAndSeat(String.valueOf(c), r, s).isEmpty())
                     clusterRepository.save(cluster);
             }
@@ -102,23 +91,23 @@ public class ClusterService {
     }
 
     private boolean isValidFormat(final String clusterZone) {
-        return clusterZone.matches(CLUSTER_REGEX);
+        return clusterZone.matches(ClusterConstant.CLUSTER_REGEX.getStringValue());
     }
 
     private String extractPrefix(final String clusterZone) {
-        return clusterZone.replaceAll(ALL_NUMBER, EMPTY_STRING);
+        return clusterZone.replaceAll(ClusterConstant.ALL_NUMBER.getStringValue(), ClusterConstant.EMPTY_STRING.getStringValue());
     }
 
     private int extractClusterNumber(final String clusterZone) {
-        return Integer.parseInt(clusterZone.replaceAll(ALL_STRING, EMPTY_STRING));
+        return Integer.parseInt(clusterZone.replaceAll(ClusterConstant.ALL_STRING.getStringValue(), ClusterConstant.EMPTY_STRING.getStringValue()));
     }
 
     private boolean isValidClusterRange(final String prefix, final int clusterNumber) {
-        if (Objects.equals(CLUSTER_C, prefix)) {
-            return clusterNumber >= CLUSTER_C_MIN && clusterNumber <= CLUSTER_C_MAX;
+        if (Objects.equals(ClusterConstant.CLUSTER_C.getStringValue(), prefix)) {
+            return clusterNumber >= ClusterConstant.CLUSTER_C.getMinValue() && clusterNumber <= ClusterConstant.CLUSTER_C.getMaxValue();
         }
-        if (Objects.equals(CLUSTER_CX, prefix)) {
-            return clusterNumber >= CLUSTER_CX_MIN && clusterNumber <= CLUSTER_CX_MAX;
+        if (Objects.equals(ClusterConstant.CLUSTER_CX.getStringValue(), prefix)) {
+            return clusterNumber >= ClusterConstant.CLUSTER_CX.getMinValue() && clusterNumber <= ClusterConstant.CLUSTER_CX.getMaxValue();
         }
         return false;
     }
