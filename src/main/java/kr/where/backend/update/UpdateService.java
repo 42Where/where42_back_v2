@@ -6,7 +6,7 @@ import java.util.List;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Cluster;
+import kr.where.backend.api.json.ClusterInfo;
 import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
@@ -52,18 +52,18 @@ public class UpdateService {
         log.info("[scheduling] : 로그인한 맴버의 imacLocation 업데이트를 시작합니다!!");
         final String token = oauthTokenService.findAccessToken(UPDATE_TOKEN);
 
-        final List<Cluster> loginMember = getLoginMember(token);
+        final List<ClusterInfo> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
         log.info("[scheduling] : 로그인한 맴버의 imacLocation 업데이트를 끝냅니다!!");
     }
 
-    private List<Cluster> getLoginMember(final String token) {
+    private List<ClusterInfo> getLoginMember(final String token) {
         int page = 1;
-        final List<Cluster> result = new ArrayList<>();
+        final List<ClusterInfo> result = new ArrayList<>();
 
         while (true) {
-            final List<Cluster> loginMember = intraApiService.getCadetsInCluster(token, page);
+            final List<ClusterInfo> loginMember = intraApiService.getCadetsInCluster(token, page);
             result.addAll(loginMember);
             if (loginMember.get(99).getEnd_at() != null) {
                 break;
@@ -75,7 +75,7 @@ public class UpdateService {
         return result;
     }
 
-    private void updateLocation(final List<Cluster> cadets) {
+    private void updateLocation(final List<ClusterInfo> cadets) {
         final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
@@ -101,23 +101,23 @@ public class UpdateService {
     public void updateMemberStatus() {
         final String token = oauthTokenService.findAccessToken(ADMIN_TOKEN);
 
-        final List<Cluster> status = getStatus(token);
+        final List<ClusterInfo> status = getStatus(token);
 
         updateLocation(status);
     }
 
 
-    private List<Cluster> getStatus(final String token) {
+    private List<ClusterInfo> getStatus(final String token) {
         int page = 1;
 
-        final List<Cluster> statusResult = new ArrayList<>();
+        final List<ClusterInfo> statusResult = new ArrayList<>();
 
         while(true) {
             boolean loginFlag = false;
             boolean logoutFlag = false;
 
             if (!logoutFlag) {
-                final List<Cluster> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
+                final List<ClusterInfo> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
                 statusResult.addAll(logoutStatus);
 
                 if (logoutStatus.size() < 100) {
@@ -125,7 +125,7 @@ public class UpdateService {
                 }
             }
             if (!loginFlag) {
-                final List<Cluster> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
+                final List<ClusterInfo> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
                         .forEach(statusResult::add);

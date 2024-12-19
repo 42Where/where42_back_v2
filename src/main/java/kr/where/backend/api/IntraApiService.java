@@ -6,7 +6,7 @@ import kr.where.backend.api.http.HttpHeader;
 import kr.where.backend.api.http.HttpResponse;
 import kr.where.backend.api.http.UriBuilder;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Cluster;
+import kr.where.backend.api.json.ClusterInfo;
 import kr.where.backend.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,31 +48,31 @@ public class IntraApiService {
      * 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
     @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    public List<Cluster> getCadetsInCluster(final String token, final int page) {
+    public List<ClusterInfo> getCadetsInCluster(final String token, final int page) {
         return JsonMapper
                 .mappings(
                         HttpResponse.getMethod(HttpHeader.request42Info(token), UriBuilder.loginCadet(page)),
-                        Cluster[].class);
+                        ClusterInfo[].class);
     }
 
     /**
      * 5분 이내 클러스터 아이맥에 로그아웃 한 카뎃 index page 별로 반환
      */
     @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    public List<Cluster> getLogoutCadetsLocation(final String token, final int page) {
+    public List<ClusterInfo> getLogoutCadetsLocation(final String token, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
-                                UriBuilder.loginBeforeFiveMinute(page, false)), Cluster[].class);
+                                UriBuilder.loginBeforeFiveMinute(page, false)), ClusterInfo[].class);
     }
 
     /**
      * 5분 이내 클러스터 아이맥에 로그인 한 카뎃 index page 별로 반환
      */
     @Retryable(retryFor = TooManyRequestException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    public List<Cluster> getLoginCadetsLocation(final String token, final int page) {
+    public List<ClusterInfo> getLoginCadetsLocation(final String token, final int page) {
         return JsonMapper
                 .mappings(HttpResponse.getMethod(HttpHeader.request42Info(token),
-                        UriBuilder.loginBeforeFiveMinute(page, true)), Cluster[].class);
+                        UriBuilder.loginBeforeFiveMinute(page, true)), ClusterInfo[].class);
     }
 
     /**
@@ -103,7 +103,7 @@ public class IntraApiService {
     }
 
     @Recover
-    public List<Cluster> fallbackClusterList(final CustomException exception) {
+    public List<ClusterInfo> fallbackClusterList(final CustomException exception) {
         log.warn("[IntraApiService] List<Cluster> method");
         throw exception;
     }
