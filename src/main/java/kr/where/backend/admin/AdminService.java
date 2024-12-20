@@ -1,9 +1,11 @@
 package kr.where.backend.admin;
 
 import java.util.List;
+import java.util.Objects;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
+import kr.where.backend.admin.dto.ResponseAdminMembersDTO;
+import kr.where.backend.admin.dto.ResponseCheckAdminDTO;
+import kr.where.backend.admin.dto.ResponseRoleDTO;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
@@ -19,25 +21,23 @@ public class AdminService {
     private static final String ADMIN_ROLE = "ADMIN";
     private final MemberRepository memberRepository;
 
-    public ResponseRoleStatusDTO getRoleStatus(final AuthUser authUser) {
+    public ResponseCheckAdminDTO checkAdmin(final AuthUser authUser) {
         final Member member = memberRepository.findByIntraId(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
-        return ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole());
+        return ResponseCheckAdminDTO.of(Objects.equals(member.getRole(), ADMIN_ROLE));
     }
 
     @Transactional
-    public ResponseRoleStatusDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
-        Member targerMember = memberRepository.findByIntraName(requestRoleStatusDTO.getIntraName())
+    public ResponseRoleDTO changeAdminStatus(final RequestRoleStatusDTO requestRoleStatusDTO) {
+        final Member targetMember = memberRepository.findByIntraName(requestRoleStatusDTO.getIntraName())
                 .orElseThrow(MemberException.NoMemberException::new);
-        if (!targerMember.getRole().equals(requestRoleStatusDTO.getRole()))
-            targerMember.updateRole(requestRoleStatusDTO.getRole());
-        return ResponseRoleStatusDTO.of(targerMember.getIntraName(), targerMember.getRole());
+        if (!targetMember.getRole().equals(requestRoleStatusDTO.getRole()))
+            targetMember.updateRole(requestRoleStatusDTO.getRole());
+        return ResponseRoleDTO.of(targetMember.getIntraName(), targetMember.getRole());
     }
 
-    public ResponseRoleStatusListDTO getAllAdmin() {
+    public ResponseAdminMembersDTO getAllAdmin() {
         final List<Member> members = memberRepository.findAllByRole(ADMIN_ROLE);
-        final List<ResponseRoleStatusDTO> statuses = members.
-                stream().map(member -> ResponseRoleStatusDTO.of(member.getIntraName(), member.getRole())).toList();
-        return ResponseRoleStatusListDTO.of(statuses);
+        return ResponseAdminMembersDTO.of(members.stream().map(Member::getIntraName).toList());
     }
 }

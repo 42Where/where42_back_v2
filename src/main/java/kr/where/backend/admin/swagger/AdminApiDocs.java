@@ -9,8 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
+import kr.where.backend.admin.dto.ResponseAdminMembersDTO;
+import kr.where.backend.admin.dto.ResponseCheckAdminDTO;
+import kr.where.backend.admin.dto.ResponseRoleDTO;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AdminApiDocs {
     @Operation(
             summary = "Admin status check API",
-            description = "본인 접근 권한 레벨 확인하는 API",
+            description = "본인 접근 권한이 ADMIN인지 확인하는 API",
             parameters = {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "접근 권한 확인 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "ADMIN인지 확인 성공", content = @Content(schema = @Schema(implementation = ResponseCheckAdminDTO.class))),
             }
     )
     @GetMapping("/status")
-    ResponseEntity<ResponseRoleStatusDTO> getRoleStatus(@AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseCheckAdminDTO> checkAdmin(@AuthUserInfo final AuthUser authUser);
 
     @Operation(
             summary = "get all admin API",
@@ -40,11 +41,11 @@ public interface AdminApiDocs {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusListDTO.class)))
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseAdminMembersDTO.class)))
             }
     )
     @GetMapping("/status/all")
-    ResponseEntity<ResponseRoleStatusListDTO> getAllAdmin();
+    ResponseEntity<ResponseAdminMembersDTO> getAllAdmin();
 
     @Operation(
             summary = "Admin post API",
@@ -55,10 +56,10 @@ public interface AdminApiDocs {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "변경할 권한을 role에 입력", required = true, content = @Content(schema = @Schema(implementation = RequestRoleStatusDTO.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "역할 변경 성공", content = @Content(schema = @Schema(implementation = ResponseRoleStatusDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "역할 변경 성공", content = @Content(schema = @Schema(implementation = ResponseRoleDTO.class))),
                     @ApiResponse(responseCode = "403", description = "접근 권한 부족", content = @Content(schema = @Schema(type = "string")))
             }
     )
     @PostMapping("/status")
-    ResponseEntity<ResponseRoleStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestRoleStatusDTO requestRoleStatusDTO);
+    ResponseEntity<ResponseRoleDTO> changeAdminStatus(@RequestBody @Valid final RequestRoleStatusDTO requestRoleStatusDTO);
 }

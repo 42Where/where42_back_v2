@@ -2,8 +2,9 @@ package kr.where.backend.admin;
 
 import jakarta.validation.Valid;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
+import kr.where.backend.admin.dto.ResponseAdminMembersDTO;
+import kr.where.backend.admin.dto.ResponseCheckAdminDTO;
+import kr.where.backend.admin.dto.ResponseRoleDTO;
 import kr.where.backend.admin.swagger.AdminApiDocs;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
@@ -23,17 +24,17 @@ public class AdminController implements AdminApiDocs {
     private final AdminService adminService;
 
     @GetMapping("/status")
-    public ResponseEntity<ResponseRoleStatusDTO> getRoleStatus(@AuthUserInfo final AuthUser authUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getRoleStatus(authUser));
+    public ResponseEntity<ResponseCheckAdminDTO> checkAdmin(@AuthUserInfo final AuthUser authUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.checkAdmin(authUser));
     }
 
     @GetMapping("/status/all")
-    public ResponseEntity<ResponseRoleStatusListDTO> getAllAdmin() {
+    public ResponseEntity<ResponseAdminMembersDTO> getAllAdmin() {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllAdmin());
     }
 
     @PostMapping("/status")
-    public ResponseEntity<ResponseRoleStatusDTO> changeAdminStatus(@RequestBody @Valid final RequestRoleStatusDTO requestRoleStatusDTO) {
+    public ResponseEntity<ResponseRoleDTO> changeAdminStatus(@RequestBody @Valid final RequestRoleStatusDTO requestRoleStatusDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.changeAdminStatus(requestRoleStatusDTO));
     }
 }
