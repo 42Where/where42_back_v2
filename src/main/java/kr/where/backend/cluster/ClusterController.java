@@ -23,7 +23,6 @@ public class ClusterController implements ClusterApiDocs {
 
     @PostMapping("/init")
     public void init() {
-        log.info("init 들어옴");
         clusterService.init();
     }
 
