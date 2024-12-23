@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
+import kr.where.backend.cluster.dto.ResponseMostPopularSeatDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,5 +37,17 @@ public interface ClusterApiDocs {
     )
     @PostMapping("/init")
     public void init();
+
+
+    @Operation(summary = "Most Popular Seat API", description = "클러스터 내 가장 인기 있는 자리 조회",
+            parameters = {
+                    @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseMostPopularSeatDTO.class))),
+            }
+    )
+    @GetMapping("/popular")
+    public ResponseEntity<ResponseMostPopularSeatDTO> getMostPopularSeat();
 
 }
