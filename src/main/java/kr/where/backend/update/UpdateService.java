@@ -8,6 +8,7 @@ import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.ClusterInfo;
 import kr.where.backend.api.json.hane.HaneResponseDto;
+import kr.where.backend.cluster.ClusterService;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
@@ -34,6 +35,8 @@ public class UpdateService {
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
     private final MemberService memberService;
+    private final ClusterService clusterService;
+
 
     //TODO
     /**
@@ -104,6 +107,21 @@ public class UpdateService {
         final List<ClusterInfo> status = getStatus(token);
 
         updateLocation(status);
+        updateClusterSeat(status);
+    }
+
+    @Transactional
+    public void updateClusterSeat(List<ClusterInfo> cadets) {
+        cadets.stream().forEach(c -> {
+            //로그인 한 유저
+            if (c.getEnd_at() == null) {
+                clusterService.increaseUsedCount(c.getUser().getLocation(), c.getUser().getId());
+            }
+            //로그아웃 한 유저
+            if (c.getEnd_at() != null) {
+                clusterService.removeClusterLastUsedMember(c.getUser().getLocation());
+            }
+        });
     }
 
 

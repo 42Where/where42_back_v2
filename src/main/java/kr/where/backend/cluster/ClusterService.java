@@ -1,5 +1,6 @@
 package kr.where.backend.cluster;
 
+import kr.where.backend.api.json.ClusterInfo;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.cluster.dto.ResponseClusterDTO;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
@@ -9,13 +10,16 @@ import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.member.Member;
+import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,8 @@ public class ClusterService {
     private final ClusterRepository clusterRepository;
     private final LocationRepository locationRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final MemberRepository memberRepository;
+
 
     @Transactional
     public void init() {
@@ -114,6 +120,7 @@ public class ClusterService {
         return false;
     }
 
+    @Transactional
     public ResponseMostPopularSeatDTO getMostPopularSeat() {
         List<Cluster> seats = clusterRepository.findTop3ByOrderByUsedCountDesc();
         List<String> seatStrings = seats.stream()
@@ -125,4 +132,41 @@ public class ClusterService {
                 .toList();
         return ResponseMostPopularSeatDTO.of(seatStrings);
     }
+
+    @Transactional
+    public void increaseUsedCount(String location, Integer intraId) {
+        final Cluster cluster = parseClusterInfo(location);
+        Member member = memberRepository.findByIntraId(intraId)
+                .orElseThrow(MemberException.NoMemberException::new);
+        if (!cluster.getLastUsedMember().equals(member)) {
+            cluster.updateLastUsedMember(member);
+            cluster.increaseUsedCount();
+        }
+    }
+
+    @Transactional
+    public Cluster parseClusterInfo(String input) {
+        // 정규식 패턴 정의: "c" 다음에 하나 이상의 문자 또는 숫자, "r" 다음에 하나 이상의 숫자, "s" 다음에 하나 이상의 숫자
+        String pattern = "^c([a-zA-Z0-9]+)r(\\d+)s(\\d+)$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(input);
+
+        if (m.find()) {
+            String cluster = m.group(1);
+            int rowIndex = Integer.parseInt(m.group(2));
+            int seat = Integer.parseInt(m.group(3));
+            return clusterRepository.findByClusterAndRowIndexAndSeat(cluster, rowIndex, seat)
+                    .orElseThrow();
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+
+    @Transactional
+    public void removeClusterLastUsedMember(String location) {
+        final Cluster cluster = parseClusterInfo(location);
+        cluster.removeLastUsedMember();
+    }
+
 }
