@@ -3,6 +3,7 @@ package kr.where.backend.cluster;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.cluster.dto.ResponseClusterDTO;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
+import kr.where.backend.cluster.dto.ResponseMostPopularSeatDTO;
 import kr.where.backend.cluster.exception.ClusterException;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.location.Location;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +112,17 @@ public class ClusterService {
             return clusterNumber >= ClusterConstant.CLUSTER_CX.getMinValue() && clusterNumber <= ClusterConstant.CLUSTER_CX.getMaxValue();
         }
         return false;
+    }
+
+    public ResponseMostPopularSeatDTO getMostPopularSeat() {
+        List<Cluster> seats = clusterRepository.findTop3ByOrderByUsedCountDesc();
+        List<String> seatStrings = seats.stream()
+                .map(s -> new StringBuilder()
+                        .append("c").append(s.getCluster())
+                        .append("r").append(s.getRowIndex())
+                        .append("s").append(s.getSeat())
+                        .toString())
+                .toList();
+        return ResponseMostPopularSeatDTO.of(seatStrings);
     }
 }
