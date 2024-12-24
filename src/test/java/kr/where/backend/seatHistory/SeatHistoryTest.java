@@ -133,11 +133,11 @@ public class SeatHistoryTest {
         for (String s : seats) {
             seatHistoryService.report(s, 12345);
         }
-//        seats.forEach(s -> seatHistoryService.report(s, 12345));
+
         //when
         List<SeatHistory> seatHistories = seatHistoryRepository
                 .findALLByMemberIntraId(12345);
-//        System.out.println(seatHistories.get(0).getImac() + ", " + seatHistories.get(1).getImac());
+
         //then
         assertThat(seatHistories.size()).isEqualTo(1);
         assertThat(seatHistories.get(0).getImac()).isEqualTo("c1r1s1");
