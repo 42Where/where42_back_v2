@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -121,5 +122,24 @@ public class SeatHistoryTest {
         assertThat(seatHistories.get(1).getPercent()).isEqualTo(33.3);
         assertThat(seatHistories.get(2).getImac()).isEqualTo("c1r5s7");
         assertThat(seatHistories.get(2).getPercent()).isEqualTo(16.7);
+    }
+
+    @Test
+    @DisplayName("업데이트 한지 5분 이상 지났을 경우 판단하는 Test")
+    void isAfterFiveMinute() {
+        //given
+        List<String> seats = List.of("c1r1s1", "c1r1s1");
+
+        for (String s : seats) {
+            seatHistoryService.report(s, 12345);
+        }
+//        seats.forEach(s -> seatHistoryService.report(s, 12345));
+        //when
+        List<SeatHistory> seatHistories = seatHistoryRepository
+                .findALLByMemberIntraId(12345);
+//        System.out.println(seatHistories.get(0).getImac() + ", " + seatHistories.get(1).getImac());
+        //then
+        assertThat(seatHistories.size()).isEqualTo(1);
+        assertThat(seatHistories.get(0).getImac()).isEqualTo("c1r1s1");
     }
 }
