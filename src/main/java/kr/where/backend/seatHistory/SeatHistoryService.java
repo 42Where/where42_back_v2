@@ -35,6 +35,7 @@ public class SeatHistoryService {
     public void report(final String seat, final Integer intraId) {
         final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
+
         member.getSeatHistories()
                 .stream()
                 .filter(s -> Objects.equals(s.getImac(), seat))

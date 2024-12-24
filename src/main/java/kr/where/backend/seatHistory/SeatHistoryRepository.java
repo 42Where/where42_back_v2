@@ -22,4 +22,7 @@ public interface SeatHistoryRepository extends JpaRepository<SeatHistory, Long> 
 
     @Query("SELECT SUM(sh.count) FROM SeatHistory sh WHERE sh.member.intraId = :intraId")
     int sumSeatHistoriesCountByMember(@Param("intraId") final Integer intraId);
+
+    @Query("SELECT sh FROM SeatHistory sh WHERE sh.member.intraId = :intraId")
+    List<SeatHistory> findALLByMemberIntraId(@Param("intraId") final Integer intraId);
 }
