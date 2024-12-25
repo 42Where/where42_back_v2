@@ -46,17 +46,17 @@ public class AuthUser {
 
     @Override
     public String toString() {
-        if (defaultGroupId == null) {
-            return "AuthUser{" +
-                    "intraId=" + intraId +
-                    ", intraName='" + intraName + '\'' +
-                    '}';
+        StringBuilder result = new StringBuilder();
+        result.append("AuthUser{")
+                .append("intraId=")
+                .append(intraId)
+                .append(", intraName='")
+                .append(intraName);
+        if (defaultGroupId != null) {
+            result.append(", defaultGroupId=")
+                    .append(defaultGroupId);
         }
-
-        return "AuthUser{" +
-                "intraId=" + intraId +
-                ", intraName='" + intraName + '\'' +
-                ", defaultGroupId=" + defaultGroupId +
-                '}';
+        result.append('\'' + '}');
+        return result.toString();
     }
 }
