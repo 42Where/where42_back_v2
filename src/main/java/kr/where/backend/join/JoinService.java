@@ -2,8 +2,7 @@ package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
+import kr.where.backend.join.dto.ResponseJoinDTO;
 import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
@@ -24,8 +23,8 @@ public class JoinService {
     private final RedisTokenService redisTokenService;
 
     @Transactional
-    public ResponseRefreshTokenDTO join(final AuthUser authUser) {
-        final Member member = memberService.findOne(authUser.getIntraId())
+    public ResponseJoinDTO join(final Integer intraId, final String intraName) {
+        final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
@@ -38,12 +37,12 @@ public class JoinService {
                         .getHaneInfo(member.getIntraName(), TOKEN_HANE)
         );
 
-        String refreshToken = jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName());
+        final String refreshToken = jwtService.createRefreshToken(intraId, intraName);
         redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
 
-        return ResponseRefreshTokenDTO
+        return ResponseJoinDTO
                 .builder()
-                .refreshToken(refreshToken)
+                .intraId(intraId)
                 .build();
     }
 }
