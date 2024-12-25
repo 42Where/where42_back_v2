@@ -47,6 +47,22 @@ public class ClusterService {
             initClusterSeat(cluster, initClusterSeat.get(cluster));
         }
         //x클러스터 초기화 코드 추가해야함.
+        /** TO-DO
+         * X클러스터 초기화 코드
+         * X - 1
+         * R1,2,3 - s4
+         * R4, 5 - s8
+         *
+         * X - 2
+         * R1 - s4
+         * R2 - s10
+         * R3 - s8
+         * R4 - s6
+         * R5 - s6
+         * R6 - s8
+         * R7 - s10
+         * R8 - s4
+          */
     }
 
     private void initClusterSeat(final int c, final ClusterLayout clusterLayout) {
