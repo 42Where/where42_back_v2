@@ -24,7 +24,7 @@ import kr.where.backend.auth.oauth2login.cookie.CookieShop;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberService;
+import kr.where.backend.member.MemberRepository;
 import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,41 +52,31 @@ public class JwtService {
     private String secret_code;
     @Value("${issuer}")
     private String issuer;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final RedisTokenService redisTokenService;
     /**
      * 쿠키에 있는 refreshToken을 사용하여 재발급
-     * @param refreshToken : 재발급을 위한 refreshToken을 httpOnly로 설정되어있기 때문에 값을 받아온다.
+     * @param response : accessToken을 http 쿠키에 넣기 위한 용도
+     * @param intraId : 재발급을 위한 맴버 intraId.
      * @return accessToken
      */
     public ResponseAccessTokenDTO reissueAccessToken(final HttpServletResponse response,
-                                                     final String refreshToken) {
+                                                     final Integer intraId) {
+        final String refreshToken = redisTokenService.getRefreshToken("refreshToken" + intraId);
+
+        if (redisTokenService.isRefreshTokenInBlackList(intraId.toString(), refreshToken)) {
+            throw new JwtException.InvalidJwtToken();
+        }
 
         final Claims claims = parseToken(refreshToken);
-        final Integer memberId = (Integer) claims.get("intraId");
         final String intraName = (String) claims.get("intraName");
-
-        final String savedRefreshToken = redisTokenService.getRefreshToken("refreshToken" + memberId);
-        if (!Objects.equals(refreshToken, savedRefreshToken)) {
-            throw new JwtException.InvalidJwtToken();
-        }
-
-        if (redisTokenService.isRefreshTokenInBlackList(memberId.toString(), refreshToken)) {
-            throw new JwtException.InvalidJwtToken();
-        }
-
-        String accessToken = redisTokenService.getAccessToken("accessToken" + memberId);
-        if (accessToken == null || accessToken.isEmpty()) {
-            accessToken = createAccessToken(memberId, intraName);
-            redisTokenService.saveAccessToken("accessToken" + memberId, accessToken);
-        }
+        final String accessToken = createAccessToken(intraId, intraName);
 
         CookieShop.bakedCookie(
                 response,
                 JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                accessToken,
-                false
+                accessToken
         );
 
         return ResponseAccessTokenDTO
@@ -186,7 +176,7 @@ public class JwtService {
         }
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
-        final Member member = memberService.findOne(intraId)
+        final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
         final Collection<? extends GrantedAuthority> authorities
