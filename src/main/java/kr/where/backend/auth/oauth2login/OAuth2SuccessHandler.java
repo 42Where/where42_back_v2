@@ -45,24 +45,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //jwt 발행
         final String accessToken = jwtService.createAccessToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
-        redisTokenService.saveAccessToken(member.getIntraId().toString(), accessToken);
 
         CookieShop.bakedCookie(response,
                 JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                accessToken,
-                false
+                accessToken
         );
 
         if (member.isAgree()) {
             final String refreshToken = jwtService.createRefreshToken(cadetPrivacy.getId(), cadetPrivacy.getLogin());
             redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
-            CookieShop.bakedCookie(response,
-                    JwtConstants.REFRESH.getValue(),
-                    REFRESH_EXPIRY,
-                    refreshToken,
-                    true
-            );
         }
 
         getRedirectStrategy().sendRedirect(
