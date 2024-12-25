@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthUser {
     private Integer intraId;
@@ -43,5 +42,21 @@ public class AuthUser {
             throw new AuthUserException.AnonymousUserException();
         }
         return (AuthUser) principle;
+    }
+
+    @Override
+    public String toString() {
+        if (defaultGroupId == null) {
+            return "AuthUser{" +
+                    "intraId=" + intraId +
+                    ", intraName='" + intraName + '\'' +
+                    '}';
+        }
+
+        return "AuthUser{" +
+                "intraId=" + intraId +
+                ", intraName='" + intraName + '\'' +
+                ", defaultGroupId=" + defaultGroupId +
+                '}';
     }
 }
