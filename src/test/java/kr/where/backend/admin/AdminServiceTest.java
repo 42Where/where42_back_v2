@@ -7,8 +7,9 @@ import jakarta.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 import kr.where.backend.admin.dto.RequestRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusDTO;
-import kr.where.backend.admin.dto.ResponseRoleStatusListDTO;
+import kr.where.backend.admin.dto.ResponseAdminMembersDTO;
+import kr.where.backend.admin.dto.ResponseCheckAdminDTO;
+import kr.where.backend.admin.dto.ResponseRoleDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
@@ -55,16 +56,16 @@ public class AdminServiceTest {
         memberRepository.save(member);
     }
 
-    @DisplayName("유저 권한 조회하는 테스트")
+    @DisplayName("admin인지 확인하는 테스트")
     @Test
     @Rollback
-    void getRoleStatusTest() {
+    void checkAdminTest() {
         //given
         //when
-        ResponseRoleStatusDTO responseRoleStatusDTO = adminService.getRoleStatus(authUser);
+        ResponseCheckAdminDTO responseCheckAdminDTO = adminService.checkAdmin(authUser);
 
         //then
-        assertEquals("ADMIN", responseRoleStatusDTO.getRole());
+        assertEquals(true, responseCheckAdminDTO.isAdmin());
     }
 
     @DisplayName("관리자인 유저 모두 조회하는 테스트")
@@ -73,10 +74,10 @@ public class AdminServiceTest {
     void getAllAdminTest() {
         //given
         //when
-        ResponseRoleStatusListDTO statuses = adminService.getAllAdmin();
+        ResponseAdminMembersDTO responseAdminMembersDTO = adminService.getAllAdmin();
 
         //then
-        assertEquals(1, statuses.getRoleStatuses().size());
+        assertEquals(1, responseAdminMembersDTO.getMembers().size());
     }
 
     @DisplayName("유저 권한 변경 성공하는 테스트")
@@ -95,7 +96,7 @@ public class AdminServiceTest {
         RequestRoleStatusDTO requestRoleStatusDTO = new RequestRoleStatusDTO("jonhan", "USER");
 
         //when
-        ResponseRoleStatusDTO responseRoleStatusDTO = adminService.changeAdminStatus(requestRoleStatusDTO);
+        ResponseRoleDTO responseRoleDTO = adminService.changeAdminStatus(requestRoleStatusDTO);
         Member resMember = memberRepository.findByIntraName("jonhan").get();
 
         //then
