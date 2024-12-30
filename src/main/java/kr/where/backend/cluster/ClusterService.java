@@ -35,37 +35,49 @@ public class ClusterService {
 
     @Transactional
     public void init() {
-        Map<Integer, ClusterLayout> initClusterSeat = new HashMap<>();
-        initClusterSeat.put(1, ClusterLayout.CLUSTER_1);
-        initClusterSeat.put(2, ClusterLayout.CLUSTER_2);
-        initClusterSeat.put(3, ClusterLayout.CLUSTER_3);
-        initClusterSeat.put(4, ClusterLayout.CLUSTER_4);
-        initClusterSeat.put(5, ClusterLayout.CLUSTER_5);
-        initClusterSeat.put(6, ClusterLayout.CLUSTER_6);
+        Map<Integer, ClusterLayout> initClusterSeat = Map.of(
+                1, ClusterLayout.CLUSTER_1,
+                2, ClusterLayout.CLUSTER_2,
+                3, ClusterLayout.CLUSTER_3,
+                4, ClusterLayout.CLUSTER_4,
+                5, ClusterLayout.CLUSTER_5,
+                6, ClusterLayout.CLUSTER_6
+        );
+
         clusterRepository.deleteAll();
-        for (int cluster = ClusterConstant.CLUSTER_C.getMinValue(); cluster <= ClusterConstant.CLUSTER_C.getMaxValue(); cluster++) {
-            initClusterSeat(cluster, initClusterSeat.get(cluster));
-        }
-        //x클러스터 초기화 코드 추가해야함.
-        /** TO-DO
-         * X클러스터 초기화 코드
-         * X - 1
-         * R1,2,3 - s4
-         * R4, 5 - s8
-         *
-         * X - 2
-         * R1 - s4
-         * R2 - s10
-         * R3 - s8
-         * R4 - s6
-         * R5 - s6
-         * R6 - s8
-         * R7 - s10
-         * R8 - s4
-          */
+        initClusterSeat.forEach(this::initGeneralClusterSeat);
+        initXClusterSeat();
     }
 
-    private void initClusterSeat(final int c, final ClusterLayout clusterLayout) {
+    private void initXClusterSeat() {
+        //x-1 클러스터 초기화
+        int[] x1Rows = {1, 2, 3, 4, 5};
+        for (int row : x1Rows) {
+            int seatCount = ClusterLayout.valueOf("CLUSTER_X1_" + row).getSeat();
+            for (int s = 1; s <= seatCount; s++) {
+                final Cluster cluster = new Cluster("x1", row, s);
+                if (clusterRepository.findByClusterAndRowIndexAndSeat("x1", row, s).isEmpty()) {
+                    clusterRepository.save(cluster);
+                }
+            }
+        }
+
+        //x-2 클러스터 초기화
+        int[] x2Rows = {1, 2, 3, 4, 5, 6, 7, 8};
+        for (int row : x2Rows) {
+            int seatCount = ClusterLayout.valueOf("CLUSTER_X2_" + row).getSeat();
+            for (int s = 1; s <= seatCount; s++) {
+                final Cluster cluster = new Cluster("x2", row, s);
+                if (clusterRepository.findByClusterAndRowIndexAndSeat("x2", row, s).isEmpty()) {
+                    clusterRepository.save(cluster);
+                }
+            }
+        }
+    }
+
+
+
+    private void initGeneralClusterSeat(final int c, final ClusterLayout clusterLayout) {
         for (int r = 1; r <= clusterLayout.getRow(); r++) {
             for (int s = 1; s <= clusterLayout.getSeat(); s++) {
                 final Cluster cluster = new Cluster(String.valueOf(c), r, s);
@@ -74,6 +86,7 @@ public class ClusterService {
             }
         }
     }
+
 
     public ResponseClusterListDTO getLoginMember(final AuthUser authUser, final String cluster) {
         validateCluster(cluster);
