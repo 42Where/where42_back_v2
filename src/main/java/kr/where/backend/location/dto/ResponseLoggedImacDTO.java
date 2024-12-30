@@ -1,4 +1,4 @@
-package kr.where.backend.cluster.dto;
+package kr.where.backend.location.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class ResponseClusterDTO {
+public class ResponseLoggedImacDTO {
     private Integer intraId;
     private String intraName;
     private String image;
@@ -18,11 +18,11 @@ public class ResponseClusterDTO {
 
     private static final String LOCATION_SPLIT_REGEX = "r|s";
 
-    public ResponseClusterDTO (final Integer intraId,
-                               final String intraName,
-                               final String image,
-                               final String location,
-                               final Boolean isFriend) {
+    public ResponseLoggedImacDTO(final Integer intraId,
+                                 final String intraName,
+                                 final String image,
+                                 final String location,
+                                 final Boolean isFriend) {
         this.intraId = intraId;
         this.intraName = intraName;
         this.image = image;
@@ -38,11 +38,11 @@ public class ResponseClusterDTO {
         this.seat = Integer.parseInt(parsedLocation[2]);
     }
 
-    public static ResponseClusterDTO of(final Integer intraId,
-                                        final String intraName,
-                                        final String image,
-                                        final String location,
-                                        final Boolean isFriend) {
-        return new ResponseClusterDTO(intraId, intraName, image, location, isFriend);
+    public static ResponseLoggedImacDTO of(final Integer intraId,
+                                           final String intraName,
+                                           final String image,
+                                           final String location,
+                                           final Boolean isFriend) {
+        return new ResponseLoggedImacDTO(intraId, intraName, image, location, isFriend);
     }
 }
