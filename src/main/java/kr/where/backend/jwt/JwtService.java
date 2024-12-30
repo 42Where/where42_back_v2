@@ -25,6 +25,7 @@ import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,7 @@ import org.springframework.security.core.Authentication;
 @Slf4j
 public class JwtService {
     private static final int ACCESS_EXPIRY = 30 * 60;
+    private static final String NULL = "null";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -62,11 +64,9 @@ public class JwtService {
      */
     public ResponseAccessTokenDTO reissueAccessToken(final HttpServletResponse response,
                                                      final Integer intraId) {
-        final String refreshToken = redisTokenService.getRefreshToken("refreshToken" + intraId);
+        memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
 
-        if (redisTokenService.isRefreshTokenInBlackList(intraId.toString(), refreshToken)) {
-            throw new JwtException.InvalidJwtToken();
-        }
+        final String refreshToken = redisTokenService.getRefreshToken(intraId.toString());
 
         final Claims claims = parseToken(refreshToken);
         final String intraName = (String) claims.get("intraName");
@@ -158,6 +158,10 @@ public class JwtService {
      * @return
      */
     public Authentication getAuthentication(final HttpServletRequest request, final String token) {
+        if (redisTokenService.isAccessTokenInBlackList(token)) {
+            throw new JwtException.InvalidJwtToken();
+        }
+
         // 토큰 복호화
         final Claims claims = parseToken(token);
         log.info("[login] : 이름 {}, 토큰 {}, 롤 {}", claims.get(
@@ -171,9 +175,6 @@ public class JwtService {
         // 클레임에서 권한 정보 가져오기
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
-        if (redisTokenService.isAccessTokenInBlackList(intraId.toString(), token)) {
-            throw new JwtException.InvalidJwtToken();
-        }
 
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
         final Member member = memberRepository.findByIntraId(intraId)
