@@ -1,7 +1,5 @@
 package kr.where.backend.redisToken;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import kr.where.backend.auth.filter.JwtConstants;
 import kr.where.backend.jwt.exception.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisTokenService {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final static String NULL = "null";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -32,12 +31,8 @@ public class RedisTokenService {
                 );
     }
 
-    public boolean isAccessTokenInBlackList(final String intraId, final String token) {
-        return Objects.equals(token, redisTemplate.opsForValue().get("expiredAccess:" + intraId));
-    }
-
-    public boolean isRefreshTokenInBlackList(final String intraId, final String token) {
-        return Objects.equals(token, redisTemplate.opsForValue().get("expiredRefresh:" + intraId));
+    public boolean isAccessTokenInBlackList(final String token) {
+        return !Objects.equals(redisTemplate.opsForValue().get(token), NULL);
     }
 
     public String getRefreshToken(final String intraId) {
@@ -55,19 +50,11 @@ public class RedisTokenService {
     }
 
     private void saveInBlackList(final String accessToken, final String intraId) {
-        final String refreshToken = getRefreshToken(intraId);
         redisTemplate.opsForValue()
                 .set(
-                        "expiredAccess:" + intraId,
                         accessToken,
+                        "expiredAccess:" + intraId,
                         accessTokenExpirationTime,
-                        TimeUnit.MILLISECONDS
-                );
-        redisTemplate.opsForValue()
-                .set(
-                        "expiredRefresh:" + intraId,
-                        refreshToken,
-                        refreshTokenExpirationTime,
                         TimeUnit.MILLISECONDS
                 );
     }
