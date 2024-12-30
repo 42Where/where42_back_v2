@@ -1,8 +1,6 @@
 package kr.where.backend.jwt;
 
 import jakarta.servlet.http.HttpServletResponse;
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.jwt.dto.RequestReissueDTO;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.swagger.JwtApiDocs;
@@ -20,7 +18,6 @@ public class JwtController implements JwtApiDocs {
     public ResponseEntity<ResponseAccessTokenDTO> reIssue(final HttpServletResponse response,
                                                           @RequestBody final RequestReissueDTO requestReissueDTO)
     {
-
         return ResponseEntity.ok(
                 jwtService.reissueAccessToken(
                                 response,
