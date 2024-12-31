@@ -80,13 +80,8 @@ public class LocationServiceTest {
     @Test
     public void delete_custom_location_test() {
         //given
-        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(12345, "suhwpark", 1L);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
-        Hane hane = Hane.create("IN");
-
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        memberCreateAndSave(12345, "suhwpark", "c1r1s1", "IN", authUser);
 
         UpdateCustomLocationDTO updateCustomLocationDto = UpdateCustomLocationDTO.createForTest("1F open lounge");
         ResponseLocationDTO beforeResponseLocationDTO = locationService.updateCustomLocation(updateCustomLocationDto, authUser);
