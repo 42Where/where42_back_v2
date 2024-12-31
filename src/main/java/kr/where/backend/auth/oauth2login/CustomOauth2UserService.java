@@ -2,11 +2,8 @@ package kr.where.backend.auth.oauth2login;
 
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.exception.MemberErrorCode;
-import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
