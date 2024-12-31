@@ -11,7 +11,6 @@ import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +49,12 @@ public class LocationServiceTest {
 
     private final static Integer CAMPUS_ID = 29;
 
-    @BeforeEach
-    public void setUp() {
-        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-        authUser = new AuthUser(12345, "suhwpark", 1L);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-    }
     @Test
     public void update_custom_location_test() {
 		//given
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+        authUser = new AuthUser(12345, "suhwpark", 1L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
         Hane hane = Hane.create("IN");
 
@@ -84,6 +80,9 @@ public class LocationServiceTest {
     @Test
     public void delete_custom_location_test() {
         //given
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+        authUser = new AuthUser(12345, "suhwpark", 1L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
         Hane hane = Hane.create("IN");
 
@@ -105,21 +104,13 @@ public class LocationServiceTest {
     @Rollback
     void testLoggedInIMacCount() {
         //given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-        member.updateRole("ADMIN");
-        memberRepository.save(member);
-        Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        memberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser1);
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
-        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane2 = Hane.create("OUT");
-        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
-        memberRepository.save(member2);
+        memberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser2);
 
         // when
-        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser, "c1");
+        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
 
         //then
         assertEquals(2, responseLoggedImacListDTO.getMembers().size());
@@ -130,21 +121,13 @@ public class LocationServiceTest {
     @Rollback
     void testLoggedInIMacMemberNames() {
         // given
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(12345, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
-        member.updateRole("ADMIN");
-        memberRepository.save(member);
-        Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        memberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser1);
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
-        CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane2 = Hane.create("OUT");
-        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
-        memberRepository.save(member2);
+        memberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser2);
 
         // when
-        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser, "c1");
+        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
 
         //then
         ResponseLoggedImacDTO responseLoggedImacDTO_1 = responseLoggedImacListDTO.getMembers().stream()
@@ -153,11 +136,21 @@ public class LocationServiceTest {
                 .orElse(null);
         Assertions.assertNotNull(responseLoggedImacDTO_1, "suhwpark is not found");
         assertEquals("suhwpark", responseLoggedImacDTO_1.getIntraName());
+
         ResponseLoggedImacDTO responseLoggedImacDTO_2 = responseLoggedImacListDTO.getMembers().stream()
                 .filter(responseLoggedImacDTO -> "jonhan".equals(responseLoggedImacDTO.getIntraName()))
                 .findFirst()
                 .orElse(null);
         Assertions.assertNotNull(responseLoggedImacDTO_2, "jonhan is not found");
         assertEquals("jonhan", responseLoggedImacDTO_2.getIntraName());
+    }
+
+    //멤버를 생성,저장하는 공통 메소드
+    private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(intraId, intraName, location, "image", true, "2022-10-31", CAMPUS_ID);
+        Hane hane = Hane.create(haneInOut);
+        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
     }
 }
