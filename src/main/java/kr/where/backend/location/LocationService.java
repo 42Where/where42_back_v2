@@ -90,12 +90,12 @@ public class LocationService {
 	 */
 	public ResponseLoggedImacListDTO getLoggedInIMacs(final AuthUser authUser, final String cluster) {
 		validateCluster(cluster);
-		final List<Location> locations = locationRepository.findByImacLocationStartingWith(cluster);
+		final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWith(cluster);
 
-		final List<Member> members = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
+		final List<Member> friends = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
 
 		return ResponseLoggedImacListDTO.of(
-				locations.stream()
+				loggedInImacs.stream()
 						.map(location -> {
 							final Member member = location.getMember(); // 한 번만 가져오기
 							return ResponseLoggedImacDTO.of(
@@ -103,7 +103,7 @@ public class LocationService {
 									member.getIntraName(),
 									member.getImage(),
 									location.getImacLocation(),
-									members.contains(member)
+									friends.contains(member)
 							);
 						})
 						.toList()
