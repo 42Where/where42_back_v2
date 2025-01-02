@@ -1,14 +1,10 @@
 package kr.where.backend.redisToken;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.jwt.JwtService;
-import kr.where.backend.jwt.dto.RequestReissueDTO;
 import kr.where.backend.logout.LogoutService;
-import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -102,7 +96,7 @@ public class ApiTestUsingRedisServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        Member m = memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy, hane);
 
         String refreshToken = jwtService.createRefreshToken(135436, "suhwpark");
 
@@ -129,7 +123,7 @@ public class ApiTestUsingRedisServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        Member m = memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy, hane);
 
         //created refreshToken
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
@@ -164,7 +158,7 @@ public class ApiTestUsingRedisServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        Member m = memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy, hane);
 
         //created refreshToken
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
