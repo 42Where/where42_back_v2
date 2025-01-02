@@ -7,6 +7,8 @@ import kr.where.backend.announcement.exception.AnnouncementException.NoAnnouncem
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.exception.AuthUserException;
+import kr.where.backend.cluster.exception.ClusterErrorCode;
+import kr.where.backend.cluster.exception.ClusterException.InvalidPathVariable;
 import kr.where.backend.exception.httpError.HttpResourceErrorCode;
 import kr.where.backend.exception.httpError.HttpResourceException;
 import kr.where.backend.group.exception.GroupException;
@@ -191,5 +193,13 @@ public class ExceptionHandleController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(HttpResourceException.of(AnnouncementErrorCode.NO_ANNOUNCEMENTS));
+    }
+
+    @ExceptionHandler(InvalidPathVariable.class)
+    public ResponseEntity<String> handleInvalidPathVariable() {
+        log.error(ClusterErrorCode.INVALID_PATH_VARIABLE.getErrorMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(HttpResourceException.of(ClusterErrorCode.INVALID_PATH_VARIABLE));
     }
 }
