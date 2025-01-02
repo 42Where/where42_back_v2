@@ -6,7 +6,6 @@ import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.logout.LogoutService;
-import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -80,7 +79,7 @@ public class RedisTokenServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        Member m = memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy, hane);
 
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
         String refreshToken = jwtService.createRefreshToken(135436, "suhwpark");
@@ -122,7 +121,7 @@ public class RedisTokenServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
-        Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy, hane);
 
         //token 생성
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
