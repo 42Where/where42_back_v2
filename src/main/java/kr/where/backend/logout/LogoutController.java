@@ -3,6 +3,7 @@ package kr.where.backend.logout;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.logout.swagger.LogoutApiDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v3")
 @RequiredArgsConstructor
-public class LogoutController {
+public class LogoutController implements LogoutApiDocs {
 
     private final LogoutService logoutService;
 
