@@ -24,7 +24,6 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final int ACCESS_EXPIRY = 30 * 60;
-    private static final int REFRESH_EXPIRY = 14 * 24 * 60 * 60;
     private final MemberService memberService;
     private final JwtService jwtService;
     private final RedisTokenService redisTokenService;

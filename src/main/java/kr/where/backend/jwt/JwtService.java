@@ -45,7 +45,6 @@ import org.springframework.security.core.Authentication;
 @Slf4j
 public class JwtService {
     private static final int ACCESS_EXPIRY = 30 * 60;
-    private static final String NULL = "null";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
