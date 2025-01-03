@@ -2,9 +2,11 @@ package kr.where.backend.cluster;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import kr.where.backend.api.json.CadetPrivacy;
+
+import kr.where.backend.api.json.*;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.cluster.dto.ResponseClusterDTO;
@@ -12,6 +14,7 @@ import kr.where.backend.cluster.dto.ResponseClusterListDTO;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.update.UpdateService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,26 +42,21 @@ public class ClusterServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private UpdateService updateService;
     private AuthUser authUser;
-
     private final static Integer CAMPUS_ID = 29;
 
     @BeforeEach
     public void setUP() {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
-        authUser = new AuthUser(11111, "soohlee", 1L);
+        authUser = new AuthUser(111111, "soohlee", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
-        CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "soohlee", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
+        CadetPrivacy cadetPrivacy = new CadetPrivacy(111111, "soohlee", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         member.updateRole("ADMIN");
         memberRepository.save(member);
-
-        clusterRepository.save(Cluster.builder()
-                .cluster("c1")
-                .rowIndex(1)
-                .seat(2)
-                .build());
 
         Collection<? extends GrantedAuthority> authorities2 = List.of(new SimpleGrantedAuthority("user"));
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
@@ -68,11 +66,15 @@ public class ClusterServiceTest {
         Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
         memberRepository.save(member2);
 
-        clusterRepository.save(Cluster.builder()
-                .cluster("c1")
-                .rowIndex(4)
-                .seat(5)
-                .build());
+        Collection<? extends GrantedAuthority> authorities3 = List.of(new SimpleGrantedAuthority("user"));
+        AuthUser authUser3 = new AuthUser(33333, "jonhan", 2L);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser3, "", authorities3));
+        CadetPrivacy cadetPrivacy3 = new CadetPrivacy(33333, "suhwpark", "c1r2s4", "image", true, "2022-10-31", CAMPUS_ID);
+        Hane hane3 = Hane.create("OUT");
+        memberService.createAgreeMember(cadetPrivacy3, hane3);
+
+        clusterService.init();
+
     }
 
     @DisplayName("imac에 로그인되어 있는 멤버를 조회하는 기능 테스트")
@@ -81,7 +83,7 @@ public class ClusterServiceTest {
     void getLoginMember() {
         final ResponseClusterListDTO responseClusterListDTO = clusterService.getLoginMember(authUser, "c1");
         //로그인된 아이맥 개수 확인
-        assertEquals(2, responseClusterListDTO.getMembers().size());
+        assertEquals(3, responseClusterListDTO.getMembers().size());
 
         ResponseClusterDTO responseClusterDTO_1 = responseClusterListDTO.getMembers().stream()
                 .filter(responseClusterDTO -> "soohlee".equals(responseClusterDTO.getIntraName())) // "soohlee"를 찾기 위한 필터
@@ -100,5 +102,37 @@ public class ClusterServiceTest {
         Assertions.assertNotNull(responseClusterDTO_2, "responseClusterDTO is null");
         // 멤버의 정보가 예상대로인지 확인
         assertEquals("jonhan", responseClusterDTO_2.getIntraName());
+    }
+
+    @Test
+    @DisplayName("Cluster init Test")
+    void clusterInitTest() {
+//        clusterService.init();
+        long count = clusterRepository.count();
+        assertEquals(513L, count);
+    }
+
+    @Test
+    @DisplayName("유저 자리사용 횟수 증가 확인 테스트")
+    public void increaseUsedCountTest() {
+
+        //given
+        User user1 = new User(111111, " " , Image.create(Versions.create("")), "c1r2s2");
+        User user2 = new User(222222, " " , Image.create(Versions.create("")), "c1r2s3");
+        User user3 = new User(33333, " " , Image.create(Versions.create("")), "c1r2s4");
+
+        ClusterInfo clusterInfo1 = new ClusterInfo(1, null ,LocalDateTime.now().minusMinutes(30).toString(), user1);
+        ClusterInfo clusterInfo2 = new ClusterInfo(2, null ,LocalDateTime.now().minusMinutes(30).toString(), user2);
+        ClusterInfo clusterInfo3 = new ClusterInfo(3, null ,LocalDateTime.now().minusMinutes(30).toString(), user3);
+        List<ClusterInfo> cadet = List.of(clusterInfo1, clusterInfo2, clusterInfo3);
+        updateService.updateClusterSeat(cadet);
+
+        //when
+        clusterService.increaseUsedCount("c1r2s2", 222222);
+
+        //then
+        Cluster cluster = clusterRepository.findByClusterAndRowIndexAndSeat("1",2,2)
+                .orElseThrow(IllegalArgumentException::new);
+        assertEquals(cluster.getUsedCount().toString(), "2");
     }
 }
