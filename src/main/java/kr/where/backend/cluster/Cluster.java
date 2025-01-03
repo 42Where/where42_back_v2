@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +27,7 @@ public class Cluster {
 
     private Integer seat;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member lastUsedMember;
 
@@ -44,7 +46,9 @@ public class Cluster {
     }
 
     public void updateLastUsedMember(Member member) {
-        this.lastUsedMember = member;
+        if (!Objects.equals(this.lastUsedMember, member)) {
+            this.lastUsedMember = member;
+        }
     }
 
     public void removeLastUsedMember() {
