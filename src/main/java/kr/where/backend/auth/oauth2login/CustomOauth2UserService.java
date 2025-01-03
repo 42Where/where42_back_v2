@@ -6,7 +6,6 @@ import kr.where.backend.member.exception.MemberErrorCode;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -32,7 +31,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         final Map<String, Object> attributes = oAuth2User.getAttributes();
         final String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        Integer intraId = (Integer) attributes.get("id");
+        final Integer intraId = (Integer) attributes.get("id");
 
         final Optional<Member> member = memberRepository.findByIntraId(intraId);
         if (member.isPresent()) {

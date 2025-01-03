@@ -12,6 +12,7 @@ import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,8 +30,10 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (final JwtException e) {
+            SecurityContextHolder.clearContext();
             sendRequest(response, HttpServletResponse.SC_UNAUTHORIZED, e.toString());
         } catch (final MemberException e) {
+            SecurityContextHolder.clearContext();
             sendRequest(response, HttpServletResponse.SC_NOT_FOUND, e.toString());
         }
     }

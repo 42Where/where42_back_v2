@@ -1,10 +1,13 @@
 package kr.where.backend.member;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.dto.*;
 import kr.where.backend.member.swagger.MemberApiDocs;
+import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -63,9 +66,9 @@ public class MemberController implements MemberApiDocs {
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
 	@DeleteMapping("")
-	public ResponseEntity<ResponseMemberDTO> deleteMember(@AuthUserInfo final AuthUser authUser) {
-		final ResponseMemberDTO responseMemberDto = memberService.deleteMember(authUser);
-
+	public ResponseEntity<ResponseMemberDTO> deleteMember(final HttpServletRequest request,
+														  @AuthUserInfo final AuthUser authUser) {
+		final ResponseMemberDTO responseMemberDto = memberService.deleteMember(request, authUser);
 		return ResponseEntity.ok(responseMemberDto);
 	}
 

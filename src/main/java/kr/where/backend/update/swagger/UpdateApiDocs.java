@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Tag(name = "update", description = "update API")
-
 public interface UpdateApiDocs {
     @Operation(summary = "3.1 updateMember location API", description = "맴버 자리를 업데이트하는 api",
             responses = {

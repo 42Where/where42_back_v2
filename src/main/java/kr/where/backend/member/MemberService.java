@@ -1,5 +1,6 @@
 package kr.where.backend.member;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
@@ -8,11 +9,13 @@ import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
+import kr.where.backend.jwt.JwtService;
 import kr.where.backend.location.LocationService;
 import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -30,6 +33,8 @@ public class MemberService {
 	private final GroupService groupService;
 	private final LocationService locationService;
 	private final HaneApiService haneApiServiceService;
+	private final JwtService jwtService;
+	private final RedisTokenService redisTokenService;
 	private final static Integer CAMPUS_ID = 29;
 	/**
 	 * if (이미 존재하는 멤버)
@@ -107,11 +112,12 @@ public class MemberService {
 	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
 	 */
 	@Transactional
-	public ResponseMemberDTO deleteMember(final AuthUser authUser) {
+	public ResponseMemberDTO deleteMember(final HttpServletRequest request, final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
 			.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
-
+		final String accessToken = jwtService.extractToken(request).orElse(null);
+		redisTokenService.invalidateToken(accessToken, authUser.getIntraId().toString());
 		memberRepository.delete(member);
 
 		return responseMemberDto;

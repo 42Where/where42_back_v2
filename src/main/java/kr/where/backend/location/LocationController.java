@@ -2,6 +2,7 @@ package kr.where.backend.location;
 
 import jakarta.validation.Valid;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.location.swagger.LocationApiDocs;
@@ -44,8 +45,7 @@ public class LocationController implements LocationApiDocs {
 	 * @return ResponseEntity(responseLocationDTO)
 	 */
 	@DeleteMapping("/custom")
-	public ResponseEntity<ResponseLocationDTO> deleteCustomLocation() {
-		final AuthUser authUser = AuthUser.of();
+	public ResponseEntity<ResponseLocationDTO> deleteCustomLocation(@AuthUserInfo final AuthUser authUser) {
 		final ResponseLocationDTO responseLocationDto = locationService.deleteCustomLocation(authUser);
 
 		return ResponseEntity.ok(responseLocationDto);
