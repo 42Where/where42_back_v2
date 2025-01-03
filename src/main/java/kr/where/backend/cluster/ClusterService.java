@@ -167,7 +167,7 @@ public class ClusterService {
         final Cluster cluster = parseClusterInfo(location);
         Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
-        if (!cluster.getLastUsedMember().equals(member)) {
+        if (cluster.getLastUsedMember() == null || !cluster.getLastUsedMember().equals(member)) {
             cluster.updateLastUsedMember(member);
             cluster.increaseUsedCount();
         }
