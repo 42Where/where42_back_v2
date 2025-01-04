@@ -130,7 +130,7 @@ public class UpdateService {
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
                         .forEach(cluster -> {
-                            seatHistoryService.report(cluster.getUser().getLocation(), cluster.getId());
+                            seatHistoryService.report(cluster.getUser().getLocation(), cluster.getUser().getId());
                             statusResult.add(cluster);
                         });
                 if (loginStatus.size() < 100) {
