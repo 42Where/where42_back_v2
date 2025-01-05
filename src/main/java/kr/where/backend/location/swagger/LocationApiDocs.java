@@ -1,5 +1,7 @@
 package kr.where.backend.location.swagger;
 
+import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +48,5 @@ public interface LocationApiDocs {
 		}
 	)
 	@DeleteMapping("/custom")
-	ResponseEntity<ResponseLocationDTO> deleteCustomLocation();
+	ResponseEntity<ResponseLocationDTO> deleteCustomLocation(@AuthUserInfo final AuthUser authUser);
 }

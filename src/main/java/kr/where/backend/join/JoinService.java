@@ -2,15 +2,14 @@ package kr.where.backend.join;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
+import kr.where.backend.join.dto.ResponseJoinDTO;
 import kr.where.backend.join.exception.JoinException;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +20,11 @@ public class JoinService {
     private final MemberService memberService;
     private final HaneApiService haneApiService;
     private final JwtService jwtService;
+    private final RedisTokenService redisTokenService;
 
     @Transactional
-    public ResponseRefreshTokenDTO join(final AuthUser authUser) {
-        final Member member = memberService.findOne(authUser.getIntraId())
+    public ResponseJoinDTO join(final Integer intraId, final String intraName) {
+        final Member member = memberService.findOne(intraId)
                 .orElseThrow(MemberException.NoMemberException::new);
         if (member.isAgree()) {
             throw new JoinException.DuplicatedJoinMember();
@@ -37,11 +37,12 @@ public class JoinService {
                         .getHaneInfo(member.getIntraName(), TOKEN_HANE)
         );
 
-        return ResponseRefreshTokenDTO
+        final String refreshToken = jwtService.createRefreshToken(intraId, intraName);
+        redisTokenService.saveRefreshToken(member.getIntraId().toString(), refreshToken);
+
+        return ResponseJoinDTO
                 .builder()
-                .refreshToken(
-                        jwtService.createRefreshToken(authUser.getIntraId(), authUser.getIntraName())
-                )
+                .intraId(intraId)
                 .build();
     }
 }
