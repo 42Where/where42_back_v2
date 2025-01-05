@@ -12,6 +12,7 @@ import kr.where.backend.redisToken.RedisTokenService;
 import kr.where.backend.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final MemberService memberService;
     private final JwtService jwtService;
     private final RedisTokenService redisTokenService;
+
+    @Value("${domain.url.main}")
+    private String domainUrl;
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request,
@@ -60,7 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                         request,
                         response,
                         UriComponentsBuilder
-                                .fromUriString("https://where42.kr")
+                                .fromUriString(domainUrl)
                                 .queryParam("intraId", member.getIntraId())
                                 .queryParam("agreement", member.isAgree())
                                 .build()
