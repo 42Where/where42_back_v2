@@ -1,6 +1,10 @@
 package kr.where.backend.location;
 
+import java.util.List;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.location.dto.ResponseLoggedImacDTO;
+import kr.where.backend.location.dto.ResponseLoggedImacListDTO;
+import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.location.dto.ResponseLocationDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.member.Member;
@@ -17,6 +21,8 @@ public class LocationService {
 
 	private final LocationRepository locationRepository;
 	private final MemberRepository memberRepository;
+	private final GroupMemberRepository groupMemberRepository;
+	private final LocationUtils locationUtils;
 
 	/**
 	 * member의 imac 정보를 set
@@ -72,5 +78,33 @@ public class LocationService {
 		location.setCustomLocation(null);
 
 		return ResponseLocationDTO.builder().location(location).build();
+	}
+
+	/**
+	 * 현재 아이맥에 로그인한 유저 정보 모두 조회
+	 *
+	 * @param authUser accessToken 파싱한 정보
+	 * @return responseClusterListDTO
+	 */
+	public ResponseLoggedImacListDTO getLoggedInIMacs(final AuthUser authUser, final String cluster) {
+		locationUtils.validateCluster(cluster);
+		final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWith(cluster);
+
+		final List<Member> friends = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
+
+		return ResponseLoggedImacListDTO.of(
+				loggedInImacs.stream()
+						.map(location -> {
+							final Member member = location.getMember(); // 한 번만 가져오기
+							return ResponseLoggedImacDTO.of(
+									member.getIntraId(),
+									member.getIntraName(),
+									member.getImage(),
+									location.getImacLocation(),
+									friends.contains(member)
+							);
+						})
+						.toList()
+		);
 	}
 }

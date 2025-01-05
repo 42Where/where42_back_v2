@@ -6,6 +6,7 @@ import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
 import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.seatHistory.SeatHistory;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,9 +71,11 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedAt = LocalDateTime.now();
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<GroupMember> groupMembers = new ArrayList<>();
 
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<SeatHistory> seatHistories = new ArrayList<>();
 	public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
 		this.intraId = cadetPrivacy.getId();
 		this.intraName = cadetPrivacy.getLogin();
