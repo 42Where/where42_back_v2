@@ -122,21 +122,22 @@ public class SearchService {
         );
     }
 
-    @Cacheable(key = "#word", value = "searchCache", cacheManager = "redisCacheManager")
-    public List<CadetPrivacy> searchOnCache(String word) {
+    @Cacheable(key = "#word", value = "searchCache", cacheManager = "redisCacheManager", unless = "#result.isEmpty()")
+    public List<CadetPrivacy> searchOnCache(final String word) {
         final List<CadetPrivacy> result = new ArrayList<>();
 
         int page = 1;
         while (true) {
             final List<CadetPrivacy> searchApiResult =
                     intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
-            System.out.println("-----------" + searchApiResult.size());
+
             isActiveCadet(result, searchApiResult);
             if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
                 break;
             }
             page += 1;
         }
+
         return result;
     }
 }
