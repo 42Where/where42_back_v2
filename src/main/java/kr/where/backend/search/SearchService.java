@@ -2,6 +2,7 @@ package kr.where.backend.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
@@ -16,6 +17,8 @@ import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -95,5 +98,43 @@ public class SearchService {
                         .orElseGet(() -> memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearchDTO(group, search))
                 .toList();
+    }
+
+    public List<ResponseSearchDTO> searchUser(String keyWord, AuthUser authUser) {
+        final Member member = memberService.findOne(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+
+        final String word = validateKeyWord(keyWord.trim().toLowerCase());
+        final String cacheKey = word.substring(0, 3);
+
+        final List<CadetPrivacy> response = searchOnCache(cacheKey);
+
+        if (Objects.equals(word, cacheKey)) {
+            return responseOfSearch(member, response);
+        }
+
+        return responseOfSearch(
+                member,
+                response.stream()
+                        .filter(res -> res.getLogin().startsWith(keyWord))
+                        .toList()
+        );
+    }
+
+    @Cacheable(key = "#word", value = "searchCache", cacheManager = "redisCacheManager")
+    public List<CadetPrivacy> searchOnCache(String word) {
+        final List<CadetPrivacy> result = new ArrayList<>();
+
+        int page = 1;
+        while (true) {
+            final List<CadetPrivacy> searchApiResult =
+                    intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
+            isActiveCadet(result, searchApiResult);
+            if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
+                break;
+            }
+            page += 1;
+        }
+        return result;
     }
 }
