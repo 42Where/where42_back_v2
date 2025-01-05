@@ -22,7 +22,7 @@ public class LocationService {
 	private final LocationRepository locationRepository;
 	private final MemberRepository memberRepository;
 	private final GroupMemberRepository groupMemberRepository;
-	private final LocationValidator locationValidator;
+	private final LocationUtils locationUtils;
 
 	/**
 	 * member의 imac 정보를 set
@@ -87,7 +87,7 @@ public class LocationService {
 	 * @return responseClusterListDTO
 	 */
 	public ResponseLoggedImacListDTO getLoggedInIMacs(final AuthUser authUser, final String cluster) {
-		locationValidator.validateCluster(cluster);
+		locationUtils.validateCluster(cluster);
 		final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWith(cluster);
 
 		final List<Member> friends = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());

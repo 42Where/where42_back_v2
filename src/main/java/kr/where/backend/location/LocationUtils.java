@@ -6,7 +6,7 @@ import kr.where.backend.cluster.exception.ClusterException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LocationValidator {
+public class LocationUtils {
 
     public void validateCluster(final String clusterZone) {
 		//포맷형식이 맞는가? ex: "cx1" or "c1"
@@ -25,19 +25,19 @@ public class LocationValidator {
 		}
     }
 
-    private boolean isValidFormat(final String clusterZone) {
+    public boolean isValidFormat(final String clusterZone) {
         return clusterZone.matches(ClusterConstant.CLUSTER_REGEX.getStringValue());
     }
 
-    private String extractPrefix(final String clusterZone) {
+    public String extractPrefix(final String clusterZone) {
         return clusterZone.replaceAll(ClusterConstant.ALL_NUMBER.getStringValue(), ClusterConstant.EMPTY_STRING.getStringValue());
     }
 
-    private int extractClusterNumber(final String clusterZone) {
+    public int extractClusterNumber(final String clusterZone) {
         return Integer.parseInt(clusterZone.replaceAll(ClusterConstant.ALL_STRING.getStringValue(), ClusterConstant.EMPTY_STRING.getStringValue()));
     }
 
-    private boolean isValidClusterRange(final String prefix, final int clusterNumber) {
+    public boolean isValidClusterRange(final String prefix, final int clusterNumber) {
         if (Objects.equals(ClusterConstant.CLUSTER_C.getStringValue(), prefix)) {
             return clusterNumber >= ClusterConstant.CLUSTER_C.getMinValue() && clusterNumber <= ClusterConstant.CLUSTER_C.getMaxValue();
         }
