@@ -1,6 +1,5 @@
 package kr.where.backend.seatHistory;
 
-import com.fasterxml.classmate.MemberResolver;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -15,22 +14,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class SeatHistoryTest {
 
     @Autowired
@@ -81,6 +82,11 @@ public class SeatHistoryTest {
         assertThat(seatHistoryList.size()).isEqualTo(1);
     }
 
+    /**
+     * 주의사항:
+     * - 테스트는 SeatHistory::increaseCount 메서드가 항상 사용 횟수를 증가시키는 상태에서 실행되어야 한다.
+     * 5분 제한 조건이 없는 상태에서 테스트 수행하기 위해 SeatHistory::increaseCount함수에 `if (!isAfter5Minute()) {return}`을 주석처리 하고 실행한다.
+     */
     @Test
     @DisplayName("사용했던 자리면, 사용한 수를 증가하고 처음 앉는 자리라면 새로 만들어서 기록하는 test")
     void createOrIncreaseHistory() {
@@ -103,6 +109,11 @@ public class SeatHistoryTest {
         assertThat(seatHistory.getCount()).isEqualTo(2);
     }
 
+    /**
+     * 주의사항:
+     * - 테스트는 SeatHistory::increaseCount 메서드가 항상 사용 횟수를 증가시키는 상태에서 실행되어야 한다.
+     * 5분 제한 조건이 없는 상태에서 테스트 수행하기 위해 SeatHistory::increaseCount함수에 `if (!isAfter5Minute()) {return}`을 주석처리 하고 실행한다.
+     */
     @Test
     @DisplayName("가장 많이 사용하는 자리 3곳과 총 사용자리 대비 퍼센트 구하는 test")
     void getPopularSeatHistories() {
