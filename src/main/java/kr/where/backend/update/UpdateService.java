@@ -74,7 +74,7 @@ public class UpdateService {
         return result;
     }
 
-    private void updateLocation(final List<ClusterInfo> cadets) {
+    public void updateLocation(final List<ClusterInfo> cadets) {
         final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
