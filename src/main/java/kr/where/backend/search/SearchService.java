@@ -34,6 +34,7 @@ public class SearchService {
     private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
 
+
     /**
      * @param keyWord 찾을 검색 입력값
      * @return response로 변경하여 client 측에 전달 검색하고자 하는 입력값의 결과 10개를 반환 블랙홀에 빠지지 않은 카뎃을 필터로 걸러서 response DTO 생성
@@ -129,6 +130,7 @@ public class SearchService {
         while (true) {
             final List<CadetPrivacy> searchApiResult =
                     intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
+            System.out.println("-----------" + searchApiResult.size());
             isActiveCadet(result, searchApiResult);
             if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
                 break;
