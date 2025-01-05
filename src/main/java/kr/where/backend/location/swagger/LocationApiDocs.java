@@ -61,7 +61,7 @@ public interface LocationApiDocs {
 					@ApiResponse(responseCode = "200", description = "imac에 로그인한 멤버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseLoggedImacListDTO.class))),
 			}
 	)
-	@GetMapping("/{cluster}")
+	@GetMapping("/active/{cluster}")
 	public ResponseEntity<ResponseLoggedImacListDTO> getLoggedInIMacs(@PathVariable("cluster") final String cluster, @AuthUserInfo final AuthUser authUser);
 
 }
