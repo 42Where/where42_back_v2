@@ -142,4 +142,10 @@ public class SeatHistoryTest {
         assertThat(seatHistories.size()).isEqualTo(1);
         assertThat(seatHistories.get(0).getImac()).isEqualTo("c1r1s1");
     }
+
+    @Test
+    @DisplayName("자리 정보 추가시 잘못된 존재하지 intra_id를 저장하려고 할때 익센션 터지는 Test")
+    void saveInvalidIntraIdThrowsException() {
+        assertThrows(MemberException.NoMemberException.class, () -> seatHistoryService.report("c1r1s1", 99999999));
+    }
 }
