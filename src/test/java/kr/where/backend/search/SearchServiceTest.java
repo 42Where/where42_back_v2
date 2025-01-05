@@ -34,9 +34,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -50,10 +49,10 @@ public class SearchServiceTest {
     MemberService memberService;
 
     @MockBean
-    private IntraApiService intraApiService;
+    IntraApiService intraApiService;
 
     @MockBean
-    private OAuthTokenService oauthTokenService;
+    OAuthTokenService oauthTokenService;
 
     AuthUser authUser;
 
@@ -91,31 +90,24 @@ public class SearchServiceTest {
     
     @Test
     @DisplayName("searchCache 테스트")
-    public void searchOnCacheTest() throws Exception{
-    
+    public void searchOnCacheTest() throws Exception {
         //given
-        IntraApiService mockIntraApiService = Mockito.mock(IntraApiService.class);
-        OAuthTokenService mockOAuthTokenService = Mockito.mock(OAuthTokenService.class);
-
         CadetPrivacy cadetPrivacy1 = new CadetPrivacy(11111, "soohlee", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29);
         CadetPrivacy cadetPrivacy2 = new CadetPrivacy(22222, "sooh", "c1r2s4", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29);
         CadetPrivacy cadetPrivacy3 = new CadetPrivacy(33333, "soo", "c1r2s5", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29);
 
-        ReflectionTestUtils.setField(searchService, "oauthTokenService", oauthTokenService);
-        ReflectionTestUtils.setField(searchService, "intraApiService", intraApiService);
         List<CadetPrivacy> cadetPrivacies = List.of(cadetPrivacy1, cadetPrivacy2, cadetPrivacy3);
 
-        System.out.println("aaaaaa" + cadetPrivacies.size());
-        when(mockOAuthTokenService.findAccessToken("search")).thenReturn("testToken");
-        when(mockIntraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
+        when(oauthTokenService.findAccessToken("search")).thenReturn("testToken");
+        when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
         //when
-//        List<CadetPrivacy> response = searchService.searchOnCache("soo");
-        List<CadetPrivacy> cadetPrivacies1 = mockIntraApiService.getCadetsInRange("testToken", "soo", 1);
+        List<CadetPrivacy> response = searchService.searchOnCache("soo");
+
         //then
-//        assertNotNull(response);
-//        assertEquals(3, response.size());
-//        assertEquals("soohlee", response.get(0).getLogin());
+        assertThat(response).isNotNull();
+        assertThat(response.size()).isEqualTo(3);
+        assertThat(response.get(0).getLogin()).isEqualTo("soohlee");
     }
 
 }
