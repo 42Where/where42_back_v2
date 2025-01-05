@@ -48,8 +48,7 @@ public class LocationController implements LocationApiDocs {
 	 * @return ResponseEntity(responseLocationDTO)
 	 */
 	@DeleteMapping("/custom")
-	public ResponseEntity<ResponseLocationDTO> deleteCustomLocation() {
-		final AuthUser authUser = AuthUser.of();
+	public ResponseEntity<ResponseLocationDTO> deleteCustomLocation(@AuthUserInfo final AuthUser authUser) {
 		final ResponseLocationDTO responseLocationDto = locationService.deleteCustomLocation(authUser);
 
 		return ResponseEntity.ok(responseLocationDto);

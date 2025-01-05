@@ -63,5 +63,4 @@ public interface LocationApiDocs {
 	)
 	@GetMapping("/active/{cluster}")
 	public ResponseEntity<ResponseLoggedImacListDTO> getLoggedInIMacs(@PathVariable("cluster") final String cluster, @AuthUserInfo final AuthUser authUser);
-
 }

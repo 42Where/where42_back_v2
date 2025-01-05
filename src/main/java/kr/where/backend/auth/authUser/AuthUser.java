@@ -44,6 +44,7 @@ public class AuthUser {
         return (AuthUser) principle;
     }
 
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("AuthUser{")
