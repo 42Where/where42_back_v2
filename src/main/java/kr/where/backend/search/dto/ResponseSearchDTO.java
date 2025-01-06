@@ -4,16 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.member.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Schema(description = "http response dto")
 public class ResponseSearchDTO {
 
