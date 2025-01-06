@@ -1,5 +1,6 @@
 package kr.where.backend.search;
 
+import kr.where.backend.search.dto.ResponseSearchDTO;
 import org.mockito.Mockito;
 import org.junit.jupiter.api.Test;
 import kr.where.backend.api.json.*;
@@ -55,6 +56,11 @@ public class SearchServiceTest {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         authUser = new AuthUser(135436, "suhwpark", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
+        memberService.createAgreeMember(
+                new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image",
+                        true, "2022-10-31", 29),
+                Hane.create("IN")
+        );
     }
 
     @DisplayName("유효하지 않은 keyword값이 들어왔을 경우 예외처리")
@@ -105,5 +111,39 @@ public class SearchServiceTest {
         assertThat(response).isNotNull();
         assertThat(response.size()).isEqualTo(3);
         assertThat(response.get(0).getLogin()).isEqualTo("soohlee");
+    }
+
+    @Test
+    @DisplayName("3글자 이상의 keyword로 검색 시 3글자로 검색한 cache에서 찾아서 filtering 하는 test")
+    void searchMore3WordTest() {
+        //given
+        List<CadetPrivacy> cadetPrivacies = List.of(
+                new CadetPrivacy(11111, "soohlee", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soo", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soohee", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soohyun", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sooha", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soohyu", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sooa", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sooqq", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sooquest", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sook", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soohuk", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "sooha", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soopark", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29),
+                new CadetPrivacy(11111, "soose", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29)
+        );
+
+        when(oauthTokenService.findAccessToken("search")).thenReturn("testToken");
+        when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
+
+        searchService.searchOnCache("soo");
+        //when
+        List<ResponseSearchDTO> responses = searchService.searchUser("sooh", authUser);
+
+        //then
+        Mockito.verify(intraApiService, Mockito.times(1)).getCadetsInRange("testToken", "soo", 1);
+        assertThat(responses.size()).isEqualTo(7);
+        responses.forEach(response -> assertThat(response.getIntraName().startsWith("sooh")).isTrue());
     }
 }
