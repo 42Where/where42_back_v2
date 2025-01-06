@@ -51,7 +51,7 @@ public interface LocationApiDocs {
 		}
 	)
 	@DeleteMapping("/custom")
-	ResponseEntity<ResponseLocationDTO> deleteCustomLocation();
+	ResponseEntity<ResponseLocationDTO> deleteCustomLocation(@AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "loggedIMac API", description = "클러스터별 imac 로그인한 사람 조회",
 			parameters = {
