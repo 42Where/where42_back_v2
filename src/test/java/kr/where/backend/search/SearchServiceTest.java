@@ -1,41 +1,35 @@
 package kr.where.backend.search;
 
-
-import kr.where.backend.api.IntraApiService;
+import org.mockito.Mockito;
+import org.junit.jupiter.api.Test;
 import kr.where.backend.api.json.*;
-import kr.where.backend.api.json.hane.Hane;
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.location.dto.UpdateCustomLocationDTO;
-import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberService;
-import kr.where.backend.oauthtoken.OAuthTokenService;
-import kr.where.backend.oauthtoken.exception.OAuthTokenException;
-import kr.where.backend.search.dto.ResponseSearchDTO;
-import kr.where.backend.search.exception.SearchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.api.IntraApiService;
+import kr.where.backend.member.MemberService;
+import kr.where.backend.auth.authUser.AuthUser;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.junit.jupiter.params.provider.ValueSource;
+import kr.where.backend.oauthtoken.OAuthTokenService;
+import kr.where.backend.search.exception.SearchException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import kr.where.backend.oauthtoken.exception.OAuthTokenException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -90,7 +84,7 @@ public class SearchServiceTest {
     
     @Test
     @DisplayName("searchCache 테스트")
-    public void searchOnCacheTest() throws Exception {
+    public void searchOnCacheTest() {
         //given
         CadetPrivacy cadetPrivacy1 = new CadetPrivacy(11111, "soohlee", "c1r2s3", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29);
         CadetPrivacy cadetPrivacy2 = new CadetPrivacy(22222, "sooh", "c1r2s4", Image.create(Versions.create("")), true, LocalDateTime.now().toString(), 29);
@@ -102,12 +96,14 @@ public class SearchServiceTest {
         when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
         //when
+        searchService.searchOnCache("soo");
         List<CadetPrivacy> response = searchService.searchOnCache("soo");
 
         //then
+        //getCadetsInRange 메서드가 한번 호출되었는지 확인
+        Mockito.verify(intraApiService, Mockito.times(1)).getCadetsInRange("testToken", "soo", 1);
         assertThat(response).isNotNull();
         assertThat(response.size()).isEqualTo(3);
         assertThat(response.get(0).getLogin()).isEqualTo("soohlee");
     }
-
 }
