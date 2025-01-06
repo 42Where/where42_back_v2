@@ -18,7 +18,6 @@ import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -101,7 +100,7 @@ public class SearchService {
                 .toList();
     }
 
-    public List<ResponseSearchDTO> searchUser(String keyWord, AuthUser authUser) {
+    public List<ResponseSearchDTO> searchUser(final String keyWord, final AuthUser authUser) {
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
