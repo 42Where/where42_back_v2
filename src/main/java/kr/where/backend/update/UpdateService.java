@@ -79,7 +79,7 @@ public class UpdateService {
         final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
-                .ifPresentOrElse(
+                .ifPresent(
                         member -> {
                             member.getLocation().setImacLocation(cadet.getUser().getLocation());
                             if (member.isAgree()) {
@@ -88,8 +88,7 @@ public class UpdateService {
                                 );
                             }
                             log.info("[scheduling] : {}의 imacLocation가 변경되었습니다", member.getIntraName());
-                },
-                        () -> memberService.createDisagreeMember(new CadetPrivacy(cadet))
+                    }
                 )
         );
     }
@@ -132,7 +131,11 @@ public class UpdateService {
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
                         .forEach(cluster -> {
-                            seatHistoryService.report(cluster.getUser().getLocation(), cluster.getUser().getId());
+                            memberService.findOne(cluster.getUser().getId())
+                                    .ifPresentOrElse(
+                                            m -> seatHistoryService.report(cluster.getUser().getLocation(), m),
+                                            () -> memberService.createDisagreeMember(new CadetPrivacy(cluster))
+                                    );
                             statusResult.add(cluster);
                         });
                 if (loginStatus.size() < 100) {
