@@ -2,7 +2,6 @@ package kr.where.backend.seatHistory;
 
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.exception.MemberException;
 import kr.where.backend.seatHistory.dto.ResponseHistoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +19,7 @@ public class SeatHistoryService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long create(final String seat, final Integer intraId) {
-        final Member member = memberRepository.findByIntraId(intraId)
-                .orElseThrow(MemberException.NoMemberException::new);
-
+    public Long create(final String seat, final Member member) {
         final SeatHistory seatHistory = new SeatHistory(seat, member);
         seatHistoryRepository.save(seatHistory);
 
@@ -32,15 +28,12 @@ public class SeatHistoryService {
     }
 
     @Transactional
-    public void report(final String seat, final Integer intraId) {
-        final Member member = memberRepository.findByIntraId(intraId)
-                .orElseThrow(MemberException.NoMemberException::new);
-
+    public void report(final String seat, final Member member) {
         member.getSeatHistories()
                 .stream()
                 .filter(s -> Objects.equals(s.getImac(), seat))
                 .findFirst()
-                .ifPresentOrElse(SeatHistory::increaseCount, () -> create(seat, intraId));
+                .ifPresentOrElse(SeatHistory::increaseCount, () -> create(seat, member));
     }
 
     public List<ResponseHistoryDTO> getPopularSeatHistory(final Integer intraId) {
