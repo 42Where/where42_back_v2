@@ -78,8 +78,6 @@ public class ClusterServiceTest {
         CadetPrivacy cadetPrivacy3 = new CadetPrivacy(33333, "suhwpark", "c1r2s4", "image", true, "2022-10-31", CAMPUS_ID);
         Hane hane3 = Hane.create("OUT");
         memberService.createAgreeMember(cadetPrivacy3, hane3);
-
-
         clusterService.init();
     }
 

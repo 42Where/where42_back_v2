@@ -42,12 +42,13 @@ public interface ClusterApiDocs {
     @Operation(summary = "Most Popular Seat API", description = "클러스터 내 가장 인기 있는 자리 조회",
             parameters = {
                     @Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+                    @Parameter(name = "count", description = "반환받고자 하는 인기있는 자리 갯수", in = ParameterIn.QUERY)
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseMostPopularSeatDTO.class))),
             }
     )
     @GetMapping("/popular")
-    public ResponseEntity<ResponseMostPopularSeatDTO> getMostPopularSeat();
+    public ResponseEntity<ResponseMostPopularSeatDTO> getMostPopularSeat(final Integer count);
 
 }

@@ -1,6 +1,6 @@
 package kr.where.backend.cluster;
 
-import kr.where.backend.api.json.ClusterInfo;
+import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.cluster.dto.ResponseClusterDTO;
 import kr.where.backend.cluster.dto.ResponseClusterListDTO;
@@ -14,6 +14,8 @@ import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -150,8 +152,10 @@ public class ClusterService {
     }
 
     @Transactional
-    public ResponseMostPopularSeatDTO getMostPopularSeat() {
-        List<Cluster> seats = clusterRepository.findTop3ByOrderByUsedCountDesc();
+    public ResponseMostPopularSeatDTO getMostPopularSeat(int count) {
+        validateCount(count);
+        Pageable pageable = PageRequest.of(0, count);
+        List<Cluster> seats = clusterRepository.findTopNByOrderByUsedCountDesc(pageable);
         List<String> seatStrings = seats.stream()
                 .map(s -> new StringBuilder()
                         .append("c").append(s.getCluster())
@@ -160,6 +164,11 @@ public class ClusterService {
                         .toString())
                 .toList();
         return ResponseMostPopularSeatDTO.of(seatStrings);
+    }
+
+    private void validateCount(int count) {
+        if (count < 0)
+            throw new RequestException.BadRequestException();
     }
 
     @Transactional
