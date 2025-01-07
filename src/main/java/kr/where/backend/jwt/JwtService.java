@@ -24,7 +24,9 @@ import kr.where.backend.auth.oauth2login.cookie.CookieShop;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.jwt.exception.JwtException;
 import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberService;
+import kr.where.backend.member.MemberRepository;
+import kr.where.backend.member.exception.MemberException;
+import kr.where.backend.redisToken.RedisTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -51,27 +53,29 @@ public class JwtService {
     private String secret_code;
     @Value("${issuer}")
     private String issuer;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final RedisTokenService redisTokenService;
     /**
      * 쿠키에 있는 refreshToken을 사용하여 재발급
-     * @param refreshToken : 재발급을 위한 refreshToken을 httpOnly로 설정되어있기 때문에 값을 받아온다.
+     * @param response : accessToken을 http 쿠키에 넣기 위한 용도
+     * @param intraId : 재발급을 위한 맴버 intraId.
      * @return accessToken
      */
-    public ResponseAccessTokenDTO reissueAccessToken(
-            final HttpServletResponse response,
-            final String refreshToken) {
+    public ResponseAccessTokenDTO reissueAccessToken(final HttpServletResponse response,
+                                                     final Integer intraId) {
+        memberRepository.findByIntraId(intraId).orElseThrow(MemberException.NoMemberException::new);
+
+        final String refreshToken = redisTokenService.getRefreshToken(intraId.toString());
+
         final Claims claims = parseToken(refreshToken);
-        final String accessToken = createAccessToken(
-                (Integer) claims.get("intraId"),
-                (String) claims.get("intraName")
-        );
+        final String intraName = (String) claims.get("intraName");
+        final String accessToken = createAccessToken(intraId, intraName);
 
         CookieShop.bakedCookie(
                 response,
                 JwtConstants.ACCESS.getValue(),
                 ACCESS_EXPIRY,
-                accessToken,
-                false
+                accessToken
         );
 
         return ResponseAccessTokenDTO
@@ -153,6 +157,10 @@ public class JwtService {
      * @return
      */
     public Authentication getAuthentication(final HttpServletRequest request, final String token) {
+        if (redisTokenService.isAccessTokenInBlackList(token)) {
+            throw new JwtException.InvalidJwtToken();
+        }
+
         // 토큰 복호화
         final Claims claims = parseToken(token);
         log.info("[login] : 이름 {}, 토큰 {}, 롤 {}", claims.get(
@@ -166,8 +174,9 @@ public class JwtService {
         // 클레임에서 권한 정보 가져오기
         final Integer intraId = claims.get(JwtConstants.USER_ID.getValue(), Integer.class);
 
+
         //token 에 담긴 정보에 맵핑되는 User 정보 디비에서 조회
-        final Member member = memberService.findOne(intraId)
+        final Member member = memberRepository.findByIntraId(intraId)
                 .orElseThrow(JwtException.NotFoundJwtToken::new);
 
         final Collection<? extends GrantedAuthority> authorities

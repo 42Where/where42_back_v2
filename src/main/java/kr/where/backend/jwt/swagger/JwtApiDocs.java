@@ -6,27 +6,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.auth.authUser.AuthUserInfo;
+import jakarta.validation.Valid;
+import kr.where.backend.jwt.dto.RequestReissueDTO;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "jwt", description = "jwt API")
 public interface JwtApiDocs {
     @Operation(
-            summary = "reissue accessToken of Expired time API",
-            description = "accessToken을 재 발급",
+            summary = "reissue accessToken of Expired time API", description = "accessToken을 재 발급",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(implementation = RequestReissueDTO.class))
+            ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(schema = @Schema(implementation = ResponseAccessTokenDTO.class))),
+                    @ApiResponse(responseCode = "200", description = "토큰 재발급 성공",
+                            content = @Content(schema = @Schema(implementation = ResponseAccessTokenDTO.class))),
             }
 
     )
     @PostMapping("/reissue")
-    ResponseEntity<ResponseAccessTokenDTO> reIssue(
-            final HttpServletResponse response,
-            @CookieValue(value = "refreshToken") final String refreshToken
-    );
+    ResponseEntity<ResponseAccessTokenDTO> reIssue(final HttpServletResponse response,
+                                                   @RequestBody @Valid final RequestReissueDTO requestReissueDTO);
 }

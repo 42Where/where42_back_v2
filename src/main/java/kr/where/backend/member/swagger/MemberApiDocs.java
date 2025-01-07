@@ -2,6 +2,7 @@ package kr.where.backend.member.swagger;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -74,7 +74,8 @@ public interface MemberApiDocs {
 		}
 	)
 	@DeleteMapping("")
-	ResponseEntity<ResponseMemberDTO> deleteMember(@AuthUserInfo final AuthUser authUser);
+	ResponseEntity<ResponseMemberDTO> deleteMember(final HttpServletRequest request,
+												   @AuthUserInfo final AuthUser authUser);
 
 	@Operation(summary = "1.4 updatePersonalMessage API", description = "맴버 상태 메시지 변경",
 		parameters = {

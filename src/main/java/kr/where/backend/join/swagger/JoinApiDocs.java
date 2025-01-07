@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.where.backend.api.exception.JsonException;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
-import kr.where.backend.jwt.dto.ResponseRefreshTokenDTO;
+import kr.where.backend.join.dto.ResponseJoinDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -17,12 +17,12 @@ public interface JoinApiDocs {
     @Operation(summary = "3.1 JoinMember API", description = "동의 맴버 생성하는 Post API",
             responses = {
                     @ApiResponse(responseCode = "200", description = "맴버 생성 성공",
-                            content = @Content(schema = @Schema(implementation = ResponseRefreshTokenDTO.class))),
+                            content = @Content(schema = @Schema(implementation = ResponseJoinDTO.class))),
                     @ApiResponse(responseCode = "404", description = "맴버 생성 실패",
                             content = @Content(schema = @Schema(implementation = JsonException.class)))
             }
 
     )
     @PostMapping("")
-    ResponseEntity<ResponseRefreshTokenDTO> join(@AuthUserInfo final AuthUser authUser);
+    ResponseEntity<ResponseJoinDTO> join(@AuthUserInfo final AuthUser authUser);
 }
