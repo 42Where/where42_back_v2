@@ -130,6 +130,8 @@ public class SecurityConfig {
                                 .hasRole("ADMIN")
                                 .requestMatchers(requestMatcher.pattern("/v3/admin/**"))
                                 .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern("/v3/cluster/init"))
+                                .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
