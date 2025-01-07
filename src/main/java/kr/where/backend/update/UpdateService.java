@@ -58,6 +58,7 @@ public class UpdateService {
         final List<ClusterInfo> loginMember = getLoginMember(token);
 
         updateLocation(loginMember);
+        updateClusterSeat(loginMember);
         log.info("[scheduling] : 로그인한 맴버의 imacLocation 업데이트를 끝냅니다!!");
     }
 
@@ -95,7 +96,7 @@ public class UpdateService {
     }
 
     /**
-     * 3분 동안 login, logout status 적용하는 메서드
+     * 3분 동안 login, logout status 적용하는 스케줄링 메서드
      * Hane token도 적용 해야함!
      */
     @Retryable
