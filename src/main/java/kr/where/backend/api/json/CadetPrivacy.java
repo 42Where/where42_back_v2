@@ -46,6 +46,16 @@ public class CadetPrivacy {
         this.campus = campusId;
     }
 
+    public CadetPrivacy(final ClusterInfo clusterInfo) {
+        this.id = clusterInfo.getId();
+        this.login = clusterInfo.getUser().getLogin();
+        this.location = clusterInfo.getUser().getLocation();
+        this.image = clusterInfo.getUser().getImage();
+        this.active = clusterInfo.getUser().isActive();
+        this.created_at = clusterInfo.getUser().getCreated_at();
+        this.campus = SEOUL_CAMPUS_ID;
+    }
+
     public static CadetPrivacy of(final Map<String, Object> attributes) {
         Map<String, Object> image = (Map<String, Object>) attributes.get("image");
         String smallUrl = "";
