@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Tag(name = "cluster", description = "cluster API")
 public interface ClusterApiDocs {
     @Operation(summary = "initCluster API", description = "DB의 Cluster 데이터 모두 초기화",
             parameters = {
