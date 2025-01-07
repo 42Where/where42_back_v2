@@ -26,7 +26,7 @@ public class SearchService {
     private static final String PATTERN = "^[0-9a-z-]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
-    private static final int MINIMUM_LENGTH = 1;
+    private static final int MINIMUM_LENGTH = 3;
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
@@ -52,7 +52,7 @@ public class SearchService {
         if (keyWord.isEmpty() || !isContainOnlyEnglishAndDigit(keyWord)) {
             throw new SearchException.InvalidContextException();
         }
-        if (!validateLength(keyWord)) {
+        if (!newValidateLength(keyWord)) {
             throw new SearchException.InvalidLengthException();
         }
         return keyWord;
@@ -64,6 +64,10 @@ public class SearchService {
 
     private boolean validateLength(final String keyWord) {
         return keyWord.length() > MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
+    }
+
+    private boolean newValidateLength(final String keyWord) {
+        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
@@ -101,10 +105,10 @@ public class SearchService {
     }
 
     public List<ResponseSearchDTO> searchUser(final String keyWord, final AuthUser authUser) {
+        final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
-        final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final String cacheKey = word.substring(0, 3);
 
         final List<CadetPrivacy> response = searchOnCache(cacheKey);
