@@ -24,7 +24,7 @@ public class SeatHistory {
     private LocalDateTime updateAt;
 
     @ManyToOne
-    @JoinColumn(name = "intra_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public SeatHistory(final String imac, final Member member) {

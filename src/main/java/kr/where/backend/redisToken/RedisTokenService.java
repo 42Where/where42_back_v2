@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisTokenService {
     private final RedisTemplate<String, Object> redisTemplate;
-    private final static String NULL = "null";
     @Value("${accesstoken.expiration.time}")
     private long accessTokenExpirationTime;
     @Value("${refreshtoken.expiration.time}")
@@ -32,7 +31,7 @@ public class RedisTokenService {
     }
 
     public boolean isAccessTokenInBlackList(final String token) {
-        return !Objects.equals(redisTemplate.opsForValue().get(token), NULL);
+        return !Objects.equals(redisTemplate.opsForValue().get(token), null);
     }
 
     public String getRefreshToken(final String intraId) {

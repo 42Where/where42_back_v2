@@ -2,8 +2,11 @@ package kr.where.backend.location.swagger;
 
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.location.dto.ResponseLoggedImacListDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -49,4 +52,15 @@ public interface LocationApiDocs {
 	)
 	@DeleteMapping("/custom")
 	ResponseEntity<ResponseLocationDTO> deleteCustomLocation(@AuthUserInfo final AuthUser authUser);
+
+	@Operation(summary = "loggedIMac API", description = "클러스터별 imac 로그인한 사람 조회",
+			parameters = {
+					@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+			},
+			responses = {
+					@ApiResponse(responseCode = "200", description = "imac에 로그인한 멤버 조회 성공", content = @Content(schema = @Schema(implementation = ResponseLoggedImacListDTO.class))),
+			}
+	)
+	@GetMapping("/active/{cluster}")
+	public ResponseEntity<ResponseLoggedImacListDTO> getLoggedInIMacs(@PathVariable("cluster") final String cluster, @AuthUserInfo final AuthUser authUser);
 }

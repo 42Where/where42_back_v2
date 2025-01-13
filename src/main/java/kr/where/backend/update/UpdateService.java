@@ -36,7 +36,7 @@ public class UpdateService {
     private final HaneApiService haneApiService;
     private final MemberService memberService;
     private final SeatHistoryService seatHistoryService;
-    //TODO
+
     /**
      *
      * 1. 로그인한 모든 카뎃의 위치 업데이트 서비스
@@ -69,27 +69,28 @@ public class UpdateService {
             if (loginMember.get(99).getEnd_at() != null) {
                 break;
             }
-            log.info("" + page);
             page += 1;
         }
 
         return result;
     }
 
-    private void updateLocation(final List<ClusterInfo> cadets) {
+    public void updateLocation(final List<ClusterInfo> cadets) {
         final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
-                .ifPresent(member -> {
-                    member.getLocation().setImacLocation(cadet.getUser().getLocation());
-                    if (member.isAgree()) {
-                        member.setInCluster(
-                                haneApiService
-                                        .getHaneInfo(cadet.getUser().getLogin(), haneToken)
-                        );
+                .ifPresent(
+                        member -> {
+                            member.getLocation().setImacLocation(cadet.getUser().getLocation());
+                            if (member.isAgree()) {
+                                member.setInCluster(
+                                        haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken)
+                                );
+                            }
+                            log.info("[scheduling] : {}의 imacLocation가 변경되었습니다", member.getIntraName());
                     }
-                    log.info("[scheduling] : {}의 imacLocation가 변경되었습니다", member.getIntraName());
-                }));
+                )
+        );
     }
 
     /**
@@ -130,7 +131,11 @@ public class UpdateService {
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
                         .forEach(cluster -> {
-                            seatHistoryService.report(cluster.getUser().getLocation(), cluster.getId());
+                            memberService.findOne(cluster.getUser().getId())
+                                    .ifPresentOrElse(
+                                            m -> seatHistoryService.report(cluster.getUser().getLocation(), m),
+                                            () -> memberService.createDisagreeMember(new CadetPrivacy(cluster))
+                                    );
                             statusResult.add(cluster);
                         });
                 if (loginStatus.size() < 100) {

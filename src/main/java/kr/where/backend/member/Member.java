@@ -85,7 +85,7 @@ public class Member {
 		this.role = USER_ROLE;
 		this.inClusterUpdatedAt = LocalDateTime.now();
 		this.agree = true;
-		this.blackHole = false;
+		this.blackHole = cadetPrivacy.isActive();
 	}
 
 	public Member(final CadetPrivacy cadetPrivacy) {
@@ -94,7 +94,7 @@ public class Member {
 		this.image = cadetPrivacy.getImage().getVersions().getSmall();
 		this.grade = cadetPrivacy.getCreated_at();
 		this.role = USER_ROLE;
-		this.blackHole = false;
+		this.blackHole = cadetPrivacy.isActive();
 		this.agree = false;
 	}
 

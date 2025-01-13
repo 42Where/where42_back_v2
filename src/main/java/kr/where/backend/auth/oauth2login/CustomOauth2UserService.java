@@ -1,9 +1,10 @@
 package kr.where.backend.auth.oauth2login;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.exception.MemberErrorCode;
-import kr.where.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,9 +14,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
