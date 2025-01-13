@@ -24,4 +24,11 @@ public class SearchController implements SearchApiDocs {
 
         return ResponseEntity.ok(searchService.search(keyWord, authUser));
     }
+
+    @GetMapping("/new")
+    public ResponseEntity<List<ResponseSearchDTO>> searchUser(@RequestParam("keyWord") final String keyWord,
+                                                              @AuthUserInfo final AuthUser authUser) {
+        return ResponseEntity.ok().body(searchService.searchUser(keyWord, authUser));
+    }
+
 }

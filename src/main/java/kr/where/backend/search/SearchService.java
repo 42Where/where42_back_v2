@@ -2,6 +2,7 @@ package kr.where.backend.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
@@ -16,6 +17,7 @@ import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,12 +26,13 @@ public class SearchService {
     private static final String PATTERN = "^[0-9a-z-]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
-    private static final int MINIMUM_LENGTH = 1;
+    private static final int MINIMUM_LENGTH = 3;
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
+
 
     /**
      * @param keyWord 찾을 검색 입력값
@@ -49,7 +52,7 @@ public class SearchService {
         if (keyWord.isEmpty() || !isContainOnlyEnglishAndDigit(keyWord)) {
             throw new SearchException.InvalidContextException();
         }
-        if (!validateLength(keyWord)) {
+        if (!newValidateLength(keyWord)) {
             throw new SearchException.InvalidLengthException();
         }
         return keyWord;
@@ -61,6 +64,10 @@ public class SearchService {
 
     private boolean validateLength(final String keyWord) {
         return keyWord.length() > MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
+    }
+
+    private boolean newValidateLength(final String keyWord) {
+        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
@@ -95,5 +102,45 @@ public class SearchService {
                         .orElseGet(() -> memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearchDTO(group, search))
                 .toList();
+    }
+
+    public List<ResponseSearchDTO> searchUser(final String keyWord, final AuthUser authUser) {
+        final String word = validateKeyWord(keyWord.trim().toLowerCase());
+        final Member member = memberService.findOne(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+
+        final String cacheKey = word.substring(0, 3);
+
+        final List<CadetPrivacy> response = searchOnCache(cacheKey);
+
+        if (Objects.equals(word, cacheKey)) {
+            return responseOfSearch(member, response);
+        }
+
+        return responseOfSearch(
+                member,
+                response.stream()
+                        .filter(res -> res.getLogin().startsWith(keyWord))
+                        .toList()
+        );
+    }
+
+    @Cacheable(key = "#word", value = "searchCache", cacheManager = "redisCacheManager", unless = "#result.isEmpty()")
+    public List<CadetPrivacy> searchOnCache(final String word) {
+        final List<CadetPrivacy> result = new ArrayList<>();
+
+        int page = 1;
+        while (true) {
+            final List<CadetPrivacy> searchApiResult =
+                    intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
+
+            isActiveCadet(result, searchApiResult);
+            if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
+                break;
+            }
+            page += 1;
+        }
+
+        return result;
     }
 }
