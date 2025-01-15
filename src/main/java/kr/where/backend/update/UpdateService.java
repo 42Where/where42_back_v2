@@ -11,7 +11,7 @@ import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
-import kr.where.backend.seatHistory.SeatHistoryService;
+import kr.where.backend.imacHistory.ImacHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Lock;
@@ -35,7 +35,7 @@ public class UpdateService {
     private final IntraApiService intraApiService;
     private final HaneApiService haneApiService;
     private final MemberService memberService;
-    private final SeatHistoryService seatHistoryService;
+    private final ImacHistoryService imacHistoryService;
 
     /**
      *
@@ -130,14 +130,15 @@ public class UpdateService {
                 final List<ClusterInfo> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
-                        .forEach(cluster -> {
-                            memberService.findOne(cluster.getUser().getId())
-                                    .ifPresentOrElse(
-                                            m -> seatHistoryService.report(cluster.getUser().getLocation(), m),
-                                            () -> memberService.createDisagreeMember(new CadetPrivacy(cluster))
-                                    );
-                            statusResult.add(cluster);
-                        });
+                        .forEach(statusResult::add);
+//                        .forEach(cluster -> {
+//                            memberService.findOne(cluster.getUser().getId())
+//                                    .ifPresent(
+////                                            m -> imacHistoryService.report(cluster.getUser().getLocation(), m),
+//                                            () -> memberService.createDisagreeMember(new CadetPrivacy(cluster))
+//                                    );
+//                            statusResult.add(cluster);
+//                        });
                 if (loginStatus.size() < 100) {
                     loginFlag = true;
                 }
