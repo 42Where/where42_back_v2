@@ -121,4 +121,15 @@ public interface LocationApiDocs {
 	)
 	@GetMapping("/cluster/usage")
 	ResponseEntity<ResponseClusterUsageListDTO> getClusterUsage();
+
+	@Operation(summary = "Imac usage API", description = "출근자 중 아이맥 사용중인 사람 비율 조회",
+			parameters = {
+					@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+			},
+			responses = {
+					@ApiResponse(responseCode = "200", description = "출근자 중 아이맥 사용중인 사람 비율 조회 성공", content = @Content(schema = @Schema(implementation = ResponseImacUsageDTO.class)))
+			}
+	)
+	@GetMapping("/cluster/imacUsage")
+	ResponseEntity<ResponseImacUsageDTO> getImacUsage();
 }

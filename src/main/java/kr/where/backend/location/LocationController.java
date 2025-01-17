@@ -71,4 +71,8 @@ public class LocationController implements LocationApiDocs {
 		return ResponseEntity.ok(ResponseClusterUsageListDTO.of(clusters));
 	}
 
+	@GetMapping("/cluster/imacUsage")
+	public ResponseEntity<ResponseImacUsageDTO> getImacUsage() {
+		return ResponseEntity.ok(ResponseImacUsageDTO.of(0, 0, 0));
+	}
 }
