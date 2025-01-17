@@ -2,7 +2,9 @@ package kr.where.backend.location.swagger;
 
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.location.dto.ResponseImacUsageDTO;
 import kr.where.backend.location.dto.ResponseLoggedImacListDTO;
+import kr.where.backend.location.dto.ResponseClusterUsageListDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,4 +65,71 @@ public interface LocationApiDocs {
 	)
 	@GetMapping("/active/{cluster}")
 	public ResponseEntity<ResponseLoggedImacListDTO> getLoggedInIMacs(@PathVariable("cluster") final String cluster, @AuthUserInfo final AuthUser authUser);
+
+	@Operation(summary = "cluster usage API", description = "클러스터별 사용률 조회",
+			parameters = {
+					@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+			},
+			responses = {
+					@ApiResponse(responseCode = "200", description = "클러스터별 사용률 조회 성공", content = @Content(
+							mediaType = "application/json",
+							examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+									name = "클러스터별 사용률 데이터",
+									value = "{\n" +
+											"  \"clusters\": [\n" +
+											"    {\n" +
+											"      \"name\": \"c1\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    },\n" +
+											"    {\n" +
+											"      \"name\": \"c2\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    },\n" +
+											"    {\n" +
+											"      \"name\": \"cx1\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    },\n" +
+											"    {\n" +
+											"      \"name\": \"cx2\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    },\n" +
+											"    {\n" +
+											"      \"name\": \"c5\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    },\n" +
+											"    {\n" +
+											"      \"name\": \"c6\",\n" +
+											"      \"usageRate\": 0.1,\n" +
+											"      \"usingImacCount\": 0,\n" +
+											"      \"totalImacCount\": 0\n" +
+											"    }\n" +
+											"  ]\n" +
+											"}"
+							)
+					))
+			}
+	)
+	@GetMapping("/cluster/usage")
+	ResponseEntity<ResponseClusterUsageListDTO> getClusterUsage();
+
+	@Operation(summary = "Imac usage API", description = "출근자 중 아이맥 사용중인 사람 비율 조회",
+			parameters = {
+					@Parameter(name = "accessToken", description = "인증/인가 확인용 accessToken", in = ParameterIn.HEADER),
+			},
+			responses = {
+					@ApiResponse(responseCode = "200", description = "출근자 중 아이맥 사용중인 사람 비율 조회 성공", content = @Content(schema = @Schema(implementation = ResponseImacUsageDTO.class)))
+			}
+	)
+	@GetMapping("/cluster/imacUsage")
+	ResponseEntity<ResponseImacUsageDTO> getImacUsage();
 }
