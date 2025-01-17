@@ -136,8 +136,14 @@ public class UpdateService {
             if (!loginFlag) {
                 final List<ClusterInfo> loginStatus = intraApiService.getLoginCadetsLocation(token, page);
                 loginStatus.stream()
-                        .filter(cluster -> cluster.getEnd_at() == null)
-                        .forEach(statusResult::add);
+                        .filter(clusterInfo -> clusterInfo.getEnd_at() == null)
+                        .forEach(clusterInfo -> {
+                            memberService.findOne(clusterInfo.getUser().getId())
+                                    .orElseGet(
+                                            () -> memberService.createDisagreeMember(new CadetPrivacy(clusterInfo))
+                                    );
+                            statusResult.add(clusterInfo);
+                        });
                 if (loginStatus.size() < 100) {
                     loginFlag = true;
                 }
