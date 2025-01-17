@@ -120,6 +120,13 @@ public class UpdateService {
 
             if (!logoutFlag) {
                 final List<ClusterInfo> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
+                logoutStatus.forEach(clusterInfo ->
+                                imacHistoryService.create(clusterInfo.getUser().getId(),
+                                        clusterInfo.getUser().getLocation(),
+                                        clusterInfo.getBegin_at(),
+                                        clusterInfo.getEnd_at()
+                                )
+                );
                 statusResult.addAll(logoutStatus);
 
                 if (logoutStatus.size() < 100) {
@@ -131,14 +138,6 @@ public class UpdateService {
                 loginStatus.stream()
                         .filter(cluster -> cluster.getEnd_at() == null)
                         .forEach(statusResult::add);
-//                        .forEach(cluster -> {
-//                            memberService.findOne(cluster.getUser().getId())
-//                                    .ifPresent(
-////                                            m -> imacHistoryService.report(cluster.getUser().getLocation(), m),
-//                                            () -> memberService.createDisagreeMember(new CadetPrivacy(cluster))
-//                                    );
-//                            statusResult.add(cluster);
-//                        });
                 if (loginStatus.size() < 100) {
                     loginFlag = true;
                 }
