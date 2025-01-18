@@ -132,6 +132,8 @@ public class SecurityConfig {
                                 .hasRole("ADMIN")
                                 .requestMatchers(requestMatcher.pattern(HttpMethod.POST, "/v3/admin/status"))
                                 .hasRole("ADMIN")
+                                .requestMatchers(requestMatcher.pattern(HttpMethod.DELETE, "/v3/member/{id}"))
+                                .hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )

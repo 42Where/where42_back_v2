@@ -97,13 +97,13 @@ public class MemberService {
 	public List<ResponseMemberDTO> findAll() {
 		final List<Member> members = memberRepository.findAll();
 		final List<ResponseMemberDTO> responseMemberDTOList = members.stream().map(member -> ResponseMemberDTO.builder()
-			.member(member).build()).toList();
+				.member(member).build()).toList();
 
 		return responseMemberDTOList;
 	}
 
 	/**
-	 * 멤버 탈퇴
+	 * 본인 탈퇴
 	 * accessToken에서 intraId를 얻어오므로 본인확인여부를 거치지 않는다
 	 * jwt token과 member entity를 삭제
 	 *
@@ -114,10 +114,26 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDTO deleteMember(final HttpServletRequest request, final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
-			.orElseThrow(MemberException.NoMemberException::new);
+				.orElseThrow(MemberException.NoMemberException::new);
 		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 		final String accessToken = jwtService.extractToken(request).orElse(null);
 		redisTokenService.invalidateToken(accessToken, authUser.getIntraId().toString());
+		memberRepository.delete(member);
+
+		return responseMemberDto;
+	}
+
+	/**
+	 * 지정 멤버 탈퇴
+	 *
+	 * @return responseMemberDto
+	 * @throws MemberException.NoMemberException 존재하지 않는 멤버입니다
+	 */
+	@Transactional
+	public ResponseMemberDTO deleteMemberByIntraId(Integer intraId) {
+		final Member member = memberRepository.findByIntraId(intraId)
+				.orElseThrow(MemberException.NoMemberException::new);
+		final ResponseMemberDTO responseMemberDto = ResponseMemberDTO.builder().member(member).build();
 		memberRepository.delete(member);
 
 		return responseMemberDto;
@@ -133,10 +149,10 @@ public class MemberService {
 	 */
 	@Transactional
 	public ResponseMemberDTO updateComment(
-		final UpdateMemberCommentDTO updateMemberCommentDto,
-		final AuthUser authUser) {
+			final UpdateMemberCommentDTO updateMemberCommentDto,
+			final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
-			.orElseThrow(MemberException.NoMemberException::new);
+				.orElseThrow(MemberException.NoMemberException::new);
 		member.setComment(updateMemberCommentDto.getComment());
 
 		return ResponseMemberDTO.builder().member(member).build();
@@ -152,7 +168,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDTO deleteComment(final AuthUser authUser) {
 		final Member member = memberRepository.findByIntraId(authUser.getIntraId())
-			.orElseThrow(MemberException.NoMemberException::new);
+				.orElseThrow(MemberException.NoMemberException::new);
 		member.setComment(null);
 
 		return ResponseMemberDTO.builder().member(member).build();
@@ -169,7 +185,7 @@ public class MemberService {
 	@Transactional
 	public ResponseMemberDTO findOneByIntraId(final Integer intraId) {
 		final Member member = memberRepository.findByIntraId(intraId)
-			.orElseThrow(MemberException.NoMemberException::new);
+				.orElseThrow(MemberException.NoMemberException::new);
 
 		if (member.isPossibleToUpdateInCluster())
 			haneApiServiceService.updateInClusterForMainPage(member);
