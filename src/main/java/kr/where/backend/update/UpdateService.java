@@ -121,7 +121,6 @@ public class UpdateService {
             if (!logoutFlag) {
                 final List<ClusterInfo> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
                 logoutStatus.forEach(clusterInfo -> {
-                            System.out.println(clusterInfo.toString());
                             imacHistoryService.create(clusterInfo.getUser().getId(),
                                     clusterInfo.getHost(),
                                     clusterInfo.getBegin_at(),
