@@ -1,5 +1,6 @@
 package kr.where.backend.search;
 
+import kr.where.backend.cache.CacheService;
 import kr.where.backend.search.dto.ResponseSearchDTO;
 import org.mockito.Mockito;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,9 @@ public class SearchServiceTest {
 
     @MockBean
     OAuthTokenService oauthTokenService;
+
+    @Autowired
+    CacheService cacheService;
 
     AuthUser authUser;
 
@@ -102,8 +106,7 @@ public class SearchServiceTest {
         when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
         //when
-        searchService.searchOnCache("soo");
-        List<CadetPrivacy> response = searchService.searchOnCache("soo");
+        List<CadetPrivacy> response = cacheService.getSearchCacheResult("soo");
 
         //then
         //getCadetsInRange 메서드가 한번 호출되었는지 확인
@@ -137,7 +140,7 @@ public class SearchServiceTest {
         when(oauthTokenService.findAccessToken("search")).thenReturn("testToken");
         when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
-        searchService.searchOnCache("soo");
+        cacheService.getSearchCacheResult("soo");
         //when
         List<ResponseSearchDTO> responses = searchService.searchUser("sooh", authUser);
 
