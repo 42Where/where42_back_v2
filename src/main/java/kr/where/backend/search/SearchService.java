@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.cache.CacheService;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
@@ -17,7 +18,6 @@ import kr.where.backend.search.dto.ResponseSearchDTO;
 import kr.where.backend.search.exception.SearchException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,12 +26,13 @@ public class SearchService {
     private static final String PATTERN = "^[0-9a-z-]*$";
     private static final String TOKEN_NAME = "search";
     private static final int MAXIMUM_SIZE = 10;
-    private static final int MINIMUM_LENGTH = 3;
+    private static final int MINIMUM_LENGTH = 1;
     private static final int MAXIMUM_LENGTH = 10;
     private final MemberService memberService;
     private final IntraApiService intraApiService;
     private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
+    private final CacheService cacheService;
 
 
     /**
@@ -39,7 +40,6 @@ public class SearchService {
      * @return response로 변경하여 client 측에 전달 검색하고자 하는 입력값의 결과 10개를 반환 블랙홀에 빠지지 않은 카뎃을 필터로 걸러서 response DTO 생성
      * 입력 받은 값을 trim으로 공백을 없애주고, 대문자 영어가 들어와도 검색 가능하게 toLowerCase 적용
      */
-
     public List<ResponseSearchDTO> search(final String keyWord, final AuthUser authUser) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(authUser.getIntraId())
@@ -52,7 +52,7 @@ public class SearchService {
         if (keyWord.isEmpty() || !isContainOnlyEnglishAndDigit(keyWord)) {
             throw new SearchException.InvalidContextException();
         }
-        if (!newValidateLength(keyWord)) {
+        if (!validateLength(keyWord)) {
             throw new SearchException.InvalidLengthException();
         }
         return keyWord;
@@ -64,10 +64,6 @@ public class SearchService {
 
     private boolean validateLength(final String keyWord) {
         return keyWord.length() > MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
-    }
-
-    private boolean newValidateLength(final String keyWord) {
-        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
@@ -104,14 +100,20 @@ public class SearchService {
                 .toList();
     }
 
+    /**
+     * new api for search using redis caching
+     * @param keyWord
+     * @param authUser
+     * @return
+     */
     public List<ResponseSearchDTO> searchUser(final String keyWord, final AuthUser authUser) {
-        final String word = validateKeyWord(keyWord.trim().toLowerCase());
+        final String word = newValidateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
         final String cacheKey = word.substring(0, 3);
 
-        final List<CadetPrivacy> response = searchOnCache(cacheKey);
+        final List<CadetPrivacy> response = cacheService.getSearchCacheResult(cacheKey);
 
         if (Objects.equals(word, cacheKey)) {
             return responseOfSearch(member, response);
@@ -125,22 +127,17 @@ public class SearchService {
         );
     }
 
-    @Cacheable(key = "#word", value = "searchCache", cacheManager = "redisCacheManager", unless = "#result.isEmpty()")
-    public List<CadetPrivacy> searchOnCache(final String word) {
-        final List<CadetPrivacy> result = new ArrayList<>();
-
-        int page = 1;
-        while (true) {
-            final List<CadetPrivacy> searchApiResult =
-                    intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
-
-            isActiveCadet(result, searchApiResult);
-            if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
-                break;
-            }
-            page += 1;
+    private String newValidateKeyWord(final String keyWord) {
+        if (keyWord.isEmpty() || !isContainOnlyEnglishAndDigit(keyWord)) {
+            throw new SearchException.InvalidContextException();
         }
+        if (!newValidateLength(keyWord)) {
+            throw new SearchException.InvalidLengthException();
+        }
+        return keyWord;
+    }
 
-        return result;
+    private boolean newValidateLength(final String keyWord) {
+        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
     }
 }
