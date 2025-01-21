@@ -81,7 +81,11 @@ public class UpdateService {
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(
                         member -> {
-                            member.getLocation().setImacLocation(cadet.getUser().getLocation());
+                            if (cadet.getEnd_at() == null) {
+                               member.getLocation().setImacLocation(cadet.getHost());
+                            } else {
+                                member.getLocation().setImacLocation(null);
+                            }
                             if (member.isAgree()) {
                                 member.setInCluster(
                                         haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken)
@@ -120,12 +124,13 @@ public class UpdateService {
 
             if (!logoutFlag) {
                 final List<ClusterInfo> logoutStatus = intraApiService.getLogoutCadetsLocation(token, page);
-                logoutStatus.forEach(clusterInfo ->
-                                imacHistoryService.create(clusterInfo.getUser().getId(),
-                                        clusterInfo.getUser().getLocation(),
-                                        clusterInfo.getBegin_at(),
-                                        clusterInfo.getEnd_at()
-                                )
+                logoutStatus.forEach(clusterInfo -> {
+                            imacHistoryService.create(clusterInfo.getUser().getId(),
+                                    clusterInfo.getHost(),
+                                    clusterInfo.getBegin_at(),
+                                    clusterInfo.getEnd_at()
+                            );
+                        }
                 );
                 statusResult.addAll(logoutStatus);
 
