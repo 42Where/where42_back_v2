@@ -11,4 +11,8 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 	Location findByMember(Member member);
 
 	List<Location> findByImacLocationStartingWith(String prefix);
+
+	Integer countAllByImacLocationStartingWith(String prefix);
+
+	Integer countAllByImacLocationIsNotNull();
 }

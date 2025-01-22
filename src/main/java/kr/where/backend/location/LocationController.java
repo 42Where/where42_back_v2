@@ -67,12 +67,11 @@ public class LocationController implements LocationApiDocs {
 
 	@GetMapping("/cluster/usage")
 	public ResponseEntity<ResponseClusterUsageListDTO> getClusterUsage() {
-		List<ResponseClusterUsageDTO> clusters = new ArrayList<>();
-		return ResponseEntity.ok(ResponseClusterUsageListDTO.of(clusters));
+		return ResponseEntity.ok(locationService.getClusterUsage());
 	}
 
 	@GetMapping("/cluster/imacUsage")
 	public ResponseEntity<ResponseImacUsageDTO> getImacUsage() {
-		return ResponseEntity.ok(ResponseImacUsageDTO.of(0, 0, 0));
+		return ResponseEntity.ok(locationService.getImacUsage());
 	}
 }
