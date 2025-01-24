@@ -1,5 +1,8 @@
 package kr.where.backend.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +53,12 @@ public class RedisConfig {
 
     @Bean
     public RedisCacheManager redisCacheManager(final RedisConnectionFactory redisConnectionFactory) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.activateDefaultTyping(
+                BasicPolymorphicTypeValidator.builder().allowIfBaseType(Object.class).build(),
+                ObjectMapper.DefaultTyping.NON_FINAL
+        );
         final RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                         RedisSerializationContext
@@ -59,14 +68,15 @@ public class RedisConfig {
                 .serializeValuesWith(
                         RedisSerializationContext
                                 .SerializationPair
-                                .fromSerializer(new GenericJackson2JsonRedisSerializer())
+                                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
                 );
         final Map<String, RedisCacheConfiguration> cacheConfigurationMap = new HashMap<>();
         cacheConfigurationMap.put("searchCache", redisCacheConfiguration.entryTtl(Duration.ofMinutes(3L)));
-
+        cacheConfigurationMap.put("analyticsCache", redisCacheConfiguration.entryTtl(Duration.ofDays(7L)));
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration)
+                .withInitialCacheConfigurations(cacheConfigurationMap)
                 .build();
     }
 }
