@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
         "GROUP BY imac, intra_id")
 @Table(name = "member_imac_usage_analytics_view")
 @Getter
-@ToString
 public class MemberImacUsageAnalyticsView {
     @Id
     private Long id;
