@@ -150,7 +150,7 @@ public class LocationServiceTest {
         memberCreateAndSave(133456, "daejlee", "c1r1s2", "IN", authUser4);
 
         //1클러스터 총 인원과 현재 인원 체크
-        ResponseClusterUsageListDTO responseClusterUsageListDTO = locationService.getClusterUsage();
+        ResponseClusterUsageListDTO responseClusterUsageListDTO = locationService.getClusterImacUsage();
         assertThat(responseClusterUsageListDTO.getClusters().get(0).getTotalImacCount()).isEqualTo(63);
         assertThat(responseClusterUsageListDTO.getClusters().get(0).getUsingImacCount()).isEqualTo(2);
         assertThat(responseClusterUsageListDTO.getClusters().get(0).getUsageRate()).isEqualTo(3);
@@ -174,7 +174,7 @@ public class LocationServiceTest {
         AuthUser authUser4 = new AuthUser(133456, "daejlee", 2L);
         memberCreateAndSave(133456, "daejlee", null, "OUT", authUser4);
 
-        assertThatCode(() -> locationService.getImacUsage()).doesNotThrowAnyException();
+        assertThatCode(() -> locationService.getImacUsagePerHaneCount()).doesNotThrowAnyException();
     }
 
     @Test
@@ -189,7 +189,7 @@ public class LocationServiceTest {
         AuthUser authUser4 = new AuthUser(133456, "daejlee", 2L);
         memberCreateAndSave(133456, "daejlee", null, "OUT", authUser4);
 
-        ResponseImacUsageDTO responseImacUsageDTO = locationService.getImacUsage();
+        ResponseImacUsageDTO responseImacUsageDTO = locationService.getImacUsagePerHaneCount();
 
         assertThat(responseImacUsageDTO.getTotalUserCount()).isEqualTo(3);
         assertThat(responseImacUsageDTO.getUsingImacUserCount()).isEqualTo(2);

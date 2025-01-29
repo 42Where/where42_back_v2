@@ -108,9 +108,9 @@ public class LocationService {
         );
     }
 
-    public ResponseClusterUsageListDTO getClusterUsage() {
+    public ResponseClusterUsageListDTO getClusterImacUsage() {
         List<ResponseClusterUsageDTO> responseClusterUsageDTOs = Arrays.stream(ClusterLayout.values())
-                .filter(cluster -> cluster.getTotalSeatCount() > 0)
+                .filter(cluster -> cluster.getTotalSeatCount() > 0) //totalSeatCount가 0일 경우 ArithmeticException이 발생할 수 있어 추가
                 .map(cluster -> {
                     final int usingImacCount = locationRepository.countAllByImacLocationStartingWith(cluster.getClusterName());
                     final double usingRate = ((double) usingImacCount / cluster.getTotalSeatCount()) * 100;
@@ -120,7 +120,7 @@ public class LocationService {
         return ResponseClusterUsageListDTO.of(responseClusterUsageDTOs);
     }
 
-    public ResponseImacUsageDTO getImacUsage() {
+    public ResponseImacUsageDTO getImacUsagePerHaneCount() {
         final int haneInCount = memberRepository.countAllByInClusterIsTrue();
         final int usingImacCount = locationRepository.countAllByImacLocationIsNotNull();
         double usingRate = 0; // 소수점 계산을 위해 double로 선언
