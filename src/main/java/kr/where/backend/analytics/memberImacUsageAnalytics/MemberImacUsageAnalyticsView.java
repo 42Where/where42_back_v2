@@ -39,11 +39,7 @@ public class MemberImacUsageAnalyticsView {
 
     private Long usageCount;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime loginAtFirst;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime logoutAtLast;
 }
