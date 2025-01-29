@@ -110,11 +110,10 @@ public class LocationService {
 
     public ResponseClusterUsageListDTO getClusterImacUsage() {
         List<ResponseClusterUsageDTO> responseClusterUsageDTOs = Arrays.stream(ClusterLayout.values())
-                .filter(cluster -> cluster.getTotalSeatCount() > 0) //totalSeatCount가 0일 경우 ArithmeticException이 발생할 수 있어 추가
                 .map(cluster -> {
                     final int usingImacCount = locationRepository.countAllByImacLocationStartingWith(cluster.getClusterName());
-                    final double usingRate = ((double) usingImacCount / cluster.getTotalSeatCount()) * 100;
-                    return ResponseClusterUsageDTO.of(cluster.getClusterName(), (int) usingRate, usingImacCount, cluster.getTotalSeatCount());
+                    final int usingRate = locationUtils.getPercentage(usingImacCount, cluster.getTotalSeatCount());
+                    return ResponseClusterUsageDTO.of(cluster.getClusterName(), usingRate, usingImacCount, cluster.getTotalSeatCount());
                 })
                 .toList();
         return ResponseClusterUsageListDTO.of(responseClusterUsageDTOs);
@@ -123,10 +122,7 @@ public class LocationService {
     public ResponseImacUsageDTO getImacUsagePerHaneCount() {
         final int haneInCount = memberRepository.countAllByInClusterIsTrue();
         final int usingImacCount = locationRepository.countAllByImacLocationIsNotNull();
-        double usingRate = 0; // 소수점 계산을 위해 double로 선언
-        if (haneInCount != 0) {
-            usingRate = ((double) usingImacCount / haneInCount) * 100; // 정수 나눗셈 방지
-        }
-        return ResponseImacUsageDTO.of((int) usingRate, usingImacCount, haneInCount);
+        final int usingRate = locationUtils.getPercentage(usingImacCount, haneInCount);
+        return ResponseImacUsageDTO.of(usingRate, usingImacCount, haneInCount);
     }
 }

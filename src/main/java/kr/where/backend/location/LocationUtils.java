@@ -8,6 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocationUtils {
 
+    public int getPercentage(int devidend, int devisor) {
+        if (devisor == 0)
+            return 0;
+        return (int) ((double)devidend / devisor) * 100;
+    }
+
     public void validateCluster(final String clusterZone) {
 		//포맷형식이 맞는가? ex: "cx1" or "c1"
 		if (!isValidFormat(clusterZone)) {
