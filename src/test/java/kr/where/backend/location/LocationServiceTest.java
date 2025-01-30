@@ -174,10 +174,67 @@ public class LocationServiceTest {
         //then
         assertThat(loggedImacs.size()).isEqualTo(2);
     }
+
+    @DisplayName("Imac에 로그인되어 있어도 클러스터 내에 없으면 imac위치반환값이 null이 되어야 하는 테스트")
+    @Test
+    @Rollback
+    void getImacLocationNull() {
+        // given
+        final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
+        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser);
+
+        // when
+        Member member = memberRepository.findByIntraId(222222).get();
+
+        //then
+        assertThat(member.getLocation().getLocation()).isNull();
     }
 
-    //멤버를 생성,저장하는 공통 메소드
-    private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
+    @DisplayName("Imac에 로그인되어 있고 클러스터 내에 있으면 imacLocation 반환해야 하는 테스트")
+    @Test
+    @Rollback
+    void getImacLocation() {
+        // given
+        final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
+        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "IN", authUser);
+
+        // when
+        Member member = memberRepository.findByIntraId(222222).get();
+
+        //then
+        assertThat(member.getLocation().getLocation()).isEqualTo("c1r1s2");
+    }
+
+    @DisplayName("동의되지 않은 멤버 위치조회시 imacLocation 반환해야 하는 테스트")
+    @Test
+    @Rollback
+    void getImacLocationWithDisagreeMember() {
+        // given
+        final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
+        disagreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser);
+
+        // when
+        Member member = memberRepository.findByIntraId(222222).get();
+
+        //then
+        assertThat(member.getLocation().getLocation()).isEqualTo("c1r1s2");
+    }
+
+    @DisplayName("custom위치와 Imac위치 중 가장 최근것을 반환해야하는 테스트")
+    @Test
+    @Rollback
+    void getImacLocationf() {
+        // given
+        final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
+        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "IN", authUser);
+
+        // when
+        Member member = memberRepository.findByIntraId(222222).get();
+        member.getLocation().setCustomLocation("1층 회의실");
+
+        //then
+        assertThat(member.getLocation().getLocation()).isEqualTo("1층 회의실");
+    }
 
     //동의 멤버를 생성,저장하는 공통 메소드
     private void agreeMemberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
