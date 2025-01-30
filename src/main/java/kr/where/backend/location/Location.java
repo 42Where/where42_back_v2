@@ -87,4 +87,11 @@ public class Location {
 		return null;
 	}
 
+	public String getImacLocationIfInCluster() {
+		if (member.isInCluster()) {
+			return imacLocation;
+		}
+		return null;
+	}
+
 }
