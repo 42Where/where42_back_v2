@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
         "MIN(login_at) as login_at_first, " +
         "MAX(logout_at) as logout_at_last " +
         "FROM imac_history " +
-        "WHERE created_at >= CURRENT_TIMESTAMP - INTERVAL '7' DAY " +
+        "WHERE created_at BETWEEN DATE_TRUNC('week', CURRENT_TIMESTAMP - INTERVAL '7' DAY) AND " +
+        "DATE_TRUNC('week', CURRENT_TIMESTAMP - INTERVAL '7' DAY) + INTERVAL '6' DAY " +
         "GROUP BY imac"
 )
 @Table(name = "imac_usage_analytics_view")
