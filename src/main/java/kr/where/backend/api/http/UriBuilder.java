@@ -28,7 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UriBuilder {
 
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final int TIME_DIFFERENCE = -5;
+    private static final int TIME_DIFFERENCE = -3;
     private static final int LOGIN_COUNT = 100;
     private static final int SEARCH_COUNT = 10;
 
