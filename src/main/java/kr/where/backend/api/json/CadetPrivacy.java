@@ -47,9 +47,9 @@ public class CadetPrivacy {
     }
 
     public CadetPrivacy(final ClusterInfo clusterInfo) {
-        this.id = clusterInfo.getId();
+        this.id = clusterInfo.getUser().getId();
         this.login = clusterInfo.getUser().getLogin();
-        this.location = clusterInfo.getUser().getLocation();
+        this.location = clusterInfo.getHost();
         this.image = clusterInfo.getUser().getImage();
         this.active = clusterInfo.getUser().isActive();
         this.created_at = clusterInfo.getUser().getCreated_at();

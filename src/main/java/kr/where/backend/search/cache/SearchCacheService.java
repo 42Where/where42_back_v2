@@ -1,4 +1,4 @@
-package kr.where.backend.cache;
+package kr.where.backend.search.cache;
 
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CacheService {
+public class SearchCacheService {
     final IntraApiService intraApiService;
     final OAuthTokenService oauthTokenService;
     private static final String TOKEN_NAME = "search";

@@ -7,8 +7,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.where.backend.analytics.dto.ResponsePopularImacListDTO;
-import kr.where.backend.analytics.dto.ResponseSeatHistoryListDTO;
+import kr.where.backend.analytics.dto.ResponseAnalyticsDTO;
+import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,11 +24,12 @@ public interface AnalyticsApiDocs {
                     @Parameter(name = "count", description = "반환 받고 싶은 자리 갯수 (default = 1)", in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseSeatHistoryListDTO.class)))
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseAnalyticsDTO.class)))
             }
     )
     @GetMapping("/seat-history")
-    ResponseEntity<ResponseSeatHistoryListDTO> getMemberSeatHistory(@RequestParam("count") final Integer count);
+    ResponseEntity<ResponseAnalyticsDTO> getMemberSeatHistory(@AuthUserInfo final AuthUser authUser,
+                                                              @RequestParam("count") final Integer count);
 
 
     @Operation(
@@ -37,9 +39,10 @@ public interface AnalyticsApiDocs {
                     @Parameter(name = "count", description = "반환 받고 싶은 아이맥 갯수 (default = 5)", in = ParameterIn.QUERY)
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseSeatHistoryListDTO.class)))
+                    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseAnalyticsDTO.class)))
             }
     )
     @GetMapping("/popular-imac")
-    ResponseEntity<ResponsePopularImacListDTO> getPopularImac(@RequestParam("count") final Integer count);
+    ResponseEntity<ResponseAnalyticsDTO> getPopularImac(@AuthUserInfo final AuthUser authUser,
+                                                        @RequestParam("count") final Integer count);
 }
