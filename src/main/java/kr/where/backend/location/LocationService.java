@@ -96,11 +96,16 @@ public class LocationService {
 				loggedInImacs.stream()
 						.map(location -> {
 							final Member member = location.getMember(); // 한 번만 가져오기
+							String imacLocation = location.getImacLocation();
+
+							if (!member.isInCluster()) {
+								imacLocation = null;
+							}
 							return ResponseLoggedImacDTO.of(
 									member.getIntraId(),
 									member.getIntraName(),
 									member.getImage(),
-									location.getImacLocation(),
+									imacLocation,
 									friends.contains(member)
 							);
 						})

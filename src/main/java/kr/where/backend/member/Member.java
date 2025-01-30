@@ -120,8 +120,8 @@ public class Member {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 		this.inClusterUpdatedAt = LocalDateTime.now();
 
-		if (!this.inCluster)
-			this.location.initLocation();
+//		if (!this.inCluster)
+//			this.location.initLocation();
 	}
 
 	public boolean isPossibleToUpdateInCluster() {

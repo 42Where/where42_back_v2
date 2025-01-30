@@ -68,7 +68,8 @@ public class Location {
 	public String getLocation() {
 		if (!this.member.isAgree()) {
 			return this.imacLocation;
-		} else {
+		}
+		if (member.isInCluster()) {
 			if (customLocation == null && imacLocation == null) {
 				return null;
 			} else if (customLocation == null) {
@@ -83,6 +84,7 @@ public class Location {
 				}
 			}
 		}
+		return null;
 	}
 
 }
