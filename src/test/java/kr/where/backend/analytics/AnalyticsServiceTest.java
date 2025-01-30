@@ -80,7 +80,7 @@ public class AnalyticsServiceTest {
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.now();
+        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         LocalDateTime after3Hour = present.plusHours(3);
         String[] utcTimes = getUtcTimeString(present, after3Hour);
 
@@ -93,6 +93,7 @@ public class AnalyticsServiceTest {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
+        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when
@@ -119,7 +120,7 @@ public class AnalyticsServiceTest {
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.now();
+        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         LocalDateTime after3Hour = present.plusHours(3);
         String[] utcTimes = getUtcTimeString(present, after3Hour);
 
@@ -132,6 +133,7 @@ public class AnalyticsServiceTest {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
+        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when
