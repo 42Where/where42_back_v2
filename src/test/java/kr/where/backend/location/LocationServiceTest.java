@@ -155,9 +155,24 @@ public class LocationServiceTest {
                 .filter(responseLoggedImacDTO -> Objects.equals("jonhan", responseLoggedImacDTO.getIntraName()))
                 .findFirst()
                 .orElse(null);
-        Assertions.assertNotNull(responseLoggedImacDTO_2, "jonhan is not found");
-        assertEquals("jonhan", responseLoggedImacDTO_2.getIntraName());
         assertThat(responseLoggedImacDTO_2).isNull();
+    }
+
+    @DisplayName("imac에 로그인된 멤버 수를 조회하는 테스트")
+    @Test
+    @Rollback
+    void testLoggedInIMacMemberCount() {
+        // given
+        final AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser1);
+        final AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser2);
+
+        // when
+        List<Location> loggedImacs = locationRepository.findAll();
+
+        //then
+        assertThat(loggedImacs.size()).isEqualTo(2);
     }
     }
 
