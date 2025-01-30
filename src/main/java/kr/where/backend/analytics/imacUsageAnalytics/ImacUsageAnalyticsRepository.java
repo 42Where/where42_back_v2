@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ImacUsageAnalyticsRepository extends JpaRepository<ImacUsageAnalyticsView, Long> {
-    @Query("SELECT imacData FROM ImacUsageAnalyticsView imacData ORDER BY imacData.usageCount DESC")
+    @Query("SELECT imacData FROM ImacUsageAnalyticsView imacData ORDER BY imacData.usageCount DESC, imacData.usageTime DESC")
     List<ImacUsageAnalyticsView> findAllOrOrderByUsageCount();
 }
