@@ -15,6 +15,7 @@ import kr.where.backend.member.dto.UpdateMemberCommentDTO;
 import kr.where.backend.member.exception.MemberException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -35,6 +37,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class memberServiceTest {
 
 	@Autowired
@@ -252,6 +255,31 @@ public class memberServiceTest {
 		assertThat(findMember.getIntraName()).isEqualTo("suhwpark");
 		assertThat(findMember.isInCluster()).isEqualTo(true);
 
+	}
+
+	@Test
+	@DisplayName("멤버가 클러스터에 없어도 imacLocation이 유지 되는지 확인하는 테스트")
+	public void memberSetInClusterTest() {
+		// given
+		AuthUser authUser = new AuthUser(123456, "suhwpark", 2L);
+		memberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser);
+		Member member = memberRepository.findByIntraId(123456).get();
+
+
+		member.setInCluster(Hane.create("IN"));
+		assertThat(member.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+
+		member.setInCluster(Hane.create("OUT"));
+		assertThat(member.getLocation().getImacLocation()).isEqualTo("c1r1s1");
+	}
+
+	//멤버를 생성,저장하는 공통 메소드
+	private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
+		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
+		CadetPrivacy cadetPrivacy = new CadetPrivacy(intraId, intraName, location, "image", true, "2022-10-31", CAMPUS_ID);
+		Hane hane = Hane.create(haneInOut);
+		Member member = memberService.createAgreeMember(cadetPrivacy, hane);
 	}
 
 }
