@@ -3,10 +3,12 @@ package kr.where.backend.redisToken;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.logout.LogoutService;
 import kr.where.backend.member.MemberService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,12 @@ public class RedisTokenServiceTest {
 
     AuthUser authUser;
     Integer CAMPUS_ID = 29;
+
+    static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
+    @BeforeAll
+    public static void setContainer() {
+        TEST_REDIS_CONTAINER.beforeAll();
+    }
 
     @BeforeEach
     public void setUp() {
