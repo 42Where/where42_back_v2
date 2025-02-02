@@ -1,17 +1,17 @@
 package kr.where.backend.search;
 
-import kr.where.backend.cache.CacheService;
+import kr.where.backend.config.TestRedisContainer;
+import kr.where.backend.search.cache.SearchCacheService;
 import kr.where.backend.search.dto.ResponseSearchDTO;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.junit.jupiter.api.Test;
 import kr.where.backend.api.json.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.auth.authUser.AuthUser;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.junit.jupiter.params.provider.ValueSource;
 import kr.where.backend.oauthtoken.OAuthTokenService;
@@ -29,6 +29,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -51,9 +52,18 @@ public class SearchServiceTest {
     OAuthTokenService oauthTokenService;
 
     @Autowired
-    CacheService cacheService;
+    SearchCacheService searchCacheService;
+
+    @Autowired
+    RedisTemplate<String, Object> template;
 
     AuthUser authUser;
+
+    static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
+    @BeforeAll
+    public static void setContainer() {
+        TEST_REDIS_CONTAINER.beforeAll();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -65,6 +75,11 @@ public class SearchServiceTest {
                         true, "2022-10-31", 29),
                 Hane.create("IN")
         );
+    }
+
+    @AfterEach
+    void flushRedis() {
+        Objects.requireNonNull(template.getConnectionFactory()).getConnection().serverCommands().flushDb();
     }
 
     @DisplayName("유효하지 않은 keyword값이 들어왔을 경우 예외처리")
@@ -106,7 +121,7 @@ public class SearchServiceTest {
         when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
         //when
-        List<CadetPrivacy> response = cacheService.getSearchCacheResult("soo");
+        List<CadetPrivacy> response = searchCacheService.getSearchCacheResult("soo");
 
         //then
         //getCadetsInRange 메서드가 한번 호출되었는지 확인
@@ -140,7 +155,7 @@ public class SearchServiceTest {
         when(oauthTokenService.findAccessToken("search")).thenReturn("testToken");
         when(intraApiService.getCadetsInRange("testToken", "soo", 1)).thenReturn(cadetPrivacies);
 
-        cacheService.getSearchCacheResult("soo");
+        searchCacheService.getSearchCacheResult("soo");
         //when
         List<ResponseSearchDTO> responses = searchService.searchUser("sooh", authUser);
 

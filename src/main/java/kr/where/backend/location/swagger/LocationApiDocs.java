@@ -120,7 +120,7 @@ public interface LocationApiDocs {
 			}
 	)
 	@GetMapping("/cluster/usage")
-	ResponseEntity<ResponseClusterUsageListDTO> getClusterUsage();
+	ResponseEntity<ResponseClusterUsageListDTO> getClusterImacUsage();
 
 	@Operation(summary = "Imac usage API", description = "출근자 중 아이맥 사용중인 사람 비율 조회",
 			parameters = {
@@ -131,5 +131,5 @@ public interface LocationApiDocs {
 			}
 	)
 	@GetMapping("/cluster/imacUsage")
-	ResponseEntity<ResponseImacUsageDTO> getImacUsage();
+	ResponseEntity<ResponseImacUsageDTO> getImacUsagePerHaneCount();
 }

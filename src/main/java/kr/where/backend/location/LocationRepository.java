@@ -14,7 +14,12 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
 	List<Location> findByImacLocationStartingWithAndMemberInClusterTrue(String prefix);
 
+	Integer countAllByImacLocationStartingWith(String prefix);
+
+	Integer countAllByImacLocationIsNotNull();
+
 	@Modifying
 	@Query("UPDATE Location location SET location.imacLocation = null")
 	void setNullImacOfLocation();
+
 }

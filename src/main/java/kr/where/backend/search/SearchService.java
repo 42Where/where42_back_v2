@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.cache.CacheService;
+import kr.where.backend.search.cache.SearchCacheService;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
@@ -32,7 +32,7 @@ public class SearchService {
     private final IntraApiService intraApiService;
     private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
-    private final CacheService cacheService;
+    private final SearchCacheService searchCacheService;
 
 
     /**
@@ -113,7 +113,7 @@ public class SearchService {
 
         final String cacheKey = word.substring(0, 3);
 
-        final List<CadetPrivacy> response = cacheService.getSearchCacheResult(cacheKey);
+        final List<CadetPrivacy> response = searchCacheService.getSearchCacheResult(cacheKey);
 
         if (Objects.equals(word, cacheKey)) {
             return responseOfSearch(member, response);

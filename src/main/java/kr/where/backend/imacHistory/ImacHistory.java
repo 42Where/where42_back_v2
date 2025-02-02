@@ -55,4 +55,9 @@ public class ImacHistory {
     public long usedImacTime() {
         return Duration.between(this.loginAt, this.logoutAt).getSeconds();
     }
+
+    //for test
+    public void setCreatedAtForTest(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

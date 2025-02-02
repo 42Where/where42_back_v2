@@ -1,13 +1,7 @@
 package kr.where.backend.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.where.backend.api.IntraApiService;
-import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.Image;
-import kr.where.backend.api.json.Versions;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.group.entity.Group;
-import kr.where.backend.oauthtoken.OAuthTokenService;
 import kr.where.backend.search.dto.ResponseSearchDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;

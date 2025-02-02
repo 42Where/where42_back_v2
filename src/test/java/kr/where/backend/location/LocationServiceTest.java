@@ -4,10 +4,7 @@ import java.util.Objects;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.location.dto.ResponseLocationDTO;
-import kr.where.backend.location.dto.ResponseLoggedImacDTO;
-import kr.where.backend.location.dto.ResponseLoggedImacListDTO;
-import kr.where.backend.location.dto.UpdateCustomLocationDTO;
+import kr.where.backend.location.dto.*;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
 import kr.where.backend.member.MemberService;
@@ -27,8 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @Transactional
@@ -236,7 +233,66 @@ public class LocationServiceTest {
         assertThat(member.getLocation().getLocation()).isEqualTo("1층 회의실");
     }
 
-    //동의 멤버를 생성,저장하는 공통 메소드
+    @Test
+    @DisplayName("클러스터 별 아이맥 사용량 조회 테스트")
+    void getClusterUsageTest() {
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser1);
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 3L);
+        agreeMemberCreateAndSave(222222, "jonhan", null, "IN", authUser2);
+        AuthUser authUser3 = new AuthUser(333333, "soohlee", 4L);
+        agreeMemberCreateAndSave(333333, "soohlee", "c2r1s1", "IN", authUser3);
+        AuthUser authUser4 = new AuthUser(133456, "daejlee", 2L);
+        agreeMemberCreateAndSave(133456, "daejlee", "c1r1s2", "IN", authUser4);
+
+        //1클러스터 총 인원과 현재 인원 체크
+        ResponseClusterUsageListDTO responseClusterUsageListDTO = locationService.getClusterImacUsage();
+        assertThat(responseClusterUsageListDTO.getClusters().get(0).getTotalImacCount()).isEqualTo(63);
+        assertThat(responseClusterUsageListDTO.getClusters().get(0).getUsingImacCount()).isEqualTo(2);
+        assertThat(responseClusterUsageListDTO.getClusters().get(0).getUsageRate()).isEqualTo(3);
+
+        //2클러스터 총 인원과 현재 인원 체크
+        assertThat(responseClusterUsageListDTO.getClusters().get(1).getTotalImacCount()).isEqualTo(80);
+        assertThat(responseClusterUsageListDTO.getClusters().get(1).getUsingImacCount()).isEqualTo(1);
+        assertThat(responseClusterUsageListDTO.getClusters().get(1).getUsageRate()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("출근 인원 대비 아이맥 사용자 비율 계산 시 0 나누기 예외 테스트")
+    void getImacUsageDoesNotThrowExceptionTest() {
+        //inCluster 유저 0명으로 셋팅
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        agreeMemberCreateAndSave(123456, "suhwpark", null, "OUT", authUser1);
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 3L);
+        agreeMemberCreateAndSave(222222, "jonhan", null, "OUT", authUser2);
+        AuthUser authUser3 = new AuthUser(333333, "soohlee", 4L);
+        agreeMemberCreateAndSave(333333, "soohlee", null, "OUT", authUser3);
+        AuthUser authUser4 = new AuthUser(133456, "daejlee", 2L);
+        agreeMemberCreateAndSave(133456, "daejlee", null, "OUT", authUser4);
+
+        assertThatCode(() -> locationService.getImacUsagePerHaneCount()).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("출근 인원 대비 아이맥 사용자 비율 조회 테스트")
+    void getImacUsageTest() {
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", "IN", authUser1);
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 3L);
+        agreeMemberCreateAndSave(222222, "jonhan", null, "IN", authUser2);
+        AuthUser authUser3 = new AuthUser(333333, "soohlee", 4L);
+        agreeMemberCreateAndSave(333333, "soohlee", "c2r1s1", "IN", authUser3);
+        AuthUser authUser4 = new AuthUser(133456, "daejlee", 2L);
+        agreeMemberCreateAndSave(133456, "daejlee", null, "OUT", authUser4);
+
+        ResponseImacUsageDTO responseImacUsageDTO = locationService.getImacUsagePerHaneCount();
+
+        assertThat(responseImacUsageDTO.getTotalUserCount()).isEqualTo(3);
+        assertThat(responseImacUsageDTO.getUsingImacUserCount()).isEqualTo(2);
+        assertThat(responseImacUsageDTO.getUsageRate()).isEqualTo(66);
+    }
+
+    //멤버를 생성,저장하는 공통 메소드
     private void agreeMemberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
