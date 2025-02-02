@@ -240,7 +240,7 @@ public class memberServiceTest {
 	public void findOneByIntraId() {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("OUT");
+		Hane hane = Hane.create("IN");
 		Member createMember = memberService.createAgreeMember(cadetPrivacy, hane);
 
 		//when
