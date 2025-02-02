@@ -179,6 +179,31 @@ public class LocationServiceTest {
 
     }
 
+    @DisplayName("imac에 로그인된 멤버를 조회하는데 location이 null인 멤버는 안가져와야 하는 테스트")
+    @Test
+    @Rollback
+    void testLoggedInIMacCountForNull() {
+        //given
+        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+        agreeMemberCreateAndSave(123456, "suhwpark", null, "IN", authUser1);
+        AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", "OUT", authUser2);
+        AuthUser authUser3 = new AuthUser(333333, "soohlee", 2L);
+        disagreeMemberCreateAndSave(333333, "soohlee", "c1r1s3", "OUT", authUser3);
+
+        // when
+        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
+        ResponseLoggedImacDTO disAgreeMember = responseLoggedImacListDTO.getMembers().stream().
+                filter(member -> Objects.equals("soohlee", member.getIntraName())).
+                findFirst().
+                orElse(null);
+
+        //then
+        assertThat(responseLoggedImacListDTO.getMembers().size()).isEqualTo(1);
+        assertThat(disAgreeMember.getIntraName()).isEqualTo("soohlee");
+
+    }
+
     @DisplayName("imac에 로그인된 멤버 수를 조회하는 테스트")
     @Test
     @Rollback
