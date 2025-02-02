@@ -119,9 +119,6 @@ public class Member {
 	public void setInCluster(final Hane hane) {
 		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
 		this.inClusterUpdatedAt = LocalDateTime.now();
-
-		if (!this.inCluster)
-			this.location.initLocation();
 	}
 
 	public boolean isPossibleToUpdateInCluster() {

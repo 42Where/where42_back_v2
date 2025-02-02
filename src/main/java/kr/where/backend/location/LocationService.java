@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LocationService {
-
     private final LocationRepository locationRepository;
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
@@ -88,7 +87,7 @@ public class LocationService {
      */
     public ResponseLoggedImacListDTO getLoggedInIMacs(final AuthUser authUser, final String cluster) {
         locationUtils.validateCluster(cluster);
-        final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWith(cluster);
+        final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWithAndMemberInClusterTrue(cluster);
 
         final List<Member> friends = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
 
