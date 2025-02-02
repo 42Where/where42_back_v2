@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 	Location findByMember(Member member);
 
-	List<Location> findByImacLocationStartingWithAndMemberInClusterTrue(String prefix);
+	List<Location> findByImacLocationStartingWithAndMemberInClusterTrueOrMemberAgreeFalse(String prefix);
 
 	Integer countAllByImacLocationStartingWith(String prefix);
 

@@ -87,7 +87,7 @@ public class LocationService {
      */
     public ResponseLoggedImacListDTO getLoggedInIMacs(final AuthUser authUser, final String cluster) {
         locationUtils.validateCluster(cluster);
-        final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWithAndMemberInClusterTrue(cluster);
+        final List<Location> loggedInImacs = locationRepository.findByImacLocationStartingWithAndMemberInClusterTrueOrMemberAgreeFalse(cluster);
 
         final List<Member> friends = groupMemberRepository.findMembersByGroupId(authUser.getDefaultGroupId());
 
