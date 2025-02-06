@@ -1,10 +1,15 @@
 package kr.where.backend.location;
 
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.auth.authUser.AuthUserInfo;
+import kr.where.backend.location.dto.ResponseImacUsageDTO;
 import kr.where.backend.location.dto.ResponseLoggedImacListDTO;
 import kr.where.backend.location.dto.ResponseLocationDTO;
+import kr.where.backend.location.dto.ResponseClusterUsageDTO;
+import kr.where.backend.location.dto.ResponseClusterUsageListDTO;
 import kr.where.backend.location.dto.UpdateCustomLocationDTO;
 import kr.where.backend.location.swagger.LocationApiDocs;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +63,16 @@ public class LocationController implements LocationApiDocs {
 	public ResponseEntity<ResponseLoggedImacListDTO> getLoggedInIMacs(@PathVariable("cluster") final String cluster,
 																	  @AuthUserInfo final AuthUser authUser) {
 		return ResponseEntity.ok(locationService.getLoggedInIMacs(authUser, cluster));
+	}
+
+	@GetMapping("/cluster/usage")
+	public ResponseEntity<ResponseClusterUsageListDTO> getClusterImacUsage() {
+		return ResponseEntity.ok(locationService.getClusterImacUsage());
+	}
+
+
+	@GetMapping("/cluster/imacUsage")
+	public ResponseEntity<ResponseImacUsageDTO> getImacUsagePerHaneCount() {
+		return ResponseEntity.ok(locationService.getImacUsagePerHaneCount());
 	}
 }

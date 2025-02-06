@@ -2,10 +2,12 @@ package kr.where.backend.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.search.cache.SearchCacheService;
 import kr.where.backend.group.GroupRepository;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.exception.GroupException;
@@ -30,13 +32,14 @@ public class SearchService {
     private final IntraApiService intraApiService;
     private final OAuthTokenService oauthTokenService;
     private final GroupRepository groupRepository;
+    private final SearchCacheService searchCacheService;
+
 
     /**
      * @param keyWord 찾을 검색 입력값
      * @return response로 변경하여 client 측에 전달 검색하고자 하는 입력값의 결과 10개를 반환 블랙홀에 빠지지 않은 카뎃을 필터로 걸러서 response DTO 생성
      * 입력 받은 값을 trim으로 공백을 없애주고, 대문자 영어가 들어와도 검색 가능하게 toLowerCase 적용
      */
-
     public List<ResponseSearchDTO> search(final String keyWord, final AuthUser authUser) {
         final String word = validateKeyWord(keyWord.trim().toLowerCase());
         final Member member = memberService.findOne(authUser.getIntraId())
@@ -95,5 +98,46 @@ public class SearchService {
                         .orElseGet(() -> memberService.createDisagreeMember(search)))
                 .map(search -> new ResponseSearchDTO(group, search))
                 .toList();
+    }
+
+    /**
+     * new api for search using redis caching
+     * @param keyWord
+     * @param authUser
+     * @return
+     */
+    public List<ResponseSearchDTO> searchUser(final String keyWord, final AuthUser authUser) {
+        final String word = newValidateKeyWord(keyWord.trim().toLowerCase());
+        final Member member = memberService.findOne(authUser.getIntraId())
+                .orElseThrow(MemberException.NoMemberException::new);
+
+        final String cacheKey = word.substring(0, 3);
+
+        final List<CadetPrivacy> response = searchCacheService.getSearchCacheResult(cacheKey);
+
+        if (Objects.equals(word, cacheKey)) {
+            return responseOfSearch(member, response);
+        }
+
+        return responseOfSearch(
+                member,
+                response.stream()
+                        .filter(res -> res.getLogin().startsWith(keyWord))
+                        .toList()
+        );
+    }
+
+    private String newValidateKeyWord(final String keyWord) {
+        if (keyWord.isEmpty() || !isContainOnlyEnglishAndDigit(keyWord)) {
+            throw new SearchException.InvalidContextException();
+        }
+        if (!newValidateLength(keyWord)) {
+            throw new SearchException.InvalidLengthException();
+        }
+        return keyWord;
+    }
+
+    private boolean newValidateLength(final String keyWord) {
+        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
     }
 }

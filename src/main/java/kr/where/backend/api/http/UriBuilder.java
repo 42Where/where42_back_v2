@@ -2,7 +2,8 @@ package kr.where.backend.api.http;
 
 import static kr.where.backend.api.http.Uri.CADET_PATH;
 import static kr.where.backend.api.http.Uri.DELIMITER;
-import static kr.where.backend.api.http.Uri.FILTER;
+import static kr.where.backend.api.http.Uri.FILTER_ACTIVE;
+import static kr.where.backend.api.http.Uri.FILTER_KIND;
 import static kr.where.backend.api.http.Uri.HANE_PATH;
 import static kr.where.backend.api.http.Uri.HOST;
 import static kr.where.backend.api.http.Uri.HTTPS;
@@ -28,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UriBuilder {
 
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final int TIME_DIFFERENCE = -5;
+    private static final int TIME_DIFFERENCE = -3;
     private static final int LOGIN_COUNT = 100;
     private static final int SEARCH_COUNT = 10;
 
@@ -82,7 +83,7 @@ public class UriBuilder {
                 .host(HOST.getValue())
                 .path(USERS_PATH.getValue())
                 .queryParam(SORT.getValue(), "login")
-                .queryParam(FILTER.getValue(), "student")
+                .queryParam(FILTER_KIND.getValue(), "student")
                 .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER.getValue(), page)
                 .build()
@@ -101,6 +102,7 @@ public class UriBuilder {
                 .queryParam(PAGE_SIZE.getValue(), LOGIN_COUNT)
                 .queryParam(PAGE_NUMBER.getValue(), page)
                 .queryParam(SORT.getValue(), "-end_at")
+                .queryParam(FILTER_ACTIVE.getValue(), "true")
                 .build()
                 .toUri();
     }

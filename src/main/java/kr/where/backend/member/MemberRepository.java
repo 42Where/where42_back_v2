@@ -28,4 +28,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<List<HaneRequestDto>> findAllToUseHaneApi();
 
 	List<Member> findAllByRole(String role);
+
+	Integer countAllByInClusterIsTrue();
 }
