@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private static final String CREATE_AT = "createAt";
-    private final CharacterEncodingFilter characterEncodingFilter;
 
     @Transactional
     public ResponseAnnouncementDTO create(final CreateAnnouncementDTO createAnnouncementDto, final AuthUser authUser) {
