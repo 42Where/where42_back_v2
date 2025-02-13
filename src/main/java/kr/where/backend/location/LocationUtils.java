@@ -11,7 +11,7 @@ public class LocationUtils {
     public int getPercentage(int devidend, int devisor) {
         if (devisor == 0)
             return 0;
-        return (int) ((double)devidend / devisor) * 100;
+        return (int) (((double) devidend / devisor) * 100);
     }
 
     public void validateCluster(final String clusterZone) {
