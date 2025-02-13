@@ -10,8 +10,8 @@ public enum ClusterLayout {
     C5("c5", 63),
     C6("c6", 80);
 
-    private String clusterName;
-    private int totalSeatCount;
+    private final String clusterName;
+    private final int totalSeatCount;
 
     public String getClusterName() {
         return clusterName;
@@ -21,7 +21,7 @@ public enum ClusterLayout {
         return totalSeatCount;
     }
 
-    ClusterLayout(String clusterName, int totalSeatCount) {
+    ClusterLayout(final String clusterName, final int totalSeatCount) {
         this.clusterName = clusterName;
         this.totalSeatCount = totalSeatCount;
     }
