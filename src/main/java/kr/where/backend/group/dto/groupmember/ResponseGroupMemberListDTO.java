@@ -27,4 +27,6 @@ public class ResponseGroupMemberListDTO {
         this.count = count;
         this.members = members;
     }
+
+
 }
