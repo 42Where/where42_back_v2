@@ -1,5 +1,6 @@
 package kr.where.backend.group.dto.groupmember;
 
+import kr.where.backend.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,5 +39,18 @@ public class ResponseOneGroupMemberDTO {
         this.agree = agree;
         this.defaultGroupId = defaultGroupId;
         this.location = location;
+    }
+
+    public static ResponseOneGroupMemberDTO of(final Member member) {
+        return new ResponseOneGroupMemberDTO(
+                member.getIntraId(),
+                member.getIntraName(),
+                member.getGrade(),
+                member.getImage(),
+                member.getComment(),
+                member.isInCluster(),
+                member.isAgree(),
+                member.getDefaultGroupId(),
+                member.getLocation().getLocation());
     }
 }
