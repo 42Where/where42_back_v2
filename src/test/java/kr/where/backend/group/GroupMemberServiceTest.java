@@ -1,9 +1,12 @@
 package kr.where.backend.group;
 
+import kr.where.backend.api.HaneApiService;
+import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
+import kr.where.backend.group.dto.group.ResponseOwnGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.entity.Group;
@@ -17,11 +20,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -30,10 +35,13 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
 @Slf4j
+@ActiveProfiles("test")
 public class GroupMemberServiceTest {
 
     @Autowired
@@ -48,6 +56,9 @@ public class GroupMemberServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
+
+    @MockBean
+    HaneApiService haneApiService;
 
     private CreateGroupDTO createGroupDto;
     private ResponseMemberDTO responseMemberDto;
@@ -71,9 +82,10 @@ public class GroupMemberServiceTest {
         Hane hane = Hane.create("IN");
         Member member = memberService.createAgreeMember(cadetPrivacy, hane);
         authUser.setDefaultGroupId(member.getDefaultGroupId());
-        defaultResponseGroupDTO = groupService.createGroup(new CreateGroupDTO(Group.DEFAULT_GROUP), authUser);
+        defaultResponseGroupDTO = ResponseGroupDTO.from(groupService.findOneGroupById(member.getDefaultGroupId()));
         generalResponseGroupDTO = groupService.createGroup(new CreateGroupDTO("test_group"), authUser);
     }
+
     @DisplayName("그룹 멤버 생성")
     @Test
     @Rollback
@@ -127,8 +139,13 @@ public class GroupMemberServiceTest {
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .members(members)
                 .build();
+
+        AddGroupMemberListDTO defaultAddGroupMemberListDTO = AddGroupMemberListDTO.builder()
+                .groupId(defaultResponseGroupDTO.getGroupId())
+                .members(members)
+                .build();
         List<ResponseOneGroupMemberDTO> add = groupMemberService.addFriendsList(addGroupMemberListDTO, authUser);
-        System.out.println("size : " + add.size());
+        List<ResponseOneGroupMemberDTO> defaultAdd = groupMemberService.addFriendsList(defaultAddGroupMemberListDTO, authUser);
     }
 
     @DisplayName("그룹 멤버 조회")
@@ -148,6 +165,27 @@ public class GroupMemberServiceTest {
         }
         assertEquals(3, responseGroupMemberDTOS.size());
     }
+
+    @DisplayName("V4 그룹 멤버 조회")
+    @Test
+    public void testFindGroupMembersV4() throws Exception {
+        // given
+        그룹_멤버_리스트_생성_후_저장();
+        authUser.setDefaultGroupId(defaultResponseGroupDTO.getGroupId());
+
+        // Mocking HaneApiService behavior
+        doNothing().when(haneApiService).updateGroupMemberState(any(Group.class));
+
+        // when
+        ResponseOwnGroupMemberDTO responseGroupMemberDTOS = groupMemberService.getOwnGroups(authUser);
+
+        // then
+        assertEquals(3, responseGroupMemberDTOS.getDefaultGroup().getMembers().size());
+        assertEquals(1, responseGroupMemberDTOS.getGroups().size());
+        assertEquals(3, responseGroupMemberDTOS.getGroups().get(0).getMembers().size());
+
+    }
+
 
     @DisplayName("그룹 멤버 삭제")
     @Test
