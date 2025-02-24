@@ -110,7 +110,8 @@ public class LocationService {
     public ResponseClusterUsageListDTO getClusterImacUsage() {
         List<ResponseClusterUsageDTO> responseClusterUsageDTOs = Arrays.stream(ClusterLayout.values())
                 .map(cluster -> {
-                    final int usingImacCount = locationRepository.countAllByImacLocationStartingWith(cluster.getClusterName());
+                    List<Location> usingImacMember = locationRepository.getFilteredLocations(cluster.getClusterName());
+                    final int usingImacCount = usingImacMember.size();
                     final int usingRate = locationUtils.getPercentage(usingImacCount, cluster.getTotalSeatCount());
                     return ResponseClusterUsageDTO.of(cluster.getClusterName(), usingRate, usingImacCount, cluster.getTotalSeatCount());
                 })
@@ -120,7 +121,8 @@ public class LocationService {
 
     public ResponseImacUsageDTO getImacUsagePerHaneCount() {
         final int haneInCount = memberRepository.countAllByInClusterIsTrue();
-        final int usingImacCount = locationRepository.countAllByImacLocationIsNotNull();
+        List<Location> usingImacMember = locationRepository.getFilteredLocations("c");
+        final int usingImacCount = usingImacMember.size();
         final int usingRate = locationUtils.getPercentage(usingImacCount, haneInCount);
         return ResponseImacUsageDTO.of(usingRate, usingImacCount, haneInCount);
     }
