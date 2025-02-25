@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
+import kr.where.backend.announcement.dto.RequestPaginationDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -16,6 +17,7 @@ import kr.where.backend.auth.authUser.AuthUserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,9 +56,7 @@ public interface AnnouncementApiDocs {
             }
     )
     @GetMapping(value = "", params = ("page"))
-    ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
-            @RequestParam("page") final Integer page,
-            @RequestParam("size") final Integer size);
+    ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(@Valid @ModelAttribute RequestPaginationDTO requestPaginationDTO);
 
     @Operation(summary = "Delete announcement API", description = "공지 삭제",
             parameters = {
