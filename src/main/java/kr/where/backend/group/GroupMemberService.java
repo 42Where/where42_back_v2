@@ -1,10 +1,12 @@
 package kr.where.backend.group;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.auth.authUser.AuthUser;
+import kr.where.backend.group.dto.group.ResponseOwnGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.*;
 import kr.where.backend.group.entity.Group;
 import kr.where.backend.group.entity.GroupMember;
@@ -26,6 +28,7 @@ public class GroupMemberService {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
     private final HaneApiService haneApiService;
+
     /**
      * 그룹에 그룹 멤버를 추가
      * 인자로 들어온 groupId가 존재하지 않다면 Exception
@@ -34,13 +37,14 @@ public class GroupMemberService {
      * member가 처음 생성될 때, 기본그룹을 만들 때 &&  그룹을 새로 생성 될때
      * 이므로 아직 그룹이 생성되지 않은 시기이므로 해당 그룹이 나의 그룹인지 검사X
      * 이미 인자로 들어온 group에 member가 포함되어 있다면 Exception
+     *
      * @param requestDTO : CreateGroupMemberDTO(그룹에 추가 할 intraId, 추가 할 groupId)
-     * @param isOwner : isOwner로 자신이 그룹을 생성할 경우, 그룹에 포함될 경우를 구별
+     * @param isOwner    : isOwner로 자신이 그룹을 생성할 경우, 그룹에 포함될 경우를 구별
      * @param authUser
      * @return ResponseGroupMemberDTO
      */
     @Transactional
-    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner, final AuthUser authUser){
+    public ResponseGroupMemberDTO createGroupMember(final CreateGroupMemberDTO requestDTO, final boolean isOwner, final AuthUser authUser) {
         final Group group = groupRepository.findById(requestDTO.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(requestDTO.getIntraId())
@@ -69,13 +73,14 @@ public class GroupMemberService {
     /**
      * 기본 그룹에 멤버를 추가하는 메서드
      * 일반그룹멤버 생성메서드와 기능 유사(기본 그룹멤버 api에 dto를 사용하지 않기 위해 사용)
+     *
      * @param intraId
      * @param isOwner
      * @param authUser
      * @return
      */
     @Transactional
-    public ResponseGroupMemberDTO createDefaultGroupMember(final Integer intraId, final boolean isOwner, final AuthUser authUser){
+    public ResponseGroupMemberDTO createDefaultGroupMember(final Integer intraId, final boolean isOwner, final AuthUser authUser) {
         final Group group = groupRepository.findById(authUser.getDefaultGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         final Member member = memberRepository.findByIntraId(intraId)
@@ -101,6 +106,7 @@ public class GroupMemberService {
 
     /**
      * 해당 그룹이 authUser가 가지고 있는 그룹인지 확인
+     *
      * @param groupId
      * @param authUser
      */
@@ -113,6 +119,7 @@ public class GroupMemberService {
 
     /**
      * 멤버가 가진 그룹의 정보를 반환
+     *
      * @param authUser
      * @return List<ResponseGroupMemberDTO>
      */
@@ -126,15 +133,16 @@ public class GroupMemberService {
      * intraId가 존재하지 않는다면 Exception
      * 그룹멤버 중에서 IsOwner가 true이고,
      * member가 매치가 되는 그룹멤버 리스트를 조회 후 필요한 정보 파싱
+     *
      * @param intraId
      * @return List<ResponseGroupMemberDTO>
      */
     public List<ResponseGroupMemberDTO> findGroupIdByIntraId(final Integer intraId) {
         final Member owner = memberRepository.findByIntraId(intraId)
-                                .orElseThrow(MemberException.NoMemberException::new);
+                .orElseThrow(MemberException.NoMemberException::new);
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMembersByMemberAndIsOwner(owner, true);
 
-        return  groupMembers
+        return groupMembers
                 .stream()
                 .map(m -> ResponseGroupMemberDTO
                         .builder()
@@ -149,6 +157,7 @@ public class GroupMemberService {
     /**
      * groupId를 받아 해당 그룹의 모든 그룹멤버 리스트 반환
      * 해당 그룹이 존재 하지 않는다면 Exception
+     *
      * @param groupId
      * @return List<ResponseOneGroupMemberDTO>
      */
@@ -174,11 +183,12 @@ public class GroupMemberService {
 
     /**
      * 인자로 들어온 member리스트가 중 이미 그룹에 저장되어 있는 멤버라면 Exception
+     *
      * @param groupId
      * @param members
      */
     @Transactional
-    public void duplicateGroupMember(final Long groupId, final List<Member> members){
+    public void duplicateGroupMember(final Long groupId, final List<Member> members) {
         final long count = groupMemberRepository.countByGroup_GroupIdAndMemberIn(groupId, members);
         if (count > 0)
             throw new GroupMemberException.DuplicatedGroupMemberException();
@@ -189,12 +199,13 @@ public class GroupMemberService {
      * groupId에 해당하는 그룹이 없다면 Exception
      * groupId가 authUser가 소유햔 그룹에 포함되는지 확인
      * 이미 저장되어있는 멤버인지 중복확인
-     * @param dto : AddGroupMemberListDTO (groupId, List<Member>)
+     *
+     * @param dto      : AddGroupMemberListDTO (groupId, List<Member>)
      * @param authUser
      * @return List<ResponseOneGroupMemberDTO>
      */
     @Transactional
-    public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto, final AuthUser authUser){
+    public List<ResponseOneGroupMemberDTO> addFriendsList(final AddGroupMemberListDTO dto, final AuthUser authUser) {
         final Group group = groupRepository.findById(dto.getGroupId())
                 .orElseThrow(GroupException.NoGroupException::new);
         isMyGroup(dto.getGroupId(), authUser);
@@ -222,12 +233,13 @@ public class GroupMemberService {
     /**
      * 그룹에 포함된 그룹멤버 삭제
      * 만약 지울 그룹이 멤버의 기본그룹이라면 멤버가 소유한 그룹에 모든 멤버 삭제
-     * @param dto : DeleteGroupMemberListDTO (groupId, List<member>)
+     *
+     * @param dto      : DeleteGroupMemberListDTO (groupId, List<member>)
      * @param authUser
      * @return List<ResponseGroupMemberDTO>
      */
     @Transactional
-    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUser authUser){
+    public List<ResponseGroupMemberDTO> deleteFriendsList(final DeleteGroupMemberListDTO dto, final AuthUser authUser) {
 
         final List<GroupMember> deleteGroupMember;
 
@@ -242,10 +254,9 @@ public class GroupMemberService {
                     .toList();
 
             deleteGroupMember = groupMemberRepository
-                    .findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(groups,dto.getMembers());
+                    .findGroupMembersByGroup_GroupIdInAndMember_IntraIdIn(groups, dto.getMembers());
             groupMemberRepository.deleteAll(deleteGroupMember);
-        }
-        else {
+        } else {
             deleteGroupMember = groupMemberRepository
                     .findGroupMembersByGroup_GroupIdAndMember_IntraIdIn(dto.getGroupId(), dto.getMembers());
             groupMemberRepository.deleteAll(deleteGroupMember);
@@ -266,6 +277,7 @@ public class GroupMemberService {
     /**
      * 기본그룹에 포함 되지 않은 멤버 리스트 반환
      * (다른 일반 그룹에 멤버 추가 시, 해당 그룹에 포함되지 않은 친구 리스트를 보여줘야 하기때문에)
+     *
      * @param groupId
      * @param authUser
      * @return List<ResponseOneGroupMemberDTO>
@@ -282,5 +294,47 @@ public class GroupMemberService {
                 .filter(defaultMember -> groupMembers.stream()
                         .noneMatch(groupMember -> defaultMember.getIntraId().equals(groupMember.getIntraId())))
                 .toList();
+    }
+
+
+    @Transactional
+    public ResponseOwnGroupMemberDTO getOwnGroups(AuthUser authUser) {
+        final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
+
+        // 기본 그룹 찾기
+        Group defaultGroup = ownGroups.stream()
+                .filter(g -> Objects.equals(g.getGroupId(), authUser.getDefaultGroupId()))
+                .findFirst()
+                .orElseThrow(GroupException.NoGroupException::new);
+
+        haneApiService.updateGroupMemberState(defaultGroup); // 내 친구 중 상태 업데이트 가능 학지 확인 후 가능하다면 업데이트
+
+        // 기본 그룹 친구 Response DTO 생성
+        List<ResponseOneGroupMemberDTO> myFriends = defaultGroup.getGroupMembers()
+                .stream()
+                .map(friend -> ResponseOneGroupMemberDTO.of(friend.getMember()))
+                .toList();
+
+        ResponseGroupMemberListDTO defaultGroupMember = ResponseGroupMemberListDTO.builder()
+                .groupId(defaultGroup.getGroupId())
+                .groupName(defaultGroup.getGroupName())
+                .count(myFriends.size())
+                .members(myFriends)
+                .build();
+
+        // 기본 그룹 제외한 나머지 그룹들 변환
+        List<ResponseGroupMemberListDTO> customGroups = ownGroups.stream()
+                .filter(group -> !Objects.equals(group.getGroupId(), authUser.getDefaultGroupId())) // 기본 그룹 제외
+                .map(group -> ResponseGroupMemberListDTO.builder()
+                        .groupId(group.getGroupId())
+                        .groupName(group.getGroupName())
+                        .count(group.getGroupMembers().size())
+                        .members(group.getGroupMembers().stream()
+                                .map(member -> ResponseOneGroupMemberDTO.of(member.getMember()))
+                                .toList())
+                        .build())
+                .toList();
+
+        return ResponseOwnGroupMemberDTO.of(defaultGroupMember, customGroups);
     }
 }

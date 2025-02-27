@@ -8,6 +8,7 @@ import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
+import kr.where.backend.group.dto.group.ResponseOwnGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.CreateGroupMemberDTO;
 import kr.where.backend.group.dto.group.ResponseGroupDTO;
 import kr.where.backend.group.dto.groupmember.ResponseGroupMemberDTO;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
@@ -167,5 +168,8 @@ public class GroupService {
                             .build();
                 }).toList();
     }
+
+
+
 
 }
