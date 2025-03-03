@@ -2,6 +2,7 @@ package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
+import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
@@ -273,13 +274,29 @@ public class memberServiceTest {
 		assertThat(member.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 	}
 
+	@Test
+	@DisplayName("동의 멤버 조회 Test")
+	public void findAgreeMembersTest() {
+		AuthUser authUser1 = new AuthUser(111111, "jonhan", 1L);
+		memberCreateAndSave(111111, "jonhan", "c1r2s1", "IN", authUser1);
+		AuthUser authUser2 = new AuthUser(222222, "suhwparkk", 2L);
+		memberCreateAndSave(222222, "suhwparkk", "c1r2s2", "IN", authUser2);
+		AuthUser authUser3 = new AuthUser(333333, "soohlee", 3L);
+		memberCreateAndSave(333333, "soohlee", "c1r2s3", "IN", authUser3);
+
+		List<HaneRequestDto> members = memberService.findAgreeMembers().orElseThrow();
+		assertThat(members.size()).isEqualTo(3);
+	}
+
+
+
 	//멤버를 생성,저장하는 공통 메소드
 	private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(intraId, intraName, location, "image", true, "2022-10-31", CAMPUS_ID);
 		Hane hane = Hane.create(haneInOut);
-		Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+		memberService.createAgreeMember(cadetPrivacy, hane);
 	}
 
 }
