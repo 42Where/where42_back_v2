@@ -288,8 +288,6 @@ public class memberServiceTest {
 		assertThat(members.size()).isEqualTo(3);
 	}
 
-
-
 	//멤버를 생성,저장하는 공통 메소드
 	private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, AuthUser authUser) {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
