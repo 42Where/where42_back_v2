@@ -3,12 +3,17 @@ package kr.where.backend.update;
 import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.ClusterInfo;
+import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.location.LocationRepository;
+import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.member.exception.MemberException.NoMemberException;
 import kr.where.backend.oauthtoken.OAuthTokenService;
@@ -203,24 +208,24 @@ public class UpdateService {
 
     @Transactional
     @Scheduled(cron = "0 0 0/1 1/1 * ?")
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
-        final List<HaneResponseDto> haneResponse = haneApiService.getHaneListInfo(
-                memberService
-                        .findAgreeMembers()
-                        .orElseThrow(NoMemberException::new),
-                oauthTokenService.findAccessToken(HANE_TOKEN));
+        final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
 
-        haneResponse.stream()
-                .filter(response -> response.getInoutState() != null)
-                .forEach(response -> {
-                                haneApiService.updateMemberInOrOutState(
-                                memberService.findByIntraName(response.getLogin())
-                                        .orElseThrow(NoMemberException::new),
-                                response.getInoutState());
-                                log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
-                        });
-        log.info("[hane] : inCluster 업데이트를 끝냅니다!");
+        final Map<String, String> intraNameStateMap = haneResponse.stream()
+                .collect(Collectors.toMap(HaneResponseDto::getLogin, HaneResponseDto::getInoutState));
+
+        memberService.updateUpdatableMember(intraNameStateMap);
+    }
+
+    private List<HaneResponseDto> getHaneInfoOfUpdatableMember() {
+        List<Member> updatableAgreeMembers = memberService.findUpdatableAgreeMembers()
+                .orElseThrow(NoMemberException::new);
+
+        List<HaneRequestDto> haneRequestDtos = updatableAgreeMembers.stream()
+                .map(member -> new HaneRequestDto(member.getIntraName()))
+                .toList();
+
+        return haneApiService.getHaneListInfo(haneRequestDtos, oauthTokenService.findAccessToken(HANE_TOKEN));
     }
 }

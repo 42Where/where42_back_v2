@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -192,6 +193,10 @@ public class MemberService {
 		return memberRepository.findAllToUseHaneApi();
 	}
 
+	public Optional<List<Member>> findUpdatableAgreeMembers() {
+		return memberRepository.findAllByAgree(true);
+	}
+
 	/**
 	 * 회원 가입하려는 사용자가 서울 캠퍼스 인지 판별
 	 * Oauth2SuccessHandler.class에서 사용
@@ -209,5 +214,9 @@ public class MemberService {
 
 	public Optional<Member> findByIntraName(final String intraName) {
 		return memberRepository.findByIntraName(intraName);
+	}
+
+	public void updateUpdatableMember(Map<String, String> intraNameStateMap) {
+		memberRepository.updateMemberInOrOutStatus(intraNameStateMap);
 	}
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 	Optional<Member> findByIntraId(Integer intraId);
 
 	Optional<List<Member>> findByIntraIdIn(List<Integer> intraId);
@@ -26,6 +26,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "
 			+ "from Member m where m.agree = true")
 	Optional<List<HaneRequestDto>> findAllToUseHaneApi();
+
+	Optional<List<Member>> findAllByAgree(boolean agree);
 
 	List<Member> findAllByRole(String role);
 

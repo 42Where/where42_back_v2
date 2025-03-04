@@ -22,4 +22,10 @@ public class UpdateController implements UpdateApiDocs {
 
         return ResponseEntity.ok("update complete");
     }
+
+    @PostMapping("/agreeMember")
+    public ResponseEntity<String> updateMemberStatusTestAPI() {
+        updateService.updateInCluster();
+        return ResponseEntity.ok("업데이트 되었습니다.");
+    }
 }
