@@ -194,7 +194,10 @@ public class MemberService {
 	}
 
 	public Optional<List<Member>> findUpdatableAgreeMembers() {
-		return memberRepository.findAllByAgree(true);
+		List<Member> members = memberRepository.findAllByAgree(true).stream()
+				.filter(member -> member.isPossibleToUpdateInCluster())
+				.toList();
+		return Optional.of(members);
 	}
 
 	/**

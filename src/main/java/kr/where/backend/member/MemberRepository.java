@@ -27,7 +27,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberCus
 			+ "from Member m where m.agree = true")
 	Optional<List<HaneRequestDto>> findAllToUseHaneApi();
 
-	Optional<List<Member>> findAllByAgree(boolean agree);
+	List<Member> findAllByAgree(boolean agree);
 
 	List<Member> findAllByRole(String role);
 
