@@ -41,7 +41,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-public class memberServiceTest {
+public class MemberServiceTest {
 
 	@Autowired
 	private MemberService memberService;
