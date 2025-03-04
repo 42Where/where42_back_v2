@@ -211,11 +211,7 @@ public class UpdateService {
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
-
-        final Map<String, String> intraNameStateMap = haneResponse.stream()
-                .collect(Collectors.toMap(HaneResponseDto::getLogin, HaneResponseDto::getInoutState));
-
-        memberService.updateUpdatableMember(intraNameStateMap);
+        memberService.updateUpdatableMember(haneResponse);
     }
 
     private List<HaneResponseDto> getHaneInfoOfUpdatableMember() {

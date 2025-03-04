@@ -5,6 +5,7 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.json.hane.HaneRequestDto;
+import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -214,12 +215,11 @@ public class MemberService {
 		}
 	}
 
-
 	public Optional<Member> findByIntraName(final String intraName) {
 		return memberRepository.findByIntraName(intraName);
 	}
 
-	public void updateUpdatableMember(Map<String, String> intraNameStateMap) {
-		memberRepository.updateMemberInOrOutStatus(intraNameStateMap);
+	public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
+		memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
 	}
 }

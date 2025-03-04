@@ -1,12 +1,15 @@
 package kr.where.backend.member;
 
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import kr.where.backend.api.json.hane.HaneResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Map;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class MemberCustomRepositoryImpl implements MemberCustomRepository{
@@ -16,25 +19,40 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository{
 
     @Override
     @Transactional
-    public void updateMemberInOrOutStatus(Map<String, String> intraNameStateMap) {
-        if (intraNameStateMap.isEmpty()) {
+    public void updateMemberInOrOutStatus(List<HaneResponseDto> haneResponseDtos) {
+        if (haneResponseDtos == null || haneResponseDtos.isEmpty()) {
             return;
         }
         QMember qMember = QMember.member;
 
-        long updatedCount = jpaQueryFactory
+        List<String> inHaneMember = haneResponseDtos.stream()
+                .filter(dto -> "IN".equals(dto.getInoutState()))
+                .map(HaneResponseDto::getLogin)
+                .toList();
+
+        List<String> outHaneMember = haneResponseDtos.stream()
+                .filter(dto -> "OUT".equals(dto.getInoutState()))
+                .map(HaneResponseDto::getLogin)
+                .toList();
+
+        // bulk update 실행
+        long inMemberUpdatedCount = jpaQueryFactory
                 .update(qMember)
-                .set(qMember.inCluster,
-                        new CaseBuilder()
-                                .when(qMember.intraName.eq(qMember.intraName)) // 이 부분은 기본 비교로, 이미 where 절에서 필터링 했으므로, 직접 비교만 해주면 됩니다.
-                                .then(intraNameStateMap.get(qMember.intraName).equals("IN")) // Map에서 "IN"이면 true, "OUT"이면 false
-                                .otherwise(false))  // 기본적으로 false
-                .where(qMember.intraName.in(intraNameStateMap.keySet()))  // intraName이 Map에 존재하는 경우만 업데이트
+                .set(qMember.inCluster, true)
+                .set(qMember.inClusterUpdatedAt, LocalDateTime.now())
+                .where(qMember.intraName.in(inHaneMember))
+                .execute();
+
+        long outMemberUpdatedCount = jpaQueryFactory
+                .update(qMember)
+                .set(qMember.inCluster, false)
+                .set(qMember.inClusterUpdatedAt, LocalDateTime.now())
+                .where(qMember.intraName.in(outHaneMember))
                 .execute();
 
         entityManager.flush();
         entityManager.clear();
 
-        System.out.println("[hane] : " + updatedCount + "명의 inCluster 상태가 업데이트되었습니다.");
+        System.out.println("[hane] : " + (inMemberUpdatedCount + outMemberUpdatedCount) + "명의 inCluster 상태가 업데이트되었습니다.");
     }
 }
