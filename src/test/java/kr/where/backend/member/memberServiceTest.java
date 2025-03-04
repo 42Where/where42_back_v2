@@ -12,6 +12,7 @@ import kr.where.backend.location.Location;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.member.dto.ResponseMemberDTO;
 import kr.where.backend.member.dto.UpdateMemberCommentDTO;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import kr.where.backend.member.exception.MemberException;
 
@@ -28,6 +29,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -286,6 +288,29 @@ public class memberServiceTest {
 
 		List<HaneRequestDto> members = memberService.findAgreeMembers().orElseThrow();
 		assertThat(members.size()).isEqualTo(3);
+	}
+
+	@Test
+	@DisplayName("업데이트 가능한 동의 멤버 조회 Test")
+	public void findUpdatableAgreeMembersTest() {
+		//given
+		AuthUser authUser1 = new AuthUser(111111, "jonhan", 1L);
+		memberCreateAndSave(111111, "jonhan", "c1r2s1", "IN", authUser1);
+		AuthUser authUser2 = new AuthUser(222222, "suhwparkk", 2L);
+		memberCreateAndSave(222222, "suhwparkk", "c1r2s2", "IN", authUser2);
+		AuthUser authUser3 = new AuthUser(333333, "soohlee", 3L);
+		memberCreateAndSave(333333, "soohlee", "c1r2s3", "IN", authUser3);
+
+
+		Member member = memberRepository.findByIntraId(111111).orElseThrow();
+		ReflectionTestUtils.setField(member, "inClusterUpdatedAt", LocalDateTime.now().minusMinutes(10));
+		//ReflectionTestUtils을 통해 private필드도 변경가능
+
+		//when
+		List<Member> members = memberService.findUpdatableAgreeMembers().orElseThrow();
+
+		//then
+		assertThat(members.size()).isEqualTo(1);
 	}
 
 	//멤버를 생성,저장하는 공통 메소드
