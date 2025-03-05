@@ -207,7 +207,7 @@ public class UpdateService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0/1 1/1 * ?")
+    @Scheduled(cron = "0 1 0/1 1/1 * ?")
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
