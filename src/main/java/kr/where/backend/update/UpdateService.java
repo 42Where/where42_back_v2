@@ -206,15 +206,15 @@ public class UpdateService {
                 .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
     }
 
-    @Transactional
-    @Scheduled(cron = "0 0 0/1 1/1 * ?")
+
+    @Scheduled(cron = "0 1 0/1 1/1 * ?")
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
         memberService.updateUpdatableMember(haneResponse);
     }
 
-    private List<HaneResponseDto> getHaneInfoOfUpdatableMember() {
+     public List<HaneResponseDto> getHaneInfoOfUpdatableMember() {
         List<Member> updatableAgreeMembers = memberService.findUpdatableAgreeMembers()
                 .orElseThrow(NoMemberException::new);
 
