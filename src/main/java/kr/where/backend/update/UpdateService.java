@@ -1,10 +1,7 @@
 package kr.where.backend.update;
 
-import jakarta.persistence.LockModeType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
@@ -208,6 +205,7 @@ public class UpdateService {
 
 
     @Scheduled(cron = "0 1 0/1 1/1 * ?")
+    @Transactional
     public void updateInCluster() {
         log.info("[hane] : inCluster 업데이트를 시작합니다!");
         final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
