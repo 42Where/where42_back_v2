@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
+import kr.where.backend.announcement.dto.RequestPaginationDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import java.util.Collection;
@@ -116,7 +117,8 @@ public class AnnouncementServiceTest {
         announcementRepository.save(announcementSix);
 
         //when
-        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0, 5);
+        RequestPaginationDTO requestPaginationDTO = new RequestPaginationDTO(0, 5);
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(requestPaginationDTO);
         List<ResponseAnnouncementDTO> ResponseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
         //then
         assertEquals(5, ResponseAnnouncementDTO.size());
@@ -127,7 +129,8 @@ public class AnnouncementServiceTest {
         assertEquals(announcementTwo.getId(), ResponseAnnouncementDTO.get(4).getAnnouncementId());
 
         //when
-        ResponseAnnouncementListDTO responseAnnouncementListDTO2 = announcementService.getAnnouncementPage(1, 5);
+        requestPaginationDTO = new RequestPaginationDTO(1, 5);
+        ResponseAnnouncementListDTO responseAnnouncementListDTO2 = announcementService.getAnnouncementPage(requestPaginationDTO);
         List<ResponseAnnouncementDTO> responseAnnouncementDtos2 = responseAnnouncementListDTO2.getAnnouncements();
         //then
         assertEquals(1, responseAnnouncementDtos2.size());
@@ -139,7 +142,8 @@ public class AnnouncementServiceTest {
     @Rollback
     public void getAnnouncementPageWhenEmptyTest() {
         //when
-        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(0, 5);
+        RequestPaginationDTO requestPaginationDTO = new RequestPaginationDTO(0, 5);
+        ResponseAnnouncementListDTO responseAnnouncementListDto = announcementService.getAnnouncementPage(requestPaginationDTO);
         List<ResponseAnnouncementDTO> responseAnnouncementDTO = responseAnnouncementListDto.getAnnouncements();
         //then
         assertTrue(responseAnnouncementDTO.isEmpty());

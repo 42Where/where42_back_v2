@@ -1,6 +1,7 @@
 package kr.where.backend.announcement;
 
 import jakarta.validation.Valid;
+import kr.where.backend.announcement.dto.RequestPaginationDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,14 +46,11 @@ public class AnnouncementController implements AnnouncementApiDocs {
     /**
      * 공지 페이지 단위로 조회
      *
-     * @param page 쿼리 파라미터로 전달받은 페이지 번호
      * @return ResponseEntity(ResponseAnnouncementListDTO)
      */
     @GetMapping()
-    public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(
-            @RequestParam(value = "page", required = false) final Integer page,
-            @RequestParam(value = "size", required = false) final Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncementPage(page, size));
+    public ResponseEntity<ResponseAnnouncementListDTO> getAnnouncement(@Valid @ModelAttribute RequestPaginationDTO requestPaginationDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(announcementService.getAnnouncementPage(requestPaginationDTO));
     }
 
     /**
