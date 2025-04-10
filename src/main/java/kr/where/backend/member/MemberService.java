@@ -5,6 +5,7 @@ import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.json.hane.HaneRequestDto;
+import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -192,6 +194,13 @@ public class MemberService {
 		return memberRepository.findAllToUseHaneApi();
 	}
 
+	public Optional<List<Member>> findUpdatableAgreeMembers() {
+		List<Member> members = memberRepository.findAllByAgree(true).stream()
+				.filter(member -> member.isPossibleToUpdateInCluster())
+				.toList();
+		return Optional.of(members);
+	}
+
 	/**
 	 * 회원 가입하려는 사용자가 서울 캠퍼스 인지 판별
 	 * Oauth2SuccessHandler.class에서 사용
@@ -206,8 +215,12 @@ public class MemberService {
 		}
 	}
 
-
 	public Optional<Member> findByIntraName(final String intraName) {
 		return memberRepository.findByIntraName(intraName);
+	}
+
+	@Transactional
+	public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
+		memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
 	}
 }

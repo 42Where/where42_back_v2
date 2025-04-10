@@ -2,6 +2,7 @@ package kr.where.backend.announcement;
 
 import java.util.List;
 import kr.where.backend.announcement.dto.CreateAnnouncementDTO;
+import kr.where.backend.announcement.dto.RequestPaginationDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementDTO;
 import kr.where.backend.announcement.dto.ResponseAnnouncementListDTO;
 import kr.where.backend.announcement.exception.AnnouncementException;
@@ -35,23 +36,12 @@ public class AnnouncementService {
         announcementRepository.delete(announcement);
     }
 
-    public ResponseAnnouncementListDTO getAnnouncementPage(final Integer pageNumber, final Integer size) {
-        Page<Announcement> announcements;
-        if (pageNumber == null || size == null)
-            throw new AnnouncementException.InvalidArgumentException();
-
-        try {
-            announcements = announcementRepository.findAll(
-                    PageRequest.of(pageNumber, size, Sort.by(Direction.DESC, CREATE_AT)));
-        } catch (IllegalArgumentException e) {
-            throw new AnnouncementException.InvalidArgumentException();
-        }
-
-        final int totalPages = announcements.getTotalPages();
-        final long totalElements = announcements.getTotalElements();
+    public ResponseAnnouncementListDTO getAnnouncementPage(final RequestPaginationDTO requestPaginationDTO) {
+        final Page<Announcement> announcements = announcementRepository.findAll(
+                PageRequest.of(requestPaginationDTO.getPage(), requestPaginationDTO.getSize(), Sort.by(Direction.DESC, CREATE_AT)));
 
         final List<ResponseAnnouncementDTO> responseAnnouncementDTO = announcements.stream().map(
                 ResponseAnnouncementDTO::of).toList();
-        return ResponseAnnouncementListDTO.of(responseAnnouncementDTO, totalPages, totalElements);
+        return ResponseAnnouncementListDTO.of(responseAnnouncementDTO, announcements.getTotalPages(), announcements.getTotalElements());
     }
 }

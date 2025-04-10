@@ -312,6 +312,7 @@ public class GroupMemberService {
         // 기본 그룹 친구 Response DTO 생성
         List<ResponseOneGroupMemberDTO> myFriends = defaultGroup.getGroupMembers()
                 .stream()
+                .filter(friend -> !friend.getIsOwner()) //친구리스트에서 본인은 제외
                 .map(friend -> ResponseOneGroupMemberDTO.of(friend.getMember()))
                 .toList();
 
@@ -330,6 +331,7 @@ public class GroupMemberService {
                         .groupName(group.getGroupName())
                         .count(group.getGroupMembers().size())
                         .members(group.getGroupMembers().stream()
+                                .filter(friend -> !friend.getIsOwner()) //친구리스트에서 본인은 제외
                                 .map(member -> ResponseOneGroupMemberDTO.of(member.getMember()))
                                 .toList())
                         .build())
