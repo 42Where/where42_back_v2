@@ -5,7 +5,7 @@ import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.group.entity.GroupMember;
 import kr.where.backend.location.Location;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,17 +73,17 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<GroupMember> groupMembers = new ArrayList<>();
 
-	public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
-		this.intraId = cadetPrivacy.getId();
-		this.intraName = cadetPrivacy.getLogin();
-		this.grade = cadetPrivacy.getCreated_at();
-		this.image = cadetPrivacy.getImage().getVersions().getSmall();
-		this.inCluster = hane.getInoutState().equals("IN");
-		this.role = USER_ROLE;
-		this.inClusterUpdatedAt = LocalDateTime.now();
-		this.agree = true;
-		this.blackHole = cadetPrivacy.isActive();
-	}
+	// public Member(final CadetPrivacy cadetPrivacy, final Hane hane) {
+	// 	this.intraId = cadetPrivacy.getId();
+	// 	this.intraName = cadetPrivacy.getLogin();
+	// 	this.grade = cadetPrivacy.getCreated_at();
+	// 	this.image = cadetPrivacy.getImage().getVersions().getSmall();
+	// 	this.inCluster = hane.getInoutState().equals("IN");
+	// 	this.role = USER_ROLE;
+	// 	this.inClusterUpdatedAt = LocalDateTime.now();
+	// 	this.agree = true;
+	// 	this.blackHole = cadetPrivacy.isActive();
+	// }
 
 	public Member(final CadetPrivacy cadetPrivacy) {
 		this.intraId = cadetPrivacy.getId();
@@ -95,8 +95,8 @@ public class Member {
 		this.agree = false;
 	}
 
-	public void setDisagreeToAgree(final Hane hane) {
-		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+	public void setDisagreeToAgree() {
+		this.inCluster = false;
 		this.agree = true;
 	}
 
@@ -116,10 +116,10 @@ public class Member {
 		this.blackHole = !active;
 	}
 
-	public void setInCluster(final Hane hane) {
-		this.inCluster = Objects.equals(hane.getInoutState(), "IN");
-		this.inClusterUpdatedAt = LocalDateTime.now();
-	}
+	// public void setInCluster(final Hane hane) {
+	// 	this.inCluster = Objects.equals(hane.getInoutState(), "IN");
+	// 	this.inClusterUpdatedAt = LocalDateTime.now();
+	// }
 
 	public boolean isPossibleToUpdateInCluster() {
 		if (inClusterUpdatedAt == null || LocalDateTime.now()

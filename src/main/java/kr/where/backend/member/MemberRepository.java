@@ -23,9 +23,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query(value = "select m from Member m where m.intraName in :intraNames")
 	List<Member> findAllByIntraNameIn(@Param("intraNames") List<String> IntraName);
 
-	@Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "
-			+ "from Member m where m.agree = true")
-	Optional<List<HaneRequestDto>> findAllToUseHaneApi();
+	// @Query("select new kr.where.backend.api.json.hane.HaneRequestDto(m.intraName) "
+	// 		+ "from Member m where m.agree = true")
+	// Optional<List<HaneRequestDto>> findAllToUseHaneApi();
+
+	@Query("select m.intraName from Member m where m.agree = true")
+	Optional<List<String>> findAllIntraNamesOfAgreedMembers();
 
 	List<Member> findAllByAgree(boolean agree);
 
