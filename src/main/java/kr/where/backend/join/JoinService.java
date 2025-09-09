@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class JoinService {
-    private static final String TOKEN_HANE = "hane";
+    // private static final String TOKEN_HANE = "hane";
     private final MemberService memberService;
     private final HaneApiService haneApiService;
     private final JwtService jwtService;

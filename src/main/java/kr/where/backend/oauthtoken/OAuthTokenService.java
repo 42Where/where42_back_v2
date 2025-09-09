@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class OAuthTokenService {
-    private static final String EXCEPTION_TOKEN = "hane";
+    // private static final String EXCEPTION_TOKEN = "hane";
     private final OAuthTokenRepository oauthTokenRepository;
     private final TokenApiService tokenApiService;
 

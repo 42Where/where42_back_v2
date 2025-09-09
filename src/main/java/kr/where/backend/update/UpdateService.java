@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(readOnly = true)
 public class UpdateService {
-    private static final String HANE_TOKEN = "hane";
+    // private static final String HANE_TOKEN = "hane";
     private static final String IMAGE_TOKEN = "image";
     private static final String ADMIN_TOKEN = "admin";
     private static final String UPDATE_TOKEN = "update";
