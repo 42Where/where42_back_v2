@@ -3,7 +3,7 @@ package kr.where.backend.group;
 import java.util.List;
 
 import java.util.Objects;
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.aspect.LogLevel;
 import kr.where.backend.aspect.RequestLogging;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -29,7 +29,7 @@ public class GroupService {
     private static final String DEFAULT = "default";
     private final GroupRepository groupRepository;
     private final GroupMemberService groupMemberService;
-    private final HaneApiService haneApiService;
+    // private final HaneApiService haneApiService;
 
     /**
      * 그룹 생성
@@ -136,11 +136,11 @@ public class GroupService {
     public List<ResponseGroupMemberListDTO> getGroupList(final AuthUser authUser) {
         final List<Group> ownGroups = groupRepository.findAllGroupByMember(authUser.getIntraId());
 
-        haneApiService.updateGroupMemberState(ownGroups.stream()
-                .filter(g -> Objects.equals(g.getGroupId(), authUser.getDefaultGroupId()))
-                .findFirst()
-                .orElseThrow(GroupException.NoGroupException::new)
-        );
+        // haneApiService.updateGroupMemberState(ownGroups.stream()
+        //         .filter(g -> Objects.equals(g.getGroupId(), authUser.getDefaultGroupId()))
+        //         .findFirst()
+        //         .orElseThrow(GroupException.NoGroupException::new)
+        // );
 
         return ownGroups
                 .stream()

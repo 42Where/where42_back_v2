@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.ResponseOwnGroupMemberDTO;
 import kr.where.backend.group.dto.groupmember.*;
@@ -27,7 +27,7 @@ public class GroupMemberService {
     private final GroupMemberRepository groupMemberRepository;
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
-    private final HaneApiService haneApiService;
+    // private final HaneApiService haneApiService;
 
     /**
      * 그룹에 그룹 멤버를 추가
@@ -165,7 +165,7 @@ public class GroupMemberService {
         groupRepository.findById(groupId).orElseThrow(GroupException.NoGroupException::new);
 
         final List<GroupMember> groupMembers = groupMemberRepository.findGroupMemberByGroup_GroupIdAndIsOwnerIsFalse(groupId);
-        haneApiService.updateMyOwnMemberState(groupMembers);
+        // haneApiService.updateMyOwnMemberState(groupMembers);
 
         return groupMembers
                 .stream()
@@ -307,7 +307,7 @@ public class GroupMemberService {
                 .findFirst()
                 .orElseThrow(GroupException.NoGroupException::new);
 
-        haneApiService.updateGroupMemberState(defaultGroup); // 내 친구 중 상태 업데이트 가능 학지 확인 후 가능하다면 업데이트
+        // haneApiService.updateGroupMemberState(defaultGroup); // 내 친구 중 상태 업데이트 가능 학지 확인 후 가능하다면 업데이트
 
         // 기본 그룹 친구 Response DTO 생성
         List<ResponseOneGroupMemberDTO> myFriends = defaultGroup.getGroupMembers()
