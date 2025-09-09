@@ -3,12 +3,12 @@ package kr.where.backend.update;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.api.json.ClusterInfo;
-import kr.where.backend.api.json.hane.HaneRequestDto;
-import kr.where.backend.api.json.hane.HaneResponseDto;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.location.LocationRepository;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
@@ -36,7 +36,7 @@ public class UpdateService {
     private static final String UPDATE_TOKEN = "update";
     private final OAuthTokenService oauthTokenService;
     private final IntraApiService intraApiService;
-    private final HaneApiService haneApiService;
+    // private final HaneApiService haneApiService;
     private final MemberService memberService;
     private final ImacHistoryService imacHistoryService;
     private final LocationRepository locationRepository;
@@ -82,7 +82,7 @@ public class UpdateService {
     }
 
     public void updateLocation(final List<ClusterInfo> cadets) {
-        final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
+        // final String haneToken = oauthTokenService.findAccessToken(HANE_TOKEN);
 
         cadets.forEach(cadet -> memberService.findOne(cadet.getUser().getId())
                 .ifPresent(
@@ -92,11 +92,12 @@ public class UpdateService {
                             } else {
                                 member.getLocation().setImacLocation(null);
                             }
-                            if (member.isAgree()) {
-                                member.setInCluster(
-                                        haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken)
-                                );
-                            }
+                            // hane 서비스 종료로 인해 hane API 호출 중지
+                            // if (member.isAgree()) {
+                            //     member.setInCluster(
+                            //             haneApiService.getHaneInfo(cadet.getUser().getLogin(), haneToken)
+                            //     );
+                            // }
                             log.info("[scheduling] : {}의 imacLocation가 변경되었습니다", member.getIntraName());
                     }
                 )
@@ -203,23 +204,23 @@ public class UpdateService {
                 .ifPresent(member -> member.setImage(cadet.getImage().getVersions().getSmall())));
     }
 
-
-    @Scheduled(cron = "0 1 0/1 1/1 * ?")
-    @Transactional
-    public void updateInCluster() {
-        log.info("[hane] : inCluster 업데이트를 시작합니다!");
-        final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
-        memberService.updateUpdatableMember(haneResponse);
-    }
-
-     public List<HaneResponseDto> getHaneInfoOfUpdatableMember() {
-        List<Member> updatableAgreeMembers = memberService.findUpdatableAgreeMembers()
-                .orElseThrow(NoMemberException::new);
-
-        List<HaneRequestDto> haneRequestDtos = updatableAgreeMembers.stream()
-                .map(member -> new HaneRequestDto(member.getIntraName()))
-                .toList();
-
-        return haneApiService.getHaneListInfo(haneRequestDtos, oauthTokenService.findAccessToken(HANE_TOKEN));
-    }
+    // hane 서비스 종료로 인해 스케쥴러 중지
+    // @Scheduled(cron = "0 1 0/1 1/1 * ?")
+    // @Transactional
+    // public void updateInCluster() {
+    //     log.info("[hane] : inCluster 업데이트를 시작합니다!");
+    //     final List<HaneResponseDto> haneResponse = getHaneInfoOfUpdatableMember();
+    //     memberService.updateUpdatableMember(haneResponse);
+    // }
+    //
+    //  public List<HaneResponseDto> getHaneInfoOfUpdatableMember() {
+    //     List<Member> updatableAgreeMembers = memberService.findUpdatableAgreeMembers()
+    //             .orElseThrow(NoMemberException::new);
+    //
+    //     List<HaneRequestDto> haneRequestDtos = updatableAgreeMembers.stream()
+    //             .map(member -> new HaneRequestDto(member.getIntraName()))
+    //             .toList();
+    //
+    //     return haneApiService.getHaneListInfo(haneRequestDtos, oauthTokenService.findAccessToken(HANE_TOKEN));
+    // }
 }
