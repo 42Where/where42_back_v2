@@ -4,7 +4,7 @@ import static kr.where.backend.api.http.Uri.CADET_PATH;
 import static kr.where.backend.api.http.Uri.DELIMITER;
 import static kr.where.backend.api.http.Uri.FILTER_ACTIVE;
 import static kr.where.backend.api.http.Uri.FILTER_KIND;
-import static kr.where.backend.api.http.Uri.HANE_PATH;
+// import static kr.where.backend.api.http.Uri.HANE_PATH;
 import static kr.where.backend.api.http.Uri.HOST;
 import static kr.where.backend.api.http.Uri.HTTPS;
 import static kr.where.backend.api.http.Uri.LOCATIONS_PATH;
@@ -166,13 +166,13 @@ public class UriBuilder {
                 .toUri();
     }
 
-    /**
-     * hane 요청 URI 생성
-     */
-    public static URI hane(final String name) {
-        return UriComponentsBuilder
-                .fromHttpUrl(HANE_PATH.getValue() + name)
-                .build()
-                .toUri();
-    }
+    // /**
+    //  * hane 요청 URI 생성
+    //  */
+    // public static URI hane(final String name) {
+    //     return UriComponentsBuilder
+    //             .fromHttpUrl(HANE_PATH.getValue() + name)
+    //             .build()
+    //             .toUri();
+    // }
 }

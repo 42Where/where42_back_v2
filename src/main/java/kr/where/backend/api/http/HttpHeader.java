@@ -1,7 +1,7 @@
 package kr.where.backend.api.http;
 
 import kr.where.backend.api.JsonMapper;
-import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -57,26 +57,26 @@ public class HttpHeader {
         return new HttpEntity<>(params, headers);
     }
 
-    public static HttpEntity<MultiValueMap<String, String>> requestHaneInfo(final String token) {
-        final HttpHeaders headers = new HttpHeaders();
-
-        headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
-        final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
-        return new HttpEntity<>(params, headers);
-    }
-
-    public static HttpEntity<String> requestHaneListInfo(
-            final List<HaneRequestDto> requestBody,
-            final String token)
-    {
-        final HttpHeaders headers = new HttpHeaders();
-
-        headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
-        return new HttpEntity<>(JsonMapper.convertJsonForm(requestBody), headers);
-    }
+    // public static HttpEntity<MultiValueMap<String, String>> requestHaneInfo(final String token) {
+    //     final HttpHeaders headers = new HttpHeaders();
+    //
+    //     headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
+    //     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    //
+    //     final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    //
+    //     return new HttpEntity<>(params, headers);
+    // }
+    //
+    // public static HttpEntity<String> requestHaneListInfo(
+    //         final List<HaneRequestDto> requestBody,
+    //         final String token)
+    // {
+    //     final HttpHeaders headers = new HttpHeaders();
+    //
+    //     headers.add(HttpHeaders.AUTHORIZATION, BEARER + token);
+    //     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    //
+    //     return new HttpEntity<>(JsonMapper.convertJsonForm(requestBody), headers);
+    // }
 }
