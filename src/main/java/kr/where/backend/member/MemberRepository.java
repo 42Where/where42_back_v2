@@ -1,7 +1,7 @@
 package kr.where.backend.member;
 
 import jakarta.persistence.LockModeType;
-import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByIntraId(Integer intraId);
 
 	Optional<List<Member>> findByIntraIdIn(List<Integer> intraId);

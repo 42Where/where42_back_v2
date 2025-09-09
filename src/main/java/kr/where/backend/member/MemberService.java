@@ -219,8 +219,8 @@ public class MemberService {
 		return memberRepository.findByIntraName(intraName);
 	}
 
-	@Transactional
-	public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
-		memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
-	}
+	// @Transactional
+	// public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
+	// 	memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
+	// }
 }
