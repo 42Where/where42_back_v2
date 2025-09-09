@@ -12,7 +12,7 @@ import kr.where.backend.admin.dto.ResponseCheckAdminDTO;
 import kr.where.backend.admin.dto.ResponseRoleDTO;
 import kr.where.backend.api.exception.RequestException;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
@@ -50,8 +50,8 @@ public class AdminServiceTest {
         authUser = new AuthUser(11111, "soohlee", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "soohlee", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
         member.updateRole("ADMIN");
         memberRepository.save(member);
     }
@@ -88,8 +88,8 @@ public class AdminServiceTest {
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
         CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane2 = Hane.create("IN");
-        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
+        // Hane hane2 = Hane.create("IN");
+        Member member2 = memberService.createAgreeMember(cadetPrivacy2);
         memberRepository.save(member2);
 
         //given
@@ -111,8 +111,8 @@ public class AdminServiceTest {
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser2, "", authorities2));
         CadetPrivacy cadetPrivacy2 = new CadetPrivacy(222222, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane2 = Hane.create("IN");
-        Member member2 = memberService.createAgreeMember(cadetPrivacy2, hane2);
+        // Hane hane2 = Hane.create("IN");
+        Member member2 = memberService.createAgreeMember(cadetPrivacy2);
         memberRepository.save(member2);
 
         //given

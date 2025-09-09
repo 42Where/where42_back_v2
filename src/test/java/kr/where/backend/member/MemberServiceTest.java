@@ -1,8 +1,8 @@
 package kr.where.backend.member;
 
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
-import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupMemberRepository;
 import kr.where.backend.group.GroupRepository;
@@ -68,10 +68,10 @@ public class MemberServiceTest {
 
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("IN");
+		// Hane hane = Hane.create("IN");
 
 		//when
-		Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
+		Member agreeMember = memberService.createAgreeMember(cadetPrivacy);
 
 		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
 
@@ -126,10 +126,10 @@ public class MemberServiceTest {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
 		memberService.createDisagreeMember(cadetPrivacy);
-		Hane hane = Hane.create("IN");
+		// Hane hane = Hane.create("IN");
 
 		//when
-		Member agreeMember = memberService.createAgreeMember(cadetPrivacy, hane);
+		Member agreeMember = memberService.createAgreeMember(cadetPrivacy);
 
 		Optional<Member> member = memberRepository.findByIntraId(cadetPrivacy.getId());
 
@@ -159,13 +159,13 @@ public class MemberServiceTest {
 	public void member_duplicate_test() {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("IN");
+		// Hane hane = Hane.create("IN");
 
 		//when
-		memberService.createAgreeMember(cadetPrivacy, hane);
+		memberService.createAgreeMember(cadetPrivacy);
 
 		//then
-		assertThatThrownBy(() -> memberService.createAgreeMember(cadetPrivacy, hane))
+		assertThatThrownBy(() -> memberService.createAgreeMember(cadetPrivacy))
 			.isInstanceOf(MemberException.class);
 	}
 
@@ -173,8 +173,8 @@ public class MemberServiceTest {
 	public void update_comment_test() {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("IN");
-		memberService.createAgreeMember(cadetPrivacy, hane);
+		// Hane hane = Hane.create("IN");
+		memberService.createAgreeMember(cadetPrivacy);
 
 		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 		String beforeComment = member.getComment();
@@ -195,8 +195,8 @@ public class MemberServiceTest {
 	public void delete_comment_test() {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("IN");
-		memberService.createAgreeMember(cadetPrivacy, hane);
+		// Hane hane = Hane.create("IN");
+		memberService.createAgreeMember(cadetPrivacy);
 
 		Member member = memberRepository.findByIntraId(cadetPrivacy.getId()).orElse(null);
 
@@ -243,8 +243,8 @@ public class MemberServiceTest {
 	public void findOneByIntraId() {
 		//given
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "", "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create("IN");
-		Member createMember = memberService.createAgreeMember(cadetPrivacy, hane);
+		// Hane hane = Hane.create("IN");
+		Member createMember = memberService.createAgreeMember(cadetPrivacy);
 
 		//when
 		// createMember.setInClusterUpdatedAtForTest();
@@ -269,10 +269,10 @@ public class MemberServiceTest {
 		Member member = memberRepository.findByIntraId(123456).get();
 
 
-		member.setInCluster(Hane.create("IN"));
+		// member.setInCluster(Hane.create("IN"));
 		assertThat(member.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 
-		member.setInCluster(Hane.create("OUT"));
+		// member.setInCluster(Hane.create("OUT"));
 		assertThat(member.getLocation().getImacLocation()).isEqualTo("c1r1s1");
 	}
 
@@ -286,7 +286,7 @@ public class MemberServiceTest {
 		AuthUser authUser3 = new AuthUser(333333, "soohlee", 3L);
 		memberCreateAndSave(333333, "soohlee", "c1r2s3", "IN", authUser3);
 
-		List<HaneRequestDto> members = memberService.findAgreeMembers().orElseThrow();
+		List<String> members = memberService.findAgreeMembers().orElseThrow();
 		assertThat(members.size()).isEqualTo(3);
 	}
 
@@ -318,8 +318,8 @@ public class MemberServiceTest {
 		Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
 		CadetPrivacy cadetPrivacy = new CadetPrivacy(intraId, intraName, location, "image", true, "2022-10-31", CAMPUS_ID);
-		Hane hane = Hane.create(haneInOut);
-		memberService.createAgreeMember(cadetPrivacy, hane);
+		// Hane hane = Hane.create(haneInOut);
+		memberService.createAgreeMember(cadetPrivacy);
 	}
 
 }

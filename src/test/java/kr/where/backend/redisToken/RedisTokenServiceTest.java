@@ -1,7 +1,7 @@
 package kr.where.backend.redisToken;
 
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.jwt.JwtService;
@@ -86,8 +86,8 @@ public class RedisTokenServiceTest {
         //member create
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
 
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
         String refreshToken = jwtService.createRefreshToken(135436, "suhwpark");
@@ -128,8 +128,8 @@ public class RedisTokenServiceTest {
         //member 생성
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
 
         //token 생성
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");

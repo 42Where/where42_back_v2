@@ -6,7 +6,7 @@ import kr.where.backend.search.dto.ResponseSearchDTO;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import kr.where.backend.api.json.*;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -72,8 +72,7 @@ public class SearchServiceTest {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         memberService.createAgreeMember(
                 new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image",
-                        true, "2022-10-31", 29),
-                Hane.create("IN")
+                        true, "2022-10-31", 29)
         );
     }
 
@@ -99,8 +98,8 @@ public class SearchServiceTest {
     public void getCadetPrivacy() {
         //given
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
 
         //then
         assertThatThrownBy(() -> searchService.search("jn", authUser))

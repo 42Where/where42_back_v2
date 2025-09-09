@@ -4,7 +4,7 @@ import kr.where.backend.analytics.dto.ResponseAnalyticsDTO;
 import kr.where.backend.analytics.dto.ResponseImacUsageAnalyticsDTO;
 import kr.where.backend.analytics.dto.ResponseMemberImacUsageAnalyticsDTO;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.imacHistory.ImacHistory;
@@ -76,8 +76,8 @@ public class AnalyticsServiceTest {
         //given
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
         LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
@@ -116,8 +116,8 @@ public class AnalyticsServiceTest {
         //given
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
         LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
