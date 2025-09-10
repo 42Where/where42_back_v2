@@ -75,7 +75,7 @@ public class RedisTokenServiceTest extends RedisTestSupport {
 
     @Test
     @DisplayName("reissue 시 redis에서 refreshToken을 사용하여 재발급 test")
-    void reissueWithRedis() {
+    void reissueWithRedis() throws InterruptedException {
         //given
 
         //member create
@@ -91,6 +91,13 @@ public class RedisTokenServiceTest extends RedisTestSupport {
 
         //when
         MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // 기존 accessToken과 새 accessToken이 동일하게 생성되는 것을 방지하기 위함
+        // JJWT는 토큰 생성 시 발급시간(iat)과 만료시간(exp)을 포함하는데,
+        // 두 토큰이 같은 밀리초(또는 같은 초)에 생성되면 payload가 완전히 동일해져 같은 문자열로 서명됨
+        // 따라서 1.1초 이상 대기하여 iat/exp 값이 달라지도록 보장
+        Thread.sleep(1100); // 1.1초 대기 (초 단위 차이 확보)
+
         ResponseAccessTokenDTO dto = jwtService.reissueAccessToken(response, 135436);
 
         //then
