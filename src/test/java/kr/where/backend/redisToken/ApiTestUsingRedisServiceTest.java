@@ -2,9 +2,11 @@ package kr.where.backend.redisToken;
 
 import kr.where.backend.api.json.CadetPrivacy;
 import kr.where.backend.auth.authUser.AuthUser;
+// import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.logout.LogoutService;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.support.RedisTestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,12 +31,12 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 
-
 @SpringBootTest
 @Transactional
 @Rollback
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+public class ApiTestUsingRedisServiceTest extends RedisTestSupport {
     @Autowired
     MockMvc mockMvc;
 

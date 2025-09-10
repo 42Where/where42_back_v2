@@ -33,14 +33,16 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    @Value("${spring.data.redis.password}")
-    private String passWord;
+    @Value("${spring.data.redis.password:}") // 기본값 빈 문자열
+    private String password;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        final RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-        config.setPassword(passWord);
-        return new LettuceConnectionFactory(config);
+    public LettuceConnectionFactory redisConnectionFactory() {
+        final RedisStandaloneConfiguration conf = new RedisStandaloneConfiguration(host, port);
+        if (org.springframework.util.StringUtils.hasText(password)) {
+            conf.setPassword(org.springframework.data.redis.connection.RedisPassword.of(password));
+        }
+        return new LettuceConnectionFactory(conf);
     }
 
     @Bean
