@@ -24,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -73,9 +74,13 @@ public class AnalyticsRepositoryTest {
         Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-        LocalDateTime after3Hour = present.plusHours(3);
-        String[] utcTimes = getUtcTimeString(present, after3Hour);
+        LocalDateTime startOfLastWeek = LocalDateTime.now(ZoneOffset.UTC)
+            .minusDays(7)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .truncatedTo(ChronoUnit.DAYS); // 지난주 월요일 00:00
+
+        LocalDateTime after3Hour = startOfLastWeek.plusHours(3);
+        String[] utcTimes = getUtcTimeString(startOfLastWeek, after3Hour);
 
         List<ImacHistory> imacHistories = List.of(
                 new ImacHistory(intraId, "c1r1s1", utcTimes[0], utcTimes[1]),
@@ -86,7 +91,7 @@ public class AnalyticsRepositoryTest {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
-        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
+        imacHistories.forEach(history -> history.setCreatedAtForTest(startOfLastWeek));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when
@@ -128,9 +133,12 @@ public class AnalyticsRepositoryTest {
         Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-        LocalDateTime after3Hour = present.plusHours(3);
-        String[] utcTimes = getUtcTimeString(present, after3Hour);
+        LocalDateTime startOfLastWeek = LocalDateTime.now(ZoneOffset.UTC)
+            .minusDays(7)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .truncatedTo(ChronoUnit.DAYS); // 지난주 월요일 00:00
+        LocalDateTime after3Hour = startOfLastWeek.plusHours(3);
+        String[] utcTimes = getUtcTimeString(startOfLastWeek, after3Hour);
 
         List<ImacHistory> imacHistories = List.of(
                 new ImacHistory(intraId, "c1r1s1", utcTimes[0], utcTimes[1]),
@@ -141,7 +149,7 @@ public class AnalyticsRepositoryTest {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
-        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
+        imacHistories.forEach(history -> history.setCreatedAtForTest(startOfLastWeek));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when

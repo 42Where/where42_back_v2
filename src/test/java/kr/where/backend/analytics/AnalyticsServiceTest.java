@@ -6,11 +6,11 @@ import kr.where.backend.analytics.dto.ResponseMemberImacUsageAnalyticsDTO;
 import kr.where.backend.api.json.CadetPrivacy;
 // import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.imacHistory.ImacHistory;
 import kr.where.backend.imacHistory.ImacHistoryRepository;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberService;
+import kr.where.backend.support.RedisTestSupport;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,11 +22,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -51,14 +53,14 @@ public class AnalyticsServiceTest extends RedisTestSupport {
     @Autowired
     RedisTemplate<String, Object> template;
 
-    static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
+    // static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
     Integer CAMPUS_ID = 29;
     AuthUser authUser;
 
-    @BeforeAll
-    public static void setContainer() {
-        TEST_REDIS_CONTAINER.beforeAll();
-    }
+    // @BeforeAll
+    // public static void setContainer() {
+    //     TEST_REDIS_CONTAINER.beforeAll();
+    // }
 
     @BeforeEach
     void setUp() {
@@ -82,9 +84,13 @@ public class AnalyticsServiceTest extends RedisTestSupport {
         Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-        LocalDateTime after3Hour = present.plusHours(3);
-        String[] utcTimes = getUtcTimeString(present, after3Hour);
+        LocalDateTime startOfLastWeek = LocalDateTime.now(ZoneOffset.UTC)
+            .minusDays(7)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .truncatedTo(ChronoUnit.DAYS); // 지난주 월요일 00:00
+
+        LocalDateTime after3Hour = startOfLastWeek.plusHours(3);
+        String[] utcTimes = getUtcTimeString(startOfLastWeek, after3Hour);
 
         List<ImacHistory> imacHistories = List.of(
                 new ImacHistory(intraId, "c1r1s1", utcTimes[0], utcTimes[1]),
@@ -95,7 +101,7 @@ public class AnalyticsServiceTest extends RedisTestSupport {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
-        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
+        imacHistories.forEach(history -> history.setCreatedAtForTest(startOfLastWeek));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when
@@ -122,9 +128,13 @@ public class AnalyticsServiceTest extends RedisTestSupport {
         Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
-        LocalDateTime present = LocalDateTime.parse("2025-01-20T12:11:12.111Z", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-        LocalDateTime after3Hour = present.plusHours(3);
-        String[] utcTimes = getUtcTimeString(present, after3Hour);
+        LocalDateTime startOfLastWeek = LocalDateTime.now(ZoneOffset.UTC)
+            .minusDays(7)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .truncatedTo(ChronoUnit.DAYS); // 지난주 월요일 00:00
+
+        LocalDateTime after3Hour = startOfLastWeek.plusHours(3);
+        String[] utcTimes = getUtcTimeString(startOfLastWeek, after3Hour);
 
         List<ImacHistory> imacHistories = List.of(
                 new ImacHistory(intraId, "c1r1s1", utcTimes[0], utcTimes[1]),
@@ -135,7 +145,7 @@ public class AnalyticsServiceTest extends RedisTestSupport {
                 new ImacHistory(intraId, "c5r8s8", utcTimes[0], utcTimes[1]),
                 new ImacHistory(12345, "c5r8s8", utcTimes[0], utcTimes[1])
         );
-        imacHistories.forEach(history -> history.setCreatedAtForTest(present));
+        imacHistories.forEach(history -> history.setCreatedAtForTest(startOfLastWeek));
         imacHistoryRepository.saveAll(imacHistories);
 
         //when
