@@ -5,6 +5,9 @@ import kr.where.backend.analytics.imacUsageAnalytics.ImacUsageAnalyticsView;
 import kr.where.backend.analytics.memberImacUsageAnalytics.MemberImacUsageAnalyticsRepository;
 import kr.where.backend.analytics.memberImacUsageAnalytics.MemberImacUsageAnalyticsView;
 import kr.where.backend.api.json.CadetPrivacy;
+import java.time.*;
+import java.time.temporal.*;
+
 // import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.imacHistory.ImacHistory;
@@ -35,6 +38,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class AnalyticsRepositoryTest {
     @Autowired
     MemberImacUsageAnalyticsRepository memberImacUsageAnalyticsRepository;

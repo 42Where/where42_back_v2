@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.in;
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class ImacHistoryServiceTest {
     @Autowired
     ImacHistoryService imacHistoryService;

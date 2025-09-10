@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 @Transactional
 @Rollback
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ApiTestUsingSearchServiceTest {
 
     @Autowired

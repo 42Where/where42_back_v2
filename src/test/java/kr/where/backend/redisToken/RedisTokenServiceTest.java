@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -33,7 +34,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @Transactional
 @Rollback
-public class RedisTokenServiceTest {
+@ActiveProfiles("test")
+public class RedisTokenServiceTest extends RedisTestSupport {
 
     @Autowired
     RedisTokenService redisTokenService;

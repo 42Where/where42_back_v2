@@ -20,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +39,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @Transactional
 @Rollback
-public class SearchServiceTest {
+@ActiveProfiles("test")
+public class SearchServiceTest extends RedisTestSupport {
 
     @Autowired
     SearchService searchService;
