@@ -34,7 +34,6 @@ import java.util.stream.Stream;
 @Transactional
 @Rollback
 @AutoConfigureMockMvc
-public class ApiTestUsingRedisServiceTest {
 @ActiveProfiles("test")
     @Autowired
     MockMvc mockMvc;
