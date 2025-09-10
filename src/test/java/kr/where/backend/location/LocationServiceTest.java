@@ -103,7 +103,7 @@ public class LocationServiceTest {
         final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
 
         //then
-        assertThat(1).isEqualTo(responseLoggedImacListDTO.getMembers().size());
+        assertThat(2).isEqualTo(responseLoggedImacListDTO.getMembers().size());
     }
 
     @DisplayName("imac에 로그인된 멤버를 조회하는 테스트")
@@ -126,58 +126,60 @@ public class LocationServiceTest {
         assertThat("suhwpark").isEqualTo(responseLoggedImacDTO_1.getIntraName());
     }
 
-    @DisplayName("imac에 로그인된 사람들 중 클러스터에 있는 사람만 조회하는 테스트")
-    @Test
-    @Rollback
-    void testLoggedInIMacMemberWithoutCluster() {
-        // given
-        final AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
-        agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", authUser1);
-        final AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
-        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser2);
+    // hane 서비스 종료로 hane 동의 로직 주석처리함.
+    // @DisplayName("imac에 로그인된 사람들 중 클러스터에 있는 사람만 조회하는 테스트")
+    // @Test
+    // @Rollback
+    // void testLoggedInIMacMemberWithoutCluster() {
+    //     // given
+    //     final AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+    //     agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", authUser1);
+    //     final AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+    //     agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser2);
+    //
+    //     // when
+    //     final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
+    //
+    //     //then
+    //     final ResponseLoggedImacDTO responseLoggedImacDTO_1 = responseLoggedImacListDTO.getMembers().stream()
+    //             .filter(responseLoggedImacDTO -> Objects.equals("suhwpark", responseLoggedImacDTO.getIntraName()))
+    //             .findFirst()
+    //             .orElse(null);
+    //     assertThat(responseLoggedImacDTO_1).isNotNull();
+    //     assertThat("suhwpark").isEqualTo(responseLoggedImacDTO_1.getIntraName());
+    //
+    //     final ResponseLoggedImacDTO responseLoggedImacDTO_2 = responseLoggedImacListDTO.getMembers().stream()
+    //             .filter(responseLoggedImacDTO -> Objects.equals("jonhan", responseLoggedImacDTO.getIntraName()))
+    //             .findFirst()
+    //             .orElse(null);
+    //     assertThat(responseLoggedImacDTO_2).isNull();
+    // }
 
-        // when
-        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
-
-        //then
-        final ResponseLoggedImacDTO responseLoggedImacDTO_1 = responseLoggedImacListDTO.getMembers().stream()
-                .filter(responseLoggedImacDTO -> Objects.equals("suhwpark", responseLoggedImacDTO.getIntraName()))
-                .findFirst()
-                .orElse(null);
-        assertThat(responseLoggedImacDTO_1).isNotNull();
-        assertThat("suhwpark").isEqualTo(responseLoggedImacDTO_1.getIntraName());
-
-        final ResponseLoggedImacDTO responseLoggedImacDTO_2 = responseLoggedImacListDTO.getMembers().stream()
-                .filter(responseLoggedImacDTO -> Objects.equals("jonhan", responseLoggedImacDTO.getIntraName()))
-                .findFirst()
-                .orElse(null);
-        assertThat(responseLoggedImacDTO_2).isNull();
-    }
-
-    @DisplayName("imac에 로그인된 멤버를 조회하는데 동의안된 멤버도 가져와야 하는 테스트")
-    @Test
-    @Rollback
-    void testLoggedInIMacCountForDisagreeMember() {
-        //given
-        AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
-        agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", authUser1);
-        AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
-        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser2);
-        AuthUser authUser3 = new AuthUser(333333, "soohlee", 2L);
-        disagreeMemberCreateAndSave(333333, "soohlee", "c1r1s3", authUser3);
-
-        // when
-        final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
-        ResponseLoggedImacDTO disAgreeMember = responseLoggedImacListDTO.getMembers().stream().
-                filter(member -> Objects.equals("soohlee", member.getIntraName())).
-                findFirst().
-                orElse(null);
-
-        //then
-        assertThat(responseLoggedImacListDTO.getMembers().size()).isEqualTo(2);
-        assertThat(disAgreeMember.getIntraName()).isEqualTo("soohlee");
-
-    }
+    // hane 서비스 종료로 hane 동의 로직 주석처리함.
+    // @DisplayName("imac에 로그인된 멤버를 조회하는데 동의안된 멤버도 가져와야 하는 테스트")
+    // @Test
+    // @Rollback
+    // void testLoggedInIMacCountForDisagreeMember() {
+    //     //given
+    //     AuthUser authUser1 = new AuthUser(123456, "suhwpark", 2L);
+    //     agreeMemberCreateAndSave(123456, "suhwpark", "c1r1s1", authUser1);
+    //     AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
+    //     agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser2);
+    //     AuthUser authUser3 = new AuthUser(333333, "soohlee", 2L);
+    //     disagreeMemberCreateAndSave(333333, "soohlee", "c1r1s3", authUser3);
+    //
+    //     // when
+    //     final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
+    //     ResponseLoggedImacDTO disAgreeMember = responseLoggedImacListDTO.getMembers().stream().
+    //             filter(member -> Objects.equals("soohlee", member.getIntraName())).
+    //             findFirst().
+    //             orElse(null);
+    //
+    //     //then
+    //     assertThat(responseLoggedImacListDTO.getMembers().size()).isEqualTo(2);
+    //     assertThat(disAgreeMember.getIntraName()).isEqualTo("soohlee");
+    //
+    // }
 
     @DisplayName("imac에 로그인된 멤버를 조회하는데 location이 null인 멤버는 안가져와야 하는 테스트")
     @Test
@@ -189,7 +191,7 @@ public class LocationServiceTest {
         AuthUser authUser2 = new AuthUser(222222, "jonhan", 2L);
         agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser2);
         AuthUser authUser3 = new AuthUser(333333, "soohlee", 2L);
-        disagreeMemberCreateAndSave(333333, "soohlee", "c1r1s3", authUser3);
+        agreeMemberCreateAndSave(333333, "soohlee", "c1r1s3", authUser3);
 
         // when
         final ResponseLoggedImacListDTO responseLoggedImacListDTO = locationService.getLoggedInIMacs(authUser1, "c1");
@@ -199,7 +201,7 @@ public class LocationServiceTest {
                 orElse(null);
 
         //then
-        assertThat(responseLoggedImacListDTO.getMembers().size()).isEqualTo(1);
+        assertThat(responseLoggedImacListDTO.getMembers().size()).isEqualTo(2);
         assertThat(disAgreeMember.getIntraName()).isEqualTo("soohlee");
 
     }
@@ -221,20 +223,21 @@ public class LocationServiceTest {
         assertThat(loggedImacs.size()).isEqualTo(2);
     }
 
-    @DisplayName("Imac에 로그인되어 있어도 클러스터 내에 없으면 imac위치반환값이 null이 되어야 하는 테스트")
-    @Test
-    @Rollback
-    void getImacLocationNull() {
-        // given
-        final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
-        agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser);
-
-        // when
-        Member member = memberRepository.findByIntraId(222222).get();
-
-        //then
-        assertThat(member.getLocation().getLocation()).isNull();
-    }
+    // hane 서비스 종료로 hane 동의 로직 주석처리함.
+    // @DisplayName("Imac에 로그인되어 있어도 클러스터 내에 없으면 imac위치반환값이 null이 되어야 하는 테스트")
+    // @Test
+    // @Rollback
+    // void getImacLocationNull() {
+    //     // given
+    //     final AuthUser authUser = new AuthUser(222222, "jonhan", 2L);
+    //     agreeMemberCreateAndSave(222222, "jonhan", "c1r1s2", authUser);
+    //
+    //     // when
+    //     Member member = memberRepository.findByIntraId(222222).get();
+    //
+    //     //then
+    //     assertThat(member.getLocation().getLocation()).isNull();
+    // }
 
     @DisplayName("Imac에 로그인되어 있고 클러스터 내에 있으면 imacLocation 반환해야 하는 테스트")
     @Test
@@ -279,6 +282,14 @@ public class LocationServiceTest {
         member.getLocation().setCustomLocation("1층 회의실");
 
         //then
+        System.out.println("agree? " + member.isAgree());
+        System.out.println("inCluster? " + member.isInCluster());
+        System.out.println("imacUpdatedAt=" + member.getLocation().getImacUpdatedAt());
+        System.out.println("customUpdatedAt=" + member.getLocation().getCustomUpdatedAt());
+        System.out.println("location=" + member.getLocation().getLocation());
+
+        System.out.println(member.getLocation().getImacUpdatedAt() + " : imac");
+        System.out.println(member.getLocation().getCustomUpdatedAt() + " : custom");
         assertThat(member.getLocation().getLocation()).isEqualTo("1층 회의실");
     }
 

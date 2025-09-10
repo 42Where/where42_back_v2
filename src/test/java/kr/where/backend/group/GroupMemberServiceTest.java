@@ -198,16 +198,23 @@ public class GroupMemberServiceTest {
         authUser.setIntraName("jnam");
         // Hane hane = Hane.create("IN");
         memberService.createAgreeMember(cadetPrivacy);
+        // 그룹 주인(jnam)이 그룹 생성
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(99856)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
+        // 그룹에 추가할 멤버(hjeong)로 데이터 변경
         authUser.setIntraId(11111);
         authUser.setIntraName("hjeong");
+        // 그룹에 (hjeong) 멤버 추가
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
+        // authUser를 로그인된 유저(jnam)정보로 다시 변경
+        authUser.setIntraId(99856);
+        authUser.setIntraName("jnam");
 
         List<Integer> members = new ArrayList<>();
-        members.add(99856);
+        // 삭제할 멤버 List(hjeong) 생성.
+        members.add(11111);
 
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(
@@ -215,7 +222,7 @@ public class GroupMemberServiceTest {
                 .groupId(responseGroupMemberDTO.getGroupId())
                 .members(members).build() , authUser);
         //then
-        assertEquals(1, responseGroupMemberDTO1.size());
+        assertEquals(0, responseGroupMemberDTO1.size());
     }
 
     @DisplayName("기본 그룹의 멤버 삭제")

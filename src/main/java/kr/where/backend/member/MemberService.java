@@ -65,7 +65,7 @@ public class MemberService {
 		} else if (member != null && !member.isAgree()) {
 			member.setDisagreeToAgree();
 		} else {
-			member = new Member(cadetPrivacy);
+			member = new Member(cadetPrivacy, true);
 			memberRepository.save(member);
 			locationService.create(member, cadetPrivacy.getLocation());
 		}

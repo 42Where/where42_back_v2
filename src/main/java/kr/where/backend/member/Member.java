@@ -85,6 +85,18 @@ public class Member {
 	// 	this.blackHole = cadetPrivacy.isActive();
 	// }
 
+	public Member(final CadetPrivacy cadetPrivacy, final boolean agree) {
+		this.intraId = cadetPrivacy.getId();
+		this.intraName = cadetPrivacy.getLogin();
+		this.grade = cadetPrivacy.getCreated_at();
+		this.image = cadetPrivacy.getImage().getVersions().getSmall();
+		this.inCluster = false;
+		this.role = USER_ROLE;
+		this.inClusterUpdatedAt = LocalDateTime.now();
+		this.agree = agree;
+		this.blackHole = cadetPrivacy.isActive();
+	}
+
 	public Member(final CadetPrivacy cadetPrivacy) {
 		this.intraId = cadetPrivacy.getId();
 		this.intraName = cadetPrivacy.getLogin();
