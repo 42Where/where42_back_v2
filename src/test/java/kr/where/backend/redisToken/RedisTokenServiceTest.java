@@ -1,14 +1,13 @@
 package kr.where.backend.redisToken;
 
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
-import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.jwt.JwtService;
 import kr.where.backend.jwt.dto.ResponseAccessTokenDTO;
 import kr.where.backend.logout.LogoutService;
 import kr.where.backend.member.MemberService;
-import org.junit.jupiter.api.BeforeAll;
+import kr.where.backend.support.RedisTestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -33,7 +33,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @Transactional
 @Rollback
-public class RedisTokenServiceTest {
+@ActiveProfiles("test")
+public class RedisTokenServiceTest extends RedisTestSupport {
 
     @Autowired
     RedisTokenService redisTokenService;
@@ -49,12 +50,6 @@ public class RedisTokenServiceTest {
 
     AuthUser authUser;
     Integer CAMPUS_ID = 29;
-
-    static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
-    @BeforeAll
-    public static void setContainer() {
-        TEST_REDIS_CONTAINER.beforeAll();
-    }
 
     @BeforeEach
     public void setUp() {
@@ -80,14 +75,14 @@ public class RedisTokenServiceTest {
 
     @Test
     @DisplayName("reissue 시 redis에서 refreshToken을 사용하여 재발급 test")
-    void reissueWithRedis() {
+    void reissueWithRedis() throws InterruptedException {
         //given
 
         //member create
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
 
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");
         String refreshToken = jwtService.createRefreshToken(135436, "suhwpark");
@@ -96,6 +91,13 @@ public class RedisTokenServiceTest {
 
         //when
         MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // 기존 accessToken과 새 accessToken이 동일하게 생성되는 것을 방지하기 위함
+        // JJWT는 토큰 생성 시 발급시간(iat)과 만료시간(exp)을 포함하는데,
+        // 두 토큰이 같은 밀리초(또는 같은 초)에 생성되면 payload가 완전히 동일해져 같은 문자열로 서명됨
+        // 따라서 1.1초 이상 대기하여 iat/exp 값이 달라지도록 보장
+        Thread.sleep(1100); // 1.1초 대기 (초 단위 차이 확보)
+
         ResponseAccessTokenDTO dto = jwtService.reissueAccessToken(response, 135436);
 
         //then
@@ -128,8 +130,8 @@ public class RedisTokenServiceTest {
         //member 생성
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
 
         //token 생성
         String accessToken = jwtService.createAccessToken(135436, "suhwpark");

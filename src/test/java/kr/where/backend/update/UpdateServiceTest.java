@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.*;
-import kr.where.backend.api.json.hane.Hane;
-import kr.where.backend.api.json.hane.HaneResponseDto;
+// import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.member.Member;
 import kr.where.backend.member.MemberRepository;
@@ -49,8 +49,8 @@ public class UpdateServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private HaneApiService haneApiService;
+    // @Autowired
+    // private HaneApiService haneApiService;
 
     AuthUser authUser;
 
@@ -66,58 +66,58 @@ public class UpdateServiceTest {
     }
     private void save500Member() {
         for (int i = 1 ; i <= 800; i++) {
-            memberCreateAndSave(i, "member" + i, "location", "IN", i);
+            memberCreateAndSave(i, "member" + i, "location", i);
         }
     }
 
-    private List<HaneResponseDto> makeHaneResponse(String inOrOutStatus) {
-        List<HaneResponseDto> dtos = new ArrayList<>();
-        for(int i = 1; i <= 500; i++) {
-            HaneResponseDto dto = new HaneResponseDto();
-            ReflectionTestUtils.setField(dto, "login", "member" + i);
-            ReflectionTestUtils.setField(dto, "inoutState", inOrOutStatus);
-            dtos.add(dto);
-        }
-        return dtos;
-    }
+    // private List<HaneResponseDto> makeHaneResponse(String inOrOutStatus) {
+    //     List<HaneResponseDto> dtos = new ArrayList<>();
+    //     for(int i = 1; i <= 500; i++) {
+    //         HaneResponseDto dto = new HaneResponseDto();
+    //         ReflectionTestUtils.setField(dto, "login", "member" + i);
+    //         ReflectionTestUtils.setField(dto, "inoutState", inOrOutStatus);
+    //         dtos.add(dto);
+    //     }
+    //     return dtos;
+    // }
 
-    @Test
-    @DisplayName("updateInCluster 스케줄러 속도 비교 Test 개선")
-    public void updateInClusterTest() {
-        List<HaneResponseDto> inResponse = makeHaneResponse("IN");
-        long startTime = System.nanoTime();  // 시작 시간 측정
-        memberService.updateUpdatableMember(inResponse);
-        long endTime = System.nanoTime();    // 종료 시간 측정
-        long duration = (endTime - startTime) / 1_000_000; // 밀리초(ms) 단위 변환
+    // @Test
+    // @DisplayName("updateInCluster 스케줄러 속도 비교 Test 개선")
+    // public void updateInClusterTest() {
+    //     List<HaneResponseDto> inResponse = makeHaneResponse("IN");
+    //     long startTime = System.nanoTime();  // 시작 시간 측정
+    //     memberService.updateUpdatableMember(inResponse);
+    //     long endTime = System.nanoTime();    // 종료 시간 측정
+    //     long duration = (endTime - startTime) / 1_000_000; // 밀리초(ms) 단위 변환
+    //
+    //     List<HaneResponseDto> outResponse = makeHaneResponse("OUT");
+    //     long beforeStartTime = System.nanoTime();  // 시작 시간 측정
+    //     beforeUpdateInClusterTest(outResponse);
+    //     long beforeEndTime = System.nanoTime();    // 종료 시간 측정
+    //     long beforeCodeDuration = (beforeEndTime - beforeStartTime) / 1_000_000; // 밀리초(ms) 단위 변환
+    //
+    //     System.out.println("updateInCluster 개선 후 실행 시간: " + duration + " ms");
+    //     System.out.println("updateInCluster 개선 전 실행 시간: " + beforeCodeDuration + " ms");
+    // }
 
-        List<HaneResponseDto> outResponse = makeHaneResponse("OUT");
-        long beforeStartTime = System.nanoTime();  // 시작 시간 측정
-        beforeUpdateInClusterTest(outResponse);
-        long beforeEndTime = System.nanoTime();    // 종료 시간 측정
-        long beforeCodeDuration = (beforeEndTime - beforeStartTime) / 1_000_000; // 밀리초(ms) 단위 변환
+    // private void beforeUpdateInClusterTest(List<HaneResponseDto> haneResponse) {
+    //     haneResponse.stream()
+    //             .filter(response -> response.getInoutState() != null)
+    //             .forEach(response -> {
+    //                 haneApiService.updateMemberInOrOutState(
+    //                         memberService.findByIntraName(response.getLogin())
+    //                                 .orElseThrow(MemberException.NoMemberException::new),
+    //                         response.getInoutState());
+    //             });
+    // }
 
-        System.out.println("updateInCluster 개선 후 실행 시간: " + duration + " ms");
-        System.out.println("updateInCluster 개선 전 실행 시간: " + beforeCodeDuration + " ms");
-    }
-
-    private void beforeUpdateInClusterTest(List<HaneResponseDto> haneResponse) {
-        haneResponse.stream()
-                .filter(response -> response.getInoutState() != null)
-                .forEach(response -> {
-                    haneApiService.updateMemberInOrOutState(
-                            memberService.findByIntraName(response.getLogin())
-                                    .orElseThrow(MemberException.NoMemberException::new),
-                            response.getInoutState());
-                });
-    }
-
-    private void memberCreateAndSave(int intraId, String intraName, String location, String haneInOut, long defaultGroupId) {
+    private void memberCreateAndSave(int intraId, String intraName, String location, long defaultGroupId) {
         AuthUser authUser = new AuthUser(intraId, intraName, defaultGroupId);
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = new CadetPrivacy(intraId, intraName, location, "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create(haneInOut);
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create(haneInOut);
+        memberService.createAgreeMember(cadetPrivacy);
     }
 
 //    @Test

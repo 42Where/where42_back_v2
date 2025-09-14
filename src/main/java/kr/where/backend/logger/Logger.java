@@ -27,7 +27,7 @@ public enum Logger {
     UPDATE_TOKEN("[TOKEN] : {} 토큰이 갱신 되었습니다."),
     EXPIRE_TOKEN("[TOKEN] : {} 토큰이 만료되었습니다."),
     INTRA_API_FALLBACK("[INTRA API] : Cadet Privacy fallback {}"),
-    HANE_API_ERROR("[HANE API] : Hane Api 오류가 발생하였습니다."),
+    // HANE_API_ERROR("[HANE API] : Hane Api 오류가 발생하였습니다."),
     EXCEPTION("[EXCEPTION] : {}");
 
     public final String msg;

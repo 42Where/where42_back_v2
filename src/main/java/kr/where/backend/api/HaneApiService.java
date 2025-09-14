@@ -1,138 +1,138 @@
-package kr.where.backend.api;
-
-import jakarta.persistence.LockModeType;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import kr.where.backend.api.exception.RequestException;
-import kr.where.backend.api.http.HttpHeader;
-import kr.where.backend.api.http.HttpResponse;
-import kr.where.backend.api.http.Uri;
-import kr.where.backend.api.http.UriBuilder;
-import kr.where.backend.api.json.hane.Hane;
-import kr.where.backend.api.json.hane.HaneRequestDto;
-import kr.where.backend.api.json.hane.HaneResponseDto;
-import kr.where.backend.group.entity.Group;
-import kr.where.backend.group.entity.GroupMember;
-import kr.where.backend.member.Member;
-import kr.where.backend.member.MemberRepository;
-import kr.where.backend.member.exception.MemberException.NoMemberException;
-import kr.where.backend.oauthtoken.OAuthTokenService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@Slf4j
-@Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class HaneApiService {
-	private final OAuthTokenService oauthTokenService;
-	private final MemberRepository memberRepository;
-	private static final String HANE_TOKEN = "hane";
-
-	/**
-	 * hane api 호출하여 in, out state 반환
-	 */
-	public Hane getHaneInfo(final String name, final String token) {
-		try {
-			return JsonMapper.mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
-				Hane.class);
-		} catch (final RequestException exception) {
-			log.warn("[hane] {} : {}", name, exception.toString());
-			return new Hane();
-		}
-	}
-
-	@Transactional
-	public void updateInClusterForMainPage(final Member member) {
-		if (member.isAgree()) {
-			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
-
-			log.info("[scheduling] : {}의 imacLocation이 변경되었습니다", member.getIntraName());
-		}
-	}
-
-	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
-		try {
-			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
-					UriBuilder.hane(Uri.HANE_INFO_LIST.getValue())), HaneResponseDto[].class);
-		} catch (final RequestException exception) {
-			log.warn("[hane] : {}", exception.toString());
-			return new ArrayList<>();
-		}
-	}
-
-	@Transactional
-	public void updateMemberInOrOutState(final Member member, final String state) {
-		if (member.isPossibleToUpdateInCluster()) {
-			member.setInCluster(Hane.create(state));
-		}
-	}
-
-	@Transactional
-	public void updateMyOwnMemberState(final List<GroupMember> friends) {
-		log.info("[hane] : inCluster 업데이트 스케줄링을 시작합니다!");
-		final List<HaneResponseDto> responses = getHaneListInfo(
-				friends
-						.stream()
-						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
-						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
-						.toList(),
-				oauthTokenService.findAccessToken(HANE_TOKEN));
-
-		responses.stream()
-				.filter(response -> response.getInoutState() != null)
-				.forEach(response -> {
-					this.updateMemberInOrOutState(
-							memberRepository.findByIntraName(response.getLogin())
-									.orElseThrow(NoMemberException::new),
-							response.getInoutState());
-					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
-				});
-		log.info("[hane] : inCluster 업데이트 스케줄링을 끝냅니다!");
-	}
-
-	public void updateGroupMemberState(final Group group) {
-		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
-		final List<HaneResponseDto> responses = getHaneListInfo(
-				group
-						.getGroupMembers()
-						.stream()
-						.filter(m -> !m.getIsOwner())
-						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
-						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
-						.toList(),
-				oauthTokenService.findAccessToken(HANE_TOKEN)
-		);
-
-		updateMemberList(responses);
-		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 끝냅니다!");
-	}
-
-	@Transactional
-	public void updateMemberList(final List<HaneResponseDto> responses) {
-		final Map<String, String> inOrOutStatus = responses.stream()
-				.filter(dto -> dto.getInoutState() != null)
-				.collect(Collectors.toMap(HaneResponseDto::getLogin, HaneResponseDto::getInoutState));
-
-		final List<Member> members = memberRepository
-				.findAllByIntraNameIn(responses
-						.stream()
-						.filter(r -> r.getInoutState() != null)
-						.map(HaneResponseDto::getLogin)
-						.toList()
-				);
-
-		members.forEach(m -> {
-			m.setInCluster(Hane.create(inOrOutStatus.get(m.getIntraName())));
-			log.info("[hane] : {}의 inCluster가 변경되었습니다", m.getIntraName());
-		});
-	}
-}
+// package kr.where.backend.api;
+//
+// import jakarta.persistence.LockModeType;
+// import java.util.ArrayList;
+// import java.util.Comparator;
+// import java.util.HashMap;
+// import java.util.List;
+// import java.util.Map;
+// import java.util.stream.Collectors;
+// import kr.where.backend.api.exception.RequestException;
+// import kr.where.backend.api.http.HttpHeader;
+// import kr.where.backend.api.http.HttpResponse;
+// import kr.where.backend.api.http.Uri;
+// import kr.where.backend.api.http.UriBuilder;
+// import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.HaneResponseDto;
+// import kr.where.backend.group.entity.Group;
+// import kr.where.backend.group.entity.GroupMember;
+// import kr.where.backend.member.Member;
+// import kr.where.backend.member.MemberRepository;
+// import kr.where.backend.member.exception.MemberException.NoMemberException;
+// import kr.where.backend.oauthtoken.OAuthTokenService;
+// import lombok.RequiredArgsConstructor;
+// import lombok.extern.slf4j.Slf4j;
+//
+// import org.springframework.data.jpa.repository.Lock;
+// import org.springframework.stereotype.Service;
+// import org.springframework.transaction.annotation.Transactional;
+//
+// @Slf4j
+// @Service
+// @RequiredArgsConstructor
+// @Transactional(readOnly = true)
+// public class HaneApiService {
+// 	private final OAuthTokenService oauthTokenService;
+// 	private final MemberRepository memberRepository;
+// 	private static final String HANE_TOKEN = "hane";
+//
+// 	/**
+// 	 * hane api 호출하여 in, out state 반환
+// 	 */
+// 	public Hane getHaneInfo(final String name, final String token) {
+// 		try {
+// 			return JsonMapper.mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
+// 				Hane.class);
+// 		} catch (final RequestException exception) {
+// 			log.warn("[hane] {} : {}", name, exception.toString());
+// 			return new Hane();
+// 		}
+// 	}
+//
+// 	@Transactional
+// 	public void updateInClusterForMainPage(final Member member) {
+// 		if (member.isAgree()) {
+// 			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
+//
+// 			log.info("[scheduling] : {}의 imacLocation이 변경되었습니다", member.getIntraName());
+// 		}
+// 	}
+//
+// 	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
+// 		try {
+// 			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
+// 					UriBuilder.hane(Uri.HANE_INFO_LIST.getValue())), HaneResponseDto[].class);
+// 		} catch (final RequestException exception) {
+// 			log.warn("[hane] : {}", exception.toString());
+// 			return new ArrayList<>();
+// 		}
+// 	}
+//
+// 	@Transactional
+// 	public void updateMemberInOrOutState(final Member member, final String state) {
+// 		if (member.isPossibleToUpdateInCluster()) {
+// 			member.setInCluster(Hane.create(state));
+// 		}
+// 	}
+//
+// 	@Transactional
+// 	public void updateMyOwnMemberState(final List<GroupMember> friends) {
+// 		log.info("[hane] : inCluster 업데이트 스케줄링을 시작합니다!");
+// 		final List<HaneResponseDto> responses = getHaneListInfo(
+// 				friends
+// 						.stream()
+// 						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
+// 						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
+// 						.toList(),
+// 				oauthTokenService.findAccessToken(HANE_TOKEN));
+//
+// 		responses.stream()
+// 				.filter(response -> response.getInoutState() != null)
+// 				.forEach(response -> {
+// 					this.updateMemberInOrOutState(
+// 							memberRepository.findByIntraName(response.getLogin())
+// 									.orElseThrow(NoMemberException::new),
+// 							response.getInoutState());
+// 					log.info("[hane] : {}의 inCluster가 변경되었습니다", response.getLogin());
+// 				});
+// 		log.info("[hane] : inCluster 업데이트 스케줄링을 끝냅니다!");
+// 	}
+//
+// 	public void updateGroupMemberState(final Group group) {
+// 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
+// 		final List<HaneResponseDto> responses = getHaneListInfo(
+// 				group
+// 						.getGroupMembers()
+// 						.stream()
+// 						.filter(m -> !m.getIsOwner())
+// 						.filter(m -> m.getMember().isPossibleToUpdateInCluster())
+// 						.map(m -> new HaneRequestDto(m.getMember().getIntraName()))
+// 						.toList(),
+// 				oauthTokenService.findAccessToken(HANE_TOKEN)
+// 		);
+//
+// 		updateMemberList(responses);
+// 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 끝냅니다!");
+// 	}
+//
+// 	@Transactional
+// 	public void updateMemberList(final List<HaneResponseDto> responses) {
+// 		final Map<String, String> inOrOutStatus = responses.stream()
+// 				.filter(dto -> dto.getInoutState() != null)
+// 				.collect(Collectors.toMap(HaneResponseDto::getLogin, HaneResponseDto::getInoutState));
+//
+// 		final List<Member> members = memberRepository
+// 				.findAllByIntraNameIn(responses
+// 						.stream()
+// 						.filter(r -> r.getInoutState() != null)
+// 						.map(HaneResponseDto::getLogin)
+// 						.toList()
+// 				);
+//
+// 		members.forEach(m -> {
+// 			m.setInCluster(Hane.create(inOrOutStatus.get(m.getIntraName())));
+// 			log.info("[hane] : {}의 inCluster가 변경되었습니다", m.getIntraName());
+// 		});
+// 	}
+// }

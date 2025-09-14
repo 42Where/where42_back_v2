@@ -1,9 +1,9 @@
 package kr.where.backend.group;
 
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
 import kr.where.backend.group.dto.group.ResponseOwnGroupMemberDTO;
@@ -57,8 +57,8 @@ public class GroupMemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @MockBean
-    HaneApiService haneApiService;
+    // @MockBean
+    // HaneApiService haneApiService;
 
     private CreateGroupDTO createGroupDto;
     private ResponseMemberDTO responseMemberDto;
@@ -79,8 +79,8 @@ public class GroupMemberServiceTest {
         authUser = new AuthUser(11111, "hjeong", 1L);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         CadetPrivacy cadetPrivacy = new CadetPrivacy(11111, "hjeong", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
         authUser.setDefaultGroupId(member.getDefaultGroupId());
         defaultResponseGroupDTO = ResponseGroupDTO.from(groupService.findOneGroupById(member.getDefaultGroupId()));
         generalResponseGroupDTO = groupService.createGroup(new CreateGroupDTO("test_group"), authUser);
@@ -92,10 +92,10 @@ public class GroupMemberServiceTest {
     public void 그룹_멤버_생성() throws Exception {
         //given
         CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
+        // Hane hane = Hane.create("IN");
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy);
 
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(99856)
@@ -114,20 +114,20 @@ public class GroupMemberServiceTest {
         CadetPrivacy cadetPrivacy1 = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
-        Hane hane1 = Hane.create("OUT");
-        memberService.createAgreeMember(cadetPrivacy1, hane1);
+        // Hane hane1 = Hane.create("OUT");
+        memberService.createAgreeMember(cadetPrivacy1);
 
         CadetPrivacy cadetPrivacy2 = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(135436);
         authUser.setIntraName("suhwpark");
-        Hane hane2 = Hane.create("OUT");
-        memberService.createAgreeMember(cadetPrivacy2, hane2);
+        // Hane hane2 = Hane.create("OUT");
+        memberService.createAgreeMember(cadetPrivacy2);
 
         CadetPrivacy cadetPrivacy3 = new CadetPrivacy(22224, "jonhan", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(22224);
         authUser.setIntraName("jonhan");
-        Hane hane3 = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy3, hane3);
+        // Hane hane3 = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy3);
 
         List<Integer> members = new ArrayList<>();
         members.add(99856);
@@ -174,7 +174,7 @@ public class GroupMemberServiceTest {
         authUser.setDefaultGroupId(defaultResponseGroupDTO.getGroupId());
 
         // Mocking HaneApiService behavior
-        doNothing().when(haneApiService).updateGroupMemberState(any(Group.class));
+        // doNothing().when(haneApiService).updateGroupMemberState(any(Group.class));
 
         // when
         ResponseOwnGroupMemberDTO responseGroupMemberDTOS = groupMemberService.getOwnGroups(authUser);
@@ -196,18 +196,25 @@ public class GroupMemberServiceTest {
         CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        memberService.createAgreeMember(cadetPrivacy);
+        // 그룹 주인(jnam)이 그룹 생성
         createGroupMemberDTO = CreateGroupMemberDTO.builder()
                 .intraId(99856)
                 .groupId(generalResponseGroupDTO.getGroupId())
                 .build();
+        // 그룹에 추가할 멤버(hjeong)로 데이터 변경
         authUser.setIntraId(11111);
         authUser.setIntraName("hjeong");
+        // 그룹에 (hjeong) 멤버 추가
         ResponseGroupMemberDTO responseGroupMemberDTO = groupMemberService.createGroupMember(createGroupMemberDTO, false, authUser);
+        // authUser를 로그인된 유저(jnam)정보로 다시 변경
+        authUser.setIntraId(99856);
+        authUser.setIntraName("jnam");
 
         List<Integer> members = new ArrayList<>();
-        members.add(99856);
+        // 삭제할 멤버 List(hjeong) 생성.
+        members.add(11111);
 
         //when
         List<ResponseGroupMemberDTO> responseGroupMemberDTO1 = groupMemberService.deleteFriendsList(
@@ -215,7 +222,7 @@ public class GroupMemberServiceTest {
                 .groupId(responseGroupMemberDTO.getGroupId())
                 .members(members).build() , authUser);
         //then
-        assertEquals(1, responseGroupMemberDTO1.size());
+        assertEquals(0, responseGroupMemberDTO1.size());
     }
 
     @DisplayName("기본 그룹의 멤버 삭제")
@@ -226,10 +233,10 @@ public class GroupMemberServiceTest {
         //given
         //멤버 한명 생성
         CadetPrivacy cadetPrivacy = new CadetPrivacy(99856, "jnam", "c1r1s1", "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
+        // Hane hane = Hane.create("IN");
         authUser.setIntraId(99856);
         authUser.setIntraName("jnam");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        memberService.createAgreeMember(cadetPrivacy);
 
         //클라이언트의 아이디 다시 세팅
         authUser.setIntraId(11111);

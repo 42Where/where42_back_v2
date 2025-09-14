@@ -13,9 +13,14 @@ import org.springframework.stereotype.Repository;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 	Location findByMember(Member member);
 
+	// hane 서비스 종료로 인해 동의 조건 제거
+	// @Query("SELECT l FROM Location l "
+	// 		+ "WHERE l.imacLocation LIKE :prefix% "
+	// 		+ "AND (l.member.inCluster = TRUE OR l.member.agree = FALSE)")
+	// List<Location> getFilteredLocations(@Param("prefix") String prefix);
+
 	@Query("SELECT l FROM Location l "
-			+ "WHERE l.imacLocation LIKE :prefix% "
-			+ "AND (l.member.inCluster = TRUE OR l.member.agree = FALSE)")
+		+ "WHERE l.imacLocation LIKE :prefix% ")
 	List<Location> getFilteredLocations(@Param("prefix") String prefix);
 
 	Integer countAllByImacLocationStartingWith(String prefix);

@@ -1,11 +1,11 @@
 package kr.where.backend.member;
 
 import jakarta.servlet.http.HttpServletRequest;
-import kr.where.backend.api.HaneApiService;
+// import kr.where.backend.api.HaneApiService;
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
-import kr.where.backend.api.json.hane.HaneRequestDto;
-import kr.where.backend.api.json.hane.HaneResponseDto;
+// import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.HaneRequestDto;
+// import kr.where.backend.api.json.hane.HaneResponseDto;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.group.GroupService;
 import kr.where.backend.group.dto.group.CreateGroupDTO;
@@ -34,7 +34,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final GroupService groupService;
 	private final LocationService locationService;
-	private final HaneApiService haneApiServiceService;
+	// private final HaneApiService haneApiServiceService;
 	private final JwtService jwtService;
 	private final RedisTokenService redisTokenService;
 	private final static Integer CAMPUS_ID = 29;
@@ -50,12 +50,12 @@ public class MemberService {
 	 * 멤버 생성후에는 new default group을 해준다
 	 *
 	 * @param cadetPrivacy : 42api에게 받아온 cadet info
-	 * @param hane : hane api에게 받아온 inCluster 여부
+	 // * @param hane : hane api에게 받아온 inCluster 여부
 	 * @return member
 	 * @throws MemberException.DuplicatedMemberException 이미 존재하는 멤버입니다
 	 */
 	@Transactional
-	public Member createAgreeMember(final CadetPrivacy cadetPrivacy, final Hane hane) {
+	public Member createAgreeMember(final CadetPrivacy cadetPrivacy) {
 		final AuthUser authUser = AuthUser.of();
 
 		Member member = memberRepository.findByIntraId(authUser.getIntraId()).orElse(null);
@@ -63,9 +63,9 @@ public class MemberService {
 		if (member != null && member.isAgree()) {
 			throw new MemberException.DuplicatedMemberException();
 		} else if (member != null && !member.isAgree()) {
-			member.setDisagreeToAgree(hane);
+			member.setDisagreeToAgree();
 		} else {
-			member = new Member(cadetPrivacy, hane);
+			member = new Member(cadetPrivacy, true);
 			memberRepository.save(member);
 			locationService.create(member, cadetPrivacy.getLocation());
 		}
@@ -173,8 +173,8 @@ public class MemberService {
 		final Member member = memberRepository.findByIntraId(intraId)
 			.orElseThrow(MemberException.NoMemberException::new);
 
-		if (member.isPossibleToUpdateInCluster())
-			haneApiServiceService.updateInClusterForMainPage(member);
+		// if (member.isPossibleToUpdateInCluster())
+		// 	haneApiServiceService.updateInClusterForMainPage(member);
 
 		return ResponseMemberDTO.builder().member(member).build();
 	}
@@ -190,8 +190,8 @@ public class MemberService {
 		return memberRepository.findByIntraId(intraId);
 	}
 
-	public Optional<List<HaneRequestDto>> findAgreeMembers() {
-		return memberRepository.findAllToUseHaneApi();
+	public Optional<List<String>> findAgreeMembers() {
+		return memberRepository.findAllIntraNamesOfAgreedMembers();
 	}
 
 	public Optional<List<Member>> findUpdatableAgreeMembers() {
@@ -219,8 +219,8 @@ public class MemberService {
 		return memberRepository.findByIntraName(intraName);
 	}
 
-	@Transactional
-	public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
-		memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
-	}
+	// @Transactional
+	// public void updateUpdatableMember(List<HaneResponseDto> haneResponseDtos) {
+	// 	memberRepository.updateMemberInOrOutStatus(haneResponseDtos);
+	// }
 }

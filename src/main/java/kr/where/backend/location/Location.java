@@ -65,26 +65,43 @@ public class Location {
 		this.customUpdatedAt = LocalDateTime.now();
 	}
 
+	// hane 동의 로직 제거로 인해 주석처리
+	// public String getLocation() {
+	// 	if (!this.member.isAgree()) {
+	// 		return this.imacLocation;
+	// 	}
+	// 	if (member.isInCluster()) {
+	// 		if (customLocation == null && imacLocation == null) {
+	// 			return null;
+	// 		} else if (customLocation == null) {
+	// 			return imacLocation;
+	// 		} else if (imacLocation == null) {
+	// 			return customLocation;
+	// 		} else {
+	// 			if (customUpdatedAt.isAfter(imacUpdatedAt)) {
+	// 				return customLocation;
+	// 			} else {
+	// 				return imacLocation;
+	// 			}
+	// 		}
+	// 	}
+	// 	return null;
+	// }
+
 	public String getLocation() {
-		if (!this.member.isAgree()) {
-			return this.imacLocation;
-		}
-		if (member.isInCluster()) {
-			if (customLocation == null && imacLocation == null) {
-				return null;
-			} else if (customLocation == null) {
-				return imacLocation;
-			} else if (imacLocation == null) {
+		if (customLocation == null && imacLocation == null) {
+			return null;
+		} else if (customLocation == null) {
+			return imacLocation;
+		} else if (imacLocation == null) {
+			return customLocation;
+		} else {
+			if (customUpdatedAt.isAfter(imacUpdatedAt)) {
 				return customLocation;
 			} else {
-				if (customUpdatedAt.isAfter(imacUpdatedAt)) {
-					return customLocation;
-				} else {
-					return imacLocation;
-				}
+				return imacLocation;
 			}
 		}
-		return null;
 	}
 
 	public String getImacLocationIfInCluster() {

@@ -1,12 +1,11 @@
 package kr.where.backend.search;
 
-import kr.where.backend.config.TestRedisContainer;
 import kr.where.backend.search.cache.SearchCacheService;
 import kr.where.backend.search.dto.ResponseSearchDTO;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import kr.where.backend.api.json.*;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.api.IntraApiService;
 import kr.where.backend.member.MemberService;
 import kr.where.backend.auth.authUser.AuthUser;
@@ -20,8 +19,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import kr.where.backend.oauthtoken.exception.OAuthTokenException;
+import kr.where.backend.support.RedisTestSupport;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +39,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @Transactional
 @Rollback
-public class SearchServiceTest {
+@ActiveProfiles("test")
+public class SearchServiceTest extends RedisTestSupport {
 
     @Autowired
     SearchService searchService;
@@ -59,12 +61,6 @@ public class SearchServiceTest {
 
     AuthUser authUser;
 
-    static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
-    @BeforeAll
-    public static void setContainer() {
-        TEST_REDIS_CONTAINER.beforeAll();
-    }
-
     @BeforeEach
     public void setUp() {
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("user"));
@@ -72,8 +68,7 @@ public class SearchServiceTest {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authUser, "", authorities));
         memberService.createAgreeMember(
                 new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image",
-                        true, "2022-10-31", 29),
-                Hane.create("IN")
+                        true, "2022-10-31", 29)
         );
     }
 
@@ -99,8 +94,11 @@ public class SearchServiceTest {
     public void getCadetPrivacy() {
         //given
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1", "image", true, "2022-10-31", 29);
-        Hane hane = Hane.create("IN");
-        memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+
+        // OAuthTokenService는 @MockBean 이므로, 이 서비스의 함수들은 익셉션을 뱉지 않는다. 그래서 스텁(행동정의)를 사용했다.
+        when(oauthTokenService.findAccessToken("search"))
+            .thenThrow(new OAuthTokenException.InvalidOAuthTokenException());
 
         //then
         assertThatThrownBy(() -> searchService.search("jn", authUser))

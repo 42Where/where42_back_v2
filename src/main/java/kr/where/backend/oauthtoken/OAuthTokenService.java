@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class OAuthTokenService {
-    private static final String EXCEPTION_TOKEN = "hane";
+    // private static final String EXCEPTION_TOKEN = "hane";
     private final OAuthTokenRepository oauthTokenRepository;
     private final TokenApiService tokenApiService;
 
@@ -41,7 +41,7 @@ public class OAuthTokenService {
     @Transactional
     public String findAccessToken(final String name) {
         final OAuthToken oauthToken = oauthTokenRepository.findByName(name).orElseThrow(InvalidOAuthTokenException::new);
-        if (!name.equals(EXCEPTION_TOKEN) && oauthToken.isTimeOver()) {
+        if (oauthToken.isTimeOver()) {
             updateToken(oauthToken);
         }
         return oauthToken.getAccessToken();

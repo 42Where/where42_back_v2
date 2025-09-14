@@ -1,7 +1,7 @@
 package kr.where.backend.imacHistory;
 
 import kr.where.backend.api.json.CadetPrivacy;
-import kr.where.backend.api.json.hane.Hane;
+// import kr.where.backend.api.json.hane.Hane;
 import kr.where.backend.auth.authUser.AuthUser;
 import kr.where.backend.imacHistory.dto.GroupByImac;
 import kr.where.backend.imacHistory.exception.ImacHistoryException;
@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.in;
 @SpringBootTest
 @Transactional
 @Rollback
+@ActiveProfiles("test")
 public class ImacHistoryServiceTest {
     @Autowired
     ImacHistoryService imacHistoryService;
@@ -61,8 +63,8 @@ public class ImacHistoryServiceTest {
         //member create
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime after3Hour = now.plusHours(3);
@@ -87,8 +89,8 @@ public class ImacHistoryServiceTest {
         //member create
         CadetPrivacy cadetPrivacy = new CadetPrivacy(135436, "suhwpark", "c1r1s1",
                 "image", true, "2022-10-31", CAMPUS_ID);
-        Hane hane = Hane.create("IN");
-        Member member = memberService.createAgreeMember(cadetPrivacy, hane);
+        // Hane hane = Hane.create("IN");
+        Member member = memberService.createAgreeMember(cadetPrivacy);
         Integer intraId= member.getIntraId();
 
         LocalDateTime present = LocalDateTime.now();
