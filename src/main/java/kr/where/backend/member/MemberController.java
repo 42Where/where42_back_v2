@@ -47,6 +47,13 @@ public class MemberController implements MemberApiDocs {
 		return ResponseEntity.ok(responseMemberDto);
 	}
 
+//	@GetMapping("")
+//	public ResponseEntity findOneByAccessToken(@RequestParam("intraId") final Integer intraId) {
+//		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(intraId);
+//
+//		return ResponseEntity.ok(responseMemberDto);
+//	}
+
 	/**
 	 * DB에 존재하는 모든 멤버 list 조회
 	 *
