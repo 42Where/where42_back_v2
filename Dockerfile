@@ -1,5 +1,5 @@
 # JDK11 이미지 사용
-FROM openjdk:17-jdk
+FROM eclipse-temurin:17-jdk
 
 # VOLUME 설정
 VOLUME /tmp

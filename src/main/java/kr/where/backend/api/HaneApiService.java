@@ -28,6 +28,8 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,11 +39,15 @@ public class HaneApiService {
 	private final MemberRepository memberRepository;
 	private static final String HANE_TOKEN = "hane";
 
+	@Value("${hane.enabled:false}")
+	private boolean haneEnabled;
+
 	/**
 	 * hane api 호출하여 in, out state 반환
 	 */
 	public Hane getHaneInfo(final String name, final String token) {
 		try {
+
 			return JsonMapper.mapping(HttpResponse.getMethod(HttpHeader.requestHaneInfo(token), UriBuilder.hane(name)),
 				Hane.class);
 		} catch (final RequestException exception) {
@@ -52,6 +58,11 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateInClusterForMainPage(final Member member) {
+		if (!haneEnabled) {
+			log.info("[hane] disabled -> skip update");
+			return;
+		}
+
 		if (member.isAgree()) {
 			member.setInCluster(getHaneInfo(member.getIntraName(), oauthTokenService.findAccessToken(HANE_TOKEN)));
 
@@ -61,6 +72,9 @@ public class HaneApiService {
 
 	public List<HaneResponseDto> getHaneListInfo(final List<HaneRequestDto> haneRequestDto, final String token) {
 		try {
+			if (!haneEnabled) {
+				return new ArrayList<>();
+			}
 			return JsonMapper.mappings(HttpResponse.postMethod(HttpHeader.requestHaneListInfo(haneRequestDto, token),
 					UriBuilder.hane(Uri.HANE_INFO_LIST.getValue())), HaneResponseDto[].class);
 		} catch (final RequestException exception) {
@@ -71,6 +85,11 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMemberInOrOutState(final Member member, final String state) {
+		if (!haneEnabled) {
+			log.info("[hane] disabled -> skip update");
+			return;
+		}
+
 		if (member.isPossibleToUpdateInCluster()) {
 			member.setInCluster(Hane.create(state));
 		}
@@ -78,6 +97,11 @@ public class HaneApiService {
 
 	@Transactional
 	public void updateMyOwnMemberState(final List<GroupMember> friends) {
+		if (!haneEnabled) {
+			log.info("[hane] disabled -> skip update");
+			return;
+		}
+
 		log.info("[hane] : inCluster 업데이트 스케줄링을 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				friends
@@ -100,6 +124,11 @@ public class HaneApiService {
 	}
 
 	public void updateGroupMemberState(final Group group) {
+		if (!haneEnabled) {
+			log.info("[hane] disabled -> skip updateGroupMemberState");
+			return;
+		}
+
 		log.info("[hane] : 메인 페이지 새로고침으로 인한 inCluster 업데이트를 시작합니다!");
 		final List<HaneResponseDto> responses = getHaneListInfo(
 				group
