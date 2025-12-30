@@ -50,7 +50,8 @@ public interface MemberApiDocs {
 		}
 	)
 	@GetMapping("")
-	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
+//	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser);
+	public ResponseEntity findOneByAccessToken(@RequestParam("intraId") final Integer intraId);
 
 	@Operation(summary = "1.6 findAll API", description = "모든 멤버 list 조회",
 		parameters = {

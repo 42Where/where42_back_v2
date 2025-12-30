@@ -40,9 +40,16 @@ public class MemberController implements MemberApiDocs {
 	 *
 	 * @return ResponseEntity(ResponseMemberDTO)
 	 */
+//	@GetMapping("")
+//	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
+//		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(authUser.getIntraId());
+//
+//		return ResponseEntity.ok(responseMemberDto);
+//	}
+
 	@GetMapping("")
-	public ResponseEntity findOneByAccessToken(@AuthUserInfo final AuthUser authUser) {
-		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(authUser.getIntraId());
+	public ResponseEntity findOneByAccessToken(@RequestParam("intraId") final Integer intraId) {
+		final ResponseMemberDTO responseMemberDto = memberService.findOneByIntraId(intraId);
 
 		return ResponseEntity.ok(responseMemberDto);
 	}
