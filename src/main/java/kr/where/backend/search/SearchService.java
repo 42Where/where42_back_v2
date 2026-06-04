@@ -63,7 +63,7 @@ public class SearchService {
     }
 
     private boolean validateLength(final String keyWord) {
-        return keyWord.length() > MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
+        return keyWord.length() >= MINIMUM_LENGTH && keyWord.length() < MAXIMUM_LENGTH;
     }
 
     private List<CadetPrivacy> findActiveCadets(final String word) {
@@ -111,7 +111,7 @@ public class SearchService {
         final Member member = memberService.findOne(authUser.getIntraId())
                 .orElseThrow(MemberException.NoMemberException::new);
 
-        final String cacheKey = word.substring(0, 3);
+        final String cacheKey = word.substring(0, Math.min(3, word.length()));
 
         final List<CadetPrivacy> response = searchCacheService.getSearchCacheResult(cacheKey);
 
@@ -138,6 +138,6 @@ public class SearchService {
     }
 
     private boolean newValidateLength(final String keyWord) {
-        return keyWord.length() >= 3 && keyWord.length() <= MAXIMUM_LENGTH;
+        return keyWord.length() >= MINIMUM_LENGTH && keyWord.length() <= MAXIMUM_LENGTH;
     }
 }
