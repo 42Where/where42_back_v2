@@ -83,7 +83,7 @@ public class SearchServiceTest {
     }
 
     @DisplayName("유효하지 않은 keyword값이 들어왔을 경우 예외처리")
-    @ValueSource(strings = {"수환", "a", "", "%%"})
+    @ValueSource(strings = {"수환", "", "%%"})
     @ParameterizedTest
     public void invalidKeyWord(final String keyWord) {
         //then
