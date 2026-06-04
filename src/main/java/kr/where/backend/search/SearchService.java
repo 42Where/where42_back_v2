@@ -74,7 +74,7 @@ public class SearchService {
             final List<CadetPrivacy> searchApiResult =
                     intraApiService.getCadetsInRange(oauthTokenService.findAccessToken(TOKEN_NAME), word, page);
             isActiveCadet(result, searchApiResult);
-            if (searchApiResult.size() < MAXIMUM_SIZE || result.size() > 14) {
+            if (searchApiResult.size() < MAXIMUM_SIZE) {
                 break;
             }
             page += 1;
